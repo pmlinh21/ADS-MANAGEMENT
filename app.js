@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
-const port = 8080;
+const portNguoiDan = 8081; 
+const portCanBo = 8080;
 
 const sequelize = require('./models/index');
 const config = require('./config/index');
@@ -21,13 +22,21 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
-const rootRoute = require('./routes');
-app.use("/api", rootRoute);
-
 // Thiết lập EJS làm view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+const appNguoiDan = express();
+appNguoiDan.listen(portNguoiDan, () => {
+  console.log(`Phân hệ người dân đang chạy trên cổng ${portNguoiDan}`);
+});
+
+const appCanBo = express();
+appCanBo.listen(portCanBo, () => {
+  console.log(`Phân hệ cán bộ đang chạy trên cổng ${portCanBo}`);
+});
+
+// Sử dụng rootRoute cho cả hai ứng dụng
+const rootRoute = require('./routes');
+appNguoiDan.use('/api', rootRoute);
+appCanBo.use('/api', rootRoute);
