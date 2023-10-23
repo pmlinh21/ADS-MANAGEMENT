@@ -36,6 +36,14 @@ appCanBo.listen(portCanBo, () => {
   console.log(`Phân hệ cán bộ đang chạy trên cổng ${portCanBo}`);
 });
 
+// Thiết lập EJS cho appNguoiDan
+appNguoiDan.set('view engine', 'ejs');
+appNguoiDan.set('views', path.join(__dirname, 'views'));
+
+// Thiết lập EJS cho appCanBo
+appCanBo.set('view engine', 'ejs');
+appCanBo.set('views', path.join(__dirname, 'views'));
+
 // Sử dụng rootRoute cho cả hai ứng dụng
 const rootRoute = require('./routes');
 appNguoiDan.use('/api', rootRoute);
