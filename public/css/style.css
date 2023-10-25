@@ -14,13 +14,72 @@ body {
   font-weight: 500;
 }
 
-/**/
+/*login.ejs*/
 
-.navbar{
-    background-color: green;
-    height: 4rem;
+ .login-container {
+  background-image: url("../image/background_2.png");
+  width: 100vw; 
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.navbar img{
-    height: 4em;
+.login-container > div{
+  background-color: white;
+  width: 50%;
+  border-radius: 2rem;
+  padding: 4rem 0rem 2rem;
+  position: relative;
+}
+
+.login-container > div::before{
+  background-color: #0B7B31;
+  width: 8rem;
+  height: 8rem;
+  position: absolute;
+  top: -4rem;
+  left: calc(50% - 4rem);
+  border-radius: 10rem;
+  content: "\f007";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 4.5rem;
+  color: #BDF3CF;
+  text-align: center;
+  padding-top: 0.5rem;
+}
+
+.login-container > div > div *{
+  margin-top: 0.3rem;
+  margin-bottom: 0.1rem;
+}
+
+.form-control:focus,
+.form-control:hover{
+  box-shadow: 0 0 0 0.2rem rgba(11, 123, 49, 0.25);
+  border-color: #0B7B31;
+}
+
+.login-container form label::after{
+  content: ' *';
+  color: red;
+}
+
+.login-container form button{
+  margin: 1.5rem auto 0.5rem;
+  background-color: #0B7B31;
+  color: white;
+  display: table;
+}
+
+.login-container form button:hover{
+  background-color: #BDF3CF;
+  color: #0B7B31;
+}
+
+.login-container > div a {
+  text-decoration-color: #0B7B31;
+  color: #0B7B31;
+  text-align: center;
 }

@@ -7,7 +7,6 @@ const sequelize = require('./models/index');
 const config = require('./config/index');
 const path = require('path');
 app.use(express.json());
-// app.use('/public', express.static('public'));
 
 const cors = require('cors');
 app.use(cors());
@@ -22,10 +21,6 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
-// Thiết lập EJS làm view engine
-// app.set('view engine', 'ejs');
-// app.set('views', path.join(__dirname, 'views'));
-
 const appNguoiDan = express();
 appNguoiDan.listen(portNguoiDan, () => {
   console.log(`Phân hệ người dân đang chạy trên cổng ${portNguoiDan}`);
@@ -39,19 +34,18 @@ appCanBo.listen(portCanBo, () => {
 // Thiết lập EJS cho appNguoiDan
 appNguoiDan.set('view engine', 'ejs');
 appNguoiDan.set('views', path.join(__dirname, 'views'));
+appNguoiDan.use('/public', express.static('public'));
 
 // Thiết lập EJS cho appCanBo
 appCanBo.set('view engine', 'ejs');
 appCanBo.set('views', path.join(__dirname, 'views'));
+appCanBo.use('/public', express.static('public'));
 
 // Sử dụng rootRoute cho cả hai ứng dụng
 const rootRoute = require('./routes');
 appNguoiDan.use('/api', rootRoute);
 appCanBo.use('/api', rootRoute);
 
-appCanBo.set('view engine', 'ejs');
-appCanBo.set('views', path.join(__dirname, 'views'));
-appCanBo.use('/public', express.static('public'));
 
 appCanBo.get('/', function(req, res) {
   res.render('CanBo/login');
