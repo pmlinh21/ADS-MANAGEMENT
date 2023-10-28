@@ -58,6 +58,22 @@ appCanBo.get('/', function(req, res) {
   res.render('CanBo/homepageCanbo');
 });
 
+appCanBo.get('/', function(req, res) {
+  res.render('CanBo/adsLocation');
+});
+
+appCanBo.get('/', function(req, res) {
+  res.render('CanBo/ads');
+});
+
+appCanBo.get('/', function(req, res) {
+  res.render('CanBo/report');
+});
+
+appCanBo.get('/', function(req, res) {
+  res.render('CanBo/createAds');
+});
+
 // appCanBo.get('/adslocation', function(req, res) {
 //   res.render('CanBo/adsLocation');
 // });
