@@ -1,0 +1,28 @@
+<%- include("../partial/header"); %>
+        <div class = "select-ward-bar"> Chọn phường để xem ... </div>
+        <div id = "navbar">
+            <ul>
+                <li id="manage" >
+                    <a class="nav-link" >Quản lý</a>
+                    <ul class = "manage-menu" style = "display: none;">
+                        <li><a>Danh sách điểm đặt quảng cáo</a></li>
+                        <li><a>Danh sách biển quảng cáo</a></li>
+                        <li><a>Danh sách báo cáo vi phạm</a></li>
+                        <li><a>Danh sách cấp phép quảng cáo</a> </li>
+                    </ul>
+                </li>
+                <li id="account">
+                    <a class="nav-link" href = "/account">Tài khoản</a>
+                </li>
+                <li id="logout">
+                    <a class="nav-link"  href = "/login">Đăng xuất</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+  <div id='map'></div>
+  
+  <script type = "text/javascript" src="../../public/js/homepageCanBo.js"></script>
+</body>
+</html>

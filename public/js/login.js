@@ -19,6 +19,9 @@ $(document).ready(function () {
             alert('Mật khẩu không được để trống');
             return;
         }
+        else{
+            window.location.href = "/";
+        }
         
     });
 });

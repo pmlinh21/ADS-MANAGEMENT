@@ -46,7 +46,21 @@ const rootRoute = require('./routes');
 appNguoiDan.use('/api', rootRoute);
 appCanBo.use('/api', rootRoute);
 
+appNguoiDan.get('/', function(req, res) {
+  res.render('NguoiDan/homepageNguoiDan');
+});
 
-appCanBo.get('/', function(req, res) {
+appCanBo.get('/login', function(req, res) {
   res.render('CanBo/login');
 });
+
+appCanBo.get('/', function(req, res) {
+  res.render('CanBo/homepageCanbo');
+});
+
+// appCanBo.get('/adslocation', function(req, res) {
+//   res.render('CanBo/adsLocation');
+// });
+
+
+
