@@ -1,16 +1,16 @@
 function renderWard(){
-    var checkboxes = [
-        'Checkbox 1',
-        'Checkbox 2',
-        'Checkbox 3',
-        'Checkbox 4',
-        'Checkbox 5',
-        'Checkbox 6',
-        'Checkbox 7',
-        'Checkbox 8',
-        'Checkbox 9',
-        'Checkbox 10'
-      ];
+  var checkboxes = [
+    'Bến Nghé',
+    'Bến Thành',
+    'Cầu Kho',
+    'Cầu Ông Lãnh',
+    'Nguyễn Thái Bình',
+    'Nguyễn Cư Trinh',
+    'Đa Kao',
+    'Cô Giang',
+    'Tân Định',
+    'Phạm Ngũ Lão'
+  ];
 
     var template = ` 
         <% for (var i = 0; i < checkboxes.length; i++) { %>
@@ -30,7 +30,9 @@ function renderWard(){
 $(document).ready(function () {
     const manageButton = $('#manage');
     const manageMenu = $('#manage .manage-menu');
-    const role = 2;
+
+    // 2 = Quan, 1 = Phuong
+    const role = 2; 
   
     if (role === 1) {
         $("#select-ward").hide();

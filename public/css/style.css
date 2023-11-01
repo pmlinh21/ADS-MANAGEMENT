@@ -6,6 +6,7 @@ body {
   padding: 0;
   box-sizing: border-box;
   font-size: 16px;
+  overflow-x: hidden;
 }
 
 body {
@@ -19,11 +20,13 @@ body {
 
  .login-container {
   background-image: url("../image/background_2.png");
-  width: 100vw; 
-  height: 100vh;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .login-container > div{
@@ -36,18 +39,21 @@ body {
 
 .login-container > div::before{
   background-color: #0B7B31;
-  width: 8rem;
-  height: 8rem;
   position: absolute;
-  top: -4rem;
-  left: calc(50% - 4rem);
-  border-radius: 10rem;
   content: "\f007";
   font-family: "Font Awesome 6 Free";
   font-weight: 900;
-  font-size: 4.5rem;
+  font-size: 4rem;
   color: #BDF3CF;
   text-align: center;
+  
+  width: 18%;
+  max-width: 18%;
+  aspect-ratio: 1/1;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
   padding-top: 0.5rem;
 }
 
@@ -57,10 +63,14 @@ body {
 }
 
 .form-control:focus,
-.form-control:hover{
+.form-control:hover,
+.form-select:focus,
+.form-select:hover{
   box-shadow: 0 0 0 0.2rem rgba(11, 123, 49, 0.25);
   border-color: #0B7B31;
 }
+
+
 
 .login-container form label::after{
   content: ' *';
@@ -90,16 +100,18 @@ body {
 #header {
   background-color: #0B7B31;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  width: 100vw;
+  /* max-width: 100vw; */
   padding-left: 0.5rem;
   flex-wrap: wrap;
+  height: fit-content;
 }
 
 .logo-link {
   display: flex;
   align-items: center;
+  margin-right: auto;
 }
 
 .logo-img {
@@ -135,6 +147,7 @@ body {
   width: 30rem;
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
 }
 
 .select-ward-bar{
@@ -154,7 +167,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  padding: 3rem 1rem 1rem;;
+  padding: 3rem 1rem 1rem;
 
   display: grid;
   grid-template-columns: repeat(3,3fr);
@@ -180,13 +193,15 @@ body {
   -moz-appearance: none;
   appearance: none;
 }
-#ward-container input:checked{
+#ward-container input:checked,
+.ward-table input:checked{
   background-color: #0B7B31;
   outline: none;
   border: none;
 }
 
-#ward-container input:focus{
+#ward-container input:focus,
+.ward-table input:focus{
   box-shadow: none;
 }
 
@@ -194,12 +209,7 @@ body {
   height: fit-content;
 }
 
-/* #select-ward > div:last-child{
-  position: absolute;
-} */
-
 #ward-container > div:last-child{
-  /* position: absolute; */
   grid-column: span 3;
   display: flex;
   justify-content: center;
@@ -230,9 +240,9 @@ button:active{
   transform: translateY(4px);
 }
 
-
 #navbar{
   margin: 0rem;
+  /* margin-left: auto; */
 }
 
 #navbar ul{
@@ -291,9 +301,53 @@ button:active{
 }
 
 #navbar .manage-menu a {
+  text-decoration: none;
   color: black;
 }
 
 #navbar .manage-menu li:hover a{
   color:#0B7B31;
+}
+
+/*adsLocation.ejs*/
+.title-page{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 2rem 4rem 0.5rem;
+  gap: 0.5rem;
+  color: #0B7B31;
+  font-weight: 700;
+}
+
+.ward-table input{
+  margin-right: 0.5rem;
+  border-radius: 2px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+} 
+
+.ward-table .container-fluid {
+  padding: 1rem 4rem 1rem 5rem;
+  border-radius: 1.5rem;
+  width: 100%;
+}
+
+#example_wrapper{
+  margin: 1rem 4rem;
+}
+
+#example{
+  background-color: white;
+  border-radius: 0.8rem;
+  margin: 1rem auto 2rem !important;
+}
+
+#example thead{
+  color: #0B7B31;
+}
+
+#example .odd{
+  background-color: #E6FFEE;
 }

@@ -58,20 +58,24 @@ appCanBo.get('/', function(req, res) {
   res.render('CanBo/homepageCanbo');
 });
 
-appCanBo.get('/', function(req, res) {
+appCanBo.get('/adsLocation', function(req, res) {
   res.render('CanBo/adsLocation');
 });
 
-appCanBo.get('/', function(req, res) {
+appCanBo.get('/ads', function(req, res) {
   res.render('CanBo/ads');
 });
 
-appCanBo.get('/', function(req, res) {
+appCanBo.get('/report', function(req, res) {
   res.render('CanBo/report');
 });
 
-appCanBo.get('/', function(req, res) {
+appCanBo.get('/createAds', function(req, res) {
   res.render('CanBo/createAds');
+});
+
+appCanBo.get('/account', function(req, res) {
+  res.render('CanBo/account');
 });
 
 // appCanBo.get('/adslocation', function(req, res) {
