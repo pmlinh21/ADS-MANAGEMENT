@@ -11,7 +11,7 @@ body {
 
 body {
   font-family: Montserrat;
-  background-color: #f2f2f2;
+  background-color: #F8F9FA;
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -328,11 +328,15 @@ button:active{
   appearance: none;
 } 
 
-.ward-table .container-fluid {
+.ward-table label{
+  color: #867F7F;
+}
+
+/* .ward-table .container {
   padding: 1rem 4rem 1rem 5rem;
   border-radius: 1.5rem;
   width: 100%;
-}
+} */
 
 #example_wrapper{
   margin: 1rem 4rem;
@@ -341,13 +345,53 @@ button:active{
 #example{
   background-color: white;
   border-radius: 0.8rem;
-  margin: 1rem auto 2rem !important;
+  margin: 1rem auto !important;
+  color: #7E94AB;
+  line-height: 1.8rem;
+  box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3);
 }
 
-#example thead{
+#example_filter{
+  color: #7E94AB;
+  font-weight: 800;
+}
+
+thead, tbody, td, tfoot, th, thead, tr{
+  border: none;
+}
+
+thead{
   color: #0B7B31;
 }
 
 #example .odd{
   background-color: #E6FFEE;
+  margin-top: 2rem;
+}
+
+#example .delete-btn{
+  background-color: #0B7B31;
+  color: white;
+  width: 1.5rem;
+  aspect-ratio: 1 / 1;
+  font-size: 0.8rem;
+  padding: 0rem;
+}
+
+#example .delete-btn:active,
+#example .delete-btn:focus{
+  box-shadow: none;
+}
+
+.page-item .page-link{
+  color: #0B7B31;
+}
+
+.page-item.active .page-link{
+  background-color: #0B7B31;
+  border: none
+}
+
+.page-link:focus{
+  box-shadow: none;
 }
