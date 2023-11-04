@@ -46,70 +46,95 @@
   
     <div class="modal fade" id="view-image" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
+            <div class="modal-content">
             <!-- <div class="modal-body"> -->
-              <img class = "photo" src = ""></img>
+                <img class = "photo" src = ""></img>
             <!-- </div> -->
-          </div>
-        </div>
-      </div>
-
-      <div class="modal fade" id="edit-info" tabindex="-1" role="dialog" aria-labelledby="edit-request" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="edit-request">YÊU CẦU CHỈNH SỬA THÔNG TIN</h5>
-              </div>
-            <div class="modal-body">
-              <form class="needs-validation" novalidate>
-                <div class=" col-md-12">
-                  <label for="address" class="col-form-label">Địa chỉ</label>
-                  <input type="text" class="form-control" id="address">
-                </div>
-                <div class="row">
-                    <div class=" col-xl-6">
-                        <label for="id_loc_type" class="col-form-label">Loại vị trí</label>
-                        <select id="id_loc_type" class="form-select" aria-label="Default select example">
-                            <option value="" selected>(Trống)</option>
-                        </select>
-                    </div>
-                    <div class=" col-md-6">
-                        <label for="id_ads_type" class="col-form-label">Hình thức quảng cáo</label>
-                        <select for="id_ads_type" class="form-select" aria-label="Default select example">
-                            <option value=""  selected>(Trống)</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class=" col-md-6">
-                        <label for="is_zoning" class="col-form-label">Quy hoạch</label>
-                        <select id="is_zoning" class="form-select" aria-label="Default select example">
-                            <option value="" selected>(Trống)</option>
-                            <option value="1">Đã quy hoạch</option>
-                            <option value="0">Chưa quy hoạch</option>
-                        </select>
-                    </div>
-                    <div class=" col-md-6">
-                        <label for="photo" class="col-form-label">Hình ảnh minh họa</label>
-                        <input type="file" class="form-control" id="photo" accept = "image/jpeg, image/png">
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <label for="validationReason" class="form-label required">Lí do chỉnh sửa</label>
-                    <input type="text" class="form-control" id="validationReason" required>
-                    <div class="invalid-feedback">
-                        Thông tin bắt buộc.
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn style3-button" data-dismiss="modal">Hủy</button>
-                    <button type="submit" class="btn style1-button" >Xác nhận</button>
-                </div>
-              </form>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
+
+    <div class="modal fade" id="edit-info" tabindex="-1" role="dialog" aria-labelledby="edit-request" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header ">
+            <h5 class="modal-title" id="edit-request">YÊU CẦU CHỈNH SỬA THÔNG TIN</h5>
+            </div>
+        <div class="modal-body">
+            <form class="needs-validation row" novalidate>
+
+                <div class="col-md-6">
+                    <div class=" col-md-12">
+                        <label for="search" class="col-form-label">Địa chỉ (nhập địa chỉ ở bên phải)</label>
+                        <input type="text" class="form-control" id="address" value = "" readonly>
+                    </div>
+                    <div class="row">
+                        <div class=" col-md-6">
+                            <label for="id_loc_type" class="col-form-label">Loại vị trí</label>
+                            <select id="id_loc_type" class="form-select" aria-label="Default select example">
+                                <option value="" selected>(Trống)</option>
+                            </select>
+                        </div>
+                        <div class=" col-md-6">
+                            <label for="id_ads_type" class="col-form-label">Hình thức quảng cáo</label>
+                            <select id="id_ads_type" class="form-select" aria-label="Default select example">
+                                <option value=""  selected>(Trống)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class=" col-md-6">
+                            <label for="is_zoning" class="col-form-label">Quy hoạch</label>
+                            <select id="is_zoning" class="form-select" aria-label="Default select example">
+                                <option value="" selected>(Trống)</option>
+                                <option value="1">Đã quy hoạch</option>
+                                <option value="0">Chưa quy hoạch</option>
+                            </select>
+                        </div>
+                        <div class=" col-md-6">
+                            <label for="photo" class="col-form-label">Hình ảnh minh họa</label>
+                            <input type="file" class="form-control" id="photo" accept = "image/jpeg, image/png">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="validationReason" class="col-form-label required">Lí do chỉnh sửa</label>
+                        <input type="text" class="form-control" id="validationReason" required>
+                        <div class="invalid-feedback">
+                            Thông tin bắt buộc.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mt-3 choose-location">
+                    <div class="header-map">
+                        <label for = "search" class = "col-form-label">Xác định vị trí điểm đặt</label>
+                        <input type="text" class="form-control" id="search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        
+                    </div>
+                    <div class="col-md-12 map bg-primary"> </div>
+                </div>
+            <div class="modal-footer col-md-12">
+                <button type="button" class="btn style3-button" data-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn style1-button" >Xác nhận</button>
+            </div>
+            </form>
+        </div>
+        
+        
+        </div>
+    </div>
+    </div>
+
+    <!-- <div class="modal" id="view-map" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-body">
+                
+            </div>
+            </div>
+        </div>
+    </div> -->
 
 <script type = "text/javascript" src="../../public/js/adsLocation.js"></script>
 <script type = "text/javascript" src="../../public/js/renderWard.js"></script>

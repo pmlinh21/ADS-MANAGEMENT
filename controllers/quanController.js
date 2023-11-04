@@ -4,6 +4,36 @@ const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
 const { Op } = require("sequelize");
 
+const getLocType = async(req, res) =>{
+    try{
+        let data = await model.Location_type.findAll();
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
+const getAdsType = async(req, res) =>{
+    try{
+        let data = await model.Ads_type.findAll();
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
+const getBoardType = async(req, res) =>{
+    try{
+        let data = await model.Board_type.findAll();
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
 const getInfo = async(req, res) =>{
     try{
         let { email } = req.params;
@@ -205,6 +235,7 @@ const getLocReport = async(req, res) =>{
 //     }
 // } 
 
-module.exports = { getInfo, getWard,
+module.exports = { getLocType, getAdsType, getBoardType,
+    getInfo, getWard,
     getAdsLocation, getAds, 
     getAdsLocReport, getAdsReport, getLocReport}

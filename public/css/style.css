@@ -436,6 +436,11 @@ td:nth-child(1),
   margin: 0 auto;
 }
 
+.modal-body{
+  border-bottom: none;
+  padding-top: 0;
+}
+
 .modal-body label{
   color: #0B7B31;
 }
@@ -447,4 +452,57 @@ label.required::after{
 
 .modal-footer{
   justify-content: center;
+  border-top: none;
 }
+
+#edit-info .modal-dialog{
+  max-width: 90%;
+}
+
+#edit-info .modal-content{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#edit-info .header-map{
+  height: 15%;
+  background-color: #0B7B31;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  padding-left: 3%;
+  padding-right: 3%;
+  border-radius: 1rem 1rem 0rem 0rem;
+}
+
+#edit-info .header-map label{
+  color: white;
+}
+
+#edit-info .header-map  input{
+  background-color: white;
+  border-radius: 0.2rem;
+  width: 45%;
+  height: 60%;
+  font-size: 0.8rem;
+  margin-left: auto;
+  margin-right: 0.5rem;
+}
+
+#edit-info #address,
+#edit-info #address:focus,
+#edit-info #address:hover,
+#edit-info #address:focus-within,
+#edit-info #address:focus-visible{
+  box-shadow: none;
+  border: none;
+  transform: none;
+}
+
+#edit-info .map{
+  height: 85%;
+}
+
+
+

@@ -1,9 +1,16 @@
 const express = require('express');
 const quanRoute = express.Router();
-const { getInfo, getWard,
+const { getLocType, getAdsType, getBoardType,
+    getInfo, getWard,
     getAdsLocation, getAds, 
     getAdsLocReport, getAdsReport, getLocReport } = require('../controllers/quanController')
 const { upload } = require('../middlewares/upload');
+
+quanRoute.get("/getLocType", getLocType);
+
+quanRoute.get("/getAdsType", getAdsType);
+
+quanRoute.get("/getBoardType", getBoardType);
 
 quanRoute.get("/getInfo/:email", getInfo);
 
