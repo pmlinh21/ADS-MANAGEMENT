@@ -6,7 +6,7 @@ function renderWard(checkboxes){
                   <div class="col-md-4 col-lg-3 col-xl-2">
                      
                           <input class="form-check-input" type="checkbox" id="ward<%= i + 1 %>" />
-                          <label class="form-check-label" for="checkbox<%= i + 1 %>"><%= checkboxes[i] %></label>
+                          <label class="form-check-label" for="ward<%= i + 1 %>"><%= checkboxes[i] %></label>
                      
                   </div>
               <% } %>

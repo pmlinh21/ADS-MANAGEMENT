@@ -106,6 +106,9 @@ body {
   padding-left: 0.5rem;
   flex-wrap: wrap;
   height: fit-content;
+  position: fixed;
+  width: 100%;
+  z-index: 99;
 }
 
 .logo-link {
@@ -226,14 +229,22 @@ body {
   padding: 0.25rem 1rem;
 }
 
-.style1-button{
+.style1-button,
+.style1-button:hover{
   background-color: #0B7B31;
   color: white;
 }
 
-.style2-button{
+.style2-button,
+.style2-button:hover{
   background-color: #BDF3CF;
   color: #0B7B31;
+}
+
+.style3-button,
+.style3-button:hover{
+  background-color: #BC0F24;
+  color: white;
 }
 
 button:active{
@@ -314,7 +325,7 @@ button:active{
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin: 2rem 4rem 0.5rem;
+  margin: 5rem 4rem 0.5rem;
   gap: 0.5rem;
   color: #0B7B31;
   font-weight: 700;
@@ -340,6 +351,9 @@ button:active{
 
 #example_wrapper{
   margin: 1rem 4rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 #example{
@@ -362,6 +376,7 @@ thead, tbody, td, tfoot, th, thead, tr{
 
 thead{
   color: #0B7B31;
+  white-space: nowrap;
 }
 
 #example .odd{
@@ -369,7 +384,8 @@ thead{
   margin-top: 2rem;
 }
 
-#example .delete-btn{
+#example .edit-btn,
+#example .view-btn{
   background-color: #0B7B31;
   color: white;
   width: 1.5rem;
@@ -378,8 +394,11 @@ thead{
   padding: 0rem;
 }
 
-#example .delete-btn:active,
-#example .delete-btn:focus{
+#example .edit-btn:focus,
+#example .view-btn:focus, 
+.style1-button:focus,
+.style2-button:focus,
+.style3-button:focus{
   box-shadow: none;
 }
 
@@ -394,4 +413,38 @@ thead{
 
 .page-link:focus{
   box-shadow: none;
+}
+
+td:nth-child(1),
+.btn-cell{
+  text-align: center;
+}
+
+.modal-content{
+  border-radius: 1.2rem;
+}
+
+.modal-header{
+  text-align: center;
+  border-bottom: none;
+  color: #0B7B31;
+  padding-bottom: 0;
+}
+
+.modal-title{
+  font-weight: 900;
+  margin: 0 auto;
+}
+
+.modal-body label{
+  color: #0B7B31;
+}
+
+label.required::after{
+  content: " *";
+  color: #BC0F24;
+}
+
+.modal-footer{
+  justify-content: center;
 }
