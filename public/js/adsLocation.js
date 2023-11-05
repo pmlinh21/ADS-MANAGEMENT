@@ -1,11 +1,14 @@
-// gửi form yêu cầu -> api tạo form
+// search address api
 
 $(document).ready(function () {
-    // 2 = Quan, 1 = Phuong
-    const role = 2; 
+    // 1 = Quan, 2 = Phuong
+    const role = 1; 
+    const email = "nnlien21@clc.fitus.edu.vn"
     const id_district = 1;
   
-    var loc_type, ads_type;
+    var loc_type, ads_type
+    var info, filter_info, wards
+
     $.get(`http://localhost:8080/api/quan/getLocType`, function(data) {
         loc_type = data.content
         // console.log(loc_type);
@@ -19,163 +22,144 @@ $(document).ready(function () {
         console.log(error);
       });
 
-    if (role === 1) {
+    if (role === 2) {
         $(".ward-table").hide();
+
     }
     else{
-
-      // lấy data
       $.get(`http://localhost:8080/api/quan/getWard/${id_district}`, function(data) {
-        var wards = data.content.map(ward => ward.ward);
-        // render bảng phường
+        wards = data.content.map(ward => ward.ward);
         console.log("!");
         renderWard(wards);
-
-        $.get(`http://localhost:8080/api/quan/getAdsLocation/${id_district}`, function(data) {
-            console.log("~");
-            // mảng gồm mảng thông tin theo cột trong bảng
-            var info = data.content.map(function(data){
-              let {id_ads_location, address, ward, loc_type, ads_type, photo, is_zoning} = data
-              let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
-              return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, photo]
-            })
-            var filter_info = [...info]
-
-            var table = $("#example").DataTable({
-              // tắt sắp xếp, đổi entries, tắt search bar
-              ordering: false,
-              lengthChange: false,
-              searching: false,
-              info: false,
-              pageLength: 5,
-    
-              // thêm nút vào column 6,7
-              columnDefs: [
-                {
-                    targets: 6, // Last column (Action column)
-                    data: null,
-                    width: "2rem",
-                    className: 'btn-cell',
-                    defaultContent: '<button data-target="#view-image" data-toggle="modal" class="btn view-btn"><i class="fa-solid fa-eye"></i></button>'
-                },
-                {
-                  targets: 7, // Last column (Action column)
-                  data: null,
-                  width: "2rem",
-                  className: 'btn-cell',
-                  defaultContent: '<button data-target="#edit-info" data-toggle="modal" class="btn edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>'
-                }
-              ],
-    
-              // render dữ liệu vào các dòng
-              data: info
-            });
-
-            $('.view-btn').on('click', function(e){
-              let row = $(this).closest('tr').index();
-              console.log(row);
-              $('#view-image .photo').attr('src', `../../../public/image/${info[row][6]}`);
-            })
-
-            loc_type?.forEach(function(type){
-              $('#id_loc_type').append(`<option value="type.id_loc_type">${type.loc_type}</option>`);
-            })
-    
-            ads_type?.forEach(function(type){
-              $('#id_ads_type').append(`<option value="type.id_ads_type">${type.ads_type}</option>`);
-            })
-
-            $('.ward-table input').click(function() {
-              var id_ward = $(this).attr('id');
-              id_ward = id_ward.slice(id_ward.indexOf("-") + 1)
-    
-              if ($(this).is(':checked')) {
-                for (var i = 0; i < info.length; i++){
-                  if (info[i][2] == wards[id_ward])
-                  filter_info.push(info[i]);
-                }
-              } else {
-                var result = []
-                for (var i = 0; i < filter_info.length; i++){
-                  if (filter_info[i][2] != wards[id_ward])
-                    result.push(filter_info[i]);
-                }
-                filter_info = [...result]
-              }
-
-              $("#example").DataTable().clear().rows.add(filter_info).draw();
-              // console.log(filter_info)
-            });
-        })
-
       }).fail(function(error) {
         console.log(error);
       });
 
-    //   $.get(`http://localhost:8080/api/quan/getAdsLocation/${id_district}`, function(data) {
-    //     // console.log("1");
-    //     // mảng gồm mảng thông tin theo cột trong bảng
-    //     let info = data.content.map(function(data){
-    //       let {id_ads_location, address, ward, loc_type, ads_type, photo, is_zoning} = data
-    //       let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
-    //       return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, photo]
-    //     })
+      $.get(`http://localhost:8080/api/quan/getAdsLocation/${id_district}`, function(data) {
+        console.log("~");
+        info = data.content.map(function(data){
+          let {id_ads_location, address, ward, loc_type, ads_type, photo, is_zoning} = data
+          let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
+          id_ads_location = parseInt(id_ads_location)
+          return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, photo]
+        })
+        filter_info = [...info]
+        $("#example").DataTable({
+          ordering: false,
+          lengthChange: false,
+          searching: false,
+          info: false,
+          pageLength: 5,
+          columnDefs: [
+            {
+                targets: 6, // Last column (Action column)
+                data: null,
+                width: "2rem",
+                className: 'btn-cell',
+                defaultContent: '<button data-target="#view-image" data-toggle="modal" class="btn view-btn"><i class="fa-solid fa-eye"></i></button>'
+            },
+            {
+              targets: 7, // Last column (Action column)
+              data: null,
+              width: "2rem",
+              className: 'btn-cell',
+              defaultContent: '<button data-target="#edit-info" data-toggle="modal" class="btn edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>'
+            }
+          ],
+          data: info
+          });
+      }).fail(function(error) {
+        console.log(error);
+      }).always(function() {
 
-    //     let table = $("#example").DataTable({
-    //       // tắt sắp xếp, đổi entries, tắt search bar
-    //       ordering: false,
-    //       lengthChange: false,
-    //       searching: false,
-    //       info: false,
-    //       pageLength: 5,
+        $('.ward-table input').click(function() {
+          var id_ward = $(this).attr('id');
+          id_ward = id_ward.slice(id_ward.indexOf("-") + 1)
+    
+          if ($(this).is(':checked')) {
+            for (var i = 0; i < info.length; i++){
+              if (info[i][2] == wards[id_ward])
+              filter_info.push(info[i]);
+            }
+          } else {
+            var result = []
+            for (var i = 0; i < filter_info.length; i++){
+              if (filter_info[i][2] != wards[id_ward])
+                result.push(filter_info[i]);
+            }
+            filter_info = [...result]
+          }
+          $("#example").DataTable().clear().rows.add(filter_info.sort(function(a, b) {
+            return a[0] - b[0];
+          })).draw();
+          return
+        });
 
-    //       // thêm nút vào column 6,7
-    //       columnDefs: [
-    //         {
-    //             targets: 6, // Last column (Action column)
-    //             data: null,
-    //             width: "2rem",
-    //             className: 'btn-cell',
-    //             defaultContent: '<button data-target="#view-image" data-toggle="modal" class="btn view-btn"><i class="fa-solid fa-eye"></i></button>'
-    //         },
-    //         {
-    //           targets: 7, // Last column (Action column)
-    //           data: null,
-    //           width: "2rem",
-    //           className: 'btn-cell',
-    //           defaultContent: '<button data-target="#edit-info" data-toggle="modal" class="btn edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>'
-    //         }
-    //       ],
+        $('.view-btn').on('click', function(){
+          let row = $(this).closest('tr').index();
+          console.log(row);
+          $('#view-image .photo').attr('src', `../../../public/image/${info[row][6]}`);
+        })
 
-    //       // render dữ liệu vào các dòng
-    //       data: info
-    //     });
+        $('.edit-btn').on('click', function(e){
+          var click_row = $(this).closest('tr').index();
+          // console.log(click_row);
+          loc_type?.forEach(function(type){
+            $('#id_loc_type').append(`<option value=${type.id_loc_type}>${type.loc_type}</option>`);
+          })
+    
+          ads_type?.forEach(function(type){
+            $('#id_ads_type').append(`<option value=${type.id_ads_type}>${type.ads_type}</option>`);
+          })
+    
+          $('#edit-info .style1-button').off('click').on('click', function(e) {
+            e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
+            
+            console.log(click_row);
+            let reason = $('#reason').val();
+            if (!reason){
+              alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
+            }
+            else{
+              var formData = new FormData();
+              formData.append('id_ads_location', click_row + 1);
+              formData.append('latitude', null);
+              formData.append('longitude', null);
+              formData.append('address', null);
+              formData.append('id_ward', null);
+              formData.append('id_district', null);
+              formData.append('id_loc_type', $('#id_loc_type').val());
+              formData.append('photo', $('#photo').val());
+              formData.append('id_ads_type', $('#id_ads_type').val());
+              formData.append('is_zoning', $('#is_zoning').val());
+              formData.append('req_time', validateDate(new Date()));
+              formData.append('reason', $('#reason').val());
+              formData.append('office', role);
+    
+              console.log(formData);
+              $("form").get(0).reset();
+              $("#edit-info").modal("hide")
+    
+              $.ajax({
+                url: `http://localhost:8080/api/quan/updateAdsLoc/${email}`,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                  // Handle the successful response here
+                  console.log(response);
+                },
+                error: function(xhr, status, error) {
+                  // Handle the error here
+                  console.error(error);
+                }
+              });
+            }
+          })
+        })
 
-    //     // không biết
-    //     table.on('page.dt', function() {
-    //       $('html, body').animate({
-    //         scrollTop: $('.ads-location-table').offset().top
-    //       }, 'fast');
-    //     });
-
-
-    //     // thêm ảnh vào img khi nhấn view button
-    //     $('.view-btn').on('click', function(e){
-    //       let row = table.row($(this).closest('tr')).index();
-    //       $('#view-image .photo').attr('src', `../../../public/image/${info[row][6]}`);
-    //     })
-
-    //     loc_type?.forEach(function(type){
-    //       $('#id_loc_type').append(`<option value="type.id_loc_type">${type.loc_type}</option>`);
-    //     })
-
-    //     ads_type?.forEach(function(type){
-    //       $('#id_ads_type').append(`<option value="type.id_ads_type">${type.ads_type}</option>`);
-    //     })
-
-    //   }).fail(function(error) {
-    //     console.log(error);
-    //   });
+      }); 
     }
 
     const manageButton = $('#manage');

@@ -14,3 +14,12 @@ function renderWard(checkboxes){
     var rendered = ejs.render(template, { checkboxes: checkboxes });
     $(".ward-table").html(rendered);
 }
+
+function validateDate(currentDate){
+    var year = currentDate.getFullYear();
+    var month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Adding 1 to month since it is zero-based
+    var day = String(currentDate.getDate()).padStart(2, '0');
+    
+    return `${year}/${month}/${day}`;
+
+}

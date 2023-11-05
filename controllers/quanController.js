@@ -4,6 +4,22 @@ const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
 const { Op } = require("sequelize");
 
+function validateObj(obj) {
+    Object.keys(obj).forEach(function(key) {
+        var value = obj[key];
+        if (value === "" || value === "null") {
+            obj[key] = null;
+        }else {
+            try {
+              obj[key] = JSON.parse(value);
+            } catch (error) {
+              obj[key] = value;
+            }
+          }
+      });
+    return obj;
+}
+
 const getLocType = async(req, res) =>{
     try{
         let data = await model.Location_type.findAll();
@@ -34,6 +50,7 @@ const getBoardType = async(req, res) =>{
     }
 }
 
+//
 const getInfo = async(req, res) =>{
     try{
         let { email } = req.params;
@@ -94,6 +111,7 @@ const getAdsLocation = async(req, res) =>{
     }
 } 
 
+//
 const getAds = async(req, res) =>{
     try{
         let { id_district } = req.params;
@@ -114,6 +132,7 @@ const getAds = async(req, res) =>{
     }
 } 
 
+//
 const getAdsLocReport = async(req, res) =>{
     try{
         let { id_district } = req.params;
@@ -134,6 +153,7 @@ const getAdsLocReport = async(req, res) =>{
     }
 } 
 
+//
 const getAdsReport = async(req, res) =>{
     try{
         let { id_district } = req.params;
@@ -154,6 +174,7 @@ const getAdsReport = async(req, res) =>{
     }
 } 
 
+//
 const getLocReport = async(req, res) =>{
     try{
         // let { id_district } = req.params;
@@ -170,22 +191,28 @@ const getLocReport = async(req, res) =>{
     }
 }  
 
-// const getAdsLocation = async(req, res) =>{
-//     try{
-//         let { id_district } = req.params;
+const updateAdsLoc = async(req, res) =>{
+    try{
+        let { email } = req.params;
 
-//         let data = await model.Ads_location.findAll({
-//             where:{
-//                 id_district
-//             }
-//         });
-//         sucessCode(res,data,"Get thành công")
+        const obj = validateObj(req.body)
 
-//     }catch(err){
-//         errorCode(res,"Lỗi BE")
-//     }
-// } 
+        let { id_ads_location, latitude, longitude, address, id_ward, id_district, 
+            id_loc_type, photo, id_ads_type, is_zoning, req_time, reason, office} = obj
+    
+        const data = await model.Ads_loc_update.create({
+            id_ads_location, latitude, longitude, address, id_ward, id_district, 
+            id_loc_type, photo, id_ads_type, is_zoning, req_time, reason, office,
+            officer: email,
+            status: 0
+        });
 
+        sucessCode(res,data, "Create thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+} 
 
 // const getAdsLocation = async(req, res) =>{
 //     try{
@@ -237,5 +264,5 @@ const getLocReport = async(req, res) =>{
 
 module.exports = { getLocType, getAdsType, getBoardType,
     getInfo, getWard,
-    getAdsLocation, getAds, 
+    getAdsLocation, getAds, updateAdsLoc,
     getAdsLocReport, getAdsReport, getLocReport}

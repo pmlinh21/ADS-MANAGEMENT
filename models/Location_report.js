@@ -28,6 +28,14 @@ class Location_report extends Sequelize.Model {
       type: DataTypes.FLOAT,
       allowNull: true
     },
+    id_ward: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Ward',
+        key: 'id_ward'
+      }
+    },
     id_report_type: {
       type: DataTypes.INTEGER,
       allowNull: true,

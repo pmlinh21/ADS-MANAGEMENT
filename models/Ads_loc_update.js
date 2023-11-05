@@ -40,13 +40,21 @@ class Ads_loc_update extends Sequelize.Model {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    ward: {
-      type: DataTypes.TEXT,
-      allowNull: true
+    id_ward: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Ward',
+        key: 'id_ward'
+      }
     },
-    district: {
-      type: DataTypes.TEXT,
-      allowNull: true
+    id_district: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'District',
+        key: 'id_district'
+      }
     },
     id_loc_type: {
       type: DataTypes.INTEGER,

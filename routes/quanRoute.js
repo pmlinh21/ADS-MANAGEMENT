@@ -2,7 +2,7 @@ const express = require('express');
 const quanRoute = express.Router();
 const { getLocType, getAdsType, getBoardType,
     getInfo, getWard,
-    getAdsLocation, getAds, 
+    getAdsLocation, getAds, updateAdsLoc,
     getAdsLocReport, getAdsReport, getLocReport } = require('../controllers/quanController')
 const { upload } = require('../middlewares/upload');
 
@@ -24,17 +24,17 @@ quanRoute.get("/getWard/:id_district", getWard);
 
 quanRoute.get("/getAdsLocation/:id_district", getAdsLocation);
 
-// quanRoute.post("/updateAdsLoc/:id_district", updateAdsLoc, upload('updateAdsLoc').single("file"));
+quanRoute.post("/updateAdsLoc/:email", upload('updateAdsLoc').single("file"), updateAdsLoc);
 
-quanRoute.get("/getAds/:id_district", getAds);
+// quanRoute.get("/getAds/:id_district", getAds);
 
 // quanRoute.post("/updateAds/:id_district", updateAds, upload('updateAds').single("file"));
 
-quanRoute.get("/getAdsLocReport/:id_district", getAdsLocReport);
+// quanRoute.get("/getAdsLocReport/:id_district", getAdsLocReport);
 
 // quanRoute.put("/updateAdsLocReport/:id_district", updateAdsLocReport);
 
-quanRoute.get("/getAdsReport/:id_district", getAdsReport);
+// quanRoute.get("/getAdsReport/:id_district", getAdsReport);
 
 // quanRoute.put("/putAdsReport/:id_district", putAdsReport);
 
