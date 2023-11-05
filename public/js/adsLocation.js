@@ -1,10 +1,14 @@
-// search address api
+//  lỗi hiển thị map
+// standard địa chỉ
 
 $(document).ready(function () {
     // 1 = Quan, 2 = Phuong
     const role = 1; 
     const email = "nnlien21@clc.fitus.edu.vn"
     const id_district = 1;
+    mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
+    
+    
   
     var loc_type, ads_type
     var info, filter_info, wards
@@ -38,10 +42,11 @@ $(document).ready(function () {
       $.get(`http://localhost:8080/api/quan/getAdsLocation/${id_district}`, function(data) {
         console.log("~");
         info = data.content.map(function(data){
-          let {id_ads_location, address, ward, loc_type, ads_type, photo, is_zoning} = data
+          let {id_ads_location, address, ward, loc_type, ads_type, 
+            photo, is_zoning, longitude, latitude} = data
           let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
           id_ads_location = parseInt(id_ads_location)
-          return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, photo]
+          return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, photo, longitude, latitude]
         })
         filter_info = [...info]
         $("#example").DataTable({
@@ -103,6 +108,8 @@ $(document).ready(function () {
 
         $('.edit-btn').on('click', function(e){
           var click_row = $(this).closest('tr').index();
+          var ward, district, result, longitude, latitude
+
           // console.log(click_row);
           loc_type?.forEach(function(type){
             $('#id_loc_type').append(`<option value=${type.id_loc_type}>${type.loc_type}</option>`);
@@ -111,11 +118,72 @@ $(document).ready(function () {
           ads_type?.forEach(function(type){
             $('#id_ads_type').append(`<option value=${type.id_ads_type}>${type.ads_type}</option>`);
           })
-    
+
+          var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [info[click_row][7], info[click_row][8]],
+            zoom: 17
+          });
+
+          var geocoder = new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            mapboxgl: mapboxgl,
+          });
+
+          $('#search').append(geocoder.onAdd(map));
+
+          $(".header-map i").on('click', geocoding);
+          $('#search').on('keydown', function(event) {
+            if (event.keyCode === 13) { // Kiểm tra phím Enter
+              geocoding();
+            }
+          });
+
+          function geocoding(){
+            var address = $('#search').val()
+
+            $.ajax({
+              url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(address) + '.json',
+              type: 'GET',
+              data: {
+                access_token: mapboxgl.accessToken
+              },
+              success: function(response) {
+                // Xử lý kết quả geocoding
+                var features = response.features;
+                if (features.length > 0) {
+                  var firstFeature = features[0];
+                  var coordinates = firstFeature.center;
+
+                  result = firstFeature.place_name;
+                  // ward = firstFeature.context[0];
+                  // district = firstFeature.context[1];
+                  longitude = coordinates[0];
+                  latitude= coordinates[1]
+
+
+                  // Cập nhật tọa độ và zoom của map
+                  map.flyTo({
+                    center: coordinates,
+                    zoom: 17
+                  });
+                  $("#address").val(`${result} [${coordinates[0]}, ${coordinates[1]}]` )
+                  console.log(firstFeature)
+                } else {
+                  alert('No results found');
+                }
+              },
+              error: function() {
+                alert('Error occurred during geocoding');
+              }
+            });
+          }
+          
           $('#edit-info .style1-button').off('click').on('click', function(e) {
             e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
             
-            console.log(click_row);
+            // console.log(click_row);
             let reason = $('#reason').val();
             if (!reason){
               alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
@@ -123,8 +191,8 @@ $(document).ready(function () {
             else{
               var formData = new FormData();
               formData.append('id_ads_location', click_row + 1);
-              formData.append('latitude', null);
-              formData.append('longitude', null);
+              formData.append('latitude', latitude);
+              formData.append('longitude', longitude);
               formData.append('address', null);
               formData.append('id_ward', null);
               formData.append('id_district', null);

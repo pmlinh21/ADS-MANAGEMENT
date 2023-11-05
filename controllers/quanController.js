@@ -97,7 +97,8 @@ const getAdsLocation = async(req, res) =>{
         let { id_district } = req.params;
 
         const [data, metadata] = await sequelize.query
-            (`SELECT al.id_ads_location, al.address, w.ward, lt.loc_type, at.ads_type, al.is_zoning, al.photo
+            (`SELECT al.id_ads_location, al.address, w.ward, lt.loc_type, at.ads_type, al.is_zoning, 
+            al.photo, al.longitude, al.latitude
             FROM Ads_location al
             INNER JOIN Ward w ON al.id_ward = w.id_ward
             INNER JOIN Location_type lt ON lt.id_loc_type = al.id_loc_type 

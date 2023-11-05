@@ -247,8 +247,10 @@ body {
   color: white;
 }
 
-button:active{
+button:active,
+.header-map i:focus{
   transform: translateY(4px);
+  cursor: pointer;
 }
 
 #navbar{
@@ -490,6 +492,10 @@ label.required::after{
   margin-right: 0.5rem;
 }
 
+.header-map i{
+  cursor: pointer;
+}
+
 #edit-info #address,
 #edit-info #address:focus,
 #edit-info #address:hover,
@@ -502,6 +508,7 @@ label.required::after{
 
 #edit-info .map{
   height: 85%;
+  width: 100%;
 }
 
 
