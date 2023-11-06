@@ -77,3 +77,14 @@
 .menu li:hover i {
     color: #0E5025;
 }
+@media (max-width: 768px) {
+    .side-navbar {
+        width: 60px;
+    }
+    .side-navbar:hover {
+        width: 300px;
+    }
+    .account {
+        display: none;
+    }
+}
