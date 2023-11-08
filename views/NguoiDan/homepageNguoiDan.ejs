@@ -1,8 +1,15 @@
-<%- include("../partial/header"); %>
+<%- include("../partial/headerNgDan"); %>
+
+  <div class="homepageNgDan">
+    <div id='map'>
+      <script type="text/javascript" src="../../public/js/homepageNguoiDan.js"></script>
     </div>
-
-    <div id='map'></div>
-
-    <script type = "text/javascript" src="../../public/js/homepageNguoiDan.js"></script>
+    <div class="toggle-btn">
+      <input type="checkbox" checked data-toggle="toggle" data-onstyle="primary">
+      <input type="checkbox" checked data-toggle="toggle" data-onstyle="success">
+      <input type="checkbox" checked data-toggle="toggle" data-onstyle="danger">
+    </div>
+  </div>
   </body>
-</html>
+
+  </html>
