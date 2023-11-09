@@ -8,5 +8,4 @@ $(document).ready(function () {
         center: [106.6974, 10.7743],
         zoom: 15
     });
-
 });
