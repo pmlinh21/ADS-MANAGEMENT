@@ -386,14 +386,20 @@ button:active,
   width: 100%;
 } */
 
-#example_wrapper {
+#example_wrapper,
+#example1_wrapper,
+#example2_wrapper,
+#example3_wrapper {
   margin: 1rem 4rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-#example {
+#example,
+#example1,
+#example2,
+#example3 {
   background-color: white;
   border-radius: 0.8rem;
   margin: 1rem auto !important;
@@ -422,13 +428,16 @@ thead {
   white-space: nowrap;
 }
 
-#example .odd {
+#example .odd,
+#example1 .odd,
+#example2 .odd,
+#example3 .odd {
   background-color: #E6FFEE;
   margin-top: 2rem;
 }
 
-#example .edit-btn,
-#example .view-btn {
+table .edit-btn,
+table .view-btn {
   background-color: #0B7B31;
   color: white;
   width: 1.5rem;
@@ -437,8 +446,8 @@ thead {
   padding: 0rem;
 }
 
-#example .edit-btn:focus,
-#example .view-btn:focus,
+table .edit-btn:focus,
+table .view-btn:focus,
 .style1-button:focus,
 .style2-button:focus,
 .style3-button:focus {
@@ -550,6 +559,15 @@ label.required::after {
 #edit-info .map {
   height: 85%;
   width: 100%;
+}
+
+.ads-report-table td:nth-child(2),
+.ads-report-table td:nth-child(8),
+.adsloc-report-table td:nth-child(2),
+.adsloc-report-table td:nth-child(8),
+.loc-report-table td:nth-child(2),
+.loc-report-table td:nth-child(8){
+  text-align: center
 }
 
 /* PHAN HE SO: side-navbar */

@@ -59,28 +59,25 @@ appCanBo.get('/', function(req, res) {
 });
 
 appCanBo.get('/adsLocation', function(req, res) {
-  res.render('CanBo/adsLocation');
+  res.render('CanBo/PhuongQuan/adsLocation');
 });
 
 appCanBo.get('/ads', function(req, res) {
-  res.render('CanBo/ads');
+  res.render('CanBo/PhuongQuan/ads');
 });
 
 appCanBo.get('/report', function(req, res) {
-  res.render('CanBo/report');
+  res.render('CanBo/PhuongQuan/report');
 });
 
 appCanBo.get('/createAds', function(req, res) {
-  res.render('CanBo/createAds');
+  res.render('CanBo/PhuongQuan/createAds');
 });
 
 appCanBo.get('/account', function(req, res) {
   res.render('CanBo/account');
 });
 
-// appCanBo.get('/adslocation', function(req, res) {
-//   res.render('CanBo/adsLocation');
-// });
 
 
 

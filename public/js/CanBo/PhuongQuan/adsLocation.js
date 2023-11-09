@@ -202,8 +202,8 @@ $(document).ready(function () {
             else{
               var formData = new FormData();
               formData.append('id_ads_location', click_row + 1);
-              formData.append('latitude', latitude);
-              formData.append('longitude', longitude);
+              formData.append('latitude', null);
+              formData.append('longitude', null);
               formData.append('address', null);
               formData.append('id_ward', null);
               formData.append('id_district', null);
