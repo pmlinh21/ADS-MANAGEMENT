@@ -7,19 +7,12 @@ $(document).ready(function () {
     const email = "nnlien21@clc.fitus.edu.vn"
     const id_district = 1;
     mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
-  
-    var loc_type, ads_type
+    
+    var board_type
     var info, filter_info, wards
 
-    $.get(`http://localhost:8080/api/quan/getLocType`, function(data) {
-        loc_type = data.content
-        // console.log(loc_type);
-      }).fail(function(error) {
-        console.log(error);
-      });
-
-    $.get(`http://localhost:8080/api/quan/getAdsType`, function(data) {
-        ads_type = data.content
+    $.get(`http://localhost:8080/api/quan/getBoardType`, function(data) {
+      board_type = data.content
       }).fail(function(error) {
         console.log(error);
       });
@@ -37,17 +30,19 @@ $(document).ready(function () {
         console.log(error);
       });
 
-      $.get(`http://localhost:8080/api/quan/getAdsLocation/${id_district}`, function(data) {
+      $.get(`http://localhost:8080/api/quan/getAds/${id_district}`, function(data) {
         console.log("~");
         info = data.content.map(function(data){
-          let {id_ads_location, address, ward, loc_type, ads_type, 
-            photo, is_zoning, longitude, latitude} = data
-          let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
+          let {id_ads, id_ads_location, address, ward, loc_type, board_type, photo,
+            width, height, quantity, expired_date, longitude, latitude } = data
           id_ads_location = parseInt(id_ads_location)
-          return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, photo, longitude, latitude]
+          id_ads = parseInt(id_ads)
+          return [id_ads, board_type, `${address}, phường ${ward}`, loc_type, `${width}m x ${height}m`, quantity, 
+          validateSQLDate(expired_date), photo, id_ads_location, ward, longitude, latitude]
         })
         filter_info = [...info]
-        $("#example").DataTable({
+        console.log(info);
+        $("#example.ads-table").DataTable({
           ordering: false,
           lengthChange: false,
           searching: false,
@@ -55,14 +50,14 @@ $(document).ready(function () {
           pageLength: 5,
           columnDefs: [
             {
-                targets: 6, // Last column (Action column)
+                targets: 7, // Last column (Action column)
                 data: null,
                 width: "2rem",
                 className: 'btn-cell',
                 defaultContent: '<button data-target="#view-image" data-toggle="modal" class="btn view-btn"><i class="fa-solid fa-eye"></i></button>'
             },
             {
-              targets: 7, // Last column (Action column)
+              targets: 8, // Last column (Action column)
               data: null,
               width: "2rem",
               className: 'btn-cell',
@@ -81,18 +76,18 @@ $(document).ready(function () {
     
           if ($(this).is(':checked')) {
             for (var i = 0; i < info.length; i++){
-              if (info[i][2] == wards[id_ward])
+              if (info[i][9] == wards[id_ward])
               filter_info.push(info[i]);
             }
           } else {
             var result = []
             for (var i = 0; i < filter_info.length; i++){
-              if (filter_info[i][2] != wards[id_ward])
+              if (filter_info[i][9] != wards[id_ward])
                 result.push(filter_info[i]);
             }
             filter_info = [...result]
           }
-          $("#example").DataTable().clear().rows.add(filter_info.sort(function(a, b) {
+          $("#example.ads-table").DataTable().clear().rows.add(filter_info.sort(function(a, b) {
             return a[0] - b[0];
           })).draw();
           return
@@ -101,26 +96,21 @@ $(document).ready(function () {
         $('.view-btn').on('click', function(){
           let row = $(this).closest('tr').index();
           console.log(row);
-          $('#view-image .photo').attr('src', `../../../public/image/${info[row][6]}`);
+          $('#view-image .photo').attr('src', `../../../public/image/${info[row][7]}`);
         })
 
         $('.edit-btn').on('click', function(e){
           var click_row = $(this).closest('tr').index();
-          var ward, district, result, longitude, latitude, imageData, photo
+          // var ward, district, result, longitude, latitude
 
-          // console.log(click_row);
-          loc_type?.forEach(function(type){
-            $('#id_loc_type').append(`<option value=${type.id_loc_type}>${type.loc_type}</option>`);
-          })
-    
-          ads_type?.forEach(function(type){
-            $('#id_ads_type').append(`<option value=${type.id_ads_type}>${type.ads_type}</option>`);
+          board_type?.forEach(function(type){
+            $('#id_board_type').append(`<option value=${type.id_board_type}>${type.board_type}</option>`);
           })
 
           var map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v11',
-            center: [info[click_row][7], info[click_row][8]],
+            center: [info[click_row][10], info[click_row][11]],
             zoom: 17
           });
 
@@ -129,93 +119,77 @@ $(document).ready(function () {
             mapboxgl: mapboxgl,
           });
 
-          $('#search').append(geocoder.onAdd(map));
+          // $('#search').append(geocoder.onAdd(map));
 
-          $(".header-map i").on('click', geocoding);
-          $('#search').on('keydown', function(event) {
-            if (event.keyCode === 13) { // Kiểm tra phím Enter
-              geocoding();
-            }
-          });
+          // $(".header-map i").on('click', geocoding);
+          // $('#search').on('keydown', function(event) {
+          //   if (event.keyCode === 13) { // Kiểm tra phím Enter
+          //     geocoding();
+          //   }
+          // });
 
-          function geocoding(){
-            var address = $('#search').val()
+      //     function geocoding(){
+      //       var address = $('#search').val()
 
-            $.ajax({
-              url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(address) + '.json',
-              type: 'GET',
-              data: {
-                access_token: mapboxgl.accessToken
-              },
-              success: function(response) {
-                // Xử lý kết quả geocoding
-                var features = response.features;
-                if (features.length > 0) {
-                  var firstFeature = features[0];
-                  var coordinates = firstFeature.center;
+      //       $.ajax({
+      //         url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(address) + '.json',
+      //         type: 'GET',
+      //         data: {
+      //           access_token: mapboxgl.accessToken
+      //         },
+      //         success: function(response) {
+      //           // Xử lý kết quả geocoding
+      //           var features = response.features;
+      //           if (features.length > 0) {
+      //             var firstFeature = features[0];
+      //             var coordinates = firstFeature.center;
 
-                  result = firstFeature.place_name;
-                  // ward = firstFeature.context[0];
-                  // district = firstFeature.context[1];
-                  longitude = coordinates[0];
-                  latitude= coordinates[1]
+      //             result = firstFeature.place_name;
+      //             // ward = firstFeature.context[0];
+      //             // district = firstFeature.context[1];
+      //             longitude = coordinates[0];
+      //             latitude= coordinates[1]
 
 
-                  // Cập nhật tọa độ và zoom của map
-                  map.flyTo({
-                    center: coordinates,
-                    zoom: 17
-                  });
-                  $("#address").val(`${result} [${coordinates[0]}, ${coordinates[1]}]` )
-                  console.log(firstFeature)
-                } else {
-                  alert('No results found');
-                }
-              },
-              error: function() {
-                alert('Error occurred during geocoding');
-              }
-            });
-          }
+      //             // Cập nhật tọa độ và zoom của map
+      //             map.flyTo({
+      //               center: coordinates,
+      //               zoom: 17
+      //             });
+      //             $("#address").val(`${result} [${coordinates[0]}, ${coordinates[1]}]` )
+      //             console.log(firstFeature)
+      //           } else {
+      //             alert('No results found');
+      //           }
+      //         },
+      //         error: function() {
+      //           alert('Error occurred during geocoding');
+      //         }
+      //       });
+      //     }
           
-          $('#photo').on('change', function(e) {
-            if (e.target.files[0])
-            if (e.target.files[0].type.startsWith('image/') &&  e.target.files[0].size / 1024 <= 4*1024){
-              imageData = e.target.files[0]
-            }
-            else if (!e.target.files[0].type.startsWith('image/')){
-              alert('Avatar must be an image file (.jpg, .png, .jpeg)')
-            }
-            else if (!(e.target.files[0].size / 1024 <= 4)){
-              alert('Avatar must not exceed 4MB')
-            }
-          });
-
           $('#edit-info .style1-button').off('click').on('click', function(e) {
             e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
             
-            // console.log(click_row);
+      //       // console.log(click_row);
             let reason = $('#reason').val();
             if (!reason){
               alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
             }
             else{
               var formData = new FormData();
-              formData.append('id_ads_location', click_row + 1);
-              formData.append('latitude', latitude);
-              formData.append('longitude', longitude);
-              formData.append('address', null);
-              formData.append('id_ward', null);
-              formData.append('id_district', null);
-              formData.append('id_loc_type', $('#id_loc_type').val());
-              formData.append('file', imageData);
-              formData.append('id_ads_type', $('#id_ads_type').val());
-              formData.append('is_zoning', $('#is_zoning').val());
+              formData.append('id_ads', click_row + 1);
+              formData.append('id_ads_location', null);
+              formData.append('id_board_type', $('#id_board_type').val());
+              formData.append('quantity', $('#quantity').val());
+              formData.append('width', $('#width').val());
+              formData.append('height', $('#height').val());
+              formData.append('expired_date', $('#expired_date').val() );
               formData.append('req_time', validateDate(new Date()));
               formData.append('reason', $('#reason').val());
               formData.append('office', role);
     
-              // console.log($('#photo').val());
+              console.log(formData);
               $("form").get(0).reset();
               $("#edit-info").modal("hide")
     

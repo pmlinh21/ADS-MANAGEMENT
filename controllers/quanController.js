@@ -112,19 +112,17 @@ const getAdsLocation = async(req, res) =>{
     }
 } 
 
-//
 const getAds = async(req, res) =>{
     try{
         let { id_district } = req.params;
 
         const [data, metadata] = await sequelize.query
-            (`SELECT *
-            FROM Ads 
-            WHERE Ads.id_ads_location IN (
-                SELECT id_ads_location
-                FROM Ads_location
-                WHERE Ads_location.id_district = ${id_district}
-            )`);
+            (`SELECT a.*, al.address, al.longitude, al.latitude, w.ward, l.loc_type, b.board_type
+            FROM Ads a
+            INNER JOIN Board_type b ON a.id_board_type = b.id_board_type
+            INNER JOIN Ads_location al ON a.id_ads_location = al.id_ads_location AND al.id_district = ${id_district}
+            INNER JOIN Ward w ON w.id_ward = al.id_ward
+            INNER JOIN Location_type l ON al.id_loc_type = l.id_loc_type`);
 
         sucessCode(res,data,"Get thành công")
 
@@ -139,14 +137,12 @@ const getAdsLocReport = async(req, res) =>{
         let { id_district } = req.params;
 
         const [data, metadata] = await sequelize.query
-            (`SELECT *
-            FROM Ads_loc_report 
-            WHERE Ads_loc_report.id_ads_location IN (
-                SELECT id_ads_location
-                FROM Ads_location
-                WHERE Ads_location.id_district = ${id_district}
-            )`);
-
+            (`SELECT alr.*, rt.report_type
+            FROM Ads_loc_report alr
+            INNER JOIN Report_type rt ON rt.id_report_type = alr.id_report_type
+            INNER JOIN Ads_location al ON al.id_ads_location = alr.id_ads_location
+            WHERE al.id_district = ${id_district}
+            `);
         sucessCode(res,data,"Get thành công")
 
     }catch(err){
@@ -160,14 +156,12 @@ const getAdsReport = async(req, res) =>{
         let { id_district } = req.params;
 
         const [data, metadata] = await sequelize.query
-            (`SELECT *
-            FROM Ads_report 
-            WHERE Ads_report.id_ads IN (
-                SELECT id_ads
-                FROM Ads a
-                INNER JOIN Ads_location al 
-                ON a.id_ads_location = al.id_ads_location AND al.id_district = ${id_district}
-            )`);
+            (`SELECT ar.*
+            FROM Ads_report ar
+            INNER JOIN Report_type rt ON rt.id_report_type = ar.id_report_type
+            INNER JOIN Ads a ON a.id_ads = ar.id_ads
+            INNER JOIN Ads_location al ON al.id_ads_location = a.id_ads_location
+            WHERE al.id_district = ${id_district}`);
         sucessCode(res,data,"Get thành công")
 
     }catch(err){
@@ -178,92 +172,188 @@ const getAdsReport = async(req, res) =>{
 //
 const getLocReport = async(req, res) =>{
     try{
-        // let { id_district } = req.params;
+        let { id_district } = req.params;
 
-        // let data = await model.Ads_location.findAll({
-        //     where:{
-        //         id_district
-        //     }
-        // });
-        // sucessCode(res,data,"Get thành công")
+        const [data, metadata] = await sequelize.query
+            (`SELECT lr.*
+            FROM Location_report lr
+            INNER JOIN Report_type rt ON rt.id_report_type = lr.id_report_type
+            INNER JOIN Ward w ON w.id_ward = lr.id_ward
+            WHERE w.id_district = ${id_district}`);
+        sucessCode(res,data,"Get thành công")
 
     }catch(err){
         errorCode(res,"Lỗi BE")
     }
 }  
 
-const updateAdsLoc = async(req, res) =>{
+//
+const getAdsCreate = async(req, res) =>{
     try{
-        let { email } = req.params;
+        let { id_district } = req.params;
 
-        const obj = validateObj(req.body)
+        const [data, metadata] = await sequelize.query
+        (`SELECT ac.*, bt.board_type
+        FROM Ads_create ac
+        INNER JOIN Board_type bt ON bt.id_board_type = ac.id_board_type
+        INNER JOIN Ads_location al ON al.id_ads_location = ac.id_ads_location
+        WHERE al.id_district = ${id_district}`);
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
 
-        let { id_ads_location, latitude, longitude, address, id_ward, id_district, 
-            id_loc_type, photo, id_ads_type, is_zoning, req_time, reason, office} = obj
-    
-        const data = await model.Ads_loc_update.create({
-            id_ads_location, latitude, longitude, address, id_ward, id_district, 
-            id_loc_type, photo, id_ads_type, is_zoning, req_time, reason, office,
-            officer: email,
-            status: 0
-        });
+//
+const updateInfo = async(req, res) =>{
+    try{
+        let { id_district } = req.params;
 
-        sucessCode(res,data, "Create thành công")
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
+//
+const updatePassword = async(req, res) =>{
+    try{
+        let { id_district } = req.params;
 
     }catch(err){
         errorCode(res,"Lỗi BE")
     }
 } 
 
-// const getAdsLocation = async(req, res) =>{
-//     try{
-//         let { id_district } = req.params;
+//
+const forgetPassword = async(req, res) =>{
+    try{
+        let { id_district } = req.params;
 
-//         let data = await model.Ads_location.findAll({
-//             where:{
-//                 id_district
-//             }
-//         });
-//         sucessCode(res,data,"Get thành công")
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+} 
 
-//     }catch(err){
-//         errorCode(res,"Lỗi BE")
-//     }
-// } 
+//
+const updateAdsLoc = async(req, res) =>{
+    try{
+        let { email } = req.params;
+        const file = req.file;
+        const obj = validateObj(req.body)
 
-// const getAdsLocation = async(req, res) =>{
-//     try{
-//         let { id_district } = req.params;
+        let { id_ads_location, latitude, longitude, address, id_ward, id_district, 
+            id_loc_type, id_ads_type, is_zoning, req_time, reason, office} = obj
 
-//         let data = await model.Ads_location.findAll({
-//             where:{
-//                 id_district
-//             }
-//         });
-//         sucessCode(res,data,"Get thành công")
+        const data = await model.Ads_loc_update.create({
+            id_ads_location, latitude, longitude, address, id_ward, id_district, 
+            id_loc_type, id_ads_type, is_zoning, req_time, reason, office,
+            officer: email,
+            photo: file.filename,
+            status: 0
+        });
 
-//     }catch(err){
-//         errorCode(res,"Lỗi BE")
-//     }
-// } 
+        sucessCode(res,"", "Create thành công")
 
-// const getAdsLocation = async(req, res) =>{
-//     try{
-//         let { id_district } = req.params;
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+} 
 
-//         let data = await model.Ads_location.findAll({
-//             where:{
-//                 id_district
-//             }
-//         });
-//         sucessCode(res,data,"Get thành công")
+//
+const updateAds = async(req, res) =>{
+    try{
+        let { email } = req.params;
 
-//     }catch(err){
-//         errorCode(res,"Lỗi BE")
-//     }
-// } 
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+} 
+
+//
+const updateAdsLocReport = async(req, res) =>{
+    try{
+        let { id_req } = req.params;
+        const obj = validateObj(req.body)
+
+        let { status, resolve, office, officer} = obj
+        let data = await model.Ads_loc_report.update({
+            office, officer, resolve, status
+        },{
+            where:{
+                id_req
+            }
+        });
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+} 
+
+//
+const updateAdsReport = async(req, res) =>{
+    try{
+        let { id_req } = req.params;
+        const obj = validateObj(req.body)
+
+        let { status, resolve, office, officer} = obj
+        let data = await model.Ads_report.update({
+            office, officer, resolve, status
+        },{
+            where:{
+                id_req
+            }
+        });
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+} 
+
+//
+const updateLocReport = async(req, res) =>{
+    try{
+        let { id_req } = req.params;
+        const obj = validateObj(req.body)
+
+        let { status, resolve, office, officer} = obj
+        let data = await model.Location_report.update({
+            office, officer, resolve, status
+        },{
+            where:{
+                id_req
+            }
+        });
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+} 
+
+//
+const createAds = async(req, res) =>{
+    try{
+        let { id_district } = req.params;
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+} 
+
+// xóa hình ảnh nếu có
+const deleteAdsCreate = async(req, res) =>{
+    try{
+        let { id_district } = req.params;
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+} 
 
 module.exports = { getLocType, getAdsType, getBoardType,
-    getInfo, getWard,
-    getAdsLocation, getAds, updateAdsLoc,
-    getAdsLocReport, getAdsReport, getLocReport}
+    getInfo, getWard, updateInfo, updatePassword, forgetPassword,
+    getAdsLocation, getAds, updateAdsLoc, updateAds,
+    getAdsLocReport, getAdsReport, getLocReport,
+    updateAdsLocReport, updateAdsReport, updateLocReport,
+    getAdsCreate, createAds, deleteAdsCreate}
