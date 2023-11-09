@@ -1,3 +1,5 @@
+// caption cho từng bảng
+
 $(document).ready(function () {
     // 1 = Quan, 2 = Phuong
     const role = 1; 
@@ -26,8 +28,6 @@ $(document).ready(function () {
           let {id_report, id_ads, report_type, fullname, email, phone, content,
             photo1, photo2, report_time, status, resolve, ward } = data
           let statusText = status ? "Đã xử lí" : "Chưa xử lí"
-          id_report = parseInt(id_report);
-          // console.log(id_report);
           return [id_report, id_ads, report_type, fullname, email, phone, 
           validateSQLDate(report_time), statusText, 
           '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>', 
@@ -38,10 +38,6 @@ $(document).ready(function () {
         // console.log(info);
 
         $(".ads-report-table").DataTable({
-          // ordering: false,
-          // lengthChange: false,
-          // searching: false,
-          // info: false,
           pageLength: 6,
           data: ads_info
           });
@@ -103,10 +99,6 @@ $(document).ready(function () {
         // console.log(info2);
 
         $(".adsloc-report-table").DataTable({
-          // ordering: false,
-          // lengthChange: false,
-          // searching: false,
-          // info: false,
           pageLength: 6,
           data: adsloc_info
           });
@@ -163,10 +155,6 @@ $(document).ready(function () {
         // console.log(info);
 
         $("#example.loc-report-table").DataTable({
-          // ordering: false,
-          // lengthChange: false,
-          // searching: false,
-          // info: false,
           pageLength: 6,
           data: loc_info
           });

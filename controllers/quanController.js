@@ -195,11 +195,15 @@ const getAdsCreate = async(req, res) =>{
         let { id_district } = req.params;
 
         const [data, metadata] = await sequelize.query
-        (`SELECT ac.*, bt.board_type
+        (`SELECT ac.*, bt.board_type, w.ward
         FROM Ads_create ac
         INNER JOIN Board_type bt ON bt.id_board_type = ac.id_board_type
         INNER JOIN Ads_location al ON al.id_ads_location = ac.id_ads_location
+        INNER JOIN Ward w ON w.id_ward = al.id_ward
         WHERE al.id_district = ${id_district}`);
+        
+        sucessCode(res,data,"Get thành công")
+
     }catch(err){
         errorCode(res,"Lỗi BE")
     }

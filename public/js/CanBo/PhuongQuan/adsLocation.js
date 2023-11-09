@@ -48,11 +48,6 @@ $(document).ready(function () {
         })
         filter_info = [...info]
         $("#example").DataTable({
-          ordering: false,
-          lengthChange: false,
-          searching: false,
-          info: false,
-          pageLength: 5,
           columnDefs: [
             {
                 targets: 6, // Last column (Action column)

@@ -71,7 +71,7 @@ appCanBo.get('/report', function(req, res) {
 });
 
 appCanBo.get('/createAds', function(req, res) {
-  res.render('CanBo/PhuongQuan/createAds');
+  res.render('CanBo/PhuongQuan/adsCreate');
 });
 
 appCanBo.get('/account', function(req, res) {
