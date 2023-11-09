@@ -366,6 +366,7 @@ button:active,
   gap: 0.5rem;
   color: #0B7B31;
   font-weight: 700;
+  font-size: 1rem;
 }
 
 .ward-table input {
@@ -436,8 +437,17 @@ thead {
   margin-top: 2rem;
 }
 
+table .caption{
+    font-weight: 900;
+    text-align: center;
+    color: #0B7B31;
+    font-size: 1rem;
+}
+
 table .edit-btn,
-table .view-btn {
+table .view-btn,
+table .edit-btn:hover,
+table .view-btn:hover {
   background-color: #0B7B31;
   color: white;
   width: 1.5rem;
@@ -452,6 +462,7 @@ table .view-btn:focus,
 .style2-button:focus,
 .style3-button:focus {
   box-shadow: none;
+  color: white;
 }
 
 .page-item .page-link {
