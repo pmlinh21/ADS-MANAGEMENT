@@ -1,152 +1,178 @@
 // QUẬN
 
 let getAdsLocation = {
-    message: "Get thành công",
-    content: [
-      {
-        id_ads_location: 1,
-        address: "59 Nguyễn Thị Minh Khai",
-        ward: "Bến Thành",
-        loc_type: "Đất tư nhân/Nhà ở riêng lẻ",
-        ads_type: "Cổ động chính trị",
-        is_zoning: 1,
-        photo: "image1.png",
-        longitude: 106.69,
-        latitude: 10.7737
-      },
-      {
-        id_ads_location: 2,
-        address: "70 Phạm Hồng Thái",
-        ward: "Bến Thành",
-        loc_type: "Đất tư nhân/Nhà ở riêng lẻ",
-        ads_type: "Xã hội hoá",
-        is_zoning: 0,
-        photo: "image2.png",
-        longitude: 106.694,
-        latitude: 10.7714
-      },
-      {
-        id_ads_location: 3,
-        address: "84 Lê Lai",
-        ward: "Phạm Ngũ Lão",
-        loc_type: "Trung tâm thương mại",
-        ads_type: "Xã hội hoá",
-        is_zoning: 0,
-        photo: "image3.png",
-        longitude: 106.694,
-        latitude: 10.7701
-      },
-      {
-        id_ads_location: 8,
-        address: "2 Bùi Thị Xuân",
-        ward: "Bến Thành",
-        loc_type: "Cây xăng",
-        ads_type: "Xã hội hoá",
-        is_zoning: 0,
-        photo: "image1.png",
-        longitude: 106.691,
-        latitude: 10.7726
-      },
-      {
-        id_ads_location: 13,
-        address: "1 Bùi Thị Xuân",
-        ward: "Bến Thành",
-        loc_type: "Đất tư nhân/Nhà ở riêng lẻ",
-        ads_type: "Xã hội hoá",
-        is_zoning: 0,
-        photo: "image2.png",
-        longitude: 106.691,
-        latitude: 10.7726
-      },
-      {
-        id_ads_location: 14,
-        address: "59 Nguyễn Thị Minh Khai",
-        ward: "Bến Thành",
-        loc_type: "Trung tâm thương mại",
-        ads_type: "Cổ động chính trị",
-        is_zoning: 1,
-        photo: "image3.png",
-        longitude: 106.69,
-        latitude: 10.7744
-      },
-      {
-        id_ads_location: 15,
-        address: "161-141 Nguyễn Du",
-        ward: "Bến Thành",
-        loc_type: "Đất tư nhân/Nhà ở riêng lẻ",
-        ads_type: "Cổ động chính trị",
-        is_zoning: 1,
-        photo: "image1.png",
-        longitude: 106.692,
-        latitude: 10.7721
-      },
-      {
-        id_ads_location: 18,
-        address: "66 Trương Định",
-        ward: "Bến Thành",
-        loc_type: "Trung tâm thương mại",
-        ads_type: "Quảng cáo thương mại",
-        is_zoning: 1,
-        photo: "image2.png",
-        longitude: 106.695,
-        latitude: 10.7729
-      },
-      {
-        id_ads_location: 20,
-        address: "14 Alexandre de Rhodes",
-        ward: "Bến Nghé",
-        loc_type: "Nhà chờ xe buýt",
-        ads_type: "Cổ động chính trị",
-        is_zoning: 0,
-        photo: "image3.png",
-        longitude: 106.696,
-        latitude: 10.7792
-      },
-      {
-        id_ads_location: 21,
-        address: "108 Nguyễn Du",
-        ward: "Bến Thành",
-        loc_type: "Nhà chờ xe buýt",
-        ads_type: "Xã hội hoá",
-        is_zoning: 1,
-        photo: "image1.png",
-        longitude: 106.697,
-        latitude: 10.7756
-      },
-      {
-        id_ads_location: 22,
-        address: "55-53 Nguyễn Thị Minh Khai",
-        ward: "Bến Nghé",
-        loc_type: "Trung tâm thương mại",
-        ads_type: "Cổ động chính trị",
-        is_zoning: 1,
-        photo: "image2.png",
-        longitude: 106.695,
-        latitude: 10.7796
-      },
-      {
-        id_ads_location: 23,
-        address: "132 Nam Kỳ Khởi Nghĩa",
-        ward: "Bến Thành",
-        loc_type: "Đất công/Công viên/Hành lang an toàn giao thông",
-        ads_type: "Quảng cáo thương mại",
-        is_zoning: 1,
-        photo: "image3.png",
-        longitude: 106.698,
-        latitude: 10.7769
-      },
-      {
-        id_ads_location: 24,
-        address: "550 Lý Tự Trọng",
-        ward: "Bến Thành",
-        loc_type: "Chợ",
-        ads_type: "Xã hội hoá",
-        is_zoning: 1,
-        photo: "image1.png",
-        longitude: 106.694,
-        latitude: 10.7717
-      }
-    ]
+  message: "Get thành công",
+  content: [
+    {
+      id_ads_location: 1,
+      address: "59 Nguyễn Thị Minh Khai",
+      ward: "Bến Thành",
+      loc_type: "Đất tư nhân/Nhà ở riêng lẻ",
+      ads_type: "Cổ động chính trị",
+      is_zoning: 1,
+      photo: "image1.png",
+      longitude: 106.69,
+      latitude: 10.7737,
+      hasAds: 2,
+      hasReport: 2
+    },
+    {
+      id_ads_location: 2,
+      address: "70 Phạm Hồng Thái",
+      ward: "Bến Thành",
+      loc_type: "Đất tư nhân/Nhà ở riêng lẻ",
+      ads_type: "Xã hội hoá",
+      is_zoning: 0,
+      photo: "image2.png",
+      longitude: 106.694,
+      latitude: 10.7714,
+      hasAds: 1,
+      hasReport: 0
+    },
+    {
+      id_ads_location: 3,
+      address: "84 Lê Lai",
+      ward: "Phạm Ngũ Lão",
+      loc_type: "Trung tâm thương mại",
+      ads_type: "Xã hội hoá",
+      is_zoning: 0,
+      photo: "image3.png",
+      longitude: 106.694,
+      latitude: 10.7701,
+      hasAds: 3,
+      hasReport: 3
+    },
+    {
+      id_ads_location: 8,
+      address: "2 Bùi Thị Xuân",
+      ward: "Bến Thành",
+      loc_type: "Cây xăng",
+      ads_type: "Xã hội hoá",
+      is_zoning: 0,
+      photo: "image1.png",
+      longitude: 106.691,
+      latitude: 10.7726,
+      hasAds: 1,
+      hasReport: 1
+    },
+    {
+      id_ads_location: 13,
+      address: "1 Bùi Thị Xuân",
+      ward: "Bến Thành",
+      loc_type: "Đất tư nhân/Nhà ở riêng lẻ",
+      ads_type: "Xã hội hoá",
+      is_zoning: 0,
+      photo: "image2.png",
+      longitude: 106.691,
+      latitude: 10.7726,
+      hasAds: 1,
+      hasReport: 1
+    },
+    {
+      id_ads_location: 14,
+      address: "59 Nguyễn Thị Minh Khai",
+      ward: "Bến Thành",
+      loc_type: "Trung tâm thương mại",
+      ads_type: "Cổ động chính trị",
+      is_zoning: 1,
+      photo: "image3.png",
+      longitude: 106.69,
+      latitude: 10.7744,
+      hasAds: 1,
+      hasReport: 0
+    },
+    {
+      id_ads_location: 15,
+      address: "161-141 Nguyễn Du",
+      ward: "Bến Thành",
+      loc_type: "Đất tư nhân/Nhà ở riêng lẻ",
+      ads_type: "Cổ động chính trị",
+      is_zoning: 1,
+      photo: "image1.png",
+      longitude: 106.692,
+      latitude: 10.7721,
+      hasAds: 2,
+      hasReport: 0
+    },
+    {
+      id_ads_location: 18,
+      address: "66 Trương Định",
+      ward: "Bến Thành",
+      loc_type: "Trung tâm thương mại",
+      ads_type: "Quảng cáo thương mại",
+      is_zoning: 1,
+      photo: "image2.png",
+      longitude: 106.695,
+      latitude: 10.7729,
+      hasAds: 0,
+      hasReport: 2
+    },
+    {
+      id_ads_location: 20,
+      address: "14 Alexandre de Rhodes",
+      ward: "Bến Nghé",
+      loc_type: "Nhà chờ xe buýt",
+      ads_type: "Cổ động chính trị",
+      is_zoning: 0,
+      photo: "image3.png",
+      longitude: 106.696,
+      latitude: 10.7792,
+      hasAds: 6,
+      hasReport: 6
+    },
+    {
+      id_ads_location: 21,
+      address: "108 Nguyễn Du",
+      ward: "Bến Thành",
+      loc_type: "Nhà chờ xe buýt",
+      ads_type: "Xã hội hoá",
+      is_zoning: 1,
+      photo: "image1.png",
+      longitude: 106.697,
+      latitude: 10.7756,
+      hasAds: 0,
+      hasReport: 2
+    },
+    {
+      id_ads_location: 22,
+      address: "55-53 Nguyễn Thị Minh Khai",
+      ward: "Bến Nghé",
+      loc_type: "Trung tâm thương mại",
+      ads_type: "Cổ động chính trị",
+      is_zoning: 1,
+      photo: "image2.png",
+      longitude: 106.695,
+      latitude: 10.7796,
+      hasAds: 2,
+      hasReport: 2
+    },
+    {
+      id_ads_location: 23,
+      address: "132 Nam Kỳ Khởi Nghĩa",
+      ward: "Bến Thành",
+      loc_type: "Đất công/Công viên/Hành lang an toàn giao thông",
+      ads_type: "Quảng cáo thương mại",
+      is_zoning: 1,
+      photo: "image3.png",
+      longitude: 106.698,
+      latitude: 10.7769,
+      hasAds: 0,
+      hasReport: 0
+    },
+    {
+      id_ads_location: 24,
+      address: "550 Lý Tự Trọng",
+      ward: "Bến Thành",
+      loc_type: "Chợ",
+      ads_type: "Xã hội hoá",
+      is_zoning: 1,
+      photo: "image1.png",
+      longitude: 106.694,
+      latitude: 10.7717,
+      hasAds: 0,
+      hasReport: 1
+    }
+  ]
 }
 
 let getAds = {

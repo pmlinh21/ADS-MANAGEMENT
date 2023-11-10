@@ -357,6 +357,34 @@ button:active,
   color: #0B7B31;
 }
 
+#map{
+  position: relative;
+  top: 3.5rem;
+  height: calc(100% - 3.5rem)
+}
+
+.custom-marker {
+  cursor: pointer;
+}
+
+.mapboxgl-popup-tip{
+  display: none;
+}
+
+.popup-content{
+  font-family: Montserrat;
+}
+
+.popup-content p{
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+}
+
+.popup-content img{
+  width: 100%;
+  margin-top: 5%
+}
+
 /*adsLocation.ejs*/
 .title-page {
   display: flex;

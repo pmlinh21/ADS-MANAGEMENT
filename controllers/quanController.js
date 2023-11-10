@@ -98,12 +98,16 @@ const getAdsLocation = async(req, res) =>{
 
         const [data, metadata] = await sequelize.query
             (`SELECT al.id_ads_location, al.address, w.ward, lt.loc_type, at.ads_type, al.is_zoning, 
-            al.photo, al.longitude, al.latitude
+            al.photo, al.longitude, al.latitude, COUNT(a.id_ads) as hasAds, COUNT(alr.id_report) as hasReport
             FROM Ads_location al
             INNER JOIN Ward w ON al.id_ward = w.id_ward
             INNER JOIN Location_type lt ON lt.id_loc_type = al.id_loc_type 
             INNER JOIN Ads_type at ON at.id_ads_type = al.id_ads_type
+            LEFT JOIN Ads a ON a.id_ads_location = al.id_ads_location
+            LEFT JOIN Ads_loc_report alr ON alr.id_ads_location = al.id_ads_location
             WHERE al.id_district = ${id_district}
+            GROUP BY al.id_ads_location, al.address, w.ward, lt.loc_type, at.ads_type, al.is_zoning, 
+            al.photo, al.longitude, al.latitude
             ORDER BY al.id_ads_location`);
         sucessCode(res,data,"Get thành công")
 

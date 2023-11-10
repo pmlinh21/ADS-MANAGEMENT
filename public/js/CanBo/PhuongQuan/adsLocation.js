@@ -96,7 +96,7 @@ $(document).ready(function () {
         $('.view-btn').on('click', function(){
           let row = $(this).closest('tr').index();
           console.log(row);
-          $('#view-image .photo').attr('src', `../../../public/image/${info[row][6]}`);
+          $('#view-image .photo').attr('src', `../../../../public/image/${info[row][6]}`);
         })
 
         $('.edit-btn').on('click', function(e){
