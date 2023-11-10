@@ -357,7 +357,7 @@ button:active,
   color: #0B7B31;
 }
 
-#map{
+body > #map{
   position: relative;
   top: 3.5rem;
   height: calc(100% - 3.5rem)
@@ -598,6 +598,7 @@ label.required::after {
 #edit-info .map {
   height: 85%;
   width: 100%;
+  cursor: pointer
 }
 
 .ads-report-table td:nth-child(2),
@@ -605,7 +606,9 @@ label.required::after {
 .adsloc-report-table td:nth-child(2),
 .adsloc-report-table td:nth-child(8),
 .loc-report-table td:nth-child(2),
-.loc-report-table td:nth-child(8){
+.loc-report-table td:nth-child(8),
+.ads-table td:nth-child(6),
+.ads-create-table td:nth-child(8){
   text-align: center
 }
 

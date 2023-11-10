@@ -50,7 +50,23 @@ const getBoardType = async(req, res) =>{
     }
 }
 
-//
+const getAllAdsLoc = async(req, res) =>{
+    try{
+        const [data, metadata] = await sequelize.query
+        (`SELECT al.id_ads_location, al.address, al.longitude, al.latitude, 
+        w.ward, d.district
+        FROM Ads_location al
+        INNER JOIN Ward w ON al.id_ward = w.id_ward
+        INNER JOIN District d ON al.id_district = d.id_district
+        WHERE al.is_zoning = 1`);
+
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
 const getInfo = async(req, res) =>{
     try{
         let { email } = req.params;
@@ -135,7 +151,6 @@ const getAds = async(req, res) =>{
     }
 } 
 
-//
 const getAdsLocReport = async(req, res) =>{
     try{
         let { id_district } = req.params;
@@ -155,7 +170,6 @@ const getAdsLocReport = async(req, res) =>{
     }
 } 
 
-//
 const getAdsReport = async(req, res) =>{
     try{
         let { id_district } = req.params;
@@ -175,7 +189,6 @@ const getAdsReport = async(req, res) =>{
     }
 } 
 
-//
 const getLocReport = async(req, res) =>{
     try{
         let { id_district } = req.params;
@@ -193,13 +206,12 @@ const getLocReport = async(req, res) =>{
     }
 }  
 
-//
 const getAdsCreate = async(req, res) =>{
     try{
         let { id_district } = req.params;
 
         const [data, metadata] = await sequelize.query
-        (`SELECT ac.*, bt.board_type, w.ward
+        (`SELECT ac.*, bt.board_type, w.ward, al.address
         FROM Ads_create ac
         INNER JOIN Board_type bt ON bt.id_board_type = ac.id_board_type
         INNER JOIN Ads_location al ON al.id_ads_location = ac.id_ads_location
@@ -213,7 +225,6 @@ const getAdsCreate = async(req, res) =>{
     }
 }
 
-//
 const updateInfo = async(req, res) =>{
     try{
         let { id_district } = req.params;
@@ -223,7 +234,6 @@ const updateInfo = async(req, res) =>{
     }
 }
 
-//
 const updatePassword = async(req, res) =>{
     try{
         let { id_district } = req.params;
@@ -233,7 +243,7 @@ const updatePassword = async(req, res) =>{
     }
 } 
 
-//
+
 const forgetPassword = async(req, res) =>{
     try{
         let { id_district } = req.params;
@@ -243,7 +253,7 @@ const forgetPassword = async(req, res) =>{
     }
 } 
 
-//
+
 const updateAdsLoc = async(req, res) =>{
     try{
         let { email } = req.params;
@@ -257,28 +267,41 @@ const updateAdsLoc = async(req, res) =>{
             id_ads_location, latitude, longitude, address, id_ward, id_district, 
             id_loc_type, id_ads_type, is_zoning, req_time, reason, office,
             officer: email,
-            photo: file.filename,
+            photo: file?.filename,
             status: 0
         });
 
-        sucessCode(res,"", "Create thành công")
+        sucessCode(res,obj, "Create thành công")
 
     }catch(err){
         errorCode(res,"Lỗi BE")
     }
 } 
 
-//
 const updateAds = async(req, res) =>{
     try{
         let { email } = req.params;
+        const file = req.file;
+        const obj = validateObj(req.body)
+
+        let { id_ads, id_ads_location, id_board_type, quantity, width, height, 
+            expired_date, req_time, reason, office} = obj
+
+        const data = await model.Ads_update.create({
+            id_ads, id_ads_location, quantity, width, height, 
+            id_board_type, expired_date, req_time, reason, office,
+            officer: email,
+            photo: file?.filename,
+            status: 0
+        });
+        sucessCode(res,data, "Create thành công")
 
     }catch(err){
         errorCode(res,"Lỗi BE")
     }
 } 
 
-//
+
 const updateAdsLocReport = async(req, res) =>{
     try{
         let { id_req } = req.params;
@@ -299,7 +322,7 @@ const updateAdsLocReport = async(req, res) =>{
     }
 } 
 
-//
+
 const updateAdsReport = async(req, res) =>{
     try{
         let { id_req } = req.params;
@@ -320,7 +343,7 @@ const updateAdsReport = async(req, res) =>{
     }
 } 
 
-//
+
 const updateLocReport = async(req, res) =>{
     try{
         let { id_req } = req.params;
@@ -341,7 +364,7 @@ const updateLocReport = async(req, res) =>{
     }
 } 
 
-//
+
 const createAds = async(req, res) =>{
     try{
         let { id_district } = req.params;
@@ -351,7 +374,7 @@ const createAds = async(req, res) =>{
     }
 } 
 
-// xóa hình ảnh nếu có
+//  xóa hình ảnh nếu có
 const deleteAdsCreate = async(req, res) =>{
     try{
         let { id_district } = req.params;
@@ -362,6 +385,7 @@ const deleteAdsCreate = async(req, res) =>{
 } 
 
 module.exports = { getLocType, getAdsType, getBoardType,
+    getAllAdsLoc,
     getInfo, getWard, updateInfo, updatePassword, forgetPassword,
     getAdsLocation, getAds, updateAdsLoc, updateAds,
     getAdsLocReport, getAdsReport, getLocReport,

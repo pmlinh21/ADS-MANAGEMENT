@@ -58,7 +58,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="edit-info" tabindex="-1" role="dialog" aria-labelledby="edit-request" aria-hidden="true">
+    <div class="modal fade" id="edit-info" tabindex="-1" role="dialog" aria-labelledby="edit-request" 
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
         <div class="modal-header ">
@@ -69,7 +70,7 @@
 
                 <div class="col-md-6">
                     <div class=" col-md-12">
-                        <label for="search" class="col-form-label">Điểm đặt (nhập địa chỉ ở bên phải)</label>
+                        <label for="search" class="col-form-label">Điểm đặt </label>
                         <input type="text" class="form-control" id="address" value = "" readonly>
                     </div>
                     <div class="row">
@@ -81,7 +82,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="expired_date" class="col-form-label">Ngày hết hạn</label>
-                            <input type="text" class="form-control" id="expired_date">
+                            <input type="date" class="form-control" id="expired_date">
                         </div>
                     </div>
                     <div class="row">
@@ -112,10 +113,7 @@
 
                 <div class="col-md-6 mt-3 choose-location">
                     <div class="header-map">
-                        <label for = "search" class = "col-form-label">Nhập địa chỉ điểm đặt</label>
-                        <input type="text" class="form-control" id="search">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        
+                        <label for = "search" class = "col-form-label">Nhấn chọn điểm đặt</label>    
                     </div>
                     <div class="col-md-12 map bg-primary" id = "map"> </div>
                 </div>

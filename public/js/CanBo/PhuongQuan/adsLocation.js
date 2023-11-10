@@ -1,6 +1,7 @@
 //  lỗi hiển thị map
 // standard địa chỉ
 
+// gọi api
 $(document).ready(function () {
     // 1 = Quan, 2 = Phuong
     const role = 1; 
@@ -44,31 +45,23 @@ $(document).ready(function () {
             photo, is_zoning, longitude, latitude} = data
           let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
           id_ads_location = parseInt(id_ads_location)
-          return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, photo, longitude, latitude]
+          return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, 
+            '<button data-target="#view-image" data-toggle="modal" class="btn-cell btn view-btn"><i class="fa-solid fa-eye"></i></button>',
+            '<button data-target="#edit-info" data-toggle="modal" class="btn-cell btn edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>',
+            photo, longitude, latitude]
         })
         filter_info = [...info]
+
         $("#example").DataTable({
-          columnDefs: [
-            {
-                targets: 6, // Last column (Action column)
-                data: null,
-                width: "2rem",
-                className: 'btn-cell',
-                defaultContent: '<button data-target="#view-image" data-toggle="modal" class="btn view-btn"><i class="fa-solid fa-eye"></i></button>'
-            },
-            {
-              targets: 7, // Last column (Action column)
-              data: null,
-              width: "2rem",
-              className: 'btn-cell',
-              defaultContent: '<button data-target="#edit-info" data-toggle="modal" class="btn edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>'
-            }
-          ],
-          data: info
-          });
-      }).fail(function(error) {
-        console.log(error);
-      }).always(function() {
+          data: filter_info
+        });
+
+        $('#example_wrapper').on('click', ".view-btn", function(){
+          let row = $(this).closest('tr').index();
+          console.log(filter_info[row][8]);
+          $('#view-image .photo').attr('src', `../../../../public/image/${filter_info[row][8]}`);
+          return
+        })
 
         $('.ward-table input').click(function() {
           var id_ward = $(this).attr('id');
@@ -87,23 +80,18 @@ $(document).ready(function () {
             }
             filter_info = [...result]
           }
+
           $("#example").DataTable().clear().rows.add(filter_info.sort(function(a, b) {
             return a[0] - b[0];
           })).draw();
-          return
+          // return
         });
 
-        $('.view-btn').on('click', function(){
-          let row = $(this).closest('tr').index();
-          console.log(row);
-          $('#view-image .photo').attr('src', `../../../../public/image/${info[row][6]}`);
-        })
-
-        $('.edit-btn').on('click', function(e){
-          var click_row = $(this).closest('tr').index();
-          var ward, district, result, longitude, latitude, imageData, photo
-
-          // console.log(click_row);
+        $("#example_wrapper").on('click', '.edit-btn', function(event){
+          var click_row = $(event.target).closest('tr').index();
+          var ward = district = result = longitude = latitude = imageData = null
+          
+          // console.log(filter_info[click_row][0])
           loc_type?.forEach(function(type){
             $('#id_loc_type').append(`<option value=${type.id_loc_type}>${type.loc_type}</option>`);
           })
@@ -115,7 +103,7 @@ $(document).ready(function () {
           var map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v11',
-            center: [info[click_row][7], info[click_row][8]],
+            center: [filter_info[click_row][9], filter_info[click_row][10]],
             zoom: 17
           });
 
@@ -123,6 +111,9 @@ $(document).ready(function () {
             accessToken: mapboxgl.accessToken,
             mapboxgl: mapboxgl,
           });
+
+          let canvas = $('.mapboxgl-canvas')
+          canvas.width('100%');
 
           $('#search').append(geocoder.onAdd(map));
 
@@ -154,15 +145,20 @@ $(document).ready(function () {
                   // district = firstFeature.context[1];
                   longitude = coordinates[0];
                   latitude= coordinates[1]
-
+                  // console.log(firstFeature)
 
                   // Cập nhật tọa độ và zoom của map
                   map.flyTo({
                     center: coordinates,
                     zoom: 17
                   });
+
+                 new mapboxgl.Marker( {color: '#0B7B31' })
+                  .setLngLat(coordinates) // Specify the marker longitude and latitude
+                  .addTo(map);
+
                   $("#address").val(`${result} [${coordinates[0]}, ${coordinates[1]}]` )
-                  console.log(firstFeature)
+                  
                 } else {
                   alert('No results found');
                 }
@@ -172,6 +168,42 @@ $(document).ready(function () {
               }
             });
           }
+
+          map.on('click', function(e) {
+            let lngLat = e.lngLat;
+            longitude = lngLat.lng;
+            latitude = lngLat.lat;
+          
+            $.ajax({
+              url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json`,
+              method: 'GET',
+              data: {
+                access_token: mapboxgl.accessToken
+              },
+              success: function(response) {
+                // Lấy địa chỉ từ kết quả Geocoding
+                result = response.features[0].place_name;
+          
+                // Gán địa chỉ vào phần tử HTML
+                $("#address").val(`${result} [${longitude}, ${latitude}]`);
+              },
+              error: function(error) {
+                console.log(error);
+              }
+            });
+          });
+
+          // Lắng nghe sự kiện mousedown trên bản đồ
+          map.on('mousedown', function() {
+            // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
+            map.getCanvas().style.cursor = 'grab';
+          });
+
+          // Lắng nghe sự kiện mouseup trên bản đồ
+          map.on('mouseup', function() {
+            // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
+            map.getCanvas().style.cursor = 'pointer';
+          });
           
           $('#photo').on('change', function(e) {
             if (e.target.files[0])
@@ -186,19 +218,28 @@ $(document).ready(function () {
             }
           });
 
+          $('#edit-info .style3-button').off('click').on('click', function(e) {
+            $("#address").val("")
+            $('#id_loc_type').val("")
+            $('#id_ads_type').val("")
+            $('#is_zoning').val("")
+            $('#reason').val("")
+            $('#photo').val("")
+          })
+
           $('#edit-info .style1-button').off('click').on('click', function(e) {
             e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
             
-            // console.log(click_row);
+            // console.log(longitude, latitude, filter_info[click_row][0]);
             let reason = $('#reason').val();
             if (!reason){
               alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
             }
             else{
               var formData = new FormData();
-              formData.append('id_ads_location', click_row + 1);
-              formData.append('latitude', null);
-              formData.append('longitude', null);
+              formData.append('id_ads_location',filter_info[click_row][0]);
+              formData.append('latitude', latitude);
+              formData.append('longitude', longitude);
               formData.append('address', null);
               formData.append('id_ward', null);
               formData.append('id_district', null);
@@ -209,8 +250,7 @@ $(document).ready(function () {
               formData.append('req_time', validateDate(new Date()));
               formData.append('reason', $('#reason').val());
               formData.append('office', role);
-    
-              // console.log($('#photo').val());
+              
               $("form").get(0).reset();
               $("#edit-info").modal("hide")
     
@@ -233,7 +273,9 @@ $(document).ready(function () {
           })
         })
 
-      }); 
+      }).fail(function(error) {
+        console.log(error);
+      })
     }
 
     const manageButton = $('#manage');
@@ -251,4 +293,6 @@ $(document).ready(function () {
         manageMenu.hide();
       }
     );
-  });
+});
+
+// hard code

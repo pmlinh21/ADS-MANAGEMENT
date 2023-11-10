@@ -154,7 +154,7 @@ $(document).ready(function () {
         loc_info = [...info3].sort((a, b) => a[0] - b[0]);
         // console.log(info);
 
-        $("#example.loc-report-table").DataTable({
+        $("#example3.loc-report-table").DataTable({
           pageLength: 6,
           data: loc_info
           });

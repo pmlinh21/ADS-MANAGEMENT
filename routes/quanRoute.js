@@ -1,6 +1,7 @@
 const express = require('express');
 const quanRoute = express.Router();
 const { getLocType, getAdsType, getBoardType,
+    getAllAdsLoc,
     getInfo, getWard, updateInfo, updatePassword, forgetPassword,
     getAdsLocation, getAds, updateAdsLoc, updateAds,
     getAdsLocReport, getAdsReport, getLocReport,
@@ -13,6 +14,8 @@ quanRoute.get("/getLocType", getLocType);
 quanRoute.get("/getAdsType", getAdsType);
 
 quanRoute.get("/getBoardType", getBoardType);
+
+quanRoute.get("/getAllAdsLoc", getAllAdsLoc)
 
 quanRoute.get("/getInfo/:email", getInfo);
 

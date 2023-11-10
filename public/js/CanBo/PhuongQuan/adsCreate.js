@@ -30,7 +30,7 @@ $(document).ready(function () {
             width, height, quantity, photo, email, phone, ward } = data
           let statusText = status ? "Đã xét duyệt" : "Chưa xét duyệt"
 
-          return [id_create, board_type, address, content, company,
+          return [id_create, board_type, `${address}, phường ${ward}`, content, company,
           validateSQLDate(start_date), validateSQLDate(end_date), statusText, 
           '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>', 
           width, height, quantity, photo, email, phone, ward]
