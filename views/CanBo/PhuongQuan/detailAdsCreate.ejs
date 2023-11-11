@@ -1,0 +1,27 @@
+<%- include("../../partial/header"); %>
+<div id = "navbar">
+    <ul>
+        <li id="manage" >
+            <a class="nav-link" >Quản lý</a>
+            <ul class = "manage-menu" style = "display: none;">
+                <li><a href = "/adsLocation">Danh sách điểm đặt quảng cáo</a></li>
+                <li><a href = "/ads">Danh sách biển quảng cáo</a></li>
+                <li><a href = "/report">Danh sách báo cáo vi phạm</a></li>
+                <li><a href = "/createAds">Danh sách cấp phép quảng cáo</a> </li>
+            </ul>
+        </li>
+        <li id="account">
+            <a class="nav-link" href = "/account">Tài khoản</a>
+        </li>
+        <li id="logout">
+            <a class="nav-link"  href = "/login">Đăng xuất</a>
+        </li>
+    </ul>
+</div>
+</div>
+<div class="title-page">
+    <i class="fa-solid fa-house"></i>
+    <p class="mb-0">Quản lí cấp phép quảng cáo / Chi tiết cấp phép</p>
+</div>
+
+<script defer type = "text/javascript" src="../../public/js/CanBo/PhuongQuan/detailReport.js"></script>

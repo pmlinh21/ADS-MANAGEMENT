@@ -5,15 +5,16 @@ $(document).ready(function () {
     const role = 1; 
     const email = "nnlien21@clc.fitus.edu.vn"
     const id_district = 1;
+    mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
     
-    var info, wards
-    var filter_info
+    var info, wards, filter_info
 
     if (role === 2) {
         $(".ward-table").hide();
 
     }
     else{
+      // render ward table
       $.get(`http://localhost:8080/api/quan/getWard/${id_district}`, function(data) {
         wards = data.content.map(ward => ward.ward);
         console.log("!");
@@ -22,6 +23,7 @@ $(document).ready(function () {
         console.log(error);
       })
 
+      // get ads create table
       $.get(`http://localhost:8080/api/quan/getAdsCreate/${id_district}`, function(data) {
         console.log("~");
         info = data.content.map(function(data){
@@ -43,15 +45,12 @@ $(document).ready(function () {
           pageLength: 6,
           data: filter_info
           });
-        
-      }).fail(function(error) {
-        console.log(error);
-      }).always(function() {
 
-        $('.ads-create-table .view-btn').on('click', function(){
+        $("#example_wrapper").on('click', '.ads-create-table .view-btn', function(){
           let row = $(this).closest('tr').index();
+          let id_create = filter_info[row][0]
+          window.location.href = '/detailAdsCreate?id_create=' + id_create;
           console.log(row);
-          return
         })
 
         $('.ward-table input').click(function() {
@@ -66,7 +65,7 @@ $(document).ready(function () {
             }
           } else {
             console.log("hihi")
-            var result = []
+            let result = []
             for (var i = 0; i < filter_info.length; i++){
               if (filter_info[i][15] != wards[id_ward])
                 result.push(filter_info[i]);
@@ -79,9 +78,178 @@ $(document).ready(function () {
           })).draw()
 
         })
-      }); 
-
+      }).fail(function(error) {
+        console.log(error);
+      })
     }
+
+    // render form
+    $.get(`http://localhost:8080/api/quan/getBoardType`, function(data) {
+      var board_type = data.content, imageData, result, id_adsloc
+
+      board_type?.forEach(function(type){
+        $('#id_board_type').append(`<option value=${type.id_board_type}>${type.board_type}</option>`);
+      })
+
+      $('#photo').on('change', function(e) {
+        if (e.target.files[0])
+        if (e.target.files[0].type.startsWith('image/') &&  e.target.files[0].size / 1024 <= 4*1024){
+          imageData = e.target.files[0]
+        }
+        else if (!e.target.files[0].type.startsWith('image/')){
+          alert('Avatar must be an image file (.jpg, .png, .jpeg)')
+        }
+        else if (!(e.target.files[0].size / 1024 <= 4)){
+          alert('Avatar must not exceed 4MB')
+        }
+      });
+
+      // reinitialize the form
+      $('.form-ads-create.style3-button').off('click').on('click', function(e) {
+        $("#id_ads_location").val("")
+        $('#id_board_type').val("")
+        $('#content').val("")
+        $('#width').val("")
+        $('#height').val("")
+        $('#photo').val("")
+        $('#quantity').val("")
+        $('#reason').val("")
+        $('#company').val("")
+        $('#address').val("")
+        $('#email').val("")
+        $('#phone').val("")
+        $('#start_date').val("")
+        $('#end_date').val("")
+      })  
+
+      // click "Chọn điểm đặt"
+      $('.form-ads-create .input-group button').on('click', function(){
+        console.log("a");
+
+        // get ads location
+        $.get(`http://localhost:8080/api/quan/getAdsLocation/${id_district}`, function(data) {
+          var info = [], index = null
+          for (let i = 0; i < data.content.length; i++) {
+            let {id_ads_location, address, ward, is_zoning, longitude, latitude} = data.content[i]
+            if (is_zoning == 1) 
+              info.push( {id_ads_location, address, ward, photo, longitude, latitude})
+          }
+
+          console.log(info);
+
+          var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [info[0].longitude, info[0].latitude],
+            zoom: 17
+          });
+
+          let canvas = $('.mapboxgl-canvas')
+          canvas.width('100%');
+          canvas.height('100%');
+
+          info.forEach(function (item, index) {
+            var marker = new mapboxgl.Marker({color: '#0B7B31' })
+            .setLngLat([item.longitude, item.latitude]) 
+            .addTo(map)
+            .getElement();
+
+            marker.id =`marker-${index}`;
+          });
+
+          // click marker 
+          $(document).on('click', '.mapboxgl-marker', function() {
+            let markerId = $(this).attr('id');
+            index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
+            // console.log('Marker clicked:', index);
+            id_adsloc = info[index].id_ads_location
+            result = info[index].address + ', phường ' + info[index].ward + ', quận ' + id_district;
+            $(".id_ads_location").val(`${result} [${info[index].longitude}, ${info[index].latitude}]` )
+          });
+
+          // click confirm button
+          $('#choose-adsloc .style1-button').off('click').on('click', function(e) {
+            e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
+            $("#id_ads_location").val(`${result} [${info[index].longitude}, ${info[index].latitude}]` )
+          })
+
+      }).fail(function(error) {
+        console.log(error);});
+
+      })
+
+      // click "tạo cấp phép"
+      $('.form-ads-create .button-group .style1-button').off('click').on('click', function(e) {
+        e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
+        // console.log($('#quantity').val() )
+        if ($('#id_board_type').val() === "(Trống)") {
+          alert('Vui lòng chọn loại bảng quảng cáo.');
+        } else if ($('#quantity').val() === "") {
+          alert('Vui lòng nhập số lượng.');
+        } else if ($('#width').val() === "") {
+          alert('Vui lòng nhập chiều rộng.');
+        } else if ($('#height').val() === "") {
+          alert('Vui lòng nhập chiều cao.');
+        } else if ($('#start_date').val() === "") {
+          alert('Vui lòng nhập ngày bắt đầu.');
+        } else if ($('#end_date').val() === "") {
+          alert('Vui lòng nhập ngày kết thúc.');
+        } else if ($('#company').val() === "") {
+          alert('Vui lòng nhập tên công ty.');
+        } else if ($('#address').val() === "") {
+          alert('Vui lòng nhập địa chỉ.');
+        } else if ($('#email').val() === "") {
+          alert('Vui lòng nhập địa chỉ email.');
+        } else if ($('#phone').val() === "") {
+          alert('Vui lòng nhập số điện thoại.');
+        } else if ($('#content').val() === "") {
+          alert('Vui lòng nhập nội dung.');
+        } else if ($('#start_date').val() > $('#end_date').val()) {
+          alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
+        } else if (id_adsloc === null) {
+          alert('Vui lòng chọn điểm đặt quảng cáo.');
+        }else{
+          var formData = new FormData();
+          formData.append('id_ads_location', id_adsloc);
+          formData.append('id_board_type', $('#id_board_type').val());
+          formData.append('quantity', $('#quantity').val());
+          formData.append('width', $('#width').val());
+          formData.append('height', $('#height').val());
+          formData.append('start_date', $('#start_date').val() );
+          formData.append('end_date', $('#end_date').val() );
+          formData.append('company', $('#company').val());
+          formData.append('address', $('#address').val());
+          formData.append('email', $('#email').val() );
+          formData.append('phone', $('#phone').val() );          
+          formData.append('content', $('#content').val());
+          formData.append('office', role);
+          formData.append('file', imageData);
+
+          // console.log(formData);
+          $("form").get(0).reset();
+
+          // $.ajax({
+          //   url: `http://localhost:8080/api/quan/updateAds/${email}`,
+          //   type: 'POST',
+          //   data: formData,
+          //   processData: false,
+          //   contentType: false,
+          //   success: function(response) {
+          //     // Handle the successful response here
+          //     console.log(response);
+          //   },
+          //   error: function(xhr, status, error) {
+          //     // Handle the error here
+          //     console.error(error);
+          //   }
+          // });
+        }
+      })
+  }).fail(function(error) {
+    console.log(error);
+  });
+
+
 
 
     const manageButton = $('#manage');

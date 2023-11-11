@@ -102,11 +102,6 @@ $(document).ready(function () {
             zoom: 17
           });
 
-          var geocoder = new MapboxGeocoder({
-            accessToken: mapboxgl.accessToken,
-            mapboxgl: mapboxgl,
-          });
-
           let canvas = $('.mapboxgl-canvas')
           canvas.width('100%');
 
@@ -129,7 +124,6 @@ $(document).ready(function () {
               id_adsloc = adsloc[index].id_ads_location
               result = adsloc[index].address + ', phường ' + adsloc[index].ward + ', ' + adsloc[index].district;
               $("#address").val(`${result} [${adsloc[index].longitude}, ${adsloc[index].latitude}]` )
-              // Perform any desired actions when the marker is clicked
             });
 
           }).fail(function(error) {

@@ -70,8 +70,21 @@ appCanBo.get('/report', function(req, res) {
   res.render('CanBo/PhuongQuan/report');
 });
 
+appCanBo.get('/detailReport', function(req, res) {
+  const id_report = req.query.id_report;
+  const table = req.query.table;
+
+  res.render('CanBo/PhuongQuan/detailReport', { id_report: id_report, table: table });
+});
+
 appCanBo.get('/createAds', function(req, res) {
   res.render('CanBo/PhuongQuan/adsCreate');
+});
+
+appCanBo.get('/detailAdsCreate', function(req, res) {
+  const id_create = req.query.id_create;
+
+  res.render('CanBo/PhuongQuan/detailAdsCreate', { id_create: id_create});
 });
 
 appCanBo.get('/account', function(req, res) {

@@ -241,6 +241,7 @@ body {
 #ward-container input:focus,
 .ward-table input:focus {
   box-shadow: none;
+  border-color: #867F7F
 }
 
 #ward-container label {
@@ -610,6 +611,34 @@ label.required::after {
 .ads-table td:nth-child(6),
 .ads-create-table td:nth-child(8){
   text-align: center
+}
+
+.form-ads-create{
+  margin: 1rem 4rem;
+  background-color: white;
+  padding: 0.5rem 2rem 1.2rem 2rem;
+  color: #0B7B31;
+  box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3);
+  border-radius: 1rem;
+}
+
+.form-ads-create div:nth-child(1){
+  font-weight: 900;
+  margin-bottom: -0.5rem;
+}
+
+.form-ads-create .button-group{
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+#choose-adsloc .map {
+  height: 21.5rem;
+  width: 100%;
+  cursor: pointer;
+  margin-top: 1rem;
 }
 
 /* PHAN HE SO: side-navbar */

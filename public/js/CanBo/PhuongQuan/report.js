@@ -42,14 +42,11 @@ $(document).ready(function () {
           data: ads_info
           });
         
-      }).fail(function(error) {
-        console.log(error);
-      }).always(function() {
-
-        $('.ads-report-table .view-btn').on('click', function(){
+        $("#example1_wrapper").on('click', '.ads-report-table .view-btn', function(){
           let row = $(this).closest('tr').index();
+          let id_report = ads_info[row][0], table = "ads"
+          window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
           console.log(row);
-          return
         })
 
         $('.ward-table input').click(function() {
@@ -75,11 +72,11 @@ $(document).ready(function () {
           $(".ads-report-table").DataTable().clear().rows.add(ads_info.sort(function(a, b) {
             return a[0] - b[0];
           })).draw();
-
-
         })
-
-      }); 
+        
+      }).fail(function(error) {
+        console.log(error);
+      })
 
       $.get(`http://localhost:8080/api/quan/getAdsLocReport/${id_district}`, function(data) {
         console.log("~");
@@ -96,20 +93,17 @@ $(document).ready(function () {
         })
 
         adsloc_info = [...info2].sort((a, b) => a[0] - b[0]);
-        // console.log(info2);
 
         $(".adsloc-report-table").DataTable({
           pageLength: 6,
           data: adsloc_info
           });
 
-      }).fail(function(error) {
-        console.log(error);
-      }).always(function() {
-        $('.adsloc-report-table .view-btn').on('click', function(){
+        $('#example2_wrapper').on('click', '.adsloc-report-table .view-btn', function(){
           let row = $(this).closest('tr').index();
+          let id_report = adsloc_info[row][0], table = "adsloc"
+          window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
           console.log(row);
-          return
         })
 
         $('.ward-table input').click(function() {
@@ -134,7 +128,10 @@ $(document).ready(function () {
           $(".adsloc-report-table").DataTable().clear().rows.add(adsloc_info.sort(function(a, b) {
             return a[0] - b[0];
           })).draw();
-      }); 
+        }); 
+
+      }).fail(function(error) {
+        console.log(error);
       })
 
       $.get(`http://localhost:8080/api/quan/getLocReport/${id_district}`, function(data) {
@@ -159,13 +156,11 @@ $(document).ready(function () {
           data: loc_info
           });
 
-      }).fail(function(error) {
-        console.log(error);
-      }).always(function() {
-        $('.loc-report-table .view-btn').on('click', function(){
+        $("#example3_wrapper").on('click', '.loc-report-table .view-btn', function(){
           let row = $(this).closest('tr').index();
+          let id_report = loc_info[row][0], table = "loc"
+          window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
           console.log(row);
-          return
         })
 
         $('.ward-table input').click(function() {
@@ -190,10 +185,12 @@ $(document).ready(function () {
           $(".loc-report-table").DataTable().clear().rows.add(adsloc_info.sort(function(a, b) {
             return a[0] - b[0];
           })).draw();
-      });
-      }); 
-    }
+        });
 
+      }).fail(function(error) {
+        console.log(error);
+      }) 
+    }
 
     const manageButton = $('#manage');
     const manageMenu = $('#manage .manage-menu');
