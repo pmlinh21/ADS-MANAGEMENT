@@ -58,6 +58,10 @@ appCanBo.get('/', function(req, res) {
   res.render('CanBo/homepageCanbo');
 });
 
+appCanBo.get('/quanlichung', function(req, res) {
+  res.render('CanBo/So/quanlichung');
+});
+
 appCanBo.get('/adsLocation', function(req, res) {
   res.render('CanBo/PhuongQuan/adsLocation');
 });
