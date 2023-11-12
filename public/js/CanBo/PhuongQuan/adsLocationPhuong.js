@@ -63,22 +63,29 @@ $(document).ready(function(){
     });
 
     $('#example_wrapper').on('click', ".view-btn", function(){
-        let row = $(this).closest('tr').index();
-        console.log(ads_location[row][7]);
-        $('#view-image .photo').attr('src', `../../../../public/image/${ads_location[row][7]}`);
-        return
-    })
-
+        let table = $('#example').DataTable();
+        let row = table.row($(this).closest('tr')).index();
+        let rowData = table.row(row).data();
+    
+        console.log(row);
+        console.log(rowData[7]);
+    
+        $('#view-image .photo').attr('src', `../../../../public/image/${rowData[7]}`);
+        return;
+    });
+    
+    mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
     $("#example_wrapper").on('click', '.edit-btn', function(event){
         var click_row = $(event.target).closest('tr').index();
+        console.log("click_row", click_row);
         var ward = district = result = longitude = latitude = imageData = null
         
         loc_type?.forEach(function(type){
-          $('#id_loc_type').append(`<option value=${type.id_loc_type}>${type.loc_type}</option>`);
+          $('#id_loc_type').append(`<option value=${type[0]}>${type[1]}</option>`);
         })
   
         ads_type?.forEach(function(type){
-          $('#id_ads_type').append(`<option value=${type.id_ads_type}>${type.ads_type}</option>`);
+          $('#id_ads_type').append(`<option value=${type[0]}>${type[1]}</option>`);
         })
 
         var map = new mapboxgl.Map({
@@ -253,4 +260,5 @@ $(document).ready(function(){
           }
         })
       })
+      
 });
