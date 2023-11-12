@@ -1,5 +1,155 @@
 // QUẬN
 
+let getAdsType = {
+  message: "Get thành công",
+  content: [
+    {
+      id_ads_type: 1,
+      ads_type: "Cổ động chính trị"
+    },
+    {
+      id_ads_type: 2,
+      ads_type: "Quảng cáo thương mại"
+    },
+    {
+      id_ads_type: 3,
+      ads_type: "Xã hội hoá"
+    }
+  ]
+}
+
+let getLocType = {
+  message: "Get thành công",
+  content: [
+    {
+      id_loc_type: 1,
+      loc_type: "Đất công/Công viên/Hành lang an toàn giao thông"
+    },
+    {
+      id_loc_type: 2,
+      loc_type: "Đất tư nhân/Nhà ở riêng lẻ"
+    },
+    {
+      id_loc_type: 3,
+      loc_type: "Trung tâm thương mại"
+    },
+    {
+      id_loc_type: 4,
+      loc_type: "Chợ"
+    },
+    {
+      id_loc_type: 5,
+      loc_type: "Cây xăng"
+    },
+    {
+      id_loc_type: 6,
+      loc_type: "Nhà chờ xe buýt"
+    }
+  ]
+}
+
+let getBoardType ={
+  message: "Get thành công",
+  content: [
+    {
+      id_board_type: 1,
+      board_type: "Trụ bảng hiflex"
+    },
+    {
+      id_board_type: 2,
+      board_type: "Trụ màn hình điện tử LED"
+    },
+    {
+      id_board_type: 3,
+      board_type: "Trụ hộp đèn"
+    },
+    {
+      id_board_type: 4,
+      board_type: "Bảng hiflex ốp tường"
+    },
+    {
+      id_board_type: 5,
+      board_type: "Màn hình điện tử ốp tường"
+    },
+    {
+      id_board_type: 6,
+      board_type: "Trụ treo băng rôn dọc"
+    },
+    {
+      id_board_type: 7,
+      board_type: "Trụ treo băng rôn ngang"
+    },
+    {
+      id_board_type: 8,
+      board_type: "Trụ/Cụm pano"
+    },
+    {
+      id_board_type: 9,
+      board_type: "Cổng chào"
+    },
+    {
+      id_board_type: 10,
+      board_type: "Trung tâm thương mại"
+    }
+  ]
+}
+
+let getWard = {
+  message: "Get thành công",
+  content: [
+    {
+      id_ward: 1,
+      ward: "Bến Nghé",
+      id_district: 1
+    },
+    {
+      id_ward: 2,
+      ward: "Bến Thành",
+      id_district: 1
+    },
+    {
+      id_ward: 3,
+      ward: "Cầu Kho",
+      id_district: 1
+    },
+    {
+      id_ward: 4,
+      ward: "Cầu Ông Lãnh",
+      id_district: 1
+    },
+    {
+      id_ward: 5,
+      ward: "Cô Giang",
+      id_district: 1
+    },
+    {
+      id_ward: 6,
+      ward: "Đa Kao",
+      id_district: 1
+    },
+    {
+      id_ward: 7,
+      ward: "Nguyễn Cư Trinh",
+      id_district: 1
+    },
+    {
+      id_ward: 8,
+      ward: "Nguyễn Thái Bình",
+      id_district: 1
+    },
+    {
+      id_ward: 9,
+      ward: "Phạm Ngũ Lão",
+      id_district: 1
+    },
+    {
+      id_ward: 10,
+      ward: "Tân Định",
+      id_district: 1
+    }
+  ]
+}
+
 let getAdsLocation = {
   message: "Get thành công",
   content: [
@@ -171,6 +321,140 @@ let getAdsLocation = {
       latitude: 10.7717,
       hasAds: 0,
       hasReport: 1
+    }
+  ]
+}
+
+let getAllAdsLoc = {
+  message: "Get thành công",
+  content: [
+    {
+      id_ads_location: 1,
+      address: "59 Nguyễn Thị Minh Khai",
+      longitude: 106.69,
+      latitude: 10.7737,
+      ward: "Bến Thành",
+      district: "Quận 1"
+    },
+    {
+      id_ads_location: 4,
+      address: "128 Nguyễn Thị Minh Khai",
+      longitude: 106.693,
+      latitude: 10.7776,
+      ward: "Võ Thị Sáu",
+      district: "Quận 3"
+    },
+    {
+      id_ads_location: 5,
+      address: "118 Nguyễn Thị Minh Khai",
+      longitude: 106.694,
+      latitude: 10.7785,
+      ward: "Võ Thị Sáu",
+      district: "Quận 3"
+    },
+    {
+      id_ads_location: 9,
+      address: "141 Cách Mạng Tháng 8",
+      longitude: 106.688,
+      latitude: 10.7743,
+      ward: "5",
+      district: "Quận 3"
+    },
+    {
+      id_ads_location: 10,
+      address: "70 Cách Mạng Tháng 8",
+      longitude: 106.687,
+      latitude: 10.7751,
+      ward: "5",
+      district: "Quận 3"
+    },
+    {
+      id_ads_location: 11,
+      address: "36 Bà Huyện Thanh Quan",
+      longitude: 106.688,
+      latitude: 10.7769,
+      ward: "Võ Thị Sáu",
+      district: "Quận 3"
+    },
+    {
+      id_ads_location: 12,
+      address: "55-25 Trương Định",
+      longitude: 106.691,
+      latitude: 10.7768,
+      ward: "Võ Thị Sáu",
+      district: "Quận 3"
+    },
+    {
+      id_ads_location: 14,
+      address: "59 Nguyễn Thị Minh Khai",
+      longitude: 106.69,
+      latitude: 10.7744,
+      ward: "Bến Thành",
+      district: "Quận 1"
+    },
+    {
+      id_ads_location: 15,
+      address: "161-141 Nguyễn Du",
+      longitude: 106.692,
+      latitude: 10.7721,
+      ward: "Bến Thành",
+      district: "Quận 1"
+    },
+    {
+      id_ads_location: 16,
+      address: "2-10 Trương Định",
+      longitude: 106.691,
+      latitude: 10.7763,
+      ward: "Võ Thị Sáu",
+      district: "Quận 3"
+    },
+    {
+      id_ads_location: 17,
+      address: "16 Nguyễn Thị Diệu",
+      longitude: 106.689,
+      latitude: 10.7763,
+      ward: "Võ Thị Sáu",
+      district: "Quận 3"
+    },
+    {
+      id_ads_location: 18,
+      address: "66 Trương Định",
+      longitude: 106.695,
+      latitude: 10.7729,
+      ward: "Bến Thành",
+      district: "Quận 1"
+    },
+    {
+      id_ads_location: 21,
+      address: "108 Nguyễn Du",
+      longitude: 106.697,
+      latitude: 10.7756,
+      ward: "Bến Thành",
+      district: "Quận 1"
+    },
+    {
+      id_ads_location: 22,
+      address: "55-53 Nguyễn Thị Minh Khai",
+      longitude: 106.695,
+      latitude: 10.7796,
+      ward: "Bến Nghé",
+      district: "Quận 1"
+    },
+    {
+      id_ads_location: 23,
+      address: "132 Nam Kỳ Khởi Nghĩa",
+      longitude: 106.698,
+      latitude: 10.7769,
+      ward: "Bến Thành",
+      district: "Quận 1"
+    },
+    {
+      id_ads_location: 24,
+      address: "550 Lý Tự Trọng",
+      longitude: 106.694,
+      latitude: 10.7717,
+      ward: "Bến Thành",
+      district: "Quận 1"
     }
   ]
 }
