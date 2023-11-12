@@ -1,0 +1,114 @@
+<%- include('../../partial/headerSo.ejs') %>
+<%- include('../../partial/sidebarSo.ejs') %>
+    <div class="content">
+        <div class="title-container">
+            <span class="title-icon"><i class="fas fa-home"></i></span>
+            <span class="title-text"><h1>Quản lí chung</h1></span>
+        </div>
+
+        <!-- STATISTICS -->
+        <div class="statistic-container">
+            <div class="statistic-card" id="district-statistic">
+                <div class="statistic-icon"><i class="fas fa-landmark"></i></div>
+                <div class="statistic-content">
+                    <p class="statistic-text">Quận</p>
+                    <p class="statistic-number">24</p>
+                </div>
+            </div>
+
+            <div class="statistic-card" id="ward-statistic">
+                <div class="statistic-icon"><i class="fas fa-building"></i></div>
+                <div class="statistic-content">
+                    <p class="statistic-text">Phường</p>
+                    <p class="statistic-number">143</p>
+                </div>
+            </div>
+
+            <div class="statistic-card" id="officer-statistic">
+                <div class="statistic-icon"><i class="fas fa-address-card"></i></div>
+                <div class="statistic-content">
+                    <p class="statistic-text">Cán bộ</p>
+                    <p class="statistic-number">201</p>
+                </div>
+            </div>
+
+            <div class="statistic-card" id="location-statistic">
+                <div class="statistic-icon"><i class="fas fa-map-marked-alt"></i></div>
+                <div class="statistic-content">
+                    <p class="statistic-text">Điểm đặt quảng cáo</p>
+                    <p class="statistic-number">438</p>
+                </div>
+            </div>
+
+            <div class="statistic-card" id="ad-statistic">
+                <div class="statistic-icon"><i class="fas fa-ad"></i></div>
+                <div class="statistic-content">
+                    <p class="statistic-text">Bảng quảng cáo</p>
+                    <p class="statistic-number">350</p>
+                </div>
+            </div>
+        </div>
+        <!-- END OF STATISTICS -->
+
+        <!-- TABLE 1 -->
+        <div class="table-wrap" id="location-type">
+            <table>
+                <caption>Danh sách các loại vị trí</caption>
+                <thead>
+                    <tr><th class="id">ID</th><th>Tên loại vị trí</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="2" class="add-item"><i class="fas fa-plus"></i></td>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TABLE 2 -->
+        <div class="table-wrap" id="ads-type">
+            <table>
+                <caption>Danh sách các hình thức quảng cáo</caption>
+                <thead>
+                    <tr><th class="id">ID</th><th>Tên hình thức báo cáo</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="2" class="add-item"><i class="fas fa-plus"></i></td>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TABLE 3 -->
+        <div class="table-wrap" id="report-type">
+            <table>
+                <caption>Danh sách các loại hình báo cáo</caption>
+                <thead>
+                    <tr><th class="id">ID</th><th>Tên loại hình báo cáo</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="id">1</td><td>Tố giác sai phạm</td></tr>
+                    <tr><td class="id">2</td><td>Đăng ký nội dung</td></tr>
+                    <tr><td class="id">3</td><td>Đóng góp ý kiến</td></tr>
+                    <tr><td class="id">4</td><td>Giải đáp thắc mắc</td></tr>
+                    <tr><td colspan="2" class="add-item"><i class="fas fa-plus"></i></td>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TABLE 4 -->
+        <div class="table-wrap" id="board-type">
+            <table>
+                <caption>Danh sách các loại bảng quảng cáo</caption>
+                <thead>
+                    <tr><th class="id">ID</th><th>Tên loại bảng báo cáo</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="id">1</td><td>Trụ bảng hìlex</td></tr>
+                    <tr><td class="id">2</td><td>Đăng ký nội dung</td></tr>
+                    <tr><td class="id">3</td><td>Đóng góp ý kiến</td></tr>
+                    <tr><td class="id">4</td><td>Giải đáp thắc mắc</td></tr>
+                    <tr><td colspan="2" class="add-item"><i class="fas fa-plus"></i></td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="../../../public/js/CanBo/So/quanlichung.js"></script>
+<%- include('../../partial/footerSo.ejs') %>
