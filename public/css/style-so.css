@@ -276,7 +276,7 @@ body {
     }
 }
 
-/* TABLE */
+/* START OF TABLE */
 .table-wrap {
     width: 100%;
     border-radius: 10px;
@@ -326,6 +326,29 @@ body {
     text-align: center;
     width: 40px;
 }
+/* END OF TABLE */
+
+/* START OF FORM */
+.popup-edit {
+    position: fixed;
+    top: calc(50vh - 145px);
+    left: calc(50vw - 270px);
+    width: 500px;
+    height: 250px;
+    background-color: white;
+    z-index: 999;
+    /* display: none; */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 4px 4px 5px rgba(5, 5, 5, 0.3);
+}
+.popup-edit legend {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0B7B31;
+    text-align: left;
+}
+/* END OF FORM */
 
 @media (max-width: 1620px) {
     .content {
