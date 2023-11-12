@@ -1,3 +1,5 @@
+// đã hard code (quận)
+
 function renderWard(wards){
     var template = ` 
         <% for (var i = 0; i < wards.length; i++) { %>
@@ -68,11 +70,14 @@ function createMarker(info, map, markers){
 }
 
 $(document).ready(function () {
-    // 2 = Quan, 1 = Phuong
+    // 2 = Quan, 1 = Phuong, 3 = Sở
     const role = 2; 
+
     const id_district = 1;
     var wards, info, markers = []
-    // set height of map
+
+    // const id_ward;
+
 
     $(window).on('resize', function(){
       let windowHeight = $(window).height();
@@ -104,9 +109,10 @@ $(document).ready(function () {
         $("#select-ward").hide();
     }
     else if (role === 2) {
-      $.get(`http://localhost:8080/api/quan/getAdsLocation/${id_district}`, function(data) {
-        console.log("~");
-        info = data.content.map(function(data){
+      // $.get(`http://localhost:8080/api/quan/getAdsLocation/${id_district}`, function(data) {
+      //   console.log("~");
+      
+        info = getAdsLocation.content.map(function(data){
           let {id_ads_location, address, ward, loc_type, ads_type, 
             photo, is_zoning, longitude, latitude, hasAds, hasReport} = data
           let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
@@ -117,17 +123,17 @@ $(document).ready(function () {
         console.log(info)
         createMarker(info, map, markers);
         
-      }).fail(function(error) {
-        console.log(error);
-      })
+      // }).fail(function(error) {
+      //   console.log(error);
+      // })
 
-      $.get(`http://localhost:8080/api/quan/getWard/${id_district}`, function(data) {
-        wards = data.content
+      // $.get(`http://localhost:8080/api/quan/getWard/${id_district}`, function(data) {
+        wards = getWard.content
         console.log("!");
         renderWard(wards);
-      }).fail(function(error) {
-        console.log(error);
-      });
+      // }).fail(function(error) {
+      //   console.log(error);
+      // });
 
       $(".select-ward-bar").on('click', function(){
         $("hr").show()
@@ -162,23 +168,37 @@ $(document).ready(function () {
           clearMarker(markers);
           createMarker(filter_info, map, markers);
           // console.log(markers)
+
+          $('#manage').css('pointer-events', 'auto');
+          $('#account').css('pointer-events', 'auto');
+          $('#logout').css('pointer-events', 'auto');
           return
         })
       })
     }
+    else{
+      $("#select-ward").hide();
+    }
 
     const manageButton = $('#manage');
     const manageMenu = $('#manage .manage-menu');
-    manageButton.hover(
-      function () {
-        $(this).addClass('li-hover');
-        $('#manage .nav-link').addClass('nav-link-hover');
-        manageMenu.show();
-      },
-      function () {
-        $(this).removeClass('li-hover');
-        $('#manage .nav-link').removeClass('nav-link-hover');
-        manageMenu.hide();
-      }
-    );
+    if (role === 3){
+      $('#manage .nav-link').attr('href','/quanlichung')
+    } else{
+      manageButton.hover(
+        function () {
+          $(this).addClass('li-hover');
+          $('#manage .nav-link').addClass('nav-link-hover');
+          manageMenu.show();
+          $('.black-bg').show()
+        },
+        function () {
+          $(this).removeClass('li-hover');
+          $('#manage .nav-link').removeClass('nav-link-hover');
+          manageMenu.hide();
+          $('.black-bg').hide()
+        }
+      );
+    }
+
   });

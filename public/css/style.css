@@ -372,6 +372,13 @@ button:active,
   color: #0B7B31;
 }
 
+.black-bg{
+  /* display: none;  */
+  background-color: rgba(0,0,0,0.1);
+  position: absolute;
+  z-index: 9;
+}
+
 body > #map{
   position: relative;
   top: 3.5rem;

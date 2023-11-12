@@ -243,7 +243,6 @@ const updatePassword = async(req, res) =>{
     }
 } 
 
-
 const forgetPassword = async(req, res) =>{
     try{
         let { id_district } = req.params;
@@ -252,7 +251,6 @@ const forgetPassword = async(req, res) =>{
         errorCode(res,"Lỗi BE")
     }
 } 
-
 
 const updateAdsLoc = async(req, res) =>{
     try{
@@ -301,7 +299,6 @@ const updateAds = async(req, res) =>{
     }
 } 
 
-
 const updateAdsLocReport = async(req, res) =>{
     try{
         let { id_req } = req.params;
@@ -322,7 +319,6 @@ const updateAdsLocReport = async(req, res) =>{
     }
 } 
 
-
 const updateAdsReport = async(req, res) =>{
     try{
         let { id_req } = req.params;
@@ -342,7 +338,6 @@ const updateAdsReport = async(req, res) =>{
         errorCode(res,"Lỗi BE")
     }
 } 
-
 
 const updateLocReport = async(req, res) =>{
     try{
