@@ -193,9 +193,17 @@ body {
   height: fit-content;
   padding: 0.8rem 1rem 0.5rem;
   border-radius: 1.5rem;
-  color: rgba(0, 0, 0, 0.8);
+  color: #867F7F;
   cursor: pointer;
   z-index: 2;
+}
+
+hr{
+  position: absolute;
+  z-index: 2;
+  top: 1.5rem;
+  width: 95%;
+  left: 2.5%;
 }
 
 #ward-container {
@@ -217,13 +225,14 @@ body {
 #ward-container div {
   display: flex;
   align-items: center;
+  color: #867F7F
 }
 
 #ward-container input {
   min-width: 1rem;
   height: 1rem;
   margin-right: 0.5rem;
-  outline: 1.5px solid black;
+  outline: 1.5px solid #867F7F;
   outline-offset: -1.5px;
   border-radius: 2px;
   -webkit-appearance: none;
@@ -594,6 +603,10 @@ label.required::after {
   box-shadow: none;
   border: none;
   transform: none;
+}
+
+#edit-info .choose-location{
+  min-height: 15rem;
 }
 
 #edit-info .map {

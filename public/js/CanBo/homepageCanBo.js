@@ -31,6 +31,7 @@ $(document).ready(function () {
           $.get(`http://localhost:8080/api/quan/getWard/${id_district}`, function(data) {
               wards = data.content.map(ward => ward.ward);
               console.log("!");
+              $("hr").show()
               $("#ward-container").show();
               renderWard(wards);
             }).fail(function(error) {

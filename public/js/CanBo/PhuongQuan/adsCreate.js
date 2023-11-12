@@ -85,7 +85,7 @@ $(document).ready(function () {
 
     // render form
     $.get(`http://localhost:8080/api/quan/getBoardType`, function(data) {
-      var board_type = data.content, imageData, result, id_adsloc
+      var board_type = data.content, imageData = result = id_adsloc = null
 
       board_type?.forEach(function(type){
         $('#id_board_type').append(`<option value=${type.id_board_type}>${type.board_type}</option>`);
@@ -184,16 +184,18 @@ $(document).ready(function () {
         // console.log($('#quantity').val() )
         if ($('#id_board_type').val() === "(Trống)") {
           alert('Vui lòng chọn loại bảng quảng cáo.');
+        } else if (id_adsloc === null) {
+          alert('Vui lòng chọn điểm đặt quảng cáo.');
+        } else if ($('#width').val() === "") {
+          alert('Vui lòng nhập chiều dài.');
+        } else if ($('#height').val() === "") {
+          alert('Vui lòng nhập chiều rộng.');
         } else if ($('#quantity').val() === "") {
           alert('Vui lòng nhập số lượng.');
-        } else if ($('#width').val() === "") {
-          alert('Vui lòng nhập chiều rộng.');
-        } else if ($('#height').val() === "") {
-          alert('Vui lòng nhập chiều cao.');
-        } else if ($('#start_date').val() === "") {
-          alert('Vui lòng nhập ngày bắt đầu.');
-        } else if ($('#end_date').val() === "") {
-          alert('Vui lòng nhập ngày kết thúc.');
+        } else if (imageData == null) {
+          alert('Vui lòng tải hình ảnh minh họa.');
+        } else if ($('#content').val() === "") {
+          alert('Vui lòng nhập nội dung.');
         } else if ($('#company').val() === "") {
           alert('Vui lòng nhập tên công ty.');
         } else if ($('#address').val() === "") {
@@ -202,12 +204,12 @@ $(document).ready(function () {
           alert('Vui lòng nhập địa chỉ email.');
         } else if ($('#phone').val() === "") {
           alert('Vui lòng nhập số điện thoại.');
-        } else if ($('#content').val() === "") {
-          alert('Vui lòng nhập nội dung.');
+        } else if ($('#start_date').val() === "") {
+          alert('Vui lòng nhập ngày bắt đầu.');
+        } else if ($('#end_date').val() === "") {
+          alert('Vui lòng nhập ngày kết thúc.');
         } else if ($('#start_date').val() > $('#end_date').val()) {
           alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
-        } else if (id_adsloc === null) {
-          alert('Vui lòng chọn điểm đặt quảng cáo.');
         }else{
           var formData = new FormData();
           formData.append('id_ads_location', id_adsloc);
@@ -222,35 +224,34 @@ $(document).ready(function () {
           formData.append('email', $('#email').val() );
           formData.append('phone', $('#phone').val() );          
           formData.append('content', $('#content').val());
+          formData.append('officer', email);
           formData.append('office', role);
           formData.append('file', imageData);
 
           // console.log(formData);
           $("form").get(0).reset();
 
-          // $.ajax({
-          //   url: `http://localhost:8080/api/quan/updateAds/${email}`,
-          //   type: 'POST',
-          //   data: formData,
-          //   processData: false,
-          //   contentType: false,
-          //   success: function(response) {
-          //     // Handle the successful response here
-          //     console.log(response);
-          //   },
-          //   error: function(xhr, status, error) {
-          //     // Handle the error here
-          //     console.error(error);
-          //   }
-          // });
+          $.ajax({
+            url: `http://localhost:8080/api/quan/adsCreate/${id_district}`,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+              // Handle the successful response here
+              window.location.reload();
+              console.log(response);
+            },
+            error: function(xhr, status, error) {
+              // Handle the error here
+              console.error(error);
+            }
+          });
         }
       })
   }).fail(function(error) {
     console.log(error);
   });
-
-
-
 
     const manageButton = $('#manage');
     const manageMenu = $('#manage .manage-menu');

@@ -228,7 +228,7 @@ const getAdsCreate = async(req, res) =>{
 const updateInfo = async(req, res) =>{
     try{
         let { id_district } = req.params;
-
+        sucessCode(res,req.body,"Get thành công")
     }catch(err){
         errorCode(res,"Lỗi BE")
     }
@@ -237,7 +237,7 @@ const updateInfo = async(req, res) =>{
 const updatePassword = async(req, res) =>{
     try{
         let { id_district } = req.params;
-
+        sucessCode(res,req.body,"Get thành công")
     }catch(err){
         errorCode(res,"Lỗi BE")
     }
@@ -247,7 +247,7 @@ const updatePassword = async(req, res) =>{
 const forgetPassword = async(req, res) =>{
     try{
         let { id_district } = req.params;
-
+        sucessCode(res,req.body,"Get thành công")
     }catch(err){
         errorCode(res,"Lỗi BE")
     }
@@ -364,11 +364,21 @@ const updateLocReport = async(req, res) =>{
     }
 } 
 
-
-const createAds = async(req, res) =>{
+const adsCreate = async(req, res) =>{
     try{
         let { id_district } = req.params;
+        const file = req.file
+        const obj = validateObj(req.body);
+        let {officer, office, id_ads_location, id_board_type, width, height, quantity,
+            content, company, email, phone, address, start_date, end_date} = obj
 
+        await model.Ads_create.create({
+            officer, office, id_ads_location, id_board_type, width, height, quantity,
+            content, company, email, phone, address, start_date, end_date,
+            photo: file?.filename,
+            status: 0
+        })
+        sucessCode(res,req.body,"Get thành công")
     }catch(err){
         errorCode(res,"Lỗi BE")
     }
@@ -378,7 +388,7 @@ const createAds = async(req, res) =>{
 const deleteAdsCreate = async(req, res) =>{
     try{
         let { id_district } = req.params;
-
+        sucessCode(res,req.body,"Get thành công")
     }catch(err){
         errorCode(res,"Lỗi BE")
     }
@@ -390,4 +400,4 @@ module.exports = { getLocType, getAdsType, getBoardType,
     getAdsLocation, getAds, updateAdsLoc, updateAds,
     getAdsLocReport, getAdsReport, getLocReport,
     updateAdsLocReport, updateAdsReport, updateLocReport,
-    getAdsCreate, createAds, deleteAdsCreate}
+    getAdsCreate, adsCreate, deleteAdsCreate}
