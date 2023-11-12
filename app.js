@@ -58,10 +58,6 @@ appCanBo.get('/', function(req, res) {
   res.render('CanBo/homepageCanbo');
 });
 
-appCanBo.get('/quanlichung', function(req, res) {
-  res.render('CanBo/So/quanlichung');
-});
-
 appCanBo.get('/adsLocation', function(req, res) {
   res.render('CanBo/PhuongQuan/adsLocation');
 });
@@ -95,6 +91,42 @@ appCanBo.get('/account', function(req, res) {
   res.render('CanBo/account');
 });
 
+// SO
+appCanBo.get('/quanlichung', function(req, res) {
+  res.render('CanBo/So/quanlichung');
+});
+
+appCanBo.get('/quanliquan', function(req, res) {
+  res.render('CanBo/So/quanliquan');
+});
+
+appCanBo.get('/quanliphuong', function(req, res) {
+  res.render('CanBo/So/quanliphuong');
+});
+
+appCanBo.get('/quanlicanbo', function(req, res) {
+  res.render('CanBo/So/quanlicanbo');
+});
+
+appCanBo.get('/diemdatquangcao', function(req, res) {
+  res.render('CanBo/So/diemdatquangcao');
+});
+
+appCanBo.get('/bangquangcao', function(req, res) {  
+  res.render('CanBo/So/bangquangcao');
+});
+
+appCanBo.get('/yeucauchinhsua', function(req, res) {
+  res.render('CanBo/So/yeucauchinhsua');
+});
+
+appCanBo.get('/yeucaucapphep', function(req, res) {
+  res.render('CanBo/So/yeucaucapphep');
+});
+
+appCanBo.get('/thongkebaocao', function(req, res) {
+  res.render('CanBo/So/thongkebaocao');
+});
 
 
 
