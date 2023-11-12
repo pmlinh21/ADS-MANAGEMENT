@@ -1,0 +1,29 @@
+<%- include('../../partial/headerSo.ejs') %>
+<%- include('../../partial/sidebarSo.ejs') %>
+    <div class="content">
+        <div class="title-container">
+            <span class="title-icon"><i class="fas fa-home"></i></span>
+            <span class="title-text"><h1>Quản lí yêu cầu cấp phép quảng cáo</h1></span>
+        </div>
+        <!-- TABLE 1 -->
+        <div class="table-wrap" id="create-ads-management">
+            <table>
+                <caption>Danh sách yêu cầu cấp phép quảng cáo</caption>
+                <thead>
+                    <tr>
+                        <th class="id">ID Yêu cầu</th>
+                        <th>Điểm đặt</th>
+                        <th>Công ty</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="6" class="add-item"><i class="fas fa-plus"></i></td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="../../../public/js/CanBo/So/quanliquan.js"></script>
+<%- include('../../partial/footerSo.ejs') %>
