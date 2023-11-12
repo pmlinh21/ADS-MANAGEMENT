@@ -51,7 +51,7 @@ $(document).ready(function () {
             photo, longitude, latitude]
         })
         filter_info = [...info]
-
+        console.log(filter_info)
         $("#example").DataTable({
           data: filter_info
         });

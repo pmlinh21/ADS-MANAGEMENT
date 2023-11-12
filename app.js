@@ -55,7 +55,7 @@ appCanBo.get('/login', function(req, res) {
 });
 
 appCanBo.get('/', function(req, res) {
-  res.render('CanBo/homepageCanbo');
+  res.render('CanBo/homepageCanBo');
 });
 
 appCanBo.get('/adsLocation', function(req, res) {
@@ -89,6 +89,11 @@ appCanBo.get('/detailAdsCreate', function(req, res) {
 
 appCanBo.get('/account', function(req, res) {
   res.render('CanBo/account');
+});
+
+// PHUONG
+appCanBo.get('/adsLocationPhuong', function(req, res) {
+  res.render('CanBo/PhuongQuan/adsLocationPhuong');
 });
 
 // SO
@@ -127,6 +132,4 @@ appCanBo.get('/yeucaucapphep', function(req, res) {
 appCanBo.get('/thongkebaocao', function(req, res) {
   res.render('CanBo/So/thongkebaocao');
 });
-
-
 
