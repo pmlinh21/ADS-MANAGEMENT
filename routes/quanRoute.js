@@ -6,7 +6,7 @@ const { getLocType, getAdsType, getBoardType,
     getAdsLocation, getAds, updateAdsLoc, updateAds,
     getAdsLocReport, getAdsReport, getLocReport,
     updateAdsLocReport, updateAdsReport, updateLocReport,
-    getAdsCreate, createAds, deleteAdsCreate } = require('../controllers/quanController')
+    getAdsCreate, adsCreate, deleteAdsCreate } = require('../controllers/quanController')
 const { upload } = require('../middlewares/upload');
 
 quanRoute.get("/getLocType", getLocType);
@@ -33,7 +33,7 @@ quanRoute.post("/updateAdsLoc/:email", upload('updateAdsLoc').single("file"), up
 
 quanRoute.get("/getAds/:id_district", getAds);
 
-quanRoute.post("/updateAds/:id_district", upload('updateAds').single("file"), updateAds);
+quanRoute.post("/updateAds/:email", upload('updateAds').single("file"), updateAds);
 
 quanRoute.get("/getAdsLocReport/:id_district", getAdsLocReport);
 
@@ -49,7 +49,7 @@ quanRoute.put("/updateLocReport/:id_req", updateLocReport);
 
 quanRoute.get("/getAdsCreate/:id_district", getAdsCreate);
 
-quanRoute.post("/createAds/:id_district", upload('createAds').single("file"), createAds)
+quanRoute.post("/adsCreate/:id_district", upload('adsCreate').single("file"), adsCreate)
 
 quanRoute.put("/deleteAdsCreate/:id_district", deleteAdsCreate)
 
