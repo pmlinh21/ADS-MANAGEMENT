@@ -83,3 +83,19 @@ function editPopup() {
     });
     document.querySelector("body").appendChild(div);
 }
+
+function addPopup(e) {
+    // alert("add");
+    let title = e.parentElement.parentElement.parentElement.querySelector("caption").textContent.slice(14);
+    document.querySelector("#add-popup").style.display = "block";
+    document.querySelector("#add-popup legend").innerHTML = "<i class='fas fa-plus-square'></i> Thêm " + title;
+    document.querySelector("#add-popup .input-field label").textContent = "Tên " + title;
+
+    let div = document.createElement("div");
+    div.className = "popup-background";
+    div.addEventListener("click", () => {
+        div.remove();
+        document.querySelector("#add-popup").style.display = "none";
+    });
+    document.querySelector("body").appendChild(div);
+}
