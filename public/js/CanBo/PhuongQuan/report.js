@@ -52,23 +52,44 @@ $(document).ready(function () {
         content,  photo1, photo2, resolve, status, ward, longitude, latitue]
       })
 
+      let urlParams = new URLSearchParams(window.location.search);
+      let idString = urlParams.get('id');
+      let idArray = idString?.split(',').map(Number);
+      let wardArray = idArray?.map(function(item){
+        return wards[item]
+      })
+      console.log(wardArray)
+
       ads_info = [...info1].sort((a, b) => a[0] - b[0]);
 
       adsloc_info = [...info2].sort((a, b) => a[0] - b[0]);
 
       loc_info = [...info3].sort((a, b) => a[0] - b[0]);
 
-        var checkboxes = $('input[type="checkbox"]');
-        var checkboxStates = []; 
-        checkboxes.each(function() {
-          var checkbox = $(this);
-          var checkboxState = {
-            id: checkbox.attr('id'),
-            checked: checkbox.prop('checked')
-          };
-          checkboxStates.push(checkboxState);
-        });
-        console.log(checkboxStates);
+      if (wardArray?.length > 0){
+        let result = []
+        for (let i = 0; i < ads_info.length; i++){
+          if (!wardArray.includes(ads_info[i][14]))
+            result.push(ads_info[i]);
+        }
+        ads_info = [...result]
+        result = []
+        for (let i = 0; i < adsloc_info.length; i++){
+          if (!wardArray.includes(adsloc_info[i][14]))
+            result.push(adsloc_info[i]);
+        }
+        adsloc_info = [...result]
+        result = []
+        for (let i = 0; i < loc_info.length; i++){
+          if (!wardArray.includes(loc_info[i][14]))
+            result.push(loc_info[i]);
+        }
+        loc_info = [...result]
+      }
+
+      console.log(ads_info);
+      console.log(adsloc_info);
+      console.log(loc_info);
 
       $(".ads-report-table").DataTable({
         pageLength: 6,
@@ -126,7 +147,7 @@ $(document).ready(function () {
             loc_info.push(info3[i]);
           }
         } else {
-          console.log("hihi")
+          // console.log("hihi")
           var result = []
           for (var i = 0; i < ads_info.length; i++){
             if (ads_info[i][14] != wards[id_ward])
@@ -159,7 +180,23 @@ $(document).ready(function () {
           return a[0] - b[0];
         })).draw();
 
-        // lưu local storage
+        var checkboxes = $('.ward-table input[type="checkbox"]');
+        var checkboxStates = []; 
+        checkboxes.each(function() {
+          if (!this.checked){
+            let id = parseInt(this.id.substring(this.id.indexOf("-") + 1))
+            checkboxStates.push(id);
+          }
+        });
+
+        let newURL = window.location.href.split('?')[0]; 
+        if (checkboxStates.length > 0){
+          newURL += '?id=' + encodeURIComponent(checkboxStates.join(","));
+          history.replaceState(null, null, newURL);
+        } else{
+          history.replaceState(null, null, newURL);
+        }
+        
       })
   }
 
