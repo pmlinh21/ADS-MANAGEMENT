@@ -1,6 +1,6 @@
 // QUẬN
 
-let getAdsType = {
+let AdsType = {
   message: "Get thành công",
   content: [
     {
@@ -18,7 +18,7 @@ let getAdsType = {
   ]
 }
 
-let getLocType = {
+let LocType = {
   message: "Get thành công",
   content: [
     {
@@ -48,7 +48,7 @@ let getLocType = {
   ]
 }
 
-let getBoardType ={
+let BoardType ={
   message: "Get thành công",
   content: [
     {
@@ -94,7 +94,7 @@ let getBoardType ={
   ]
 }
 
-let getWard = {
+let Ward = {
   message: "Get thành công",
   content: [
     {
@@ -150,7 +150,7 @@ let getWard = {
   ]
 }
 
-let getAdsLocation = {
+let QuanAdsLocation = {
   message: "Get thành công",
   content: [
     {
@@ -325,7 +325,7 @@ let getAdsLocation = {
   ]
 }
 
-let getAllAdsLoc = {
+let QuanAllAdsLoc = {
   message: "Get thành công",
   content: [
     {
@@ -459,7 +459,7 @@ let getAllAdsLoc = {
   ]
 }
 
-let getAds = {
+let QuanAds = {
   message: "Get thành công",
   content: [
     {
@@ -689,7 +689,7 @@ let getAds = {
   ]
 }
 
-let getAdsReport = {
+let QuanAdsReport = {
   message: "Get thành công",
   content: [
     {
@@ -1001,7 +1001,7 @@ let getAdsReport = {
   ]
 }
 
-let getAdsLocReport = {
+let QuanAdsLocReport = {
   message: "Get thành công",
   content: [
     {
@@ -1259,7 +1259,7 @@ let getAdsLocReport = {
   ]
 }
 
-let getLocReport = {
+let QuanLocReport = {
   message: "Get thành công",
   content: [
     {
@@ -1345,4 +1345,239 @@ let getLocReport = {
   ]
 }
 
-let getAdsCreate = null
+let QuanAdsCreate = {
+  message: "Get thành công",
+  content: [
+    {
+      id_create: 3,
+      officer: "pmlinh21@clc.fitus.edu.vn",
+      office: 1,
+      id_ads_location: 20,
+      id_board_type: 8,
+      width: 11.23,
+      height: 5.42,
+      quantity: 3,
+      content: "Xây dựng ước mơ của bạn. Chất lượng đến từng chi tiết.",
+      photo: "",
+      company: "Công ty Xây dựng Tiến Đạt",
+      email: "info@tiendatconstruction.vn",
+      phone: "0123456789",
+      address: "14 Alexandre de Rhodes",
+      start_date: "2023-08-15T00:00:00.000Z",
+      end_date: "2023-12-11T00:00:00.000Z",
+      status: 1,
+      board_type: "Trụ/Cụm pano",
+      ward: "Bến Nghé"
+    },
+    {
+      id_create: 5,
+      officer: "nnlien21@clc.fitus.edu.vn",
+      office: 2,
+      id_ads_location: 22,
+      id_board_type: 7,
+      width: 9.88,
+      height: 4.67,
+      quantity: 4,
+      content: "Hương vị tinh tế từ bếp đến bát. Đẳng cấp trong từng giọt mồ hôi.",
+      photo: "",
+      company: "Công ty Thực phẩm Hương Thảo",
+      email: "info@huongthaofoods.com",
+      phone: "0776543210",
+      address: "55-53 Nguyễn Thị Minh Khai",
+      start_date: "2023-09-07T00:00:00.000Z",
+      end_date: "2023-12-20T00:00:00.000Z",
+      status: 1,
+      board_type: "Trụ treo băng rôn ngang",
+      ward: "Bến Nghé"
+    },
+    {
+      id_create: 6,
+      officer: "nnlien21@clc.fitus.edu.vn",
+      office: 1,
+      id_ads_location: 21,
+      id_board_type: 1,
+      width: 5.34,
+      height: 6.11,
+      quantity: 1,
+      content: "Sáng tạo không gian xanh. Thiên nhiên sống động trong lòng thành phố.",
+      photo: "",
+      company: "EverGreen Landscapes",
+      email: "info@evergreenlandscapes.com",
+      phone: "0145678901",
+      address: "108 Nguyễn Du",
+      start_date: "2023-09-14T00:00:00.000Z",
+      end_date: "2023-12-24T00:00:00.000Z",
+      status: 0,
+      board_type: "Trụ bảng hiflex",
+      ward: "Bến Thành"
+    },
+    {
+      id_create: 9,
+      officer: "pmlinh21@clc.fitus.edu.vn",
+      office: 1,
+      id_ads_location: 15,
+      id_board_type: 10,
+      width: 2.97,
+      height: 10.75,
+      quantity: 1,
+      content: "Sức khỏe không giới hạn. Chăm sóc sức khỏe tại đỉnh.",
+      photo: "",
+      company: "Công ty Y tế Hoàn Hảo",
+      email: "info@hoanhaohealthcare.com",
+      phone: "0112233445",
+      address: "161-141 Nguyễn Du",
+      start_date: "2023-10-09T00:00:00.000Z",
+      end_date: "2024-01-08T00:00:00.000Z",
+      status: 1,
+      board_type: "Trung tâm thương mại",
+      ward: "Bến Thành"
+    },
+    {
+      id_create: 11,
+      officer: "nnlien21@clc.fitus.edu.vn",
+      office: 1,
+      id_ads_location: 14,
+      id_board_type: 2,
+      width: 6.78,
+      height: 11.24,
+      quantity: 1,
+      content: "Hỗ Trợ Cộng Đồng, Xây Dựng Tương Lai! Chúng tôi đầu tư vào các dự án xã hội để tạo ra những thay đổi tích cực trong cuộc sống hàng ngày của bạn.",
+      photo: "",
+      company: "Công ty Du lịch Phong Cảnh Đẹp",
+      email: "info@phongcachdeptravel.com",
+      phone: "0743216547",
+      address: "59 Nguyễn Thị Minh Khai",
+      start_date: "2023-10-22T00:00:00.000Z",
+      end_date: "2024-01-18T00:00:00.000Z",
+      status: 0,
+      board_type: "Trụ màn hình điện tử LED",
+      ward: "Bến Thành"
+    },
+    {
+      id_create: 12,
+      officer: "nthphuc21@clc.fitus.edu.vn",
+      office: 1,
+      id_ads_location: 21,
+      id_board_type: 7,
+      width: 14.2,
+      height: 12.68,
+      quantity: 2,
+      content: "Quản lý tài chính, xây dựng tương lai. Đối tác tài chính đáng tin cậy.",
+      photo: "",
+      company: "SilverLine Financial Services",
+      email: "info@silverlinefinancials.com",
+      phone: "0134567890",
+      address: "108 Nguyễn Du",
+      start_date: "2023-11-01T00:00:00.000Z",
+      end_date: "2024-01-23T00:00:00.000Z",
+      status: 1,
+      board_type: "Trụ treo băng rôn ngang",
+      ward: "Bến Thành"
+    },
+    {
+      id_create: 13,
+      officer: "ncluan21@clc.fitus.edu.vn",
+      office: 2,
+      id_ads_location: 20,
+      id_board_type: 1,
+      width: 1.54,
+      height: 13.91,
+      quantity: 3,
+      content: "Nội thất độc đáo, phản ánh cá nhân. Không gian sống đẳng cấp.",
+      photo: "",
+      company: "Công ty Trang trí Nội thất Mỹ Ngọc",
+      email: "info@myngocinteriors.com",
+      phone: "0965432101",
+      address: "14 Alexandre de Rhodes",
+      start_date: "2023-11-08T00:00:00.000Z",
+      end_date: "2024-01-27T00:00:00.000Z",
+      status: 1,
+      board_type: "Trụ bảng hiflex",
+      ward: "Bến Nghé"
+    },
+    {
+      id_create: 15,
+      officer: "nthphuc21@clc.fitus.edu.vn",
+      office: 1,
+      id_ads_location: 18,
+      id_board_type: 8,
+      width: 15,
+      height: 6.78,
+      quantity: 1,
+      content: "Học ngoại ngữ, mở cánh cửa thế giới. Giáo viên chất lượng, học viên tự tin.",
+      photo: "",
+      company: "Công ty Đào tạo Ngoại ngữ Quốc tế",
+      email: "info@quocnuguageschool.com",
+      phone: "0156789012",
+      address: "66 Trương Định",
+      start_date: "2023-11-21T00:00:00.000Z",
+      end_date: "2024-02-06T00:00:00.000Z",
+      status: 1,
+      board_type: "Trụ/Cụm pano",
+      ward: "Bến Thành"
+    },
+    {
+      id_create: 19,
+      officer: "pmlinh21@clc.fitus.edu.vn",
+      office: 2,
+      id_ads_location: 3,
+      id_board_type: 3,
+      width: 11.98,
+      height: 2.89,
+      quantity: 1,
+      content: "Thể thao đỉnh cao, niềm vui không ngừng. Thiết bị chất lượng, niềm đam mê không giới hạn.",
+      photo: "",
+      company: "Công ty Thể thao Đỉnh Cao",
+      email: "info@dinhhaothethao.vn",
+      phone: "0911112222",
+      address: "84 Lê Lai",
+      start_date: "2023-12-24T00:00:00.000Z",
+      end_date: "2024-02-24T00:00:00.000Z",
+      status: 1,
+      board_type: "Trụ hộp đèn",
+      ward: "Phạm Ngũ Lão"
+    },
+    {
+      id_create: 21,
+      officer: "nnlien21@clc.fitus.edu.vn",
+      office: 1,
+      id_ads_location: 1,
+      id_board_type: 2,
+      width: 1,
+      height: 1,
+      quantity: 1,
+      content: "1",
+      photo: "1699769529139_gradient.png",
+      company: "1",
+      email: "1",
+      phone: "1",
+      address: "59 Nguyễn Thị Minh Khai",
+      start_date: "2023-11-11T00:00:00.000Z",
+      end_date: "2023-11-24T00:00:00.000Z",
+      status: 0,
+      board_type: "Trụ màn hình điện tử LED",
+      ward: "Bến Thành"
+    },
+    {
+      id_create: 22,
+      officer: "nnlien21@clc.fitus.edu.vn",
+      office: 1,
+      id_ads_location: 1,
+      id_board_type: 2,
+      width: 1,
+      height: 1,
+      quantity: 1,
+      content: "1",
+      photo: "1699769662678_gradient.png",
+      company: "1",
+      email: "1",
+      phone: "1",
+      address: "59 Nguyễn Thị Minh Khai",
+      start_date: "2023-11-10T00:00:00.000Z",
+      end_date: "2023-11-22T00:00:00.000Z",
+      status: 0,
+      board_type: "Trụ màn hình điện tử LED",
+      ward: "Bến Thành"
+    }
+  ]
+}

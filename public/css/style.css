@@ -478,8 +478,9 @@ body > #map{
 #example3_wrapper {
   margin: 1rem 4rem;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 #example,

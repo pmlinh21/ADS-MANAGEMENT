@@ -1,5 +1,3 @@
-// đã hard code (quận)
-
 function renderWard(wards){
     var template = ` 
         <% for (var i = 0; i < wards.length; i++) { %>
@@ -69,136 +67,255 @@ function createMarker(info, map, markers){
   });
 }
 
+// hard code
 $(document).ready(function () {
-    // 2 = Quan, 1 = Phuong, 3 = Sở
-    const role = 2; 
+  const role = 2; 
+  const id_district = 1;
+  var wards, info, markers = []
 
-    const id_district = 1;
-    var wards, info, markers = []
-
-    // const id_ward;
-
-
-    $(window).on('resize', function(){
-      let windowHeight = $(window).height();
-      let headerHeight = $('#header').height();
-      let mapHeight = windowHeight - headerHeight;
-      $('#map').css('top', headerHeight);
-      console.log(windowHeight, headerHeight, mapHeight)
-      $('#map').height(mapHeight);
-    });
-
-    // set map
-
-    mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
-    var map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [106.6974, 10.7743],
-        zoom: 15
-    });
-
-    // set geocoder
-
-    var geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl,
-    });
-
-    if (role === 1) {
-        $("#select-ward").hide();
-    }
-    else if (role === 2) {
-      // $.get(`http://localhost:8080/api/quan/getAdsLocation/${id_district}`, function(data) {
-      //   console.log("~");
-      
-        info = getAdsLocation.content.map(function(data){
-          let {id_ads_location, address, ward, loc_type, ads_type, 
-            photo, is_zoning, longitude, latitude, hasAds, hasReport} = data
-          let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
-          id_ads_location = parseInt(id_ads_location)
-          return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, 
-            photo, longitude, latitude, is_zoning,  hasAds, hasReport]
-        })
-        console.log(info)
-        createMarker(info, map, markers);
-        
-      // }).fail(function(error) {
-      //   console.log(error);
-      // })
-
-      // $.get(`http://localhost:8080/api/quan/getWard/${id_district}`, function(data) {
-        wards = getWard.content
-        console.log("!");
-        renderWard(wards);
-      // }).fail(function(error) {
-      //   console.log(error);
-      // });
-
-      $(".select-ward-bar").on('click', function(){
-        $("hr").show()
-        $("#ward-container").show();
-        $('#manage').css('pointer-events', 'none');
-        $('#account').css('pointer-events', 'none');
-        $('#logout').css('pointer-events', 'none');
-
-        // nhấn chọn tất cả
-        $("#ward-container .style2-button").off("click").on("click", function(){
-          console.log("a")
-          $('#ward-container .form-check input').prop('checked', true);
-        })
-
-        // nhấn áp dụng
-        $("#ward-container .style1-button").off("click").on("click", function(e){
-          e.preventDefault();
-          $("hr").hide()
-          $("#ward-container").hide();
-
-          var selected_ward = $(":checkbox").map(function() {
-            if (this.checked)
-              return this.id
-          }).get();
-
-          let filter_info  = []
-          info.forEach(function(item){
-            if (selected_ward.includes(item[2])){
-              filter_info.push(item)
-            } 
-          })
-          clearMarker(markers);
-          createMarker(filter_info, map, markers);
-          // console.log(markers)
-
-          $('#manage').css('pointer-events', 'auto');
-          $('#account').css('pointer-events', 'auto');
-          $('#logout').css('pointer-events', 'auto');
-          return
-        })
-      })
-    }
-    else{
-      $("#select-ward").hide();
-    }
-
-    const manageButton = $('#manage');
-    const manageMenu = $('#manage .manage-menu');
-    if (role === 3){
-      $('#manage .nav-link').attr('href','/quanlichung')
-    } else{
-      manageButton.hover(
-        function () {
-          $(this).addClass('li-hover');
-          $('#manage .nav-link').addClass('nav-link-hover');
-          manageMenu.show();
-          $('.black-bg').show()
-        },
-        function () {
-          $(this).removeClass('li-hover');
-          $('#manage .nav-link').removeClass('nav-link-hover');
-          manageMenu.hide();
-          $('.black-bg').hide()
-        }
-      );
-    }
-
+  $(window).on('resize', function(){
+    let windowHeight = $(window).height();
+    let headerHeight = $('#header').height();
+    let mapHeight = windowHeight - headerHeight;
+    $('#map').css('top', headerHeight);
+    console.log(windowHeight, headerHeight, mapHeight)
+    $('#map').height(mapHeight);
   });
+
+  mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
+  var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [106.6974, 10.7743],
+      zoom: 15
+  });
+
+  // set geocoder
+
+  var geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl,
+  });
+
+  if (role === 1) {
+      $("#select-ward").hide();
+  }
+  else if (role === 2) {
+      info = QuanAdsLocation.content.map(function(data){
+        let {id_ads_location, address, ward, loc_type, ads_type, 
+          photo, is_zoning, longitude, latitude, hasAds, hasReport} = data
+        let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
+        id_ads_location = parseInt(id_ads_location)
+        return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, 
+          photo, longitude, latitude, is_zoning,  hasAds, hasReport]
+      })
+      console.log(info)
+      createMarker(info, map, markers);
+
+      wards = Ward.content
+      console.log("!");
+      renderWard(wards);
+
+    $(".select-ward-bar").on('click', function(){
+      $("hr").show()
+      $("#ward-container").show();
+      $('#manage').css('pointer-events', 'none');
+      $('#account').css('pointer-events', 'none');
+      $('#logout').css('pointer-events', 'none');
+
+      // nhấn chọn tất cả
+      $("#ward-container .style2-button").off("click").on("click", function(){
+        console.log("a")
+        $('#ward-container .form-check input').prop('checked', true);
+      })
+
+      // nhấn áp dụng
+      $("#ward-container .style1-button").off("click").on("click", function(e){
+        e.preventDefault();
+        $("hr").hide()
+        $("#ward-container").hide();
+
+        var selected_ward = $(":checkbox").map(function() {
+          if (this.checked)
+            return this.id
+        }).get();
+
+        let filter_info  = []
+        info.forEach(function(item){
+          if (selected_ward.includes(item[2])){
+            filter_info.push(item)
+          } 
+        })
+        clearMarker(markers);
+        createMarker(filter_info, map, markers);
+        // console.log(markers)
+
+        $('#manage').css('pointer-events', 'auto');
+        $('#account').css('pointer-events', 'auto');
+        $('#logout').css('pointer-events', 'auto');
+        return
+      })
+    })
+  }
+  else{
+    $("#select-ward").hide();
+  }
+
+  const manageButton = $('#manage');
+  const manageMenu = $('#manage .manage-menu');
+  if (role === 3){
+    $('#manage .nav-link').attr('href','/quanlichung')
+  } else{
+    manageButton.hover(
+      function () {
+        $(this).addClass('li-hover');
+        $('#manage .nav-link').addClass('nav-link-hover');
+        manageMenu.show();
+        $('.black-bg').show()
+      },
+      function () {
+        $(this).removeClass('li-hover');
+        $('#manage .nav-link').removeClass('nav-link-hover');
+        manageMenu.hide();
+        $('.black-bg').hide()
+      }
+    );
+  }
+
+});
+
+// api
+// $(document).ready(function () {
+//     // 2 = Quan, 1 = Phuong, 3 = Sở
+//     const role = 2; 
+
+//     const id_district = 1;
+//     var wards, info, markers = []
+
+//     // const id_ward;
+
+
+//     $(window).on('resize', function(){
+//       let windowHeight = $(window).height();
+//       let headerHeight = $('#header').height();
+//       let mapHeight = windowHeight - headerHeight;
+//       $('#map').css('top', headerHeight);
+//       console.log(windowHeight, headerHeight, mapHeight)
+//       $('#map').height(mapHeight);
+//     });
+
+//     // set map
+
+//     mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
+//     var map = new mapboxgl.Map({
+//         container: 'map',
+//         style: 'mapbox://styles/mapbox/streets-v11',
+//         center: [106.6974, 10.7743],
+//         zoom: 15
+//     });
+
+//     // set geocoder
+
+//     var geocoder = new MapboxGeocoder({
+//       accessToken: mapboxgl.accessToken,
+//       mapboxgl: mapboxgl,
+//     });
+
+//     if (role === 1) {
+//         $("#select-ward").hide();
+//     }
+//     else if (role === 2) {
+//       $.get(`http://localhost:8080/api/quan/getAdsLocation/${id_district}`, function(data) {
+//         console.log("~");
+      
+//         info = data.content.map(function(data){
+//           let {id_ads_location, address, ward, loc_type, ads_type, 
+//             photo, is_zoning, longitude, latitude, hasAds, hasReport} = data
+//           let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
+//           id_ads_location = parseInt(id_ads_location)
+//           return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, 
+//             photo, longitude, latitude, is_zoning,  hasAds, hasReport]
+//         })
+//         console.log(info)
+//         createMarker(info, map, markers);
+        
+//       }).fail(function(error) {
+//         console.log(error);
+//       })
+
+//       $.get(`http://localhost:8080/api/quan/getWard/${id_district}`, function(data) {
+//         wards = data.content
+//         console.log("!");
+//         renderWard(wards);
+//       }).fail(function(error) {
+//         console.log(error);
+//       });
+
+//       $(".select-ward-bar").on('click', function(){
+//         $("hr").show()
+//         $("#ward-container").show();
+//         $('#manage').css('pointer-events', 'none');
+//         $('#account').css('pointer-events', 'none');
+//         $('#logout').css('pointer-events', 'none');
+
+//         // nhấn chọn tất cả
+//         $("#ward-container .style2-button").off("click").on("click", function(){
+//           console.log("a")
+//           $('#ward-container .form-check input').prop('checked', true);
+//         })
+
+//         // nhấn áp dụng
+//         $("#ward-container .style1-button").off("click").on("click", function(e){
+//           e.preventDefault();
+//           $("hr").hide()
+//           $("#ward-container").hide();
+
+//           var selected_ward = $(":checkbox").map(function() {
+//             if (this.checked)
+//               return this.id
+//           }).get();
+
+//           let filter_info  = []
+//           info.forEach(function(item){
+//             if (selected_ward.includes(item[2])){
+//               filter_info.push(item)
+//             } 
+//           })
+//           clearMarker(markers);
+//           createMarker(filter_info, map, markers);
+//           // console.log(markers)
+
+//           $('#manage').css('pointer-events', 'auto');
+//           $('#account').css('pointer-events', 'auto');
+//           $('#logout').css('pointer-events', 'auto');
+//           return
+//         })
+//       })
+//     }
+//     else{
+//       $("#select-ward").hide();
+//     }
+
+//     const manageButton = $('#manage');
+//     const manageMenu = $('#manage .manage-menu');
+//     if (role === 3){
+//       $('#manage .nav-link').attr('href','/quanlichung')
+//     } else{
+//       manageButton.hover(
+//         function () {
+//           $(this).addClass('li-hover');
+//           $('#manage .nav-link').addClass('nav-link-hover');
+//           manageMenu.show();
+//           $('.black-bg').show()
+//         },
+//         function () {
+//           $(this).removeClass('li-hover');
+//           $('#manage .nav-link').removeClass('nav-link-hover');
+//           manageMenu.hide();
+//           $('.black-bg').hide()
+//         }
+//       );
+//     }
+
+// });
+
