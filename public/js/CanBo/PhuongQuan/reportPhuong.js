@@ -1,4 +1,8 @@
 $(document).ready(function(){
+    const role = 2; 
+    const email = "phuong@gmail.com"
+    const id_ward = 2;
+
     let ads_report = [
         [1, 'nnlien21@clc.fitus.edu.vn', 1, 1, 1, 'Nguyễn Văn Anh', 'nvanh@gmail.com', '0912345678', 'Biển quảng cáo hiển thị thông điệp chính trị không liên quan đến khu vực này. Mong muốn chính quyền địa phương kiểm tra và đảm bảo rằng quảng cáo trên đường không vi phạm các quy định liên quan.', '', '', "2023-08-05 00:00:00", 1, 'Kiểm tra thông tin quảng cáo và yêu cầu loại bỏ thông điệp không liên quan. Đảm bảo quảng cáo tuân thủ luật lệ và không gây phiền hà cho cộng đồng.'],
         [2, 'nthphuc21@clc.fitus.edu.vn', 2, 2,	1, 'Lê Thị Bình', 'ltb@gmail.com', '0923456789', 'Biển quảng cáo chính trị chứa thông điệp không chính xác về chính sách công cộng. Mong muốn chính trị gia hoặc tổ chức liên quan xem xét và điều chỉnh nội dung quảng cáo để tránh thông tin không đúng.', '', '', "2023-08-12 00:00:00", 1, 'Liên hệ chính trị gia hoặc tổ chức chính trị liên quan và yêu cầu sửa đổi thông điệp không chính xác. Đảm bảo quảng cáo không truyền đạt thông tin sai lệch về chính sách công cộng.'],
@@ -110,21 +114,14 @@ $(document).ready(function(){
     ];
     
     let loc_report = [
-        [1, '', null, 10.7762, 106.699, 1, 'Trần Thị Hương Giang', 'thgiang@gmail.com', '0901122334', 'Tôi phát hiện một quảng cáo không hợp pháp tại địa chỉ này. Xin kiểm tra và loại bỏ nó khỏi trang web của bạn.', '', '', "2023-08-05 00:00:00", 0, ''],
-        [2, 'nthphuc21@clc.fitus.edu.vn', 1, 10.7751, 106.7, 4, 'Lê Văn Đức', 'lvduc@gmail.com', '0934567890', 'Tôi muốn đăng ký quảng cáo tại đây. Xin hướng dẫn tôi qua quy trình đăng ký và các bước cần thực hiện để quảng cáo của tôi xuất hiện trên bản đồ.', '', '', "2023-08-12 00:00:00", 1, 'Để đăng ký quảng cáo, vui lòng truy cập trang chính thức của chúng tôi và làm theo hướng dẫn đăng ký. Nếu gặp vấn đề, liên hệ với bộ phận hỗ trợ.'],
-        [3, '', null,	10.7775, 106.699, 1, 'Nguyễn Thị Mai Anh', 'ntmanh@gmail.com', '0987654321', 'Bản đồ hiển thị địa chỉ không chính xác. Đề nghị cập nhật để tránh nhầm lẫn từ người dùng.', '', '', "2023-08-17 00:00:00", 0, ''],
-        [4, '', null,	10.7809, 106.686, 3, 'Bùi Minh Tuấn', 'bmtuan@gmail.com', '0912345678', 'Khu vực này có lượng người qua lại lớn. Tôi đề xuất thêm điểm quảng cáo để tăng hiển thị thông tin về cộng đồng và doanh nghiệp địa phương.', '', '', "2023-08-23 00:00:00", 0, ''],
-        [5, '', null,	10.7815, 106.687, 3, 'Hoàng Thị Lan Anh', 'htlanh@gmail.com', '0978877665', 'Khu vực này thường xuyên có trẻ em đi lại. Mong muốn các quảng cáo ở đây được thiết kế để phù hợp với độ tuổi của họ, giúp tạo ra một môi trường an toàn và thân thiện hơn.', '', '', "2023-08-28 00:00:00", 0, ''],
-        [6, 'nnlien21@clc.fitus.edu.vn', 2,	10.7787, 106.685, 4, 'Võ Văn Phúc', 'vvphuc@gmail.com', '0965123456', 'Ở đây có các bảng quảng cáo nhưng vì sao không có điểm đặt quảng cáo hiển thị trên bản đồ?', '', '', "2023-09-02 00:00:00", 1, 'Kiểm tra và xác nhận rằng điểm quảng cáo tại địa điểm này đã được thêm vào bản đồ. Cảm ơn người dân đã chú ý và báo cáo vấn đề này.'],
-        [7, '', null, 10.9448, 106.818,	1, 'Đỗ Thị Thanh Thảo',	'dtthao@gmail.com', '0921122334', 'Địa điểm có gắn quảng cáo trái phép, chưa đăng ký hợp pháp', '', '', "2023-09-08 00:00:00", 0, '']
+        [1, '', null, 10.7762, 106.699, 1, 'Trần Thị Hương Giang', 'thgiang@gmail.com', '0901122334', 'Tôi phát hiện một quảng cáo không hợp pháp tại địa chỉ này. Xin kiểm tra và loại bỏ nó khỏi trang web của bạn.', '', '', "2023-08-05 00:00:00", 0, '', 2],
+        [2, 'nthphuc21@clc.fitus.edu.vn', 1, 10.7751, 106.7, 4, 'Lê Văn Đức', 'lvduc@gmail.com', '0934567890', 'Tôi muốn đăng ký quảng cáo tại đây. Xin hướng dẫn tôi qua quy trình đăng ký và các bước cần thực hiện để quảng cáo của tôi xuất hiện trên bản đồ.', '', '', "2023-08-12 00:00:00", 1, 'Để đăng ký quảng cáo, vui lòng truy cập trang chính thức của chúng tôi và làm theo hướng dẫn đăng ký. Nếu gặp vấn đề, liên hệ với bộ phận hỗ trợ.', 1],
+        [3, '', null,	10.7775, 106.699, 1, 'Nguyễn Thị Mai Anh', 'ntmanh@gmail.com', '0987654321', 'Bản đồ hiển thị địa chỉ không chính xác. Đề nghị cập nhật để tránh nhầm lẫn từ người dùng.', '', '', "2023-08-17 00:00:00", 0, '', 1],
+        [4, '', null,	10.7809, 106.686, 3, 'Bùi Minh Tuấn', 'bmtuan@gmail.com', '0912345678', 'Khu vực này có lượng người qua lại lớn. Tôi đề xuất thêm điểm quảng cáo để tăng hiển thị thông tin về cộng đồng và doanh nghiệp địa phương.', '', '', "2023-08-23 00:00:00", 0, '', 32],
+        [5, '', null,	10.7815, 106.687, 3, 'Hoàng Thị Lan Anh', 'htlanh@gmail.com', '0978877665', 'Khu vực này thường xuyên có trẻ em đi lại. Mong muốn các quảng cáo ở đây được thiết kế để phù hợp với độ tuổi của họ, giúp tạo ra một môi trường an toàn và thân thiện hơn.', '', '', "2023-08-28 00:00:00", 0, '', 32],
+        [6, 'nnlien21@clc.fitus.edu.vn', 2,	10.7787, 106.685, 4, 'Võ Văn Phúc', 'vvphuc@gmail.com', '0965123456', 'Ở đây có các bảng quảng cáo nhưng vì sao không có điểm đặt quảng cáo hiển thị trên bản đồ?', '', '', "2023-09-02 00:00:00", 1, 'Kiểm tra và xác nhận rằng điểm quảng cáo tại địa điểm này đã được thêm vào bản đồ. Cảm ơn người dân đã chú ý và báo cáo vấn đề này.', 32],
+        [7, '', null, 10.9448, 106.818,	1, 'Đỗ Thị Thanh Thảo',	'dtthao@gmail.com', '0921122334', 'Địa điểm có gắn quảng cáo trái phép, chưa đăng ký hợp pháp', '', '', "2023-09-08 00:00:00", 0, '', 5]
     ];
-
-    let loc_type = [[1, "Đất công/Công viên/Hành lang an toàn giao thông"], [2, "Đất tư nhân/Nhà ở riêng lẻ"], 
-    [3, "Trung tâm thương mại"], [4, "Chợ"], [5, "Cây xăng"], [6, "Nhà chờ xe buýt"]];
-
-    let board_type = [[1, "Trụ bảng hiflex"], [2, "Trụ màn hình điện tử LED"], [3, "Trụ hộp đèn"], 
-    [4, "Bảng hiflex ốp tường"], [5, "Màn hình điện tử ốp tường"], [6, "Trụ treo băng rôn dọc"],
-    [7, "Trụ treo băng rôn ngang"], [8, "Trụ/Cụm pano"], [9, "Cổng chào"], [10, "Trung tâm thương mại"]];
 
     let report_type = [[1, "Tố giác sai phạm"], [2, "Đăng ký nội dung"], [3, "Đóng góp ý kiến"], [4, "Giải đáp thắc mắc"]]
     
@@ -137,7 +134,9 @@ $(document).ready(function(){
         return `${month}-${day}-${year}`;
     }
 
-    ads_report.forEach(function(row) {
+    const filtered_ads_report = ads_report.filter(row => ads_location[ads[row[3] - 1][1] - 1][4] == id_ward);
+
+    filtered_ads_report.forEach(function(row) {
         let report_type_index = row[4] - 1;
         let report_type_text = report_type[report_type_index][1];
     
@@ -147,7 +146,7 @@ $(document).ready(function(){
     });
     
     $('#example1').DataTable({
-        data: ads_report,
+        data: filtered_ads_report,
         columns: [
             { title: "ID Báo cáo", data: 0 },
             { title: "ID Quảng cáo", data: 3 },
@@ -165,12 +164,13 @@ $(document).ready(function(){
     
     $("#example1_wrapper").on('click', '.ads-report-table .view-btn', function(){
         let row = $(this).closest('tr').index();
-        let id_report = ads_report[row][0], table = "ads"
+        let id_report = filtered_ads_report[row][0], table = "ads"
         window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
         console.log(row);
     })
 
-    ads_loc_report.forEach(function(row) {
+    const filtered_ads_loc_report = ads_loc_report.filter(row => ads_location[row[3] - 1][4] == id_ward);
+    filtered_ads_loc_report.forEach(function(row) {
         let report_type_index = row[4] - 1;
         let report_type_text = report_type[report_type_index][1];
     
@@ -180,7 +180,7 @@ $(document).ready(function(){
     });
     
     $('#example2').DataTable({
-        data: ads_loc_report,
+        data: filtered_ads_loc_report,
         columns: [
             { title: "ID Báo cáo", data: 0 },
             { title: "ID Điểm đặt", data: 3 },
@@ -198,7 +198,7 @@ $(document).ready(function(){
     
     $("#example2_wrapper").on('click', '.adsloc-report-table .view-btn', function(){
         let row = $(this).closest('tr').index();
-        let id_report = ads_loc_report[row][0], table = "adsloc"
+        let id_report = filtered_ads_loc_report[row][0], table = "adsloc"
         window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
         console.log(row);
     })
@@ -216,9 +216,16 @@ $(document).ready(function(){
                     // Kiểm tra xem feature đầu tiên có thuộc tính place_name không
                     if (data.features[0].place_name) {
                         // Lấy địa chỉ từ dữ liệu trả về
-                        const addressComponents = data.features[0].place_name.split(',');
-                        const specificAddress = addressComponents.slice(0, -3).join(',').trim();
-                        callback(specificAddress);
+
+                        const fullAddress = data.features[0].place_name;
+
+                        // Tách địa chỉ thành các phần
+                        const addressComponents = fullAddress.split(', ');
+
+                        // Lấy phần của địa chỉ mà bạn quan tâm
+                        const simplifiedAddress = addressComponents.slice(0, 2).join(', ');
+
+                        callback(simplifiedAddress);
                     } else {
                         console.error('Dữ liệu không chứa thuộc tính "place_name".', data.features[0]);
                         callback('Địa chỉ không khả dụng');
@@ -235,7 +242,8 @@ $(document).ready(function(){
         });
     }
     
-    loc_report.forEach(function(row) {
+    const filtered_loc_report = loc_report.filter(row => row[15] === id_ward);
+    filtered_loc_report.forEach(function(row) {
         let report_type_index = row[5] - 1;
         let report_type_text = report_type[report_type_index][1];
     
@@ -247,21 +255,21 @@ $(document).ready(function(){
             row[13] = row[13] === 1 ? "Đã xử lý" : "Chưa xử lý";
     
             // Sau khi cập nhật giá trị địa chỉ, cập nhật dữ liệu cho DataTable
-            $('#example3').DataTable().clear().rows.add(loc_report).draw();
+            $('#example3').DataTable().clear().rows.add(filtered_loc_report).draw();
         });
     });
     
     $('#example3').DataTable({
-        data: loc_report,
+        data: filtered_loc_report,
         columns: [
             { title: "ID Báo cáo", data: 0 },
-            { title: "Địa chỉ", data: 3 },
-            { title: "Loại hình báo cáo", data: 5 },
+            { title: "Địa chỉ", class: "diachi", data: 3 },
+            { title: "Loại hình báo cáo", class: "diachi", data: 5 },
             { title: "Người báo cáo", data: 6 },
             { title: "Email", data: 7 },
-            { title: "Số điện thoại", data: 8 },
-            { title: "Thời điểm gửi", data: 12 },
-            { title: "Trạng thái", data: 13 },
+            // { title: "Số điện thoại", data: 8 },
+            { title: "Thời điểm gửi", class: "diachi", data: 12 },
+            { title: "Trạng thái", class: "diachi", data: 13 },
             { title: "", render: function() {
                 return '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>';
             } }
@@ -270,7 +278,7 @@ $(document).ready(function(){
     
     $("#example3_wrapper").on('click', '.loc-report-table .view-btn', function(){
         let row = $(this).closest('tr').index();
-        let id_report = loc_report[row][0], table = "loc"
+        let id_report = filtered_loc_report[row][0], table = "loc"
         window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
         console.log(row);
     })

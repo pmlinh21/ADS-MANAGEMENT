@@ -550,6 +550,10 @@ table .view-btn:focus,
   color: white;
 }
 
+table .diachi{
+  width: auto !important;
+  text-align: left !important;
+}
 .page-item .page-link {
   color: #0B7B31;
 }

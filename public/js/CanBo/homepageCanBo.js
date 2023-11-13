@@ -73,7 +73,7 @@ function createMarker(info, map, markers){
 
 // hard code
 $(document).ready(function () {
-  const role = 2; 
+  const role = 1; 
   const id_district = 1;
   var wards, info, markers = []
 
@@ -101,10 +101,10 @@ $(document).ready(function () {
     mapboxgl: mapboxgl,
   });
 
-  if (role === 1) {
+  if (role === 2) {
       $("#select-ward").hide();
   }
-  else if (role === 2) {
+  else if (role === 1) {
       info = QuanAdsLocation.content.map(function(data){
         let {id_ads_location, address, ward, loc_type, ads_type, 
           photo, is_zoning, longitude, latitude, hasAds, hasReport} = data
