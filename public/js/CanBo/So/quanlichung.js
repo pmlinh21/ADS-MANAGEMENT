@@ -1,3 +1,5 @@
+document.querySelector("#chung").classList.add("snb-li-active");
+
 let locationType = ["Đất công/Công viên/Hành lang an toàn giao thông", "Đất tư nhân/Nhà ở riêng lẻ", "Trung tâm thương mại", "Chợ", "Cây xăng", "Nhà chờ xe buýt"];
 for (let i = locationType.length; i > 0; i--) {
     let tr = document.createElement("tr");
@@ -63,7 +65,6 @@ for (let i = boardType.length; i > 0; i--) {
     document.querySelector("#board-type tbody").prepend(tr);
 }
 
-// open edit popup
 function editPopup() {
     let title = this.parentElement.parentElement.querySelector("caption").textContent.slice(14);
     document.querySelector("#edit-popup").style.display = "block";
