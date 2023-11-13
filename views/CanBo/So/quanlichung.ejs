@@ -62,22 +62,6 @@
                 </tbody>
             </table>
         </div>
-        <!-- POPUP FOR TABLE 1 -->
-        <form action="" method="post" class="popup-edit" id="edit-popup">
-            <legend></legend>
-            <div class="input-field">
-                <label for="id-adslocation-type"></label>
-                <input type="text" id="id-adslocation-type" name="id-adslocation-type" disabled>
-                <span class="tooltiptext">Không thể chỉnh sửa ID</span>
-            </div>
-            <div class="input-field">
-                <label for="adslocation-type"></label>
-                <input type="text" id="adslocation-type" name="name-adslocation-type" required>
-            </div>
-            
-            <button type="submit" value="delete" class="button">Lưu thay đổi</button>
-            <button type="button" value="update" class="button button-delete">Xóa bỏ</button>
-        </form>
 
         <!-- TABLE 2 -->
         <div class="table-wrap general" id="ads-type">
@@ -100,10 +84,6 @@
                     <tr><th class="id">ID</th><th>Tên loại hình báo cáo</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td class="id">1</td><td>Tố giác sai phạm</td></tr>
-                    <tr><td class="id">2</td><td>Đăng ký nội dung</td></tr>
-                    <tr><td class="id">3</td><td>Đóng góp ý kiến</td></tr>
-                    <tr><td class="id">4</td><td>Giải đáp thắc mắc</td></tr>
                     <tr><td colspan="2" class="add-item"><i class="fas fa-plus"></i></td>
                 </tbody>
             </table>
@@ -117,14 +97,39 @@
                     <tr><th class="id">ID</th><th>Tên loại bảng báo cáo</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td class="id">1</td><td>Trụ bảng hiflex</td></tr>
-                    <tr><td class="id">2</td><td>Đăng ký nội dung</td></tr>
-                    <tr><td class="id">3</td><td>Đóng góp ý kiến</td></tr>
-                    <tr><td class="id">4</td><td>Giải đáp thắc mắc</td></tr>
                     <tr><td colspan="2" class="add-item"><i class="fas fa-plus"></i></td>
                 </tbody>
             </table>
         </div>
+
+
+        <!-- POPUP EDIT FORM -->
+        <form action="" method="post" class="popup-edit" id="edit-popup">
+            <legend></legend>
+            <div class="input-field">
+                <label for="id-adslocation-type"></label>
+                <input type="text" id="id-adslocation-type" name="id-adslocation-type" disabled>
+                <span class="tooltiptext">Không thể chỉnh sửa ID</span>
+            </div>
+            <div class="input-field">
+                <label for="adslocation-type"></label>
+                <input type="text" id="adslocation-type" name="name-adslocation-type" required>
+            </div>
+            
+            <button type="submit" value="delete" class="button">Lưu thay đổi</button>
+            <button type="button" value="update" class="button button-delete">Xóa bỏ</button>
+        </form>
+
+        <!-- POPUP ADD FORM -->
+        <form action="" method="post" class="popup-edit" id="add-popup">
+            <legend></legend>
+            <div class="input-field">
+                <label for="adslocation-type"></label>
+                <input type="text" id="adslocation-type" name="name-adslocation-type" required>
+            </div>
+            
+            <button type="submit" value="add" class="button">Thêm</button>
+        </form>
     </div>
     <script src="../../../public/js/CanBo/So/quanlichung.js"></script>
 <%- include('../../partial/footerSo.ejs') %>
