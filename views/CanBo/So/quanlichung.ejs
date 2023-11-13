@@ -62,14 +62,19 @@
                 </tbody>
             </table>
         </div>
-        
+        <!-- POPUP FOR TABLE 1 -->
         <form class="popup-edit">
             <legend><i></i>Chỉnh sửa loại vị trí</legend>
-            <label for="id-adslocation-type">ID Loại vị trí</label>
-            <input type="text" id="id-adslocation-type" name="id-adslocation-type" disabled>
+            <div class="input-field">
+                <label for="id-adslocation-type">ID Loại vị trí</label>
+                <input type="text" id="id-adslocation-type" name="id-adslocation-type" disabled>
+            </div>
+            <div class="input-field">
+                <label for="adslocation-type">Tên loại vị trí</label>
+                <input type="text" id="adslocation-type" name="name-adslocation-type" value="Nhà chờ xe buýt" required>
+                <i class="fas fa-edit edit-icon"></i>
+            </div>
             
-            <label for="adslocation-type">Tên loại vị trí</label>
-            <input type="text" id="adslocation-type" name="name-adslocation-type" value="Nhà chờ xe buýt" required>
         </form>
 
         <!-- TABLE 2 -->
@@ -110,7 +115,7 @@
                     <tr><th class="id">ID</th><th>Tên loại bảng báo cáo</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td class="id">1</td><td>Trụ bảng hìlex</td></tr>
+                    <tr><td class="id">1</td><td>Trụ bảng hiflex</td></tr>
                     <tr><td class="id">2</td><td>Đăng ký nội dung</td></tr>
                     <tr><td class="id">3</td><td>Đóng góp ý kiến</td></tr>
                     <tr><td class="id">4</td><td>Giải đáp thắc mắc</td></tr>
