@@ -100,6 +100,10 @@ appCanBo.get('/adsPhuong', function(req, res) {
   res.render('CanBo/PhuongQuan/adsPhuong');
 });
 
+appCanBo.get('/reportPhuong', function(req, res) {
+  res.render('CanBo/PhuongQuan/reportPhuong');
+});
+
 // SO
 appCanBo.get('/quanlichung', function(req, res) {
   res.render('CanBo/So/quanlichung');
