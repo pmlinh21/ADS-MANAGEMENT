@@ -1,0 +1,97 @@
+<%- include("../../partial/header"); %>
+<%- include("../../partial/tableQuanPhuong"); %>
+
+<div id = "navbar">
+    <ul>
+        <li id="manage" >
+            <a class="nav-link" >Quản lý</a>
+            <ul class = "manage-menu" style = "display: none;">
+                <li><a href = "/adsLocationPhuong">Danh sách điểm đặt quảng cáo</a></li>
+                <li><a href = "/adsPhuong">Danh sách biển quảng cáo</a></li>
+                <li><a href = "/reportPhuong">Danh sách báo cáo vi phạm</a></li>
+                <li><a href = "/createAdsPhuong">Danh sách cấp phép quảng cáo</a> </li>
+            </ul>
+        </li>
+        <li id="account">
+            <a class="nav-link" href = "/account">Tài khoản</a>
+        </li>
+        <li id="logout">
+            <a class="nav-link"  href = "/login">Đăng xuất</a>
+        </li>
+    </ul>
+</div>
+</div>
+<div class="w-100 h-100 black-bg" style = "display: none;"></div>
+<div class="title-page">
+    <i class="fa-solid fa-house"></i>
+    Quản lý báo cáo vi phạm
+</div>
+
+<table id="example1" class="table ads-report-table" style="width:100%">
+    <thead>
+        <tr>
+            <th class = "caption" colspan="8">Danh sách báo cáo quảng cáo vi phạm</th>
+        </tr>
+        <tr>
+            <th>ID Báo cáo</th>
+            <th>ID Quảng cáo</th>
+            <th>Loại hình báo cáo</th>
+            <th>Người báo cáo</th>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th>Thời điểm gửi</th>
+            <th>Trạng thái</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<table id="example2" class="table adsloc-report-table" style="width:100%">
+    <thead>
+        <tr>
+            <th class = "caption" colspan="8">Danh sách báo cáo điểm đặt vi phạm</th>
+        </tr>
+        <tr>
+            <th>ID Báo cáo</th>
+            <th>ID Điểm đặt</th>
+            <th>Loại hình báo cáo</th>
+            <th>Người báo cáo</th>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th>Thời điểm gửi</th>
+            <th>Trạng thái</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<table id="example3" class="table loc-report-table" style="width:100%">
+    <thead>
+        <tr>
+            <th class = "caption" colspan="8">Danh sách báo cáo địa điểm vi phạm</th>
+        </tr>
+        <tr>
+            <th>ID Báo cáo</th>
+            <th>Địa chỉ</th>
+            <th>Loại hình báo cáo</th>
+            <th>Người báo cáo</th>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th>Thời điểm gửi</th>
+            <th>Trạng thái</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<script defer type = "text/javascript" src="../../public/js/CanBo/PhuongQuan/reportPhuong.js"></script>
+<script defer type = "text/javascript" src="../../public/js/CanBo/PhuongQuan/tableQuanPhuong.js"></script> 
+
+</body>
+</html>
