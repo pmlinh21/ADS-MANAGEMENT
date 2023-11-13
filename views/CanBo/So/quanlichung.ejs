@@ -51,7 +51,7 @@
         <!-- END OF STATISTICS -->
 
         <!-- TABLE 1 -->
-        <div class="table-wrap" id="location-type">
+        <div class="table-wrap general" id="location-type">
             <table>
                 <caption>Danh sách các loại vị trí</caption>
                 <thead>
@@ -63,18 +63,20 @@
             </table>
         </div>
         <!-- POPUP FOR TABLE 1 -->
-        <form class="popup-edit">
-            <legend><i></i>Chỉnh sửa loại vị trí</legend>
+        <form action="" method="post" class="popup-edit" id="edit-popup">
+            <legend></legend>
             <div class="input-field">
-                <label for="id-adslocation-type">ID Loại vị trí</label>
+                <label for="id-adslocation-type"></label>
                 <input type="text" id="id-adslocation-type" name="id-adslocation-type" disabled>
+                <span class="tooltiptext">Không thể chỉnh sửa ID</span>
             </div>
             <div class="input-field">
-                <label for="adslocation-type">Tên loại vị trí</label>
-                <input type="text" id="adslocation-type" name="name-adslocation-type" value="Nhà chờ xe buýt" required>
-                <i class="fas fa-edit edit-icon"></i>
+                <label for="adslocation-type"></label>
+                <input type="text" id="adslocation-type" name="name-adslocation-type" required>
             </div>
             
+            <button type="submit" value="delete" class="button">Lưu thay đổi</button>
+            <button type="button" value="update" class="button button-delete">Xóa bỏ</button>
         </form>
 
         <!-- TABLE 2 -->

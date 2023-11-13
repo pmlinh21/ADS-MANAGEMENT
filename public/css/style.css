@@ -146,6 +146,11 @@ body {
   width: 20rem;
 }
 
+#map{
+  height: 100%;
+  width: 100vw;
+}
+
 /*homepageNguoiDan.ejs*/
 .circle-marker {
   width: 1.1rem;
@@ -168,12 +173,42 @@ body {
 .homepageNgDan .toggle-btn {
   position: absolute;
   bottom: 0;
-  left: 7rem;
+  z-index: 1;
+  background-color: #ffffff;
 }
-
 .homepageNgDan #map {
   height: 100%;
   width: 100vw;
+  z-index: 0;
+}
+
+.toggle.ios,
+.toggle-on.ios,
+.toggle-off.ios {
+  border-radius: 20rem;
+}
+ .toggle.ios .toggle-handle {
+  border-radius: 20rem;
+}
+
+#sidebar {
+  height: calc(100% - 3.5rem);
+  width: 0;
+  position: fixed;
+  top: 3.5rem;
+  padding-top: 1rem;
+  background-color: white;
+  overflow-x: hidden;
+  transition: 0.5s;
+  z-index: 1;
+}
+
+#sidebar .adInfo{
+  background-color: #C7EBFF;
+}
+
+#sidebar .locInfo{
+  background-color: #0B7B31;
 }
 
 /*homepageCanBo.ejs*/
