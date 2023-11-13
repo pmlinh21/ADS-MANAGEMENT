@@ -1,5 +1,3 @@
-
-
 let locationType = ["Đất công/Công viên/Hành lang an toàn giao thông", "Đất tư nhân/Nhà ở riêng lẻ", "Trung tâm thương mại", "Chợ", "Cây xăng", "Nhà chờ xe buýt"];
 for (let i = locationType.length; i > 0; i--) {
     let tr = document.createElement("tr");
@@ -8,6 +6,8 @@ for (let i = locationType.length; i > 0; i--) {
     td1.innerHTML = i;
     td1.className = "id";
     td2.innerHTML = locationType[i-1];
+    td2.className = "name";
+    tr.addEventListener("click", editPopup);
     tr.appendChild(td1);
     tr.appendChild(td2);
 
@@ -28,3 +28,35 @@ for (let i = adsType.length; i > 0; i--) {
     document.querySelector("#ads-type tbody").prepend(tr);
 }
 // ["Tố giác sai phạm", "Đăng ký nội dung", "Đóng góp ý kiến", "Giải đáp thắc mắc"];
+// let reportType = ["Tố giác sai phạm", "Đăng ký nội dung", "Đóng góp ý kiến", "Giải đáp thắc mắc"];
+// for (let i = reportType.length; i > 0; i--) {
+//     let tr = document.createElement("tr");
+//     let td1 = document.createElement("td");
+//     let td2 = document.createElement("td");
+//     td1.innerHTML = i;
+//     td1.className = "id";
+//     td2.innerHTML = reportType[i-1];
+//     tr.appendChild(td1);
+//     tr.appendChild(td2);
+
+//     document.querySelector("#report-type tbody").prepend(tr);
+// }
+
+// open add popup
+function editPopup() {
+    let div = document.createElement("div");
+    div.className = "popup-background";
+    document.querySelector("body").appendChild(div);
+    
+
+    let title = this.parentElement.parentElement.querySelector("caption").textContent.slice(14);
+    document.querySelector("#edit-popup").style.display = "block";
+    document.querySelector("#edit-popup legend").innerHTML = "<i class='far fa-edit'></i> Chỉnh sửa " + title;
+
+    document.querySelector("#edit-popup .input-field:first-of-type label").textContent = "ID " + title;
+    document.querySelector("#edit-popup .input-field:first-of-type input").value = this.querySelector(".id").textContent;
+
+    document.querySelector("#edit-popup .input-field:last-of-type label").textContent = "Tên " + title;
+    document.querySelector("#edit-popup .input-field:last-of-type input").value = this.querySelector(".name").textContent;
+
+}
