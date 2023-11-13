@@ -2,11 +2,11 @@
 <%- include('../../partial/sidebarSo.ejs') %>
     <div class="content">
         <div class="title-container">
-            <span class="title-icon"><i class="fas fa-home"></i></span>
+            <span class="title-icon"><i class="fas fa-building"></i></span>
             <span class="title-text"><h1>Quản lí Phường</h1></span>
         </div>
         <!-- TABLE 1 -->
-        <div class="table-wrap" id="district-management">
+        <div class="table-wrap" id="ward-table">
             <table>
                 <caption>Danh sách các Phường</caption>
                 <thead>
@@ -20,10 +20,37 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="6" class="add-item"><i class="fas fa-plus"></i></td>
+                    <tr><td colspan="6" class="add-item" onclick=addPopup(this)><i class="fas fa-plus"></i></td>
                 </tbody>
             </table>
         </div>
+         <!-- POPUP EDIT FORM -->
+         <form action="" method="post" class="popup-edit" id="edit-popup">
+            <legend></legend>
+            <div class="input-field">
+                <label for="id-district"></label>
+                <input type="text" id="id-ward" name="id-ward" disabled>
+                <span class="tooltiptext">Không thể chỉnh sửa ID</span>
+            </div>
+            <div class="input-field">
+                <label for="ward-name"></label>
+                <input type="text" id="ward-name" name="ward-name" required>
+            </div>
+            
+            <button type="submit" value="delete" class="button">Lưu thay đổi</button>
+            <button type="button" value="update" class="button button-delete">Xóa bỏ</button>
+        </form>
+
+        <!-- POPUP ADD FORM -->
+        <form action="" method="post" class="popup-edit" id="add-popup">
+            <legend></legend>
+            <div class="input-field">
+                <label for="ward-name"></label>
+                <input type="text" id="ward-name" name="ward-name" required>
+            </div>
+            
+            <button type="submit" value="add" class="button">Thêm</button>
+        </form>
     </div>
 </div>
 <script src="../../../public/js/CanBo/So/quanliphuong.js"></script>
