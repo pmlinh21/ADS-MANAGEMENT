@@ -16,6 +16,7 @@ $(document).ready(function () {
       wards = Ward.content.map(ward => ward.ward);
       console.log("!");
       renderWard(wards);
+      $('.ward-table input').prop('checked', true)
 
       info1 = QuanAdsReport.content.map(function(data){
         let {id_report, id_ads, report_type, fullname, email, phone, content,
@@ -25,46 +26,6 @@ $(document).ready(function () {
         validateSQLDate(report_time), statusText, 
         '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>', 
         content,  photo1, photo2, resolve, status, ward]
-      })
-
-      ads_info = [...info1].sort((a, b) => a[0] - b[0]);
-      // console.log(info);
-
-      $(".ads-report-table").DataTable({
-        pageLength: 6,
-        data: ads_info
-        });
-      
-      $("#example1_wrapper").on('click', '.ads-report-table .view-btn', function(){
-        let row = $(this).closest('tr').index();
-        let id_report = ads_info[row][0], table = "ads"
-        window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
-        console.log(row);
-      })
-
-      $('.ward-table input').click(function() {
-        let id_ward = $(this).attr('id');
-        id_ward = id_ward.slice(id_ward.indexOf("-") + 1)
-        console.log(id_ward)
-
-        if ($(this).is(':checked')) {
-          for (var i = 0; i < info1.length; i++){
-            if (info1[i][14] == wards[id_ward])
-            ads_info.push(info1[i]);
-          }
-        } else {
-          console.log("hihi")
-          var result = []
-          for (var i = 0; i < ads_info.length; i++){
-            if (ads_info[i][14] != wards[id_ward])
-              result.push(ads_info[i]);
-          }
-          ads_info = [...result]
-        }
-
-        $(".ads-report-table").DataTable().clear().rows.add(ads_info.sort(function(a, b) {
-          return a[0] - b[0];
-        })).draw();
       })
 
       info2 = QuanAdsLocReport.content.map(function(data){
@@ -79,44 +40,6 @@ $(document).ready(function () {
         content,  photo1, photo2, resolve, status, ward]
       })
 
-      adsloc_info = [...info2].sort((a, b) => a[0] - b[0]);
-
-      $(".adsloc-report-table").DataTable({
-        pageLength: 6,
-        data: adsloc_info
-        });
-
-      $('#example2_wrapper').on('click', '.adsloc-report-table .view-btn', function(){
-        let row = $(this).closest('tr').index();
-        let id_report = adsloc_info[row][0], table = "adsloc"
-        window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
-        console.log(row);
-      })
-
-      $('.ward-table input').click(function() {
-        let id_ward = $(this).attr('id');
-        id_ward = id_ward.slice(id_ward.indexOf("-") + 1)
-  
-        if ($(this).is(':checked')) {
-          for (var i = 0; i < info2.length; i++){
-            if (info2[i][14] == wards[id_ward])
-            adsloc_info.push(info2[i]);
-          }
-        } else {
-          console.log("hihi")
-          var result = []
-          for (var i = 0; i < adsloc_info.length; i++){
-            if (adsloc_info[i][14] != wards[id_ward])
-              result.push(adsloc_info[i]);
-          }
-          adsloc_info = [...result]
-        }
-
-        $(".adsloc-report-table").DataTable().clear().rows.add(adsloc_info.sort(function(a, b) {
-          return a[0] - b[0];
-        })).draw();
-      }); 
-
       info3 = QuanLocReport.content.map(function(data){
         let {id_report, report_type, fullname, email, phone, content,
           photo1, photo2, report_time, status, resolve, ward, longitude, latitue } = data
@@ -129,13 +52,52 @@ $(document).ready(function () {
         content,  photo1, photo2, resolve, status, ward, longitude, latitue]
       })
 
-      loc_info = [...info3].sort((a, b) => a[0] - b[0]);
-      // console.log(info);
+      ads_info = [...info1].sort((a, b) => a[0] - b[0]);
 
+      adsloc_info = [...info2].sort((a, b) => a[0] - b[0]);
+
+      loc_info = [...info3].sort((a, b) => a[0] - b[0]);
+
+        var checkboxes = $('input[type="checkbox"]');
+        var checkboxStates = []; 
+        checkboxes.each(function() {
+          var checkbox = $(this);
+          var checkboxState = {
+            id: checkbox.attr('id'),
+            checked: checkbox.prop('checked')
+          };
+          checkboxStates.push(checkboxState);
+        });
+        console.log(checkboxStates);
+
+      $(".ads-report-table").DataTable({
+        pageLength: 6,
+        data: ads_info
+        });
+
+      $(".adsloc-report-table").DataTable({
+        pageLength: 6,
+        data: adsloc_info
+        });  
+    
       $("#example3.loc-report-table").DataTable({
         pageLength: 6,
         data: loc_info
         });
+
+      $("#example1_wrapper").on('click', '.ads-report-table .view-btn', function(){
+        let row = $(this).closest('tr').index();
+        let id_report = ads_info[row][0], table = "ads"
+        window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
+        console.log(row);
+      })
+      
+      $('#example2_wrapper').on('click', '.adsloc-report-table .view-btn', function(){
+        let row = $(this).closest('tr').index();
+        let id_report = adsloc_info[row][0], table = "adsloc"
+        window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
+        console.log(row);
+      })
 
       $("#example3_wrapper").on('click', '.loc-report-table .view-btn', function(){
         let row = $(this).closest('tr').index();
@@ -144,11 +106,21 @@ $(document).ready(function () {
         console.log(row);
       })
 
+
       $('.ward-table input').click(function() {
         let id_ward = $(this).attr('id');
         id_ward = id_ward.slice(id_ward.indexOf("-") + 1)
-  
+        console.log(id_ward)
+
         if ($(this).is(':checked')) {
+          for (var i = 0; i < info1.length; i++){
+            if (info1[i][14] == wards[id_ward])
+            ads_info.push(info1[i]);
+          }
+          for (var i = 0; i < info2.length; i++){
+            if (info2[i][14] == wards[id_ward])
+            adsloc_info.push(info2[i]);
+          }
           for (var i = 0; i < info3.length; i++){
             if (info3[i][14] == wards[id_ward])
             loc_info.push(info3[i]);
@@ -156,6 +128,18 @@ $(document).ready(function () {
         } else {
           console.log("hihi")
           var result = []
+          for (var i = 0; i < ads_info.length; i++){
+            if (ads_info[i][14] != wards[id_ward])
+              result.push(ads_info[i]);
+          }
+          ads_info = [...result]
+          result = []
+          for (var i = 0; i < adsloc_info.length; i++){
+            if (adsloc_info[i][14] != wards[id_ward])
+              result.push(adsloc_info[i]);
+          }
+          adsloc_info = [...result]
+          result = []
           for (var i = 0; i < loc_info.length; i++){
             if (loc_info[i][14] != wards[id_ward])
               result.push(loc_info[i]);
@@ -163,10 +147,20 @@ $(document).ready(function () {
           loc_info = [...result]
         }
 
-        $(".loc-report-table").DataTable().clear().rows.add(adsloc_info.sort(function(a, b) {
+        $(".ads-report-table").DataTable().clear().rows.add(ads_info.sort(function(a, b) {
           return a[0] - b[0];
         })).draw();
-      });
+
+        $(".adsloc-report-table").DataTable().clear().rows.add(adsloc_info.sort(function(a, b) {
+          return a[0] - b[0];
+        })).draw();
+
+        $(".loc-report-table").DataTable().clear().rows.add(loc_info.sort(function(a, b) {
+          return a[0] - b[0];
+        })).draw();
+
+        // lưu local storage
+      })
   }
 
   const manageButton = $('#manage');
@@ -371,7 +365,7 @@ $(document).ready(function () {
 //             loc_info = [...result]
 //           }
 
-//           $(".loc-report-table").DataTable().clear().rows.add(adsloc_info.sort(function(a, b) {
+//           $(".loc-report-table").DataTable().clear().rows.add(loc_info.sort(function(a, b) {
 //             return a[0] - b[0];
 //           })).draw();
 //         });

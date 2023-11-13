@@ -37,7 +37,10 @@ $(document).ready(function () {
       $('#example_wrapper').on('click', '.view-btn', function(){
         let row = $(this).closest('tr').index();
         console.log(row);
-        $('#view-image .photo').attr('src', `../../../../public/image/${info[row][9]}`);
+        let path  = "../../../public/image/image-placeholder.jpg"
+        if (filter_info[row][9] != "")
+          path  = `../../../../public/image/${filter_info[row][9]}`
+        $('#view-image .photo').attr('src', path );
         return
       })
 
@@ -228,7 +231,10 @@ $(document).ready(function () {
 //       $('#example_wrapper').on('click', '.view-btn', function(){
 //         let row = $(this).closest('tr').index();
 //         console.log(row);
-//         $('#view-image .photo').attr('src', `../../../../public/image/${info[row][9]}`);
+//         let path  = "../../../public/image/image-placeholder.jpg"
+          // if (filter_info[row][9] != "")
+          //   path  = `../../../../public/image/${filter_info[row][9]}`
+          // $('#view-image .photo').attr('src', path );
 //         return
 //       })
 

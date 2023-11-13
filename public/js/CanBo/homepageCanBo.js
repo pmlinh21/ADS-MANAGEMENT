@@ -35,9 +35,13 @@ function createMarker(info, map, markers){
       colorMarker = 'purple'; 
     else 
       colorMarker = 'blue'; 
-
-    let imagePath = "../../../public/image/" + info[index][6]
-    // console.log(imagePath)
+    
+    let imagePath
+    if (info[index][6] != "")
+      imagePath = "../../../public/image/" + info[index][6]
+    else
+      imagePath = "../../../public/image/image-placeholder.jpg"
+    console.log(imagePath)
 
     var marker = $('<div class="custom-marker"></div>');
     var svg = $(`<svg class = ${info[index][0]} viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" fill=${colorMarker} /></svg>`);

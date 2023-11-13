@@ -160,7 +160,7 @@ let QuanAdsLocation = {
       loc_type: "Đất tư nhân/Nhà ở riêng lẻ",
       ads_type: "Cổ động chính trị",
       is_zoning: 1,
-      photo: "image1.png",
+      photo: "",
       longitude: 106.69,
       latitude: 10.7737,
       hasAds: 2,
