@@ -129,8 +129,16 @@ appCanBo.get('/quanlicanbo/chinhsuaCBQuan', function(req, res) {
   res.render('CanBo/So/chinhsuaCBQuan', { id: req.query.id });
 });
 
+appCanBo.get('/quanlicanbo/themCBQuan', function(req, res) {
+  res.render('CanBo/So/themCBQuan');
+});
+
 appCanBo.get('/quanlicanbo/chinhsuaCBPhuong', function(req, res) {
-  res.render('CanBo/So/chinhsuaCBPhuong');
+  res.render('CanBo/So/chinhsuaCBPhuong', { id: req.query.id });
+});
+
+appCanBo.get('/quanlicanbo/themCBPhuong', function(req, res) {
+  res.render('CanBo/So/themCBPhuong');
 });
 
 appCanBo.get('/diemdatquangcao', function(req, res) {

@@ -1,0 +1,55 @@
+<%- include('../../partial/headerSo.ejs') %>
+<%- include('../../partial/sidebarSo.ejs') %>
+    <div class="content">
+        <div class="title-container">
+            <span class="title-icon"><i class="fas fa-address-card"></i></span>
+            <span class="title-text"><h1><a href="/quanlicanbo">Quản lí cán bộ Phường</a> / Chỉnh sửa thông tin</h1></span>
+        </div>
+       
+        <form action="" method="post" class="form" id="edit-ward-officer">
+            <legend><i class='far fa-edit'></i> Chỉnh sửa thông tin cán bộ Phường</legend>
+            <div class="input-container">
+                <div class="input-field">
+                    <label for="id-officer">ID Cán bộ</label>
+                    <input type="text" id="id-officer" name="id-officer" disabled>
+                    <span class="tooltiptext">Không thể chỉnh sửa ID</span>
+                </div>
+                <div class="input-field">
+                    <label for="name-officer">Họ tên</label>
+                    <input type="text" id="name-officer" name="name-officer" required>
+                </div>
+                <div class="input-field">
+                    <label for="dob-officer">Ngày sinh</label>
+                    <input type="date" id="dob-officer" name="position-officer" required>
+                </div>
+                <div class="input-field">
+                    <label for="email-officer">Email</label>
+                    <input type="email" id="email-officer" name="email-officer" required>
+                </div>
+                <div class="input-field">
+                    <label for="phone-officer">Số điện thoại</label>
+                    <input type="tel" id="phone-officer" name="phone-officer" required>
+                </div> 
+
+                <div class="input-field">
+                    <label for="of-district">Quận trực thuộc</label>
+                    <select name="of-district" id="of-district" required>
+                    </select>
+                </div> 
+                <div class="input-field">
+                    <label for="work-for-ward">Phường quản lí</label>
+                    <select name="work-for-ward" id="work-for-ward" required>
+                    </select>
+                </div> 
+                
+            </div>
+            <div class="button-container">
+                <button type="button" value="update" class="button button-delete">Xóa bỏ</button>
+                <button type="submit" value="delete" class="button">Lưu thay đổi</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+<script src="../../../public/js/CanBo/So/chinhsuaCBPhuong.js"></script>
+<%- include('../../partial/footerSo.ejs') %>
