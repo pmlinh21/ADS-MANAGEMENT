@@ -56,7 +56,7 @@ $(document).ready(function() {
     $('#end_date').val(info[15]);
     $('#status').val(info[16] === 1 ? "Đã xét duyệt" : "Chưa xét duyệt");
     $('#officer').val(info[1]);
-    $('#office').val(info[2] === 1 ? "Quận" : "Phường");
+    $('#office').val(info[2] === 1 ? "Quận" : (info1[2] === 2 ? "Phường" : ""));
     $('.image-details').attr('src', `../../../../public/image/${info[9]}`);
   }
 

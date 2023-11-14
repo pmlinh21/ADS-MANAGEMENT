@@ -3,9 +3,9 @@ $(document).ready(function() {
   const urlParams = new URLSearchParams(queryString);
   const id_report = urlParams.get('id_report');
   const table = urlParams.get('table');
-
+  const storedEmail = localStorage.getItem('email');
   let report_type = [[1, "Tố giác sai phạm"], [2, "Đăng ký nội dung"], [3, "Đóng góp ý kiến"], [4, "Giải đáp thắc mắc"]];
-  
+
   if (table == "ads"){
     $(".title-page p").text("Quản lý báo cáo vi phạm / Chi tiết báo cáo quảng cáo");
     const pos = document.querySelector('.form-pos');
@@ -98,7 +98,7 @@ $(document).ready(function() {
       $('#report').val(info1[8]);
       $('#time').val(formatDate(info1[11]));
       $('#officer').val(info1[1]);
-      $('#office').val(info1[2] === 1 ? "Quận" : "Phường");
+      $('#office').val(info1[2] === 1 ? "Quận" : (info1[2] === 2 ? "Phường" : ""));
       $('#status').val(info1[12] === 1 ? "Đã xét duyệt" : "Chưa xét duyệt");
       $('#method').val(info1[13]);
       $('.image-report-1').attr('src', `../../../../public/image/${info1[9]}`);
@@ -110,6 +110,9 @@ $(document).ready(function() {
       const indexToUpdate = ads_report.findIndex(item => item[0] == id_report);
 
       ads_report[indexToUpdate][13] = updatedMethod;
+      ads_report[indexToUpdate][1] = storedEmail;
+      ads_report[indexToUpdate][2] = 2;
+      ads_report[indexToUpdate][12] = 1;
       localStorage.setItem('ads_report', JSON.stringify(ads_report)); 
       location.reload();
     });
