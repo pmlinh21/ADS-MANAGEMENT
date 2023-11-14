@@ -41,15 +41,6 @@ $(document).ready(function() {
 
   let info = ads_create.find(item => item[0] == id_create);
   
-  function formatDate(inputDate) {
-    const date = new Date(inputDate);
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // tháng bắt đầu từ 0
-    const day = date.getDate().toString().padStart(2, '0');
-    const year = date.getFullYear();
-
-    return `${month}-${day}-${year}`;
-  }
-  
   if (info.length > 0) {
     $('#id').val(info[0]);
     $('#board_type').val(board_type[info[4] - 1][1]);
@@ -65,7 +56,7 @@ $(document).ready(function() {
     $('#end_date').val(info[15]);
     $('#status').val(info[16] === 1 ? "Đã xét duyệt" : "Chưa xét duyệt");
     $('#officer').val(info[1]);
-    $('#office').val(info[2] === 1 ? "Quận" : "Phường");
+    $('#office').val(info[2] === 1 ? "Quận" : (info1[2] === 2 ? "Phường" : ""));
     $('.image-details').attr('src', `../../../../public/image/${info[9]}`);
   }
 
@@ -74,22 +65,24 @@ $(document).ready(function() {
       // Lọc ra những phần tử có id_create khác với id_create từ URL
       ads_create = ads_create.filter(item => item[0] != id_create);
       localStorage.setItem('ads_create', JSON.stringify(ads_create));
-      // Chuyển hướng đến trang /createAdsPhuong
       window.location.href = '/createAdsPhuong';
     }
   });
-  // manageButton.hover(
-  //   function () {
-  //     $(this).addClass('li-hover');
-  //     $('#manage .nav-link').addClass('nav-link-hover');
-  //     manageMenu.show();
-  //     $('.black-bg').show()
-  //   },
-  //   function () {
-  //     $(this).removeClass('li-hover');
-  //     $('#manage .nav-link').removeClass('nav-link-hover');
-  //     manageMenu.hide();
-  //     $('.black-bg').hide()
-  //   }    
-  // );
+
+  const manageButton = $('#manage');
+  const manageMenu = $('#manage .manage-menu');
+  manageButton.hover(
+    function () {
+      $(this).addClass('li-hover');
+      $('#manage .nav-link').addClass('nav-link-hover');
+      manageMenu.show();
+      $('.black-bg').show()
+    },
+    function () {
+      $(this).removeClass('li-hover');
+      $('#manage .nav-link').removeClass('nav-link-hover');
+      manageMenu.hide();
+      $('.black-bg').hide()
+    }    
+  );
 })
