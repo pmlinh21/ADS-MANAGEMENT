@@ -93,15 +93,16 @@ const getAdsLoc = async(req, res) =>{
 
 const getReport = async(req, res) =>{
     try{
-        // let { email } = req.params;
+        let { email } = req.params;
         // let email = "lvduc@gmail.com"
         
         // const [adsloc, metadata] = await sequelize.query
         //     (`SELECT *
         //     FROM Ads_loc_report alr
+        //     WHERE email = ${email}
         //     `);
 
-        sucessCode(res,adsloc,"Get thành công")
+        sucessCode(res,email,"Get thành công")
 
     }catch(err){
         errorCode(res,"Lỗi BE")

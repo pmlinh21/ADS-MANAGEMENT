@@ -20,36 +20,6 @@ function validateObj(obj) {
     return obj;
 }
 
-const getLocType = async(req, res) =>{
-    try{
-        let data = await model.Location_type.findAll();
-        sucessCode(res,data,"Get thành công")
-
-    }catch(err){
-        errorCode(res,"Lỗi BE")
-    }
-}
-
-const getAdsType = async(req, res) =>{
-    try{
-        let data = await model.Ads_type.findAll();
-        sucessCode(res,data,"Get thành công")
-
-    }catch(err){
-        errorCode(res,"Lỗi BE")
-    }
-}
-
-const getBoardType = async(req, res) =>{
-    try{
-        let data = await model.Board_type.findAll();
-        sucessCode(res,data,"Get thành công")
-
-    }catch(err){
-        errorCode(res,"Lỗi BE")
-    }
-}
-
 const getAllAdsLoc = async(req, res) =>{
     try{
         const [data, metadata] = await sequelize.query
@@ -389,7 +359,7 @@ const deleteAdsCreate = async(req, res) =>{
     }
 } 
 
-module.exports = { getLocType, getAdsType, getBoardType,
+module.exports = {
     getAllAdsLoc,
     getInfo, getWard, updateInfo, updatePassword, forgetPassword,
     getAdsLocation, getAds, updateAdsLoc, updateAds,
