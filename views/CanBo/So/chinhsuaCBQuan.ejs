@@ -6,17 +6,50 @@
             <span class="title-text"><h1><a href="/quanlicanbo">Quản lí cán bộ Quận</a> / Chỉnh sửa thông tin</h1></span>
         </div>
        
-        <form action="" method="post" id="edit-district-officer">
+        <form action="" method="post" class="form" id="edit-district-officer">
             <legend><i class='far fa-edit'></i> Chỉnh sửa thông tin cán bộ Quận</legend>
             <div class="input-container">
-                
-            </div>
-            <div class="input-field">
-                <label for="id-officer"></label>
-                <input type="text" id="id-officer" name="id-officer" disabled>
-                <span class="tooltiptext">Không thể chỉnh sửa ID</span>
-            </div>
+                <div class="input-field">
+                    <label for="id-officer">ID Cán bộ</label>
+                    <input type="text" id="id-officer" name="id-officer" disabled>
+                    <span class="tooltiptext">Không thể chỉnh sửa ID</span>
+                </div>
+                <div class="input-field">
+                    <label for="name-officer">Họ tên</label>
+                    <input type="text" id="name-officer" name="name-officer" required>
+                </div>
+                <div class="input-field">
+                    <label for="dob-officer">Ngày sinh</label>
+                    <input type="date" id="dob-officer" name="position-officer" required>
+                </div>
+                <div class="input-field">
+                    <label for="email-officer">Email</label>
+                    <input type="email" id="email-officer" name="email-officer" required>
+                </div>
+                <div class="input-field">
+                    <label for="phone-officer">Số điện thoại</label>
+                    <input type="tel" id="phone-officer" name="phone-officer" required>
+                </div> 
+                <div class="input-field">
+                    <label for="work-for-district">Quận trực thuộc</label>
+                    <select name="work-for-district" id="work-for-district" required>
+                        <option value="0">Chọn quận</option>
+                        <option value="1">Quận 1</option>
+                        <option value="2">Quận 2</option>
+                        <option value="3">Quận 3</option>
+                        <option value="4">Quận 4</option>
+                        <option value="5">Quận 5</option>
+                        <option value="6">Quận 6</option>
+                        <option value="7">Quận 7</option>
+                        <option value="8">Quận 8</option>
+                        <option value="9">Quận 9</option>
+                        <option value="10">Quận 10</option>
+                        <option value="11">Quận 11</option>
+                        <option value="12">Quận 12</option>
+                    </select>
+                </div> 
 
+            </div>
         </form>
 
     </div>

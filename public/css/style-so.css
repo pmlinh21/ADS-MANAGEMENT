@@ -22,6 +22,7 @@ body {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    overflow: auto;
 }
 
 .popup-background {
@@ -188,6 +189,23 @@ body {
     line-height: 30px;
     padding: 0;
     margin: 0;
+    color: #0B7B31;
+    cursor: default;
+}
+
+.content .title-container .title-text h1 a {
+    text-decoration: none;
+    color: inherit;
+}
+.content .title-container .title-text h1 a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 1620px) {
+    .content {
+        left: 80px;
+        width: calc(100% - 100px);
+    }
 }
 
 /* STATISTICS */
@@ -308,7 +326,7 @@ body {
     box-sizing: border-box;
     min-width: 800px;
     margin-bottom: 20px;
-    overflow: auto;
+    overflow: hidden;
 }
 
 .table-wrap.general {
@@ -326,6 +344,7 @@ body {
     font-weight: 700;
     color: #0B7B31;
     text-align: left;
+    cursor: default;
 }
 
 .table-wrap thead {
@@ -367,7 +386,7 @@ body {
 /* END OF TABLE */
 
 /* START OF FORM */
-.popup-edit {
+.popup {
     position: fixed;
     top: calc(50vh - 145px);
     left: calc(50vw - 270px);
@@ -381,21 +400,33 @@ body {
     box-shadow: 4px 4px 5px rgba(5, 5, 5, 0.3);
 }
 
-.popup-edit legend {
+.form {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 4px 4px 5px rgba(5, 5, 5, 0.3);
+    background-color: white;
+    padding: 15px 20px;
+    box-sizing: border-box;
+    /* min-width: 800px; */
+    margin-bottom: 20px;
+    overflow: visible;
+}
+
+.form legend {
     font-size: 20px;
     font-weight: 700;
     color: #0B7B31;
     text-align: left;
 }
 
-.popup-edit .input-field {
+.form .input-field {
     display: flex;
     flex-direction: column;
     margin: 10px 0;
     position: relative;
 }
 
-.popup-edit label {
+.form label {
     font-size: 18px;
     font-weight: 600;
     color: #0B7B31;
@@ -403,7 +434,19 @@ body {
     font-style: none;
 }
 
-.popup-edit input {
+.form .input-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 70px;
+}
+
+@media (max-width: 720px) {
+    .form .input-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form input, .form select {
     font-size: 18px;
     font-weight: 500;
     color: #7E94AB;
@@ -411,9 +454,34 @@ body {
     border-bottom: 1px solid #7E94AB;
     outline: none;
     padding: 5px 0;
+    font-family: 'Montserrat', sans-serif;
 }
 
-.popup-edit .tooltiptext {
+.form input[type="date"] {
+    position: relative;
+}
+
+.form input[type="date"]::-webkit-calendar-picker-indicator {
+    color: transparent;
+    background: none;
+    z-index: 1;
+}
+
+.form input[type="date"]::before {
+    background: none;
+    display: block;
+    font-family: 'FontAwesome';
+    content: '\f073';
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 8px;
+    right: 0;
+    color: #7E94AB;
+}
+
+.form .tooltiptext {
     visibility: hidden;
     width: 120px;
     background-color: #7E94AB;
@@ -422,22 +490,22 @@ body {
     border-radius: 6px;
     padding: 5px 0;
     position: absolute;
-    top: 25px;
-    left: calc(100% + 5px);
+    top: -20px;
+    left: calc(100% - 120px);
 }
 
-.popup-edit .tooltiptext::after {
-    content: "";
+.form .tooltiptext::after {
+    content: " ";
     position: absolute;
-    top: 50%;
-    right: 100%;
-    margin-top: -5px;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent #7E94AB transparent transparent;
+    border-color: #7E94AB transparent transparent transparent;
 }
 
-.popup-edit input:disabled:hover+.tooltiptext {
+.form input:disabled:hover+.tooltiptext {
     visibility: visible;
 }
 
@@ -468,12 +536,5 @@ body {
     background-color: #841010;
 }
 /* END OF FORM */
-
-@media (max-width: 1620px) {
-    .content {
-        left: 80px;
-        width: calc(100% - 100px);
-    }
-}
 
 /********* END OF CONTENT *********/
