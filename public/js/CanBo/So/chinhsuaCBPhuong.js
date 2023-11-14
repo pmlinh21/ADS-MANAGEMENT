@@ -42,7 +42,7 @@ for (let i = 0; i < wards.length; i++) {
     if (wards[i][0] == wardOfficers[indexOfficer-1][5]) {
         option2 = document.createElement("option");
         option2.value = wards[i][0];
-        option2.textContent = wards[i][1];
+        option2.textContent = "Phường " + wards[i][1];
         select2.appendChild(option2);
     }
 }
@@ -63,7 +63,7 @@ select.addEventListener("change", () => {
         if (wards[i][2] == newDistrict.value) {
             option2 = document.createElement("option");
             option2.value = wards[i][0];
-            option2.textContent = wards[i][1];
+            option2.textContent = "Phường " + wards[i][1];
             select2.appendChild(option2);
         }
     }
