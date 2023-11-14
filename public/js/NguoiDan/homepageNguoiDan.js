@@ -1,6 +1,4 @@
 $(document).ready(function () {
-
-    // hoặc thay access token của mn cũng được
     mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
     var map = new mapboxgl.Map({
         container: 'map',
@@ -9,10 +7,7 @@ $(document).ready(function () {
         zoom: 15
     });
 
-    var data = getAdsLocation;
-
-    // $.get(`http://localhost:8080/api/quan/getAdsLocation/${id_district}`, function(data) {
-    // console.log("~");
+    var data = QuanAdsLocation;
     info = data.content.map(function (data) {
         let { id_ads_location, address, ward, loc_type, ads_type,
             photo, is_zoning, longitude, latitude, hasAds, hasReport } = data
@@ -36,7 +31,6 @@ $(document).ready(function () {
             colorMarker = 'blue';
 
         let imagePath = "../../../public/image/" + info[index][6]
-        // console.log(imagePath)
 
         var marker = $('<div class="custom-marker"></div>');
         var svg = $(`<svg viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" fill=${colorMarker} /></svg>`);
@@ -61,9 +55,8 @@ $(document).ready(function () {
             popup.remove();
         });
 
-        marker.on('mousedown', function(){
-            document.querySelectorAll("#sidebar")[0].style.width = "20%";
-            document.querySelectorAll("#sidebar")[0].style.color = "red"
+        marker.on('mousedown', function () {
+            document.querySelectorAll("#sidebar")[0].style.width = "25rem";
         })
 
         new mapboxgl.Marker(marker[0]).setLngLat(coord).addTo(map);
