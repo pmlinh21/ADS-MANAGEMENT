@@ -619,15 +619,15 @@ label.required::after {
 }
 
 .form-ads-create-details{
-  margin: 1rem 4rem;
+  margin: 1.5rem 4rem;
   background-color: white;
-  padding: 1rem 2rem 1.5rem 2rem;
+  padding: 0.2rem 2rem 1rem 2rem;
   color: #0B7B31;
   box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3);
   border-radius: 1rem;
 }
 
-.form-control:read-only {
+.input-details:read-only, .edit-input {
   border: none;
   border-bottom: 1px solid #7E94AB;
   background-color: #fff;
@@ -638,13 +638,15 @@ label.required::after {
   font-size: 0.9rem;
 }
 
-.form-control:read-only:hover, .form-control:read-only:focus{
+.input-details:read-only:hover, .input-details:read-only:focus{
   box-shadow: none;
 }
 .image-text{
   color: #0B7B31;
   font-weight: 600;
   margin-left: 4rem;
+  margin-top: 1rem;
+  font-size: 1.1rem;
 }
 .image-container {
   width: 700px; 

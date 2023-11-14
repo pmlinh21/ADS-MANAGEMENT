@@ -123,7 +123,7 @@ $(document).ready(function(){
         [7, '', null, 10.9448, 106.818,	1, 'Đỗ Thị Thanh Thảo',	'dtthao@gmail.com', '0921122334', 'Địa điểm có gắn quảng cáo trái phép, chưa đăng ký hợp pháp', '', '', "2023-09-08 00:00:00", 0, '', 5]
     ];
 
-    let report_type = [[1, "Tố giác sai phạm"], [2, "Đăng ký nội dung"], [3, "Đóng góp ý kiến"], [4, "Giải đáp thắc mắc"]]
+    let report_type = [[1, "Tố giác sai phạm"], [2, "Đăng ký nội dung"], [3, "Đóng góp ý kiến"], [4, "Giải đáp thắc mắc"]];
     
     function formatDate(inputDate) {
         const date = new Date(inputDate);
