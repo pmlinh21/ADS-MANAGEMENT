@@ -20,6 +20,12 @@ $(document).ready(function () {
             return;
         }
         else{
+            if (email == "quan@gmail.com")
+                localStorage.setItem('role', '1');
+            if (email == "phuong@gmail.com")
+                localStorage.setItem('role', '2');
+            if (email == "so@gmail.com")
+                localStorage.setItem('role', '3');
             window.location.href = "/";
         }
         

@@ -1,17 +1,17 @@
 // hard code
 $(document).ready(function () {
-  const role = 1; 
-  const email = "nnlien21@clc.fitus.edu.vn"
+  // const role = 1; 
+  // const email = "nnlien21@clc.fitus.edu.vn"
   const id_district = 1;
   mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
   
   var info, wards, filter_info
 
-  if (role === 2) {
-      $(".ward-table").hide();
+  // if (role === 2) {
+  //     $(".ward-table").hide();
 
-  }
-  else{
+  // }
+  // else{
       wards = Ward.content.map(ward => ward.ward);
       console.log("!");
       renderWard(wards);
@@ -68,7 +68,7 @@ $(document).ready(function () {
         })).draw()
 
       })
-  }
+  // }
 
   // render form
     var board_type = BoardType.content, imageData = result = id_adsloc = null

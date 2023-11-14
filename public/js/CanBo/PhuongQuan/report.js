@@ -1,18 +1,18 @@
 // hard code
 $(document).ready(function () {
   // 1 = Quan, 2 = Phuong
-  const role = 1; 
-  const email = "nnlien21@clc.fitus.edu.vn"
+  // const role = 1; 
+  // const email = "nnlien21@clc.fitus.edu.vn"
   const id_district = 1;
   
   var info1, info2, info3, wards
   var ads_info, adsloc_info, loc_info
 
-  if (role === 2) {
-      $(".ward-table").hide();
+  // if (role === 2) {
+  //     $(".ward-table").hide();
 
-  }
-  else{
+  // }
+  // else{
       wards = Ward.content.map(ward => ward.ward);
       console.log("!");
       renderWard(wards);
@@ -198,7 +198,7 @@ $(document).ready(function () {
         }
         
       })
-  }
+  // }
 
   const manageButton = $('#manage');
   const manageMenu = $('#manage .manage-menu');

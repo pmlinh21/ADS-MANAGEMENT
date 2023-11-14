@@ -41,7 +41,7 @@ function createMarker(info, map, markers){
       imagePath = "../../../public/image/" + info[index][6]
     else
       imagePath = "../../../public/image/image-placeholder.jpg"
-    console.log(imagePath)
+    // console.log(imagePath)
 
     var marker = $('<div class="custom-marker"></div>');
     var svg = $(`<svg class = ${info[index][0]} viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" fill=${colorMarker} /></svg>`);
@@ -73,7 +73,8 @@ function createMarker(info, map, markers){
 
 // hard code
 $(document).ready(function () {
-  const role = 2; 
+  const role = parseInt(localStorage.getItem('role'))
+  console.log(role);
   const id_district = 1;
   var wards, info, markers = []
 
@@ -101,10 +102,14 @@ $(document).ready(function () {
     mapboxgl: mapboxgl,
   });
 
-  if (role === 1) {
+  if (role === 2) {
       $("#select-ward").hide();
+      $('.manage-menu li:nth-child(1) a').attr('href', "/adsLocationPhuong")  
+      $('.manage-menu li:nth-child(2) a').attr('href', "/adsPhuong")  
+      $('.manage-menu li:nth-child(3) a').attr('href',  "/reportPhuong") 
+      $('.manage-menu li:nth-child(4) a').attr('href', "/adsCreatePhuong")  
   }
-  else if (role === 2) {
+  else if (role === 1) {
       info = QuanAdsLocation.content.map(function(data){
         let {id_ads_location, address, ward, loc_type, ads_type, 
           photo, is_zoning, longitude, latitude, hasAds, hasReport} = data
@@ -113,7 +118,7 @@ $(document).ready(function () {
         return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, 
           photo, longitude, latitude, is_zoning,  hasAds, hasReport]
       })
-      console.log(info)
+      // console.log(info)
       createMarker(info, map, markers);
 
       wards = Ward.content
