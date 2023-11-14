@@ -1,4 +1,8 @@
 $(document).ready(function(){
+    const role = 2; 
+    const email = "phuong@gmail.com"
+    const id_ward = 2;
+    
     let ads = [
         [1, 1, 5, 8.97, 3.42, 'image1.png', 1, '2023-11-03'],
         [2, 1, 2, 12.13, 7.88, '', 1, '2023-11-14'],
@@ -60,8 +64,19 @@ $(document).ready(function(){
     [4, "Bảng hiflex ốp tường"], [5, "Màn hình điện tử ốp tường"], [6, "Trụ treo băng rôn dọc"],
     [7, "Trụ treo băng rôn ngang"], [8, "Trụ/Cụm pano"], [9, "Cổng chào"], [10, "Trung tâm thương mại"]];
 
+    const filtered_ads = ads.filter(row => ads_location[row[1] - 1][4] === id_ward);
+
+    function formatDate(inputDate) {
+        const date = new Date(inputDate);
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // tháng bắt đầu từ 0
+        const day = date.getDate().toString().padStart(2, '0');
+        const year = date.getFullYear();
+    
+        return `${month}-${day}-${year}`;
+    }
+
     // Thêm HTML string cho nút vào hai cột cuối cùng
-    ads.forEach(function(row) {
+    filtered_ads.forEach(function(row) {
         let addr = ads_location[row[1] - 1][3];
         let loc_type_index = ads_location[row[1] - 1][6] - 1;
         let loc_type_text = loc_type[loc_type_index][1];
@@ -75,10 +90,12 @@ $(document).ready(function(){
         );
         row[3] = addr;
         row[2] = board_type_text;
+        row[7] = formatDate(row[7]);
     });
     
+    
     $('#example').DataTable({
-        data: ads,
+        data: filtered_ads,
         columns: [
             { title: "ID Quảng cáo", data: 0 },
             { title: "Loại bảng quảng cáo", data: 2},
@@ -120,7 +137,7 @@ $(document).ready(function(){
         var map = new mapboxgl.Map({
           container: 'map',
           style: 'mapbox://styles/mapbox/streets-v11',
-          center: [ads_location[ads[click_row][1] - 1][2], ads_location[ads[click_row][1] - 1][1]],
+          center: [ads_location[filtered_ads[click_row][1] - 1][2], ads_location[filtered_ads[click_row][1] - 1][1]],
           zoom: 17
         });
 
@@ -177,7 +194,7 @@ $(document).ready(function(){
             }
             else{
                 var formData = new FormData();
-                formData.append('id_ads', ads[click_row][0]);
+                formData.append('id_ads', filtered_ads[click_row][0]);
                 formData.append('id_ads_location', id_adsloc);
                 formData.append('id_board_type', $('#id_board_type').val());
                 formData.append('quantity', $('#quantity').val());

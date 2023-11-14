@@ -1,4 +1,8 @@
 $(document).ready(function(){
+  const role = 2; 
+  const email = "phuong@gmail.com"
+  const id_ward = 2;
+
   let ads_location = [
     [1, 10.773695, 106.689636, '59 Nguyễn Thị Minh Khai', 2, 1, 2, 'image1.png', 1, 1],
     [2, 10.77143, 106.693526, '70 Phạm Hồng Thái', 2, 1, 2, 'image2.png', 3, 0],
@@ -34,8 +38,9 @@ $(document).ready(function(){
 
   let ads_type = [[1, "Cổ động chính trị"], [2, "Quảng cáo thương mại"], [3, "Xã hội hóa"]];
 
+  const filtered_ads_loc = ads_location.filter(row => row[4] === id_ward);
   // Thêm HTML string cho nút vào hai cột cuối cùng
-  ads_location.forEach(function(row) {
+  filtered_ads_loc.forEach(function(row) {
     let loc_type_index = row[6] - 1;
     let loc_type_text = loc_type[loc_type_index][1];
     let ads_type_index = row[8] - 1;
@@ -48,7 +53,7 @@ $(document).ready(function(){
   });
 
   $('#example').DataTable({
-    data: ads_location,
+    data: filtered_ads_loc,
     columns: [
       { title: "ID Điểm đặt", data: 0 },
       { title: "Địa chỉ", data: 3 },
@@ -89,7 +94,7 @@ $(document).ready(function(){
     var map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [ads_location[click_row][2], ads_location[click_row][1]],
+      center: [filtered_ads_loc[click_row][2], filtered_ads_loc[click_row][1]],
       zoom: 17
     });
 
@@ -217,7 +222,7 @@ $(document).ready(function(){
       }
       else{
         var formData = new FormData();
-        formData.append('id_ads_location',ads_location[click_row][0]);
+        formData.append('id_ads_location',filtered_ads_loc[click_row][0]);
         formData.append('latitude', latitude);
         formData.append('longitude', longitude);
         formData.append('address', null);

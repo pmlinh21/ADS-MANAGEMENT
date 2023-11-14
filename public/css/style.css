@@ -124,93 +124,6 @@ body {
   margin: 0.5rem auto;
 }
 
-/* headerNgDan */
-#headerNgDan {
-  background-color: #0B7B31;
-  display: flex;
-  padding: 0 0.5rem;
-}
-
-#headerNgDan .flex-container {
-  width: 100%;
-  display: flex;
-  direction: row;
-  align-items: center;
-}
-
-#headerNgDan .flex-container a {
-  margin: 0 1rem;
-}
-
-#headerNgDan .flex-container input {
-  width: 20rem;
-}
-
-#map{
-  height: 100%;
-  width: 100vw;
-}
-
-/*homepageNguoiDan.ejs*/
-.circle-marker {
-  width: 1.1rem;
-  height: 1.1rem;
-  border-radius: 50%;
-  background-color: #0B7B31;
-  border: 0.1rem solid #ffffff;
-}
-
-.blue-circle-marker {
-  background-color: blue;
-}
-
-.homepageNgDan {
-  height: calc(100% - 3.5rem);
-  position: relative;
-  background-color: #0B7B31;
-}
-
-.homepageNgDan .toggle-btn {
-  position: absolute;
-  bottom: 0;
-  z-index: 1;
-  background-color: #ffffff;
-}
-.homepageNgDan #map {
-  height: 100%;
-  width: 100vw;
-  z-index: 0;
-}
-
-.toggle.ios,
-.toggle-on.ios,
-.toggle-off.ios {
-  border-radius: 20rem;
-}
- .toggle.ios .toggle-handle {
-  border-radius: 20rem;
-}
-
-#sidebar {
-  height: calc(100% - 3.5rem);
-  width: 0;
-  position: fixed;
-  top: 3.5rem;
-  padding-top: 1rem;
-  background-color: white;
-  overflow-x: hidden;
-  transition: 0.5s;
-  z-index: 1;
-}
-
-#sidebar .adInfo{
-  background-color: #C7EBFF;
-}
-
-#sidebar .locInfo{
-  background-color: #0B7B31;
-}
-
 /*homepageCanBo.ejs*/
 
 #select-ward {
@@ -550,6 +463,10 @@ table .view-btn:focus,
   color: white;
 }
 
+table .diachi{
+  width: auto !important;
+  text-align: left !important;
+}
 .page-item .page-link {
   color: #0B7B31;
 }

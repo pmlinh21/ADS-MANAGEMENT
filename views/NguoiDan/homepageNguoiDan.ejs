@@ -1,8 +1,50 @@
 <%- include("../partial/headerNgDan"); %>
 
   <div class="homepageNgDan">
-    <div id='map'>
-      <script type="text/javascript" src="../../public/js/NguoiDan/homepageNguoiDan.js"></script>
+    <div id='map'></div>
+
+    <div id="sidebar">
+      <div class="adInfo">
+        <i class="fa-solid fa-circle-info" style="color: #05ACF4; margin-bottom:1rem"></i> Thông tin bảng quảng cáo
+        <div id="data">
+          <p style="font-size: 1rem;"><strong>Trụ, cụm pano</strong></p>
+          <p>Đồng khởi - Nguyễn Du ( Sở Văn hóa và Thể thao),Phường Bến Nghé, Quận 1</p>
+          <p>Kich thước: 2.5m x 10m</p>
+          <p>Số lượng: 1 trụ/bảng</p>
+          <p>Hình thức: Cổ động chính trị</p>
+          <p>Phân loại: Đất công/ Công viên/ Hành lang an toàn giao thông</p>
+          <div style="flex-direction: row;">
+            <a name="" id="" class="btn btn-outline-info btn-sm" href="#" role="button">
+              <i class="fa-solid fa-info"></i> Chi tiết
+            </a>
+
+            <a name="" id="" class="btn btn-danger btn-sm" href="#" role="button">
+              <i class="fa-solid fa-flag"></i> Báo cáo
+            </a>
+
+            <a name="" id="" class="btn btn-warning btn-sm" href="#" role="button">
+              <i class="fa-solid fa-eye"></i> Xem báo cáo</a>
+
+          </div>
+        </div>
+      </div>
+      <div class="locInfo">
+        <i class="fa-solid fa-location-dot"></i> Thông tin địa điểm
+        <div id="data">
+          <p>Nhà thi đấu Lãnh Binh Thăng</p>
+          <p>15 Lý Thường Kiệt, Phường 10, Quận 11</p>
+        </div>
+        <div>
+          <a name="" id="" class="btn btn-danger btn-sm" href="#" role="button">
+            <i class="fa-solid fa-flag"></i> Báo cáo
+          </a>
+
+          <a name="" id="" class="btn btn-warning btn-sm" href="#" role="button" style="float:inline-end; ">
+            <i class="fa-solid fa-eye"></i> Xem báo cáo</a>
+        </div>
+      </div>
+      <a name="" id="" class="btn btn-warning btn-sm" href="#" role="button"
+        style="float:inline-end; margin-right: 1rem;" onclick="closeNav()"> Close </a>
     </div>
     <div class="toggle-btn">
       <input type="checkbox" checked data-toggle="toggle" data-style="ios" data-onstyle="primary">
@@ -10,46 +52,7 @@
       <input type="checkbox" checked data-toggle="toggle" data-style="ios" data-onstyle="danger">
     </div>
   </div>
-  <div id="sidebar">
-    <div class="adInfo">
-      <i class="fa-solid fa-circle-info" style="color: #05ACF4; float:left"></i>
-      <p style="color: #05ACF4;">Thông tin bảng quảng cáo</p>
-      <div>
-        <h1>Trụ, cụm pano</h1>
-        <p>Đồng khởi - Nguyễn Du ( Sở Văn hóa và Thể thao),Phường Bến Nghé, Quận 1</p>
-        <p>Kich thước: 2.5m x 10m</p>
-        <p>Số lượng: 1 trụ/bảng</p>
-        <p>Hình thức: Cổ động chính trị</p>
-        <p>Phân loại: Đất công/ Công viên/ Hành lang an toàn giao thông</p>
-        <div>
-          <button><i class="fa-solid fa-info"></i>
-            <p>Chi tiết</p>
-          </button>
-          <button><i class="fa-solid fa-flag"></i>
-            <p>Báo cáo</p>
-          </button>
-          <button><i class="fa-solid fa-eye"></i>
-            <p>Xem báo cáo</p>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="locInfo">
-      <i class="fa-solid fa-location-dot"></i>
-      <p>Thông tin địa điểm</p>
-      <p>Nhà thi đấu Lãnh Binh Thăng</p>
-      <p>15 Lý Thường Kiệt, Phường 10, Quận 11</p>
-      <div>
-        <button><i class="fa-solid fa-flag"></i>
-          <p>Báo cáo</p>
-        </button>
-        <button><i class="fa-solid fa-eye"></i>
-          <p>Xem báo cáo</p>
-        </button>
-      </div>
-    </div>
-    <a href="#" onclick="closeNav()">Close</a>
-  </div>
+
   </body>
   <script type="text/javascript" src="../../public/js/NguoiDan/homepageNguoiDan.js"></script>
   <script type="text/javascript" src="../../public/js/CanBo/PhuongQuan/apiObject.js"></script>

@@ -9,6 +9,7 @@ for (let i = locationType.length; i > 0; i--) {
     td1.className = "id";
     td2.innerHTML = locationType[i-1];
     td2.className = "name";
+    td2.classList.add("left");
     tr.addEventListener("click", editPopup);
     tr.appendChild(td1);
     tr.appendChild(td2);
@@ -25,6 +26,7 @@ for (let i = adsType.length; i > 0; i--) {
     td1.className = "id";
     td2.innerHTML = adsType[i-1];
     td2.className = "name";
+    td2.classList.add("left");
     tr.addEventListener("click", editPopup);
     tr.appendChild(td1);
     tr.appendChild(td2);
@@ -41,6 +43,7 @@ for (let i = reportType.length; i > 0; i--) {
     td1.className = "id";
     td2.innerHTML = reportType[i-1];
     td2.className = "name";
+    td2.classList.add("left");
     tr.addEventListener("click", editPopup);
     tr.appendChild(td1);
     tr.appendChild(td2);
@@ -58,6 +61,7 @@ for (let i = boardType.length; i > 0; i--) {
     td1.className = "id";
     td2.innerHTML = boardType[i-1];
     td2.className = "name";
+    td2.classList.add("left");
     tr.addEventListener("click", editPopup);
     tr.appendChild(td1);
     tr.appendChild(td2);

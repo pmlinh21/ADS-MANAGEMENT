@@ -13,7 +13,7 @@ $(document).ready(function() {
 
 
 
-
+        
     const manageButton = $('#manage');
     const manageMenu = $('#manage .manage-menu');
 

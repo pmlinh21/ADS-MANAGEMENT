@@ -306,13 +306,14 @@ body {
     background-color: white;
     padding: 15px 20px;
     box-sizing: border-box;
-    min-width: 580px;
+    min-width: 800px;
     margin-bottom: 20px;
-    /* overflow: hidden; */
+    overflow: auto;
 }
 
 .table-wrap.general {
     max-width: 700px;
+    min-width: 580px;
 }
 
 .table-wrap table {
@@ -340,7 +341,6 @@ body {
 
 .table-wrap td {
     color: #7E94AB;
-    text-align: left;
 }
 
 .table-wrap tbody tr:hover {
@@ -349,12 +349,11 @@ body {
 }
 
 .table-wrap.general td.id {
-    text-align: center;
     width: 50px;
 }
 
-.center {
-    text-align: center !important;
+.left {
+    text-align: left !important;
 }
 /* END OF TABLE */
 
