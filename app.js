@@ -126,7 +126,7 @@ appCanBo.get('/quanlicanbo', function(req, res) {
 });
 
 appCanBo.get('/quanlicanbo/chinhsuaCBQuan', function(req, res) {
-  res.render('CanBo/So/chinhsuaCBQuan');
+  res.render('CanBo/So/chinhsuaCBQuan', { id: req.query.id });
 });
 
 appCanBo.get('/quanlicanbo/chinhsuaCBPhuong', function(req, res) {
