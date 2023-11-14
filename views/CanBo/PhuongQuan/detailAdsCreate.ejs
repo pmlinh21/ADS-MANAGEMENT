@@ -25,4 +25,86 @@
     <p class="mb-0">Quản lí cấp phép quảng cáo / Chi tiết cấp phép</p>
 </div>
 
-<script defer type = "text/javascript" src="../../public/js/CanBo/PhuongQuan/detailReport.js"></script>
+<form class="row g-3 form-ads-create-details">
+    <div class="col-md-12">
+        <label class="form-label" style="font-weight: 600; font-size: 1rem;">Thông tin cấp phép</label>
+    </div>
+    <div class="col-md-6">
+        <label for="id_ads_create" class="form-label">ID</label>
+        <input type="number" class="form-control" id="id" readonly>
+    </div>
+    <div class="col-md-6">
+      <label for="width" class="form-label">Loại bảng quảng cáo</label>
+      <input type="text" class="form-control" id="board_type" readonly>
+    </div>
+
+    <div class="col-md-6">
+      <label for="height" class="form-label">Kích thước</label>
+      <input type="text" class="form-control" id="size" readonly>
+    </div>
+    <div class="col-md-6">
+      <label for="quantity" class="form-label">Số lượng</label>
+      <input type="number" class="form-control" id="quantity" readonly>
+    </div>
+
+    <div class="col-md-12">
+        <label for="content" class="form-label">Nội dung quảng cáo</label>
+        <input type="text" class="form-control" id="content" readonly>
+    </div>
+
+    <div class="col-md-6">
+        <label for="adsloc" class="form-label">Điểm đặt</label>
+        <input class="form-control" type="text" id="adsloc" readonly>
+      </div>
+
+    <div class="col-md-6">
+        <label for="company" class="form-label">Công ty</label>
+        <input type="text" class="form-control" id="company" readonly>
+    </div>
+    <div class="col-md-6">
+        <label for="email" class="form-label">Email công ty</label>
+        <input type="email" class="form-control" id="email" readonly>
+    </div>
+
+    <div class="col-md-6">
+        <label for="phone" class="form-label">Số điện thoại công ty</label>
+        <input type="phone" class="form-control" id="phone" readonly>
+    </div>
+    <div class="col-md-6">
+        <label for="address" class="form-label">Địa chỉ công ty</label>
+        <input type="text" class="form-control" id="address" readonly>
+    </div>
+
+    <div class="col-md-6">
+        <label for="start" class="form-label">Ngày bắt đầu hợp đồng</label>
+        <input type="date" class="form-control" id="start_date" readonly>
+    </div>
+    <div class="col-md-6">
+        <label for="end" class="form-label">Ngày kết thúc hợp đồng</label>
+        <input type="date" class="form-control" id="end_date" readonly>
+    </div>
+
+    <div class="col-md-6">
+        <label for="status" class="form-label">Trạng thái</label>
+        <input type="text" class="form-control" id="status" readonly>
+    </div>
+    <div class="col-md-6">
+        <label for="officer" class="form-label">Nguời xử lý</label>
+        <input type="email" class="form-control" id="officer" readonly>
+    </div>
+    <div class="col-md-6">
+        <label for="office" class="form-label">Đơn vị xử lý</label>
+        <input type="text" class="form-control" id="office" readonly>
+    </div>
+</form>
+
+<div class="d-flex justify-content-end mt-3">
+    <button type="button" class="btn style3-button" style="margin-right: 4rem;">Xóa cấp phép</button>
+</div>
+
+<p class="image-text">Hình ảnh minh họa</p>
+<div class="image-container">
+    <img class="image-details" alt="Ads Image">
+</div>
+
+<script defer type = "text/javascript" src="../../public/js/CanBo/PhuongQuan/detailAdsCreate.js"></script>
