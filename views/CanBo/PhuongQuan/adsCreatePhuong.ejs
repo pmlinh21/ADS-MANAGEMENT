@@ -1,0 +1,149 @@
+<%- include("../../partial/header"); %>
+<%- include("../../partial/tableQuanPhuong"); %>
+
+<div id = "navbar">
+    <ul>
+        <li id="manage" >
+            <a class="nav-link" >Quản lý</a>
+            <ul class = "manage-menu" style = "display: none;">
+                <li><a href = "/adsLocationPhuong">Danh sách điểm đặt quảng cáo</a></li>
+                <li><a href = "/adsPhuong">Danh sách bảng quảng cáo</a></li>
+                <li><a href = "/reportPhuong">Danh sách báo cáo vi phạm</a></li>
+                <li><a href = "/createAdsPhuong">Danh sách cấp phép quảng cáo</a> </li>
+            </ul>
+        </li>
+        <li id="account">
+            <a class="nav-link" href = "/account">Tài khoản</a>
+        </li>
+        <li id="logout">
+            <a class="nav-link"  href = "/login">Đăng xuất</a>
+        </li>
+    </ul>
+</div>
+</div>
+<div class="w-100 h-100 black-bg" style = "display: none;"></div>
+<div class="title-page">
+    <i class="fa-solid fa-house"></i>
+    Quản lý cấp phép quảng cáo
+</div>
+
+<table id="example" class="table ads-create-table" style="width:100%">
+    <thead>
+        <tr>
+            <th class = "caption" colspan="8">Danh sách cấp phép quảng cáo</th>
+        </tr>
+        <tr>
+            <th>ID</th>
+            <th>Loại bảng quảng cáo</th>
+            <th>Điểm đặt</th>
+            <th>Nội dung quảng cáo</th>
+            <th>Công ty</th>
+            <th>Ngày bắt đầu</th>
+            <th>Ngày kết thúc</th>
+            <th>Xét duyệt</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+    <form class="row g-3 form-ads-create">
+        <div class="col-md-12">
+            <label class="form-label">Thông tin cấp phép</label>
+        </div>
+        <div class="col-md-3">
+            <div class="col-md-12">
+                <label for="id_board_type" class="form-label required">Loại bảng quảng cáo</label>
+                <select id="id_board_type" class="form-select" required>
+                  <option selected>(Trống)</option>
+                </select>
+              </div>
+        </div>
+        <div class="col-md-9">
+            <label class="form-label required" for="address">Điểm đặt</label>
+            <div class="input-group">
+              <button type="button" data-target="#choose-adsloc" data-toggle="modal" class="btn style1-button">Chọn điểm đặt</button>
+              <input type="text" class="form-control" id="id_ads_location" value = "" readonly>
+            </div>
+        </div>
+        <div class="col-md-3">
+          <label for="width" class="form-label required">Kích thước chiều dài (m)</label>
+          <input type="number" class="form-control" id="width" required>
+        </div>
+        <div class="col-md-3">
+          <label for="height" class="form-label required">Kích thước chiều rộng (m)</label>
+          <input type="number" class="form-control" id="height" required>
+        </div>
+        <div class="col-md-3">
+          <label for="quantity" class="form-label required">Số lượng</label>
+          <input type="number" class="form-control" id="quantity" required>
+        </div>
+        <div class="col-md-3">
+            <label for="photo" class="form-label  required">Hình ảnh minh họa</label>
+            <input class="form-control" type="file" id="photo" required>
+          </div>
+        <div class="col-12">
+          <label for="content" class="form-label required">Nội dung quảng cáo</label>
+          <input type="text" class="form-control" id="content" required>
+        </div>
+        <div class="col-md-6">
+            <label for="company" class="form-label required">Công ty</label>
+            <input type="text" class="form-control" id="company" required>
+        </div>
+        <div class="col-md-6">
+            <label for="address" class="form-label required">Địa chỉ công ty</label>
+            <input type="text" class="form-control" id="address" required>
+        </div>
+        <div class="col-md-3">
+            <label for="email" class="form-label required">Email công ty</label>
+            <input type="email" class="form-control" id="email" required>
+        </div>
+        <div class="col-md-3">
+            <label for="phone" class="form-label required">Số điện thoại công ty</label>
+            <input type="phone" class="form-control" id="phone" required>
+        </div>
+        <div class="col-md-3">
+            <label for="email" class="form-label required">Ngày bắt đầu hợp đồng</label>
+            <input type="date" class="form-control" id="start_date" required>
+        </div>
+        <div class="col-md-3">
+            <label for="phone" class="form-label required">Ngày kết thúc hợp đồng</label>
+            <input type="date" class="form-control" id="end_date" required>
+        </div>
+        
+        <div class="col-12 button-group">
+            <button type="button" class="btn style3-button">Hủy</button>
+          <button type="submit" class="btn style1-button">Tạo cấp phép</button>
+        </div>
+      </form>
+
+    <div class="modal fade" id="choose-adsloc" tabindex="-1" role="dialog" aria-labelledby="edit-request" 
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-body">
+            <div class="col-md-12 mt-3 choose-location">
+                <div class="header-map">
+                    <label for = "search" class = "col-form-label">Nhấn chọn điểm đặt</label> 
+                    <input type = "text" class = "form-control id_ads_location" readonly>
+                </div>
+                <div class="col-md-12 map" id = "map"> </div>
+            </div>
+
+            <div class="modal-footer col-md-12">
+                <button type="button" class="btn style3-button" data-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn style1-button" data-dismiss="modal">Xác nhận</button>
+            </div>
+        </div>
+        </div>
+        </div>
+    </div>
+
+
+
+<script defer type = "text/javascript" src="../../public/js/CanBo/PhuongQuan/adsCreatePhuong.js"></script>
+<script defer type = "text/javascript" src="../../public/js/CanBo/PhuongQuan/tableQuanPhuong.js"></script> 
+
+</body>
+</html>

@@ -157,7 +157,7 @@ $(document).ready(function(){
             let markerId = $(this).attr('id');
             index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
             // console.log('Marker clicked:', index);
-            id_adsloc = ads_location[index][0]
+            id_adsloc = ads_location[index][0];
             result = ads_location[index][3] + ', phường ' + ads_location[index][4]+ ', ' + ads_location[index][5];
             $("#address").val(`${result} [${ads_location[index][2]}, ${ads_location[index][1]}]` )
         });
