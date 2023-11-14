@@ -54,7 +54,6 @@ function editPopup() {
 
 function addPopup(e) {
     let title = e.parentElement.parentElement.parentElement.querySelector("caption").textContent.slice(14);
-    alert(title);
     document.querySelector("#add-popup").style.display = "block";
     document.querySelector("#add-popup legend").innerHTML = "<i class='fas fa-plus-square'></i> Thêm " + title;
     document.querySelector("#add-popup .input-field label").textContent = "Tên " + title;

@@ -348,6 +348,15 @@ body {
     cursor: pointer;
 }
 
+.table-wrap a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.table-wrap .fa-plus {
+    width: 100%;
+}
+
 .table-wrap.general td.id {
     width: 50px;
 }

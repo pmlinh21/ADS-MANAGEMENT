@@ -1,0 +1,25 @@
+<%- include('../../partial/headerSo.ejs') %>
+<%- include('../../partial/sidebarSo.ejs') %>
+    <div class="content">
+        <div class="title-container">
+            <span class="title-icon"><i class="fas fa-address-card"></i></span>
+            <span class="title-text"><h1><a href="/quanlicanbo">Quản lí cán bộ Quận</a> / Chỉnh sửa thông tin</h1></span>
+        </div>
+       
+        <form action="" method="post" id="edit-district-officer">
+            <legend><i class='far fa-edit'></i> Chỉnh sửa thông tin cán bộ Quận</legend>
+            <div class="input-container">
+                
+            </div>
+            <div class="input-field">
+                <label for="id-officer"></label>
+                <input type="text" id="id-officer" name="id-officer" disabled>
+                <span class="tooltiptext">Không thể chỉnh sửa ID</span>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<script src="../../../public/js/CanBo/So/quanlicanbo.js"></script>
+<%- include('../../partial/footerSo.ejs') %>
