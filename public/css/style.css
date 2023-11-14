@@ -618,6 +618,52 @@ label.required::after {
   margin-top: 1rem;
 }
 
+.form-ads-create-details{
+  margin: 1rem 4rem;
+  background-color: white;
+  padding: 1rem 2rem 1.5rem 2rem;
+  color: #0B7B31;
+  box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3);
+  border-radius: 1rem;
+}
+
+.form-control:read-only {
+  border: none;
+  border-bottom: 1px solid #7E94AB;
+  background-color: #fff;
+  margin-bottom: 10px;
+  border-radius: 0;
+  padding: 0;
+  color: #7E94AB;
+  font-size: 0.9rem;
+}
+
+.form-control:read-only:hover, .form-control:read-only:focus{
+  box-shadow: none;
+}
+.image-text{
+  color: #0B7B31;
+  font-weight: 600;
+  margin-left: 4rem;
+}
+.image-container {
+  width: 700px; 
+  height: 500px; 
+  overflow: hidden; 
+  border-radius: 20px; 
+  position: relative;
+  margin-left: 4rem;
+}
+
+.image-container img {
+  width: 100%; 
+  height: auto; 
+  border-radius: 20px; 
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 /* PHAN HE SO: side-navbar */
 .side-navbar {
   position: fixed;
