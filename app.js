@@ -157,6 +157,14 @@ appCanBo.get('/bangquangcao', function(req, res) {
   res.render('CanBo/So/bangquangcao');
 });
 
+appCanBo.get('/bangquangcao/chinhsua', function(req, res) {
+  res.render('CanBo/So/chinhsuaBQC', { id: req.query.id });
+});
+
+appCanBo.get('/bangquangcao/them', function(req, res) {
+  res.render('CanBo/So/themBQC');
+});
+
 appCanBo.get('/yeucauchinhsua', function(req, res) {
   res.render('CanBo/So/yeucauchinhsua');
 });
