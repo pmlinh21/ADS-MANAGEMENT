@@ -1006,8 +1006,10 @@ $(document).ready(function () {
                 ];
                 localStorage.setItem('loc_report', JSON.stringify(loc_report));
             }
-            if (email == "so@gmail.com")
+            if (email == "so@gmail.com"){
                 localStorage.setItem('role', '3');
+                localStorage.setItem('email', email);
+            }
             window.location.href = "/";
         }
         

@@ -15,21 +15,24 @@
                     <span class="tooltiptext">Không thể chỉnh sửa ID</span>
                 </div>
                 <div class="input-field">
-                    <label for="coordinates-ads-location">Tọa độ</label>
-                    <input type="text" id="coordinates-ads-location" name="coordinates-ads-location" required>
-                </div>
-                <div class="input-field">
                     <label for="address-ads-location">Địa chỉ</label>
                     <input type="text" id="address-ads-location" name="address-ads-location" disabled>
+                    <span class="tooltiptext">Chỉnh sửa bằng tọa độ</span>
                 </div>
                 <div class="input-field">
                     <label for="ward-ads-location">Phường</label>
                     <input type="text" id="ward-ads-location" name="ward-ads-location" disabled>
+                    <span class="tooltiptext">Chỉnh sửa bằng tọa độ</span>
                 </div>
                 <div class="input-field">
                     <label for="district-ads-location">Quận</label>
                     <input type="text" id="district-ads-location" name="district-ads-location" disabled>
+                    <span class="tooltiptext">Chỉnh sửa bằng tọa độ</span>
                 </div> 
+                <div class="input-field">
+                    <label for="coordinates-ads-location">Tọa độ</label>
+                    <input type="text" id="coordinates-ads-location" name="coordinates-ads-location" required>
+                </div>
                 <div class="input-field">
                     <label for="ads-location-type">Loại vị trí</label>
                     <select name="ads-location-type" id="ads-location-type" required>
@@ -47,6 +50,16 @@
                         <option value="1">Đã quy hoạch</option>
                         <option value="0">Chưa quy hoạch</option>
                     </select>
+                </div>
+                <div class="input-field image">
+                    <label for="ads-location-image">Hình ảnh minh họa</label>
+                    <div class="img-container">
+                        <img src="../../../public/image/empty_image.png" alt="" id="ads-location-image-preview">
+                        <label for="ads-location-image" class="img-button">Thay đổi</label>
+                        <input type="file" id="ads-location-image" name="ads-location-image" accept="image/*" required>
+                        <div class="dark-background"></div>
+                    </div>
+                    
                 </div>
             </div>
             <div class="button-container">
