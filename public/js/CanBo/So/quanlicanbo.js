@@ -29,7 +29,7 @@ for (let i = districtOfficers.length; i > 0; i--) {
     tr.appendChild(td6);
 
     tr.addEventListener("click", function() {
-        window.location = "/quanlicanbo/chinhsuaCBQuan?id=" + districtOfficers[i-1][0];
+        window.location = "/quanlicanbo/chinhsuacbquan?id=" + districtOfficers[i-1][0];
     });
 
     document.querySelector("#district-officer-table table tbody").prepend(tr);
@@ -68,7 +68,7 @@ for (let i = wardOfficers.length; i > 0; i--) {
     tr.appendChild(td7);
 
     tr.addEventListener("click", function() {
-        window.location = "/quanlicanbo/chinhsuaCBPhuong?id=" + wardOfficers[i-1][0];
+        window.location = "/quanlicanbo/chinhsuacbphuong?id=" + wardOfficers[i-1][0];
     });
 
     document.querySelector("#ward-officer-table table tbody").prepend(tr);

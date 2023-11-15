@@ -1,0 +1,61 @@
+<%- include('../../partial/headerSo.ejs') %>
+<%- include('../../partial/sidebarSo.ejs') %>
+    <div class="content">
+        <div class="title-container">
+            <span class="title-icon"><i class="fas fa-map-marked-alt"></i></span>
+            <span class="title-text"><h1><a href="/diemdatquangcao">Quản lí điểm đặt quảng cáo</a> / Thông tin chi tiết</h1></span>
+        </div>
+       
+        <form action="" method="post" class="form" id="edit-ads-location">
+            <legend><i class="fas fa-info-circle"></i> Thông tin điểm đặt quảng cáo</legend>
+            <div class="input-container">
+                <div class="input-field">
+                    <label for="id-ads-location">ID Điểm đặt</label>
+                    <input type="text" id="id-ads-location" name="id-ads-location" disabled>
+                    <span class="tooltiptext">Không thể chỉnh sửa ID</span>
+                </div>
+                <div class="input-field">
+                    <label for="coordinates-ads-location">Tọa độ</label>
+                    <input type="text" id="coordinates-ads-location" name="coordinates-ads-location" required>
+                </div>
+                <div class="input-field">
+                    <label for="address-ads-location">Địa chỉ</label>
+                    <input type="text" id="address-ads-location" name="address-ads-location" disabled>
+                </div>
+                <div class="input-field">
+                    <label for="ward-ads-location">Phường</label>
+                    <input type="text" id="ward-ads-location" name="ward-ads-location" disabled>
+                </div>
+                <div class="input-field">
+                    <label for="district-ads-location">Quận</label>
+                    <input type="text" id="district-ads-location" name="district-ads-location" disabled>
+                </div> 
+                <div class="input-field">
+                    <label for="ads-location-type">Loại vị trí</label>
+                    <select name="ads-location-type" id="ads-location-type" required>
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label for="ads-type">Hình thức quảng cáo</label>
+                    <select name="ads-type" id="ads-type" required>
+                    </select>
+                </div> 
+                <div class="input-field">
+                    <label for="zoning-status">Tình trạng quy hoạch</label>
+                    <select name="zoning-status" id="zoning-status" required>
+                        <option value="">Chọn tình trạng</option>
+                        <option value="1">Đã quy hoạch</option>
+                        <option value="0">Chưa quy hoạch</option>
+                    </select>
+                </div>
+            </div>
+            <div class="button-container">
+                <button type="button" value="update" class="button button-delete">Xóa điểm đặt</button>
+                <button type="submit" value="delete" class="button">Lưu thay đổi</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+<script src="../../../public/js/CanBo/So/chinhsuaDDQC.js"></script>
+<%- include('../../partial/footerSo.ejs') %>

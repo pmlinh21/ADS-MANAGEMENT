@@ -125,24 +125,28 @@ appCanBo.get('/quanlicanbo', function(req, res) {
   res.render('CanBo/So/quanlicanbo');
 });
 
-appCanBo.get('/quanlicanbo/chinhsuaCBQuan', function(req, res) {
+appCanBo.get('/quanlicanbo/chinhsuacbquan', function(req, res) {
   res.render('CanBo/So/chinhsuaCBQuan', { id: req.query.id });
 });
 
-appCanBo.get('/quanlicanbo/themCBQuan', function(req, res) {
+appCanBo.get('/quanlicanbo/themcbquan', function(req, res) {
   res.render('CanBo/So/themCBQuan');
 });
 
-appCanBo.get('/quanlicanbo/chinhsuaCBPhuong', function(req, res) {
+appCanBo.get('/quanlicanbo/chinhsuacbphuong', function(req, res) {
   res.render('CanBo/So/chinhsuaCBPhuong', { id: req.query.id });
 });
 
-appCanBo.get('/quanlicanbo/themCBPhuong', function(req, res) {
+appCanBo.get('/quanlicanbo/themcbphuong', function(req, res) {
   res.render('CanBo/So/themCBPhuong');
 });
 
 appCanBo.get('/diemdatquangcao', function(req, res) {
   res.render('CanBo/So/diemdatquangcao');
+});
+
+appCanBo.get('/diemdatquangcao/chinhsua', function(req, res) {
+  res.render('CanBo/So/chinhsuaDDQC', { id: req.query.id });
 });
 
 appCanBo.get('/bangquangcao', function(req, res) {  
