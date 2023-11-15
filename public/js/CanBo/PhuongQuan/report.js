@@ -1,8 +1,5 @@
 // hard code
 $(document).ready(function () {
-  // 1 = Quan, 2 = Phuong
-  // const role = 1; 
-  // const email = "nnlien21@clc.fitus.edu.vn"
   const id_district = 1;
   
   var info1, info2, info3, wards

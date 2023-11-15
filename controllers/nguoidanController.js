@@ -20,16 +20,6 @@ function validateObj(obj) {
     return obj;
 }
 
-const getReportType = async(req, res) =>{
-    try{
-        let data = await model.Report_type.findAll();
-        sucessCode(res,data,"Get thành công")
-
-    }catch(err){
-        errorCode(res,"Lỗi BE")
-    }
-}
-
 const getAdsLoc = async(req, res) =>{
     try{
         const [adsloc, metadata1] = await sequelize.query
@@ -94,15 +84,17 @@ const getAdsLoc = async(req, res) =>{
 const getReport = async(req, res) =>{
     try{
         let { email } = req.params;
-        // let email = "lvduc@gmail.com"
         
-        // const [adsloc, metadata] = await sequelize.query
-        //     (`SELECT *
-        //     FROM Ads_loc_report alr
-        //     WHERE email = ${email}
-        //     `);
-
-        sucessCode(res,email,"Get thành công")
+        const [adsloc, metadata] = await sequelize.query
+            (`SELECT alr.*, rt.report_type, al.address, w.*, d.*
+            FROM Ads_loc_report alr
+            INNER JOIN Report_type rt ON rt.id_report_type = alr.id_report_type
+            INNER JOIN Ads_location al ON al.id_ads_location = alr.id_ads_location
+            INNER JOIN Ward w ON w.id_ward = al.id_ward
+            INNER JOIN District d ON d.id_district = al.id_district
+            WHERE alr.email = '${email}'`);
+            
+        sucessCode(res,adsloc,"Get thành công")
 
     }catch(err){
         errorCode(res,"Lỗi BE")
@@ -112,4 +104,4 @@ const getReport = async(req, res) =>{
 
 
 
-module.exports = { getAdsLoc, getReport, getReportType}
+module.exports = { getAdsLoc, getReport}
