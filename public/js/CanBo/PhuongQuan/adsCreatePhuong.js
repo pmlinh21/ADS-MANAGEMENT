@@ -1,6 +1,6 @@
 $(document).ready(function(){
-    const role = 2; 
-    const email = "phuong@gmail.com"
+    const storedEmail = localStorage.getItem('email');
+    const role = localStorage.getItem('role');
     const id_ward = 2;
     
     const storedAdsCreate = localStorage.getItem('ads_create');

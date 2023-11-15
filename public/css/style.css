@@ -627,7 +627,7 @@ label.required::after {
   border-radius: 1rem;
 }
 
-.input-details:read-only, .edit-input {
+.input-details, .input-details:read-only, .edit-input {
   border: none;
   border-bottom: 1px solid #7E94AB;
   background-color: #fff;
@@ -638,13 +638,13 @@ label.required::after {
   font-size: 0.9rem;
 }
 
-.input-details:read-only:hover, .input-details:read-only:focus{
+.input-details, .input-details:read-only:hover, .input-details:read-only:focus{
   box-shadow: none;
 }
 
 .form-check {
   display: inline-block;
-  margin-bottom: 10px;
+  margin-right: 1rem;
 }
 
 .form-check-input {
@@ -682,6 +682,69 @@ label.required::after {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+/* ACCOUNT */
+.forms-container {
+  display: flex;
+  flex-wrap: nowrap; 
+  justify-content: space-around; 
+}
+
+.form-account {
+  width: 30%; 
+  margin: 1.5rem 4rem;
+  background-color: white;
+  padding: 0rem 1.5rem 1.5rem 1.5rem;
+  color: #0B7B31;
+  box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3);
+  border-radius: 1rem;
+}
+
+.pass-details {
+  height: 2rem;
+  border: 1px solid #7E94AB;
+  background-color: #fff;
+  border-radius: 30px;
+  padding-right: 0.2rem;
+  color: #7E94AB;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.error-message {
+  color: red;
+  font-style: italic;
+  display: none;
+}
+
+.pass-details-hidden, .pass-details-hidden:hover, .pass-details-hidden:focus{
+  display: none;
+}
+
+.pass-text{
+  color: #7E94AB;
+  font-style: italic;
+  font-size: 0.7rem;
+}
+
+.field-icon {
+  float: right;
+  margin-left: -25px;
+  margin-top: -25px;
+  margin-right: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.btn-forget {
+  height: fit-content;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  padding: 0.25rem 1rem;
+  font-weight: 500;
 }
 
 /* PHAN HE SO: side-navbar */

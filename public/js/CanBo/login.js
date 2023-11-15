@@ -1005,6 +1005,18 @@ $(document).ready(function () {
                     [7, '', null, 10.9448, 106.818,	1, 'Đỗ Thị Thanh Thảo',	'dtthao@gmail.com', '0921122334', 'Địa điểm có gắn quảng cáo trái phép, chưa đăng ký hợp pháp', '', '', "2023-09-08 00:00:00", 0, '', 5]
                 ];
                 localStorage.setItem('loc_report', JSON.stringify(loc_report));
+
+                let cbphuong = [
+                    ['21127341@student.hcmus.edu.vn', 'Ngô Ngọc Liên', '123@nhomsau', '0903342521', '2002-06-25', 25],
+                    ['21127350@student.hcmus.edu.vn', 'Nguyễn Cao Luận', '123@nhomsau', '0987654321', '1989-05-02', 32],
+                    ['21127637@student.hcmus.edu.vn', 'Phan Mỹ Linh', '123@nhomsau', '0781122345', '1998-08-06', 9],
+                    ['cbphuong1@gmail.com', 'Trần Đăng Khôi', '123@nhomsau', '0903112233', '1986-10-14', 1],
+                    ['cbphuong2@gmail.com', 'Phạm Ngọc Nga', '123@nhomsau', '0978543210', '1993-08-30', 3],
+                    ['cbphuong3@gmail.com', 'Nguyễn Hải Đăng', '123@nhomsau', '0912345678', '1992-03-05', 4],
+                    ['cbphuong4@gmail.com', 'Nguyễn Minh Huy', '123@nhomsau', '0945321654', '1990-04-23', 5],
+                    ['phuong@gmail.com', 'Nguyễn Trần Hồng Phúc', '123@nhomsau', '0900012345', '1995-04-01', 2]
+                ];
+                localStorage.setItem('cbphuong', JSON.stringify(cbphuong)); 
             }
             if (email == "so@gmail.com"){
                 localStorage.setItem('role', '3');

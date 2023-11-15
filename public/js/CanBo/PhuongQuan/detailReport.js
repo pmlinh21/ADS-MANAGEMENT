@@ -49,20 +49,20 @@ $(document).ready(function() {
         <textarea type="text" class="form-control input-details fixed-size-textarea" id="report" readonly></textarea>
       </div>
 
-      <div class="col-md-6">
+      <div class="col-md-4">
         <label for="time" class="form-label">Thời điểm gửi</label>
         <input type="date" class="form-control input-details" id="time" readonly>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <label for="officer" class="form-label">Người xử lý</label>
         <input type="text" class="form-control input-details" id="officer" readonly>
       </div>
-
-      <div class="col-md-6">
+      <div class="col-md-4">
         <label for="office" class="form-label">Đơn vị xử lý</label>
         <input type="text" class="form-control input-details" id="office" readonly>
       </div>
-      <div class="col-md-6">
+      
+      <div class="col-md-12">
         <label for="status" class="form-label" style="display: block;">Trạng thái xử lý</label>
         <div class="form-check">
           <input type="radio" class="form-check-input" id="statusProcessed" name="status" value="1" readonly>
