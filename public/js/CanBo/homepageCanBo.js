@@ -107,7 +107,7 @@ $(document).ready(function () {
       $('.manage-menu li:nth-child(1) a').attr('href', "/adsLocationPhuong")  
       $('.manage-menu li:nth-child(2) a').attr('href', "/adsPhuong")  
       $('.manage-menu li:nth-child(3) a').attr('href',  "/reportPhuong") 
-      $('.manage-menu li:nth-child(4) a').attr('href', "/adsCreatePhuong")  
+      $('.manage-menu li:nth-child(4) a').attr('href', "/createAdsPhuong")  
   }
   else if (role === 1) {
       info = QuanAdsLocation.content.map(function(data){
@@ -190,7 +190,6 @@ $(document).ready(function () {
       }
     );
   }
-
 });
 
 // api

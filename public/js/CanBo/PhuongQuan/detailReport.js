@@ -115,8 +115,8 @@ $(document).ready(function() {
         $('#statusPending').prop('checked', true);
       }
       $('#method').val(info[13]);
-      $('.image-report-1').attr('src', info[9] ? `../../../../public/image/${info[9]}` : '');
-      $('.image-report-2').attr('src', info[10] ? `../../../../public/image/${info[10]}` : '');
+      $('.image-report-1').attr('src', info[9] ? `../../../../public/image/${info[9]}` : '`../../../../public/image/image-placeholder.jpg');
+      $('.image-report-2').attr('src', info[10] ? `../../../../public/image/${info[10]}` : '`../../../../public/image/image-placeholder.jpg');
     }
 
     $('.style1-button').on('click', function() {

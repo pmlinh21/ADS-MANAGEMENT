@@ -1,35 +1,52 @@
 // hard code
 $(document).ready(function () {
-  // const role = 1; 
-  // const email = "nnlien21@clc.fitus.edu.vn"
+  const role = 1; 
+  const email = "quan@gmail.com"
   const id_district = 1;
   mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
   
-  var info, wards, filter_info
+  const storedAdsCreate = localStorage.getItem('ads_create');
+  let ads_create = storedAdsCreate ? JSON.parse(storedAdsCreate) : [];
+  console.log("ads_create:", ads_create );
+  var wards, filter_info
 
-  // if (role === 2) {
-  //     $(".ward-table").hide();
+  wards = Ward.content.map(ward => ward.ward);
+  // console.log("!");
+  renderWard(wards);
 
-  // }
-  // else{
-      wards = Ward.content.map(ward => ward.ward);
-      console.log("!");
-      renderWard(wards);
+  info = ads_create.map(function(item){
+    let statusText = item[16] ? "Đã xét duyệt" : "Chưa xét duyệt"
 
-      info = QuanAdsCreate.content.map(function(data){
-        let {id_create, board_type, address, content, company,
-          start_date, end_date, status,
-          width, height, quantity, photo, email, phone, ward } = data
-        let statusText = status ? "Đã xét duyệt" : "Chưa xét duyệt"
+    return [item[0], item[17], `${item[13]}, phường ${item[18]}`, item[8], item[10],
+    validateSQLDate(item[14]), validateSQLDate(item[15]), statusText, 
+    '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>', 
+    item[5], item[6], item[7], item[9], item[11], item[12], item[18]]
+  })
 
-        return [id_create, board_type, `${address}, phường ${ward}`, content, company,
-        validateSQLDate(start_date), validateSQLDate(end_date), statusText, 
-        '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>', 
-        width, height, quantity, photo, email, phone, ward]
-      })
+  let urlParams = new URLSearchParams(window.location.search);
+  let idString = urlParams.get('id');
+  let idArray = idString?.split(',').map(Number);
+  let wardArray = idArray?.map(function(item){
+    return wards[item]
+  })
+  console.log(idArray)
 
-      filter_info = [...info].sort((a, b) => a[0] - b[0]);
-      // console.log(info);
+  filter_info = [...info].sort((a, b) => a[0] - b[0]);
+
+  if (wardArray?.length > 0){
+    let result = []
+    for (let i = 0; i < filter_info.length; i++){
+      if (!wardArray.includes(filter_info[i][15]))
+        result.push(filter_info[i]);
+    }
+    filter_info = [...result]
+
+    for (let i = 0; i < idArray.length; i++){
+      $(`#ward-${idArray[i]}`).prop('checked', false)
+    }
+  }
+
+  console.log(filter_info);
 
       $(".ads-create-table").DataTable({
         pageLength: 6,
@@ -67,10 +84,28 @@ $(document).ready(function () {
           return a[0] - b[0];
         })).draw()
 
+        var checkboxes = $('.ward-table input[type="checkbox"]');
+        var checkboxStates = []; 
+        checkboxes.each(function() {
+          if (!this.checked){
+            let id = parseInt(this.id.substring(this.id.indexOf("-") + 1))
+            checkboxStates.push(id);
+          }
+        });
+
+        let newURL = window.location.href.split('?')[0]; 
+        if (checkboxStates.length > 0){
+          newURL += '?id=' + encodeURIComponent(checkboxStates.join(","));
+          history.replaceState(null, null, newURL);
+        } else{
+          history.replaceState(null, null, newURL);
+        }
+
       })
   // }
 
   // render form
+    $("form").get(0).reset();
     var board_type = BoardType.content, imageData = result = id_adsloc = null
 
     board_type?.forEach(function(type){
@@ -113,19 +148,19 @@ $(document).ready(function () {
       console.log("a");
 
       // get ads location
-        var info = [], index = null
+        var select_adsloc = [], index = null
         for (let i = 0; i < QuanAdsLocation.content.length; i++) {
-          let {id_ads_location, address, ward, is_zoning, longitude, latitude} = data.content[i]
+          let {id_ads_location, address, ward, is_zoning, longitude, latitude} = QuanAdsLocation.content[i]
           if (is_zoning == 1) 
-            info.push( {id_ads_location, address, ward, photo, longitude, latitude})
+            select_adsloc.push( {id_ads_location, address, ward, photo, longitude, latitude})
         }
 
-        console.log(info);
+        console.log(select_adsloc);
 
         var map = new mapboxgl.Map({
           container: 'map',
           style: 'mapbox://styles/mapbox/streets-v11',
-          center: [info[0].longitude, info[0].latitude],
+          center: [select_adsloc[0].longitude, select_adsloc[0].latitude],
           zoom: 17
         });
 
@@ -133,7 +168,7 @@ $(document).ready(function () {
         canvas.width('100%');
         canvas.height('100%');
 
-        info.forEach(function (item, index) {
+        select_adsloc.forEach(function (item, index) {
           var marker = new mapboxgl.Marker({color: '#0B7B31' })
           .setLngLat([item.longitude, item.latitude]) 
           .addTo(map)
@@ -147,15 +182,15 @@ $(document).ready(function () {
           let markerId = $(this).attr('id');
           index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
           // console.log('Marker clicked:', index);
-          id_adsloc = info[index].id_ads_location
-          result = info[index].address + ', phường ' + info[index].ward + ', quận ' + id_district;
-          $(".id_ads_location").val(`${result} [${info[index].longitude}, ${info[index].latitude}]` )
+          id_adsloc = select_adsloc[index].id_ads_location
+          result = select_adsloc[index].address + ', phường ' + select_adsloc[index].ward + ', quận ' + id_district;
+          $(".id_ads_location").val(`${result} [${select_adsloc[index].longitude}, ${select_adsloc[index].latitude}]` )
         });
 
         // click confirm button
         $('#choose-adsloc .style1-button').off('click').on('click', function(e) {
           e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
-          $("#id_ads_location").val(`${result} [${info[index].longitude}, ${info[index].latitude}]` )
+          $("#id_ads_location").val(`${result} [${select_adsloc[index].longitude}, ${select_adsloc[index].latitude}]` )
         })
     })
 
@@ -173,8 +208,6 @@ $(document).ready(function () {
         alert('Vui lòng nhập chiều rộng.');
       } else if ($('#quantity').val() === "") {
         alert('Vui lòng nhập số lượng.');
-      } else if (imageData == null) {
-        alert('Vui lòng tải hình ảnh minh họa.');
       } else if ($('#content').val() === "") {
         alert('Vui lòng nhập nội dung.');
       } else if ($('#company').val() === "") {
@@ -192,23 +225,24 @@ $(document).ready(function () {
       } else if ($('#start_date').val() > $('#end_date').val()) {
         alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
       }else{
-        var formData = new FormData();
-        formData.append('id_ads_location', id_adsloc);
-        formData.append('id_board_type', $('#id_board_type').val());
-        formData.append('quantity', $('#quantity').val());
-        formData.append('width', $('#width').val());
-        formData.append('height', $('#height').val());
-        formData.append('start_date', $('#start_date').val() );
-        formData.append('end_date', $('#end_date').val() );
-        formData.append('company', $('#company').val());
-        formData.append('address', $('#address').val());
-        formData.append('email', $('#email').val() );
-        formData.append('phone', $('#phone').val() );          
-        formData.append('content', $('#content').val());
-        formData.append('officer', email);
-        formData.append('office', role);
-        formData.append('file', imageData);
+        var selected_ward = null;
+        for (let i = 0; i < QuanAdsLocation.content.length; i++) {
+          // console.log(QuanAdsLocation.content[i].id_ads_location)
+          if (QuanAdsLocation.content[i].id_ads_location == id_adsloc){
+            selected_ward = QuanAdsLocation.content[i].ward;
+            break;
+          }
+        }
+        // console.log(selected_ward)
+        let formData = [25 ,email, role, id_adsloc, parseInt($('#id_board_type').val()),
+        parseFloat($('#width').val()), parseFloat($('#height').val()), parseInt($('#quantity').val()), 
+        $('#content').val(), "", $('#company').val(), $('#email').val(), 
+        $('#phone').val(), $('#address').val(), $('#start_date').val(), 
+        $('#end_date').val(), 0, board_type[$('#id_board_type').val() - 1].board_type,
+        selected_ward]
 
+        let updateInfo = [...ads_create, formData]
+        localStorage.setItem('ads_create', JSON.stringify(updateInfo));
         // console.log(formData);
         $("form").get(0).reset();
 

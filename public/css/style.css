@@ -176,7 +176,8 @@ hr{
   color: #867F7F
 }
 
-#ward-container input {
+#ward-container input
+[type=radio] {
   min-width: 1rem;
   height: 1rem;
   margin-right: 0.5rem;
@@ -188,15 +189,22 @@ hr{
   appearance: none;
 }
 
+.ward-table div{
+  display: flex;
+  flex-direction: row;
+}
+
 #ward-container input:checked,
-.ward-table input:checked {
+.ward-table input:checked,
+[type=radio]:checked {
   background-color: #0B7B31;
   outline: none;
   border: none;
 }
 
 #ward-container input:focus,
-.ward-table input:focus {
+.ward-table input:focus,
+[type=radio]:focus {
   box-shadow: none;
   border-color: #867F7F
 }

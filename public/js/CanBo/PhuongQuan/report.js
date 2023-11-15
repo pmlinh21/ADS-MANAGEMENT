@@ -1,8 +1,5 @@
 // hard code
 $(document).ready(function () {
-  // 1 = Quan, 2 = Phuong
-  // const role = 1; 
-  // const email = "nnlien21@clc.fitus.edu.vn"
   const id_district = 1;
   
   var info1, info2, info3, wards
@@ -18,38 +15,40 @@ $(document).ready(function () {
       renderWard(wards);
       $('.ward-table input').prop('checked', true)
 
-      info1 = QuanAdsReport.content.map(function(data){
-        let {id_report, id_ads, report_type, fullname, email, phone, content,
-          photo1, photo2, report_time, status, resolve, ward } = data
-        let statusText = status ? "Đã xử lí" : "Chưa xử lí"
-        return [id_report, id_ads, report_type, fullname, email, phone, 
-        validateSQLDate(report_time), statusText, 
+      const storedAdsReport = localStorage.getItem('ads_report');
+      let ads_report = storedAdsReport ? JSON.parse(storedAdsReport) : [];
+      console.log("ads_report:", ads_report );
+
+      info1 = ads_report.map(function(item){
+        let statusText = item[12] ? "Đã xử lí" : "Chưa xử lí"
+        return [item[0], item[3], item[14], item[5], item[6], item[7], 
+        item[11], statusText, 
         '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>', 
-        content,  photo1, photo2, resolve, status, ward]
+        item[8],  item[9], item[10], item[13], item[12], item[15]]
       })
 
-      info2 = QuanAdsLocReport.content.map(function(data){
-        let {id_report, id_ads_location, report_type, fullname, email, phone, content,
-          photo1, photo2, report_time, status, resolve, ward } = data
-        let statusText = status ? "Đã xử lí" : "Chưa xử lí"
-        id_report = parseInt(id_report);
-        // console.log(id_report);
-        return [id_report, id_ads_location, report_type, fullname, email, phone, 
-        validateSQLDate(report_time), statusText, 
+      const storedAdsLocReport = localStorage.getItem('ads_loc_report');
+      let ads_loc_report = storedAdsLocReport ? JSON.parse(storedAdsLocReport) : [];
+      console.log("ads_loc_report:", ads_loc_report );
+
+      info2 = ads_loc_report.map(function(item){
+        let statusText = item[12] ? "Đã xử lí" : "Chưa xử lí"
+        return [item[0], item[3], item[14], item[5], item[6], item[7], 
+        item[11], statusText, 
         '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>', 
-        content,  photo1, photo2, resolve, status, ward]
+        item[8],  item[9], item[10], item[13], item[12], item[15]]
       })
 
-      info3 = QuanLocReport.content.map(function(data){
-        let {id_report, report_type, fullname, email, phone, content,
-          photo1, photo2, report_time, status, resolve, ward, longitude, latitue } = data
-        let statusText = status ? "Đã xử lí" : "Chưa xử lí"
-        id_report = parseInt(id_report);
-        // console.log(id_report);
-        return [id_report, "địa chỉ", report_type, fullname, email, phone, 
-        validateSQLDate(report_time), statusText, 
+      const storedLocReport = localStorage.getItem('loc_report');
+      let loc_report = storedLocReport ? JSON.parse(storedLocReport) : [];
+      console.log("loc_report:", loc_report );
+
+      info3 = loc_report.map(function(item){
+        let statusText = item[13] ? "Đã xử lí" : "Chưa xử lí"
+        return [item[0], "địa chỉ", item[16], item[6], item[7], item[8], 
+        item[12], statusText, 
         '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>',
-        content,  photo1, photo2, resolve, status, ward, longitude, latitue]
+        item[9],  item[10], item[11], item[14], item[13], item[17], item[3], item[4]]
       })
 
       let urlParams = new URLSearchParams(window.location.search);
@@ -58,7 +57,7 @@ $(document).ready(function () {
       let wardArray = idArray?.map(function(item){
         return wards[item]
       })
-      console.log(wardArray)
+      // console.log(wardArray)
 
       ads_info = [...info1].sort((a, b) => a[0] - b[0]);
 
@@ -85,6 +84,10 @@ $(document).ready(function () {
             result.push(loc_info[i]);
         }
         loc_info = [...result]
+
+        for (let i = 0; i < idArray.length; i++){
+          $(`#ward-${idArray[i]}`).prop('checked', false)
+        }
       }
 
       console.log(ads_info);
@@ -196,7 +199,6 @@ $(document).ready(function () {
         } else{
           history.replaceState(null, null, newURL);
         }
-        
       })
   // }
 
