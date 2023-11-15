@@ -113,14 +113,18 @@ $(document).ready(function () {
             ];
             localStorage.setItem('loc_report', JSON.stringify(loc_report));
 
-            if (email == "quan@gmail.com")
+            if (email == "quan@gmail.com"){
                 localStorage.setItem('role', '1');
+                localStorage.setItem('email', email);
+            }
             if (email == "phuong@gmail.com"){
                 localStorage.setItem('role', '2');
                 localStorage.setItem('email', email);
             }
-            if (email == "so@gmail.com")
+            if (email == "so@gmail.com"){
                 localStorage.setItem('role', '3');
+                localStorage.setItem('email', email);
+            }
             window.location.href = "/";
         }
         

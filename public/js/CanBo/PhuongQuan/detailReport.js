@@ -4,6 +4,8 @@ $(document).ready(function() {
   const id_report = urlParams.get('id_report');
   const table = urlParams.get('table');
   const storedEmail = localStorage.getItem('email');
+  const role = localStorage.getItem('role');
+
   let report_type = [[1, "Tố giác sai phạm"], [2, "Đăng ký nội dung"], [3, "Đóng góp ý kiến"], [4, "Giải đáp thắc mắc"]];
 
   if (table == "ads"){
@@ -12,11 +14,12 @@ $(document).ready(function() {
     const formHtml = `
     <form class="row g-3 form-ads-create-details">
       <div class="col-md-12">
-          <label class="form-label" style="font-weight: 600; font-size: 1rem;">Chi tiết báo cáo quảng cáo vi phạm</label>
+        <label class="form-label" style="font-weight: 600; font-size: 1rem;">Chi tiết báo cáo quảng cáo vi phạm</label>
       </div>
+
       <div class="col-md-6">
-          <label for="id_ads_report" class="form-label">ID Báo cáo</label>
-          <input type="number" class="form-control input-details" id="id_ads_report" readonly>
+        <label for="id_ads_report" class="form-label">ID Báo cáo</label>
+        <input type="number" class="form-control input-details" id="id_ads_report" readonly>
       </div>
       <div class="col-md-6">
         <label for="id_ads" class="form-label">ID Quảng cáo</label>
@@ -33,40 +36,47 @@ $(document).ready(function() {
       </div>
 
       <div class="col-md-6">
-          <label for="email" class="form-label">Email người báo cáo</label>
-          <input type="email" class="form-control input-details" id="email" readonly>
+        <label for="email" class="form-label">Email người báo cáo</label>
+        <input type="email" class="form-control input-details" id="email" readonly>
       </div>
       <div class="col-md-6">
-          <label for="phone" class="form-label">Số điện thoại người báo cáo</label>
-          <input type="phone" class="form-control input-details" id="phone" readonly>
+        <label for="phone" class="form-label">Số điện thoại người báo cáo</label>
+        <input type="phone" class="form-control input-details" id="phone" readonly>
       </div>
 
       <div class="col-md-12">
-          <label for="report" class="form-label">Nội dung báo cáo</label>
-          <textarea type="text" class="form-control input-details" id="report" readonly></textarea>
+        <label for="report" class="form-label">Nội dung báo cáo</label>
+        <textarea type="text" class="form-control input-details fixed-size-textarea" id="report" readonly></textarea>
       </div>
 
       <div class="col-md-6">
-          <label for="time" class="form-label">Thời điểm gửi</label>
-          <input type="date" class="form-control input-details" id="time" readonly>
+        <label for="time" class="form-label">Thời điểm gửi</label>
+        <input type="date" class="form-control input-details" id="time" readonly>
       </div>
       <div class="col-md-6">
-          <label for="officer" class="form-label">Người xử lý</label>
-          <input type="text" class="form-control input-details" id="officer" readonly>
+        <label for="officer" class="form-label">Người xử lý</label>
+        <input type="text" class="form-control input-details" id="officer" readonly>
       </div>
 
       <div class="col-md-6">
-          <label for="office" class="form-label">Đơn vị xử lý</label>
-          <input type="text" class="form-control input-details" id="office" readonly>
+        <label for="office" class="form-label">Đơn vị xử lý</label>
+        <input type="text" class="form-control input-details" id="office" readonly>
       </div>
       <div class="col-md-6">
-          <label for="status" class="form-label">Trạng thái xử lý</label>
-          <input type="text" class="form-control input-details" id="status" readonly>
+        <label for="status" class="form-label" style="display: block;">Trạng thái xử lý</label>
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="statusProcessed" name="status" value="1" readonly>
+          <label class="form-check-label" for="statusProcessed">Đã xử lý</label>
+        </div>
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="statusPending" name="status" value="0" readonly>
+          <label class="form-check-label" for="statusPending">Chưa xử lý</label>
+        </div>
       </div>
 
       <div class="col-md-12">
-          <label for="method" class="form-label">Cách thức xử lý</label>
-          <textarea class="form-control edit-input" id="method"></textarea>
+        <label for="method" class="form-label">Cách thức xử lý</label>
+        <textarea class="form-control edit-input fixed-size-textarea" id="method"></textarea>
       </div>
     </form>
     `;
@@ -99,20 +109,25 @@ $(document).ready(function() {
       $('#time').val(formatDate(info[11]));
       $('#officer').val(info[1]);
       $('#office').val(info[2] === 1 ? "Quận" : (info[2] === 2 ? "Phường" : ""));
-      $('#status').val(info[12] === 1 ? "Đã xét duyệt" : "Chưa xét duyệt");
+      if (info[12] === 1) {
+        $('#statusProcessed').prop('checked', true);
+      } else {
+        $('#statusPending').prop('checked', true);
+      }
       $('#method').val(info[13]);
-      $('.image-report-1').attr('src', `../../../../public/image/${info[9]}`);
-      $('.image-report-2').attr('src', `../../../../public/image/${info[10]}`);
+      $('.image-report-1').attr('src', info[9] ? `../../../../public/image/${info[9]}` : '');
+      $('.image-report-2').attr('src', info[10] ? `../../../../public/image/${info[10]}` : '');
     }
 
     $('.style1-button').on('click', function() {
       const updatedMethod = $('#method').val();
+      const updatedStatus = $('input[name="status"]:checked').val();
       const indexToUpdate = ads_report.findIndex(item => item[0] == id_report);
 
       ads_report[indexToUpdate][13] = updatedMethod;
       ads_report[indexToUpdate][1] = storedEmail;
-      ads_report[indexToUpdate][2] = 2;
-      ads_report[indexToUpdate][12] = 1;
+      ads_report[indexToUpdate][2] = parseInt(role);
+      ads_report[indexToUpdate][12] = parseInt(updatedStatus);
       localStorage.setItem('ads_report', JSON.stringify(ads_report)); 
       location.reload();
     });
@@ -155,7 +170,7 @@ $(document).ready(function() {
 
       <div class="col-md-12">
           <label for="report" class="form-label">Nội dung báo cáo</label>
-          <textarea type="text" class="form-control input-details" id="report" readonly></textarea>
+          <textarea type="text" class="form-control input-details fixed-size-textarea" id="report" readonly></textarea>
       </div>
 
       <div class="col-md-6">
@@ -173,12 +188,19 @@ $(document).ready(function() {
       </div>
       <div class="col-md-6">
           <label for="status" class="form-label">Trạng thái xử lý</label>
-          <input type="text" class="form-control input-details" id="status" readonly>
+          <div class="form-check">
+            <input type="radio" class="form-check-input" id="statusProcessed" name="status" value="1" readonly>
+            <label class="form-check-label" for="statusProcessed">Đã xử lý</label>
+          </div>
+          <div class="form-check">
+            <input type="radio" class="form-check-input" id="statusPending" name="status" value="0" readonly>
+            <label class="form-check-label" for="statusPending">Chưa xử lý</label>
+          </div>
       </div>
 
       <div class="col-md-12">
           <label for="method" class="form-label">Cách thức xử lý</label>
-          <textarea class="form-control edit-input" id="method"></textarea>
+          <textarea class="form-control edit-input fixed-size-textarea" id="method"></textarea>
       </div>
     </form>
     `;
@@ -211,20 +233,25 @@ $(document).ready(function() {
       $('#time').val(formatDate(info[11]));
       $('#officer').val(info[1]);
       $('#office').val(info[2] === 1 ? "Quận" : (info[2] === 2 ? "Phường" : ""));
-      $('#status').val(info[12] === 1 ? "Đã xét duyệt" : "Chưa xét duyệt");
+      if (info[12] === 1) {
+        $('#statusProcessed').prop('checked', true);
+      } else {
+        $('#statusPending').prop('checked', true);
+      }
       $('#method').val(info[13]);
-      $('.image-report-1').attr('src', `../../../../public/image/${info[9]}`);
-      $('.image-report-2').attr('src', `../../../../public/image/${info[10]}`);
+      $('.image-report-1').attr('src', info[9] ? `../../../../public/image/${info[9]}` : '');
+      $('.image-report-2').attr('src', info[10] ? `../../../../public/image/${info[10]}` : '');
     }
 
     $('.style1-button').on('click', function() {
       const updatedMethod = $('#method').val();
+      const updatedStatus = $('input[name="status"]:checked').val();
       const indexToUpdate = ads_loc_report.findIndex(item => item[0] == id_report);
 
       ads_loc_report[indexToUpdate][13] = updatedMethod;
       ads_loc_report[indexToUpdate][1] = storedEmail;
-      ads_loc_report[indexToUpdate][2] = 2;
-      ads_loc_report[indexToUpdate][12] = 1;
+      ads_loc_report[indexToUpdate][2] = parseInt(role);
+      ads_loc_report[indexToUpdate][12] = parseInt(updatedStatus);
       localStorage.setItem('ads_loc_report', JSON.stringify(ads_loc_report)); 
       location.reload();
     });
@@ -244,7 +271,7 @@ $(document).ready(function() {
       </div>
       <div class="col-md-12">
         <label for="address" class="form-label">Địa chỉ</label>
-        <textarea type="number" class="form-control input-details" id="address" readonly></textarea>
+        <textarea type="number" class="form-control input-details fixed-size-textarea" id="address" readonly></textarea>
       </div>
 
       <div class="col-md-6">
@@ -285,12 +312,19 @@ $(document).ready(function() {
       </div>
       <div class="col-md-6">
           <label for="status" class="form-label">Trạng thái xử lý</label>
-          <input type="text" class="form-control input-details" id="status" readonly>
+          <div class="form-check">
+            <input type="radio" class="form-check-input" id="statusProcessed" name="status" value="1" readonly>
+            <label class="form-check-label" for="statusProcessed">Đã xử lý</label>
+          </div>
+          <div class="form-check">
+            <input type="radio" class="form-check-input" id="statusPending" name="status" value="0" readonly>
+            <label class="form-check-label" for="statusPending">Chưa xử lý</label>
+          </div>
       </div>
 
       <div class="col-md-12">
           <label for="method" class="form-label">Cách thức xử lý</label>
-          <textarea class="form-control edit-input" id="method"></textarea>
+          <textarea class="form-control edit-input fixed-size-textarea" id="method"></textarea>
       </div>
     </form>
     `;
@@ -366,20 +400,25 @@ $(document).ready(function() {
       $('#time').val(formatDate(info[12]));
       $('#officer').val(info[1]);
       $('#office').val(info[2] === 1 ? "Quận" : (info[2] === 2 ? "Phường" : ""));
-      $('#status').val(info[13] === 1 ? "Đã xét duyệt" : "Chưa xét duyệt");
+      if (info[13] === 1) {
+        $('#statusProcessed').prop('checked', true);
+      } else {
+        $('#statusPending').prop('checked', true);
+      }
       $('#method').val(info[14]);
-      $('.image-report-1').attr('src', `../../../../public/image/${info[10]}`);
-      $('.image-report-2').attr('src', `../../../../public/image/${info[11]}`);
+      $('.image-report-1').attr('src', info[9] ? `../../../../public/image/${info[10]}` : '');
+      $('.image-report-2').attr('src', info[10] ? `../../../../public/image/${info[11]}` : '');
     }
 
     $('.style1-button').on('click', function() {
       const updatedMethod = $('#method').val();
+      const updatedStatus = $('input[name="status"]:checked').val();
       const indexToUpdate = loc_report.findIndex(item => item[0] == id_report);
 
       loc_report[indexToUpdate][14] = updatedMethod;
       loc_report[indexToUpdate][1] = storedEmail;
-      loc_report[indexToUpdate][2] = 2;
-      loc_report[indexToUpdate][12] = 1;
+      loc_report[indexToUpdate][2] = parseInt(role);
+      loc_report[indexToUpdate][13] = parseInt(updatedStatus);
       localStorage.setItem('loc_report', JSON.stringify(loc_report)); 
       location.reload();
     });
