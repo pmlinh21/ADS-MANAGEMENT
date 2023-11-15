@@ -188,6 +188,11 @@ hr{
   appearance: none;
 }
 
+.ward-table div{
+  display: flex;
+  flex-direction: row;
+}
+
 #ward-container input:checked,
 .ward-table input:checked {
   background-color: #0B7B31;

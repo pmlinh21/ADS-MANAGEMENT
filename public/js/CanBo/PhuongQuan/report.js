@@ -193,7 +193,6 @@ $(document).ready(function () {
         } else{
           history.replaceState(null, null, newURL);
         }
-        
       })
   // }
 
