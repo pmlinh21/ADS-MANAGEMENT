@@ -2,7 +2,8 @@ $(document).ready(function(){
     const role = 2; 
     const email = "phuong@gmail.com"
     const id_ward = 2;
-    
+    mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
+
     const storedAdsCreate = localStorage.getItem('ads_create');
     let ads_create = storedAdsCreate ? JSON.parse(storedAdsCreate) : [];
     console.log("ads_create:", ads_create );
@@ -128,7 +129,7 @@ $(document).ready(function(){
     // click "Chọn điểm đặt"
     $('.form-ads-create .input-group button').on('click', function(){
         const filtered_ads_loc = ads_location.filter(row => row[4] === id_ward && row[9] == 1);
-  
+        // console.log(filtered_ads_loc)
         var map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v11',
