@@ -169,8 +169,20 @@ appCanBo.get('/yeucauchinhsua', function(req, res) {
   res.render('CanBo/So/yeucauchinhsua');
 });
 
+appCanBo.get('/yeucauchinhsua/chitietddqc', function(req, res) {
+  res.render('CanBo/So/chitietDDQC', { id: req.query.id });
+});
+
+appCanBo.get('/yeucauchinhsua/chitietbqc', function(req, res) {
+  res.render('CanBo/So/chitietBQC', { id: req.query.id });
+});
+
 appCanBo.get('/yeucaucapphep', function(req, res) {
   res.render('CanBo/So/yeucaucapphep');
+});
+
+appCanBo.get('/yeucaucapphep/chitiet', function(req, res) {
+  res.render('CanBo/So/chitietYCCP', { id: req.query.id });
 });
 
 appCanBo.get('/thongkebaocao', function(req, res) {
