@@ -15,9 +15,6 @@ $(document).ready(function () {
   renderWard(wards);
 
   info = ads_create.map(function(item){
-    // let {id_create, board_type, address, content, company,
-    //   start_date, end_date, status,
-    //   width, height, quantity, photo, email, phone, ward } = data
     let statusText = item[16] ? "Đã xét duyệt" : "Chưa xét duyệt"
 
     return [item[0], item[17], `${item[13]}, phường ${item[18]}`, item[8], item[10],
@@ -26,8 +23,30 @@ $(document).ready(function () {
     item[5], item[6], item[7], item[9], item[11], item[12], item[18]]
   })
 
-      filter_info = [...info].sort((a, b) => a[0] - b[0]);
-      console.log(QuanAdsLocation);
+  let urlParams = new URLSearchParams(window.location.search);
+  let idString = urlParams.get('id');
+  let idArray = idString?.split(',').map(Number);
+  let wardArray = idArray?.map(function(item){
+    return wards[item]
+  })
+  console.log(idArray)
+
+  filter_info = [...info].sort((a, b) => a[0] - b[0]);
+
+  if (wardArray?.length > 0){
+    let result = []
+    for (let i = 0; i < filter_info.length; i++){
+      if (!wardArray.includes(filter_info[i][15]))
+        result.push(filter_info[i]);
+    }
+    filter_info = [...result]
+
+    for (let i = 0; i < idArray.length; i++){
+      $(`#ward-${idArray[i]}`).prop('checked', false)
+    }
+  }
+
+  console.log(filter_info);
 
       $(".ads-create-table").DataTable({
         pageLength: 6,
@@ -65,10 +84,28 @@ $(document).ready(function () {
           return a[0] - b[0];
         })).draw()
 
+        var checkboxes = $('.ward-table input[type="checkbox"]');
+        var checkboxStates = []; 
+        checkboxes.each(function() {
+          if (!this.checked){
+            let id = parseInt(this.id.substring(this.id.indexOf("-") + 1))
+            checkboxStates.push(id);
+          }
+        });
+
+        let newURL = window.location.href.split('?')[0]; 
+        if (checkboxStates.length > 0){
+          newURL += '?id=' + encodeURIComponent(checkboxStates.join(","));
+          history.replaceState(null, null, newURL);
+        } else{
+          history.replaceState(null, null, newURL);
+        }
+
       })
   // }
 
   // render form
+    $("form").get(0).reset();
     var board_type = BoardType.content, imageData = result = id_adsloc = null
 
     board_type?.forEach(function(type){
