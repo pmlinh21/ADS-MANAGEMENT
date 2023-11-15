@@ -3,17 +3,17 @@
     <div class="content">
         <div class="title-container">
             <span class="title-icon"><i class="fas fa-map-marked-alt"></i></span>
-            <span class="title-text"><h1><a href="/diemdatquangcao">Quản lí điểm đặt quảng cáo</a> / Thông tin chi tiết</h1></span>
+            <span class="title-text"><h1><a href="/diemdatquangcao">Quản lí điểm đặt quảng cáo</a> / Thêm điểm đặt quảng cáo</h1></span>
         </div>
        
-        <form action="" method="post" class="form" id="edit-ads-location">
-            <legend><i class="fas fa-info-circle"></i> Thông tin điểm đặt quảng cáo</legend>
+        <form action="" method="post" class="form" id="add-ads-location">
+            <legend><i class="fas fa-plus-square"></i> Thêm điểm đặt quảng cáo</legend>
             <div class="input-container">
-                <div class="input-field">
+                <!-- <div class="input-field">
                     <label for="id-ads-location">ID Điểm đặt</label>
                     <input type="text" id="id-ads-location" name="id-ads-location" disabled>
                     <span class="tooltiptext">Không thể chỉnh sửa ID</span>
-                </div>
+                </div> -->
                 <div class="input-field">
                     <label for="address-ads-location">Địa chỉ</label>
                     <input type="text" id="address-ads-location" name="address-ads-location" disabled>
@@ -51,7 +51,7 @@
                         <option value="0">Chưa quy hoạch</option>
                     </select>
                 </div>
-                <div class="input-field image span-4">
+                <div class="input-field image span-5">
                     <label for="ads-location-image">Hình ảnh minh họa</label>
                     <div class="img-container">
                         <img src="../../../public/image/empty_image.png" alt="" id="ads-location-image-preview">
@@ -63,12 +63,11 @@
                 </div>
             </div>
             <div class="button-container">
-                <button type="submit" value="delete" class="button">Xóa điểm đặt</button>
-                <button type="button" value="update" class="button button-delete">Lưu thay đổi</button>
+                <button type="submit" value="add" class="button">Thêm điểm đặt</button>
             </div>
         </form>
 
     </div>
 </div>
-<script src="../../../public/js/CanBo/So/chinhsuaDDQC.js"></script>
+<script src="../../../public/js/CanBo/So/themDDQC.js"></script>
 <%- include('../../partial/footerSo.ejs') %>
