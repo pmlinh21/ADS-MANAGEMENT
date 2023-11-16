@@ -1,3 +1,13 @@
+$(document).on('click', '.toggle-password', function() {
+    $(this).toggleClass('fa-eye fa-eye-slash');
+    var input = $($(this).attr('toggle'));
+    if (input.attr('type') == 'password') {
+        input.attr('type', 'text');
+    } else {
+        input.attr('type', 'password');
+    }
+});
+
 $(document).ready(function() {
     const role = parseInt(localStorage.getItem('role'));
     var info, email, cbquan, cbphuong
@@ -98,16 +108,6 @@ $(document).ready(function() {
         location.reload();
     });
 
-    $(".toggle-password").click(function() {
-        $(this).toggleClass("fa-eye fa-eye-slash");
-        var input = $($(this).attr("toggle"));
-        if (input.attr("type") == "password") {
-            input.attr("type", "text");
-        } else {
-            input.attr("type", "password");
-        }
-    });
-
     // Change password
     $('.btn-pass').on('click', function() {
         const curPass = $('#curpass').val();
@@ -200,6 +200,7 @@ $(document).ready(function() {
             <div class="col-md-12" style="margin-top: -5px;">
                 <label for="pass" class="form-label">Mật khẩu mới</label>
                 <input type="password" class="form-control pass-details" id="pass">
+                <span toggle="#pass" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                 <div class="error-message" id="pass-error"></div>
             </div>
     
