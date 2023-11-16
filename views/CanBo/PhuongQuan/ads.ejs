@@ -1,26 +1,6 @@
 <%- include("../../partial/header"); %>
 <%- include("../../partial/tableQuanPhuong"); %>
-        <div id = "navbar">
-            <ul>
-                <li id="manage" >
-                    <a class="nav-link" >Quản lý</a>
-                    <ul class = "manage-menu" style = "display: none;">
-                        <li><a href = "/adsLocation">Danh sách điểm đặt quảng cáo</a></li>
-                        <li><a href = "/ads">Danh sách bảng quảng cáo</a></li>
-                        <li><a href = "/report">Danh sách báo cáo vi phạm</a></li>
-                        <li><a href = "/createAds">Danh sách cấp phép quảng cáo</a> </li>
-                    </ul>
-                </li>
-                <li id="account">
-                    <a class="nav-link" href = "/account">Tài khoản</a>
-                </li>
-                <li id="logout">
-                    <a class="nav-link"  href = "/login">Đăng xuất</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="w-100 h-100 black-bg" style = "display: none;"></div>
+<%- include("../../partial/navbar"); %>
     <div class="title-page">
         <i class="fa-solid fa-house"></i>
         Quản lý bảng quảng cáo

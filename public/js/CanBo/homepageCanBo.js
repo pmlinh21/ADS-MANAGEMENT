@@ -104,10 +104,7 @@ $(document).ready(function () {
 
   if (role === 2) {
       $("#select-ward").hide();
-      $('.manage-menu li:nth-child(1) a').attr('href', "/adsLocationPhuong")  
-      $('.manage-menu li:nth-child(2) a').attr('href', "/adsPhuong")  
-      $('.manage-menu li:nth-child(3) a').attr('href',  "/reportPhuong") 
-      $('.manage-menu li:nth-child(4) a').attr('href', "/createAdsPhuong")  
+      
   }
   else if (role === 1) {
       info = QuanAdsLocation.content.map(function(data){
@@ -168,27 +165,6 @@ $(document).ready(function () {
   }
   else{
     $("#select-ward").hide();
-  }
-
-  const manageButton = $('#manage');
-  const manageMenu = $('#manage .manage-menu');
-  if (role === 3){
-    $('#manage .nav-link').attr('href','/quanlichung')
-  } else{
-    manageButton.hover(
-      function () {
-        $(this).addClass('li-hover');
-        $('#manage .nav-link').addClass('nav-link-hover');
-        manageMenu.show();
-        $('.black-bg').show()
-      },
-      function () {
-        $(this).removeClass('li-hover');
-        $('#manage .nav-link').removeClass('nav-link-hover');
-        manageMenu.hide();
-        $('.black-bg').hide()
-      }
-    );
   }
 });
 

@@ -1,9 +1,21 @@
 $(document).ready(function() {
-    const storedCBPhuong = localStorage.getItem('cbphuong');
-    let cbphuong = storedCBPhuong ? JSON.parse(storedCBPhuong) : [];
-    console.log("cbphuong:", cbphuong );
-    const email = localStorage.getItem('email');
-    let info = cbphuong.find(item => item[0] === email);
+    const role = parseInt(localStorage.getItem('role'));
+    var info, email, cbquan, cbphuong
+    if (role == 1){
+        const storedCBQuan = localStorage.getItem('cbquan');
+        cbquan = storedCBQuan ? JSON.parse(storedCBQuan) : [];
+        console.log("cbquan:", cbquan );
+        email = localStorage.getItem('email');
+        info = cbquan.find(item => item[0] === email);
+    }
+    else if (role == 2){
+        const storedCBPhuong = localStorage.getItem('cbphuong');
+        cbphuong = storedCBPhuong ? JSON.parse(storedCBPhuong) : [];
+        console.log("cbphuong:", cbphuong );
+        email = localStorage.getItem('email');
+        info = cbphuong.find(item => item[0] === email);
+    }
+    
     console.log("info:", info );
 
     let district = [
@@ -27,7 +39,12 @@ $(document).ready(function() {
         $('#fullname').val(info[1]);
         $('#phone').val(info[3]);
         $('#birthdate').val(info[4]);
-        $('#address').val('Phường ' + info[5] + ', ' + district[ward[info[5] - 1][2]][1]);
+        if (role == 2)
+            $('#address').val('Phường ' + info[5] + ', ' + district[ward[info[5] - 1][2]][1]);
+        else if (role == 1)
+            $('#address').val(district[info[5] - 1][1]);
+        else if (role == 3)
+            $('#address').hide();
     }
   
     // Update info
@@ -59,13 +76,25 @@ $(document).ready(function() {
             $('#phone-error').hide();
         }
 
-        const indexToUpdate = cbphuong.findIndex(item => item[0] === email);
+        if (role == 2){
+            const indexToUpdate = cbphuong.findIndex(item => item[0] === email);
 
-        cbphuong[indexToUpdate][1] = newFullname;
-        cbphuong[indexToUpdate][4] = newBirthdate;
-        cbphuong[indexToUpdate][3] = newPhone;
+            cbphuong[indexToUpdate][1] = newFullname;
+            cbphuong[indexToUpdate][4] = newBirthdate;
+            cbphuong[indexToUpdate][3] = newPhone;
 
-        localStorage.setItem('cbphuong', JSON.stringify(cbphuong));
+            localStorage.setItem('cbphuong', JSON.stringify(cbphuong));
+        }
+        else if (role == 1){
+            const indexToUpdate = cbquan.findIndex(item => item[0] === email);
+
+            cbquan[indexToUpdate][1] = newFullname;
+            cbquan[indexToUpdate][4] = newBirthdate;
+            cbquan[indexToUpdate][3] = newPhone;
+
+            localStorage.setItem('cbquan', JSON.stringify(cbquan));            
+        }
+        
         location.reload();
     });
 
@@ -106,14 +135,27 @@ $(document).ready(function() {
         } else {
             $('#cfpass-error').hide();
         }
-        const indexToUpdate = cbphuong.findIndex(item => item[0] === email);
 
-        cbphuong[indexToUpdate][2] = confirmPass;
-        localStorage.setItem('cbphuong', JSON.stringify(cbphuong));
-        alert('Mật khẩu đã được cập nhật thành công!');
-        setTimeout(function() {
-            location.reload();
-        }, 1000);
+        if (role == 2){
+            const indexToUpdate = cbphuong.findIndex(item => item[0] === email);
+
+            cbphuong[indexToUpdate][2] = confirmPass;
+            localStorage.setItem('cbphuong', JSON.stringify(cbphuong));
+            alert('Mật khẩu đã được cập nhật thành công!');
+            setTimeout(function() {
+                location.reload();
+            }, 1000);           
+        }
+        else if (role == 1){
+            const indexToUpdate = cbquan.findIndex(item => item[0] === email);
+
+            cbquan[indexToUpdate][2] = confirmPass;
+            localStorage.setItem('cbquan', JSON.stringify(cbquan));
+            alert('Mật khẩu đã được cập nhật thành công!');
+            setTimeout(function() {
+                location.reload();
+            }, 1000);
+        }
     });
   
     const manageButton = $('#manage');
