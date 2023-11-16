@@ -8,7 +8,7 @@ $(document).ready(function () {
   var loc_type = LocType.content, ads_type = AdsType.content
   var info, filter_info, wards
 
-  wards = Ward.content.map(ward => ward.ward);
+  wards = Ward.content.map(ward => ward.ward); 
   console.log("!");
   renderWard(wards);
 
