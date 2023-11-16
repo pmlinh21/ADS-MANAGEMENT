@@ -144,7 +144,7 @@ $(document).ready(function() {
             alert('Mật khẩu đã được cập nhật thành công!');
             setTimeout(function() {
                 location.reload();
-            }, 1000);           
+            }, 1);           
         }
         else if (role == 1){
             const indexToUpdate = cbquan.findIndex(item => item[0] === email);
@@ -154,7 +154,7 @@ $(document).ready(function() {
             alert('Mật khẩu đã được cập nhật thành công!');
             setTimeout(function() {
                 location.reload();
-            }, 1000);
+            }, 1);
         }
     });
   
@@ -226,7 +226,7 @@ $(document).ready(function() {
                     alert('Mật khẩu đã được cập nhật thành công!');
                     setTimeout(function() {
                         location.reload();
-                    }, 1000);           
+                    }, 10);           
                 }
                 else if (role == 1){
                     const indexToUpdate = cbquan.findIndex(item => item[0] === email);
@@ -236,7 +236,7 @@ $(document).ready(function() {
                     alert('Mật khẩu đã được cập nhật thành công!');
                     setTimeout(function() {
                         location.reload();
-                    }, 1000);
+                    }, 10);
                 }
             });
         });
