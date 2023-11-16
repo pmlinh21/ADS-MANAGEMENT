@@ -695,12 +695,10 @@ label.required::after {
 /* ACCOUNT */
 .forms-container {
   display: flex;
-  flex-wrap: nowrap; 
-  justify-content: space-around; 
+  gap: 1rem;
 }
 
 .form-account {
-  width: 30%; 
   margin: 1.5rem 4rem;
   background-color: white;
   padding: 0rem 1.5rem 1.5rem 1.5rem;
@@ -709,6 +707,13 @@ label.required::after {
   border-radius: 1rem;
 }
 
+.form-info{
+  flex: 1;
+}
+
+.form-pass {
+  flex: 1;
+}
 .pass-details {
   height: 2rem;
   border: 1px solid #7E94AB;
@@ -745,7 +750,7 @@ label.required::after {
   z-index: 2;
 }
 
-.btn-forget {
+.btn-confirm, .btn-confirm-new {
   height: fit-content;
   border-radius: 0.25rem;
   cursor: pointer;
@@ -753,6 +758,15 @@ label.required::after {
   border: none;
   padding: 0.25rem 1rem;
   font-weight: 500;
+  margin-top: -0.5rem;
+}
+
+.form-forget {
+  visibility: hidden;
+  flex: 1;
+}
+.form-forget.visible {
+  visibility: visible;
 }
 
 /* PHAN HE SO: side-navbar */

@@ -40,7 +40,7 @@ $(document).ready(function() {
         $('#phone').val(info[3]);
         $('#birthdate').val(info[4]);
         if (role == 2)
-            $('#address').val('Phường ' + info[5] + ', ' + district[ward[info[5] - 1][2]][1]);
+            $('#address').val('Phường ' + info[5] + ', ' + district[ward[info[5] - 1][2] - 1][1]);
         else if (role == 1)
             $('#address').val(district[info[5] - 1][1]);
         else if (role == 3)
@@ -158,6 +158,90 @@ $(document).ready(function() {
         }
     });
   
+    $('.btn-forget').on('click', function() {
+        const formHtml = `
+        <div class="col-md-12">
+            <label class="form-label" style="font-weight: 600; font-size: 1rem;">Quên mật khẩu</label>
+        </div>
+        <div class="col-md-12">
+            <label for="otp" class="form-label">Mã OTP</label>
+            <input type="text" class="form-control pass-details" id="otp">
+            <div class="error-message mt-2" id="otp-error"></div>
+        </div>
+
+        <p class="pass-text" >Chúng tôi đã gửi một mã xác minh gồm 6 chữ số đến địa chỉ email của bạn.</p>
+        <p class="pass-text" style="text-decoration: underline; color: #0B7B31; margin-top: -1rem; cursor: pointer;">Bạn không nhận được mã? Gửi lại mã OTP</p>
+        <button type="button" class="btn style1-button btn-confirm">Xác nhận</button>
+        <div style="margin-top: 9rem"></div>
+        `;
+        
+        $('.form-forget').html(formHtml).addClass('visible');
+        
+        $('.btn-confirm').on('click', function() {
+            const otp = $('#otp').val();
+            if (otp.trim() === '') {
+                $('#otp-error').text('Vui lòng nhập otp').show();
+                return;
+            }
+            const otpRegex = /^\d+$/;
+            if (!otpRegex.test(otp)) {
+                $('#otp-error').text('Vui lòng nhập otp chỉ chứa số.').show();
+                return;
+            }
+            if (otp.length != 6) {
+                $('#otp-error').text('Mã OTP phải gồm 6 chữ số.').show();
+                return;
+            }
+            $('.form-forget').removeClass('visible');
+            const formHtml = `
+            <div class="col-md-12">
+                <label class="form-label" style="font-weight: 600; font-size: 1rem;">Quên mật khẩu</label>
+            </div>
+            <div class="col-md-12" style="margin-top: -5px;">
+                <label for="pass" class="form-label">Mật khẩu mới</label>
+                <input type="password" class="form-control pass-details" id="pass">
+                <div class="error-message" id="pass-error"></div>
+            </div>
+    
+            <p class="pass-text" style="margin-top: -0.5rem; margin-bottom: -0.5rem;">Mật khẩu phải có ít nhất 8 kí tự</p>
+            <button type="button" class="btn style1-button btn-confirm-new">Xác nhận</button>
+            <div style="margin-top: 10rem"></div>
+            `;
+            $('.form-forget').html(formHtml).addClass('visible');
+
+            $('.btn-confirm-new').on('click', function() {
+                const forget_new_pass = $('#pass').val();
+        
+                if (forget_new_pass.length < 8) {
+                    $('#pass-error').text('Mật khẩu mới phải có ít nhất 8 kí tự.').show();
+                    return;
+                } else {
+                    $('#pass-error').hide();
+                }
+                if (role == 2){
+                    const indexToUpdate = cbphuong.findIndex(item => item[0] === email);
+        
+                    cbphuong[indexToUpdate][2] = forget_new_pass;
+                    localStorage.setItem('cbphuong', JSON.stringify(cbphuong));
+                    alert('Mật khẩu đã được cập nhật thành công!');
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);           
+                }
+                else if (role == 1){
+                    const indexToUpdate = cbquan.findIndex(item => item[0] === email);
+        
+                    cbquan[indexToUpdate][2] = forget_new_pass;
+                    localStorage.setItem('cbquan', JSON.stringify(cbquan));
+                    alert('Mật khẩu đã được cập nhật thành công!');
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
+                }
+            });
+        });
+    });
+
     const manageButton = $('#manage');
     const manageMenu = $('#manage .manage-menu');
     manageButton.hover(
