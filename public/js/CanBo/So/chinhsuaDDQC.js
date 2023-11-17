@@ -106,9 +106,12 @@ function mapPopup(e) {
                     break;
                 }
             }
-            document.querySelector("#select-location-map .chosen-address").textContent = "[" + lat + ", " + lng + "] " + adslocations[i][3] + ", Phường" + w + ", Quận" + d;
+            document.querySelector("#select-location-map .chosen-address").textContent = "[" + lat + ", " + lng + "] " + adslocations[i][3] + ", Phường " + w + ", Quận " + d;
             break;
         }
+    }
+    if (document.querySelector("#select-location-map .chosen-address").textContent == "") {
+        document.querySelector("#select-location-map .chosen-address").style.display = "none";
     }
 
     let div = document.createElement("div");

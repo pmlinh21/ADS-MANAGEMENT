@@ -36,3 +36,39 @@ document.querySelector("#ads-location-image").addEventListener("change", functio
     }
     reader.readAsDataURL(this.files[0]);
 });
+
+
+// open map popup
+function mapPopup(e) {
+    // let coordinates = e.value;
+    // let lat = coordinates.split(", ")[0];
+    // let lng = coordinates.split(", ")[1];
+
+    document.querySelector("#select-location-map").style.display = "block";
+    // for (let i = 0; i < adslocations.length; i++) {
+    //     if (adslocations[i][1] == lat && adslocations[i][2] == lng) {
+    //         let w, d;
+    //         for (let j = 0; j < wards.length; j++) {
+    //             if (wards[j][0] == adslocations[i][4]) {
+    //                 w = wards[j][1];
+    //                 d = wards[j][2];
+    //                 break;
+    //             }
+    //         }
+    //         document.querySelector("#select-location-map .chosen-address").textContent = "[" + lat + ", " + lng + "] " + adslocations[i][3] + ", Phường" + w + ", Quận" + d;
+    //         break;
+    //     }
+    // }
+
+    if (document.querySelector("#select-location-map .chosen-address").textContent == "") {
+        document.querySelector("#select-location-map .chosen-address").style.display = "none";
+    }
+
+    let div = document.createElement("div");
+    div.className = "popup-background";
+    div.addEventListener("click", () => {
+        div.remove();
+        document.querySelector("#select-location-map").style.display = "none";
+    });
+    document.querySelector("body").appendChild(div);
+}
