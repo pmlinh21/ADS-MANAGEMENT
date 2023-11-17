@@ -26,35 +26,42 @@
             <form>
               <svg class="svg-content" viewBox="0 0 200 200">
                 <circle cx="100" cy="100" r="40" fill="#0B7B31" />
-                <text class = "user-icon" x="100" y="100" font-family="FontAwesome" font-size="2.5rem" fill="#BDF3CF">&#xf007;</text>
-                <text class = "key-icon" style = "display: none" x="100" y="100" font-family="FontAwesome" font-size="2.5rem" fill="#BDF3CF">&#xf084;</text>
+                <text x="100" y="100" font-family="FontAwesome" font-size="2.5rem" fill="#BDF3CF">&#xf084;</text>
               </svg>
 
-              <div class = "login-form">
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="text" class="form-control" id="email" >
+              <div class="forget-pass-form">
+                <div class="form-group ">
+                  <label for="OTP">Nhập mã OTP</label>
+                  <input type="text" class="form-control" id="OTP" >
                 </div>
-                <div class="form-group">
-                  <label for="password">Mật khẩu</label>
-                  <input type="password" class="form-control" id="password">
+                <div class="inform">
+                  Chúng tôi đã gửi một mã xác minh gồm 6 chữ số đến địa chỉ email 
+                  <span class="email"></span>
+                   của bạn. Bạn có thể kiểm tra hộp thư đến của mình.
+                   <br>
+                   <a class="resend">
+                    Bạn không nhận được mã? Gửi lại mã OTP.
+                  </a>
                 </div>
-                <button id="login-button" type="submit" class="style1-button btn">Đăng nhập</button>
-                <a class="forget-pass" href = "#"><p>Quên mật khẩu</p></a>
+                  <button type="button" class="btn style1-button">Xác nhận</button>
               </div>
 
-              <div class="enter-email-form" style = "display: none">
-                <div class="form-group">
-                  <label for="enter-email">Nhập email</label>
-                  <input type="email" class="form-control" id="enter-email" >
+              <div class="new-pass-form" style = "display: none">
+                <div class="form-group ">
+                  <label for="new-pass">Nhập mật khẩu mới</label>
+                  <input type="password" class="form-control" id="new-pass" >
                 </div>
-                <div class = "button-group">
-                  <button type="button" class="btn style2-button">Quay lại</button>
+                <div class="form-group ">
+                  <label for="confirm-pass">Xác nhận mật khẩu </label>
+                  <input type="password" class="form-control" id="confirm-pass" >
+                </div>
                   <button type="button" class="btn style1-button">Xác nhận</button>
-                </div>
               </div>
 
             </form>
+
+            
+
           </div>
         </div>
       </div>
@@ -62,7 +69,7 @@
       <script src="https://code.jquery.com/jquery-3.7.0.min.js"
     integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-      <script type = "text/javascript" src="../../public/js/CanBo/login.js"></script>
+      <script type = "text/javascript" src="../../public/js/CanBo/forget-pass.js"></script>
 
 </body>
 </html>

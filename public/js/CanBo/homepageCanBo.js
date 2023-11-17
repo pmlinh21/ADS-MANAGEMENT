@@ -75,6 +75,8 @@ function createMarker(info, map, markers){
 $(document).ready(function () {
   const role = parseInt(localStorage.getItem('role'))
   console.log(role);
+  if (isNaN(role))
+    window.location.href = "/login"
   const id_district = 1;
   var wards, info, markers = []
 
