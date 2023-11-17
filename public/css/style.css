@@ -67,8 +67,10 @@ body {
   color: red;
 }
 
-#login-button{
-  margin: 1.5rem auto 0.5rem;
+#login-button,
+.forget-pass-form button,
+.new-pass-form button{
+  margin: 1.5rem auto 0.5rem !important;
   /* background-color: #0B7B31;
   color: white; */
   display: table;
@@ -81,8 +83,7 @@ body {
 }
 
 .forget-pass-form,
-.enter-email-form,
-.new-pass-form{
+.enter-email-form{
   margin-top: 0.5rem !important;
 }
 
