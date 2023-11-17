@@ -513,6 +513,22 @@ body {
     grid-row: 4 / span 4;
 }
 
+/* CREATE ADS */
+#create-ads.form .input-container {
+    display: grid;
+    grid-template-columns: calc(50% - 30px) calc(50% - 30px);
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 0 60px;
+}
+#create-ads.form .input-field.image {
+    grid-column: 2 / 3;
+    grid-row: 7 / span 4;
+}
+#create-ads.form .input-field.textarea {
+    grid-column: 2 / 3;
+    grid-row: 5 / span 2;
+}
+
 .form .input-field.image.span-4 .img-container {
     width: 100%;
     max-width: 600px;
@@ -527,6 +543,24 @@ body {
     height: 394px;
     border-radius: 10px;
     position: relative;
+}
+
+.input-field.textarea.span-2 textarea {
+    height: 116.5px;
+    font-size: 18px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    color: #7E94AB;
+    border: none;
+    border-bottom: 2px solid #7E94AB;
+    resize: none;
+    white-space: pre-line;      
+    word-wrap: break-word;
+    -moz-hyphens:auto; 
+    -webkit-hyphens:auto;
+    -o-hyphens:auto; 
+    hyphens:auto;
+    text-align: justify; 
 }
 
 .form img {
@@ -655,6 +689,21 @@ body {
         grid-column: 1 / 2;
     }
 
+    /* CREATE ADS */
+    #create-ads.form .input-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 0 0;
+    }
+    #create-ads.form .input-field.image {
+        grid-row: 17 / span 4; 
+        grid-column: 1 / 2;
+    }
+    #create-ads.form .input-field.textarea {
+        grid-row: 15 / span 4; 
+        grid-column: 1 / 2;
+    }
+
     .form .input-field.image.span-5 .img-container {
         /* to span-4 */
         max-width: 600px;
@@ -702,6 +751,10 @@ body {
     top: 8px;
     right: 0;
     color: #7E94AB;
+}
+
+.form input[type="date"]:disabled::before {
+    display: none;
 }
 
 .form .tooltiptext {
