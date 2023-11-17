@@ -55,7 +55,8 @@ $(document).ready(function () {
 
       $("#example_wrapper").on('click', '.ads-create-table .view-btn', function(){
         let row = $(this).closest('tr').index();
-        let id_create = filter_info[row][0]
+        let page = $("#example_wrapper .page-item.active a").text()
+        let id_create = filter_info[row + 6 * (parseInt(page) - 1)][0]
         window.location.href = '/detailAdsCreate?id_create=' + id_create;
         console.log(row);
       })

@@ -594,7 +594,8 @@ label.required::after {
 .loc-report-table td:nth-child(2),
 .loc-report-table td:nth-child(8),
 .ads-table td:nth-child(6),
-.ads-create-table td:nth-child(8){
+.ads-create-table td:nth-child(8),
+.loc-report-table th:nth-child(2){
   text-align: center
 }
 
