@@ -31,8 +31,8 @@ $(document).ready(function () {
             colorMarker = 'blue';
 
         let imagePath = (info[index][6] != "") 
-        ? "public/image/" + info[index][6]
-        : "public/image/image-placeholder.jpg"
+        ? "image/" + info[index][6]
+        : "image/image-placeholder.jpg"
 
         var marker = $('<div class="custom-marker"></div>');
         var svg = $(`<svg viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" fill=${colorMarker} /></svg>`);
