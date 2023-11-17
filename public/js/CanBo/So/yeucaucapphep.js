@@ -55,7 +55,7 @@ let ads = [
     [23, 25, "Trụ/Cụm pano", 6.44, 4.21, 1, "2024-08-29"]
 ];
 
-let adsCreateRequests = [
+let adsCreateRequests = [ 
     [1, "nnlien21@clc.fitus.edu.vn", 1, 10, 5, 8.12, 1.23, 1, "Vẻ đẹp tự nhiên trong từng món trang sức. Khám phá sự quý phái tại chúng tôi.", "Công ty TNHH Vàng Bạc Đá Quý", "contact@vangbacdaquy.com", "0912345678", "123 Điện Biên Phủ, Phường 7, Quận 3", "2023-08-05", "2023-12-01", 0],
     [2, "nthphuc21@clc.fitus.edu.vn", 2, 5, 3, 3.76, 3.78, 1, "Hương vị tươi mới từ nông trại đến bát. Sự tươi mới trong mỗi khẩu phần.", "FreshHarvest Foods", "info@freshharvestfoods.com", "0712345678", "56 Cao Thắng, Phường 4, Quận 3", "2023-08-10", "2023-12-05", 1],
     [3, "pmlinh21@clc.fitus.edu.vn", 1, 20, 8, 11.23, 5.42, 3, "Xây dựng ước mơ của bạn. Chất lượng đến từng chi tiết.", "Công ty Xây dựng Tiến Đạt", "info@tiendatconstruction.vn", "0123456789", "789 Lê Văn Sỹ, Phường 2, Quận Tân Bình", "2023-08-15", "2023-12-11", 1],
