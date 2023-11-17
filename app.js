@@ -175,7 +175,7 @@ appCanBo.get('/yeucauchinhsua/chitietddqc', function(req, res) {
 
 appCanBo.get('/yeucauchinhsua/chitietbqc', function(req, res) {
   res.render('CanBo/So/chitietBQC', { id: req.query.id });
-});
+});  
 
 appCanBo.get('/yeucaucapphep', function(req, res) {
   res.render('CanBo/So/yeucaucapphep');

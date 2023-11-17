@@ -418,6 +418,18 @@ body {
     text-align: left;
 }
 
+.form .half-half-field {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0 24px;
+    /* margin: 10px 0; */
+}
+
+.form .half-half-field .input-field {
+    width: calc(50% - 10px);
+}
+
 .form .input-field {
     display: flex;
     flex-direction: column;
@@ -439,6 +451,7 @@ body {
     gap: 0 60px;
 }
 
+/* ADS LOCATION */
 #edit-ads-location.form .input-container,
 #add-ads-location.form .input-container {
     display: grid;
@@ -455,6 +468,25 @@ body {
 #add-ads-location.form .input-field.image {
     grid-column: 2 / 3;
     grid-row: 2 / span 5;
+}
+
+/* ADS */
+#edit-ads.form .input-container,
+#add-ads.form .input-container {
+    display: grid;
+    grid-template-columns: calc(50% - 30px) calc(50% - 30px);
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    gap: 0 60px;
+}
+
+#edit-ads.form .input-field.image {
+    grid-column: 2 / 3;
+    grid-row: 2 / span 4;
+}
+
+#add-ads.form .input-field.image {
+    grid-column: 2 / 3;
+    grid-row: 1 / span 5;
 }
 
 .form .input-field.image.span-4 .img-container {
@@ -537,6 +569,7 @@ body {
         grid-template-columns: 1fr;
         gap: 0 0;
     }
+    /* ADS LOCATION */
     #edit-ads-location.form .input-container {
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -555,6 +588,27 @@ body {
         grid-row: 8 / span 4;
         grid-column: 1 / 2;
     }
+
+    /* ADS */
+    #edit-ads.form .input-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 0 0;
+    }
+    #add-ads.form .input-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 0 0;
+    }
+    #edit-ads.form .input-field.image {
+        grid-row: 7 / span 4; 
+        grid-column: 1 / 2;
+    }
+    #add-ads.form .input-field.image {
+        grid-row: 6 / span 4; 
+        grid-column: 1 / 2;
+    }
+
     .form .input-field.image.span-5 .img-container {
         /* to span-4 */
         max-width: 600px;
@@ -629,7 +683,8 @@ body {
     border-color: #7E94AB transparent transparent transparent;
 }
 
-.form input:disabled:hover+.tooltiptext {
+.form input:disabled:hover+.tooltiptext, 
+.form input:read-only:hover+.tooltiptext  {
     visibility: visible;
 }
 
