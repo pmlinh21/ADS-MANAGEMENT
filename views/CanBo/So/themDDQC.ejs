@@ -31,7 +31,7 @@
                 </div> 
                 <div class="input-field">
                     <label for="coordinates-ads-location">Tọa độ</label>
-                    <input type="text" id="coordinates-ads-location" name="coordinates-ads-location" required>
+                    <input type="text" id="coordinates-ads-location" name="coordinates-ads-location" onclick=mapPopup(this) readonly>
                 </div>
                 <div class="input-field">
                     <label for="ads-location-type">Loại vị trí</label>
@@ -54,7 +54,7 @@
                 <div class="input-field image span-5">
                     <label for="ads-location-image">Hình ảnh minh họa</label>
                     <div class="img-container">
-                        <img src="../../../public/image/empty_image.png" alt="" id="ads-location-image-preview">
+                        <img src="../../../public/image/image-placeholder.jpg" alt="" id="ads-location-image-preview">
                         <label for="ads-location-image" class="img-button">Thay đổi</label>
                         <input type="file" id="ads-location-image" name="ads-location-image" accept="image/*" required>
                         <div class="dark-background"></div>
@@ -66,6 +66,21 @@
                 <button type="submit" value="add" class="button">Thêm điểm đặt</button>
             </div>
         </form>
+
+        <div class="popupmap" id="select-location-map">
+            <div class="popupmap-header">
+                <span class="title">Xác định vị trí điểm đặt</span>
+                <span class="search-bar">
+                    <input type="text" id="search">
+                    <i class="fas fa-search"></i>
+                </span>
+                
+            </div>
+            <div class="popupmap-footer">
+                <div class="chosen-address"></div>
+                <button>Xác nhận</button>
+            </div>
+        </div>
 
     </div>
 </div>
