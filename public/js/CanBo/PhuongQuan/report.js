@@ -45,7 +45,7 @@ $(document).ready(function () {
 
       info3 = loc_report.map(function(item){
         let statusText = item[13] ? "Đã xử lí" : "Chưa xử lí"
-        return [item[0], "địa chỉ", item[16], item[6], item[7], item[8], 
+        return [item[0], item[18], item[16], item[6], item[7], item[8], 
         item[12], statusText, 
         '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>',
         item[9],  item[10], item[11], item[14], item[13], item[17], item[3], item[4]]
@@ -111,23 +111,29 @@ $(document).ready(function () {
 
       $("#example1_wrapper").on('click', '.ads-report-table .view-btn', function(){
         let row = $(this).closest('tr').index();
-        let id_report = ads_info[row][0], table = "ads"
+        let page = $("#example1_wrapper .page-item.active a").text();
+        // console.log(page);
+        let id_report = ads_info[row + 6 * parseInt(page) - 6][0], table = "ads"
         window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
-        console.log(row);
+        // console.log(id_report);
       })
       
       $('#example2_wrapper').on('click', '.adsloc-report-table .view-btn', function(){
         let row = $(this).closest('tr').index();
-        let id_report = adsloc_info[row][0], table = "adsloc"
+        let page = $("#example2_wrapper .page-item.active a").text();
+        console.log(page);
+        let id_report = adsloc_info[row + 6 * parseInt(page) - 6][0], table = "adsloc"
         window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
         console.log(row);
       })
 
       $("#example3_wrapper").on('click', '.loc-report-table .view-btn', function(){
         let row = $(this).closest('tr').index();
-        let id_report = loc_info[row][0], table = "loc"
+        let page = $("#example3_wrapper .page-item.active a").text();
+        console.log(page);
+        let id_report = loc_info[row + 6 * parseInt(page) - 6][0], table = "loc"
         window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
-        console.log(row);
+        console.log(id_report);
       })
 
 

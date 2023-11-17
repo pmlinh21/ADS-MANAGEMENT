@@ -392,7 +392,11 @@ $(document).ready(function() {
     
     if (info.length > 0) {
       $('#id_loc_report').val(info[0]);
-      updateAddressField(info[3], info[4]);
+      if (role == 2)
+        updateAddressField(info[3], info[4]);
+      else if (role == 1){
+        $('#address').val(info[18]);
+      }
       $('#report_type').val(report_type[info[5] - 1][1]);
       $('#name').val(info[6]);
       $('#email').val(info[7]);

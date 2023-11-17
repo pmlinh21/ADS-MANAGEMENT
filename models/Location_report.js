@@ -28,6 +28,10 @@ class Location_report extends Sequelize.Model {
       type: DataTypes.FLOAT,
       allowNull: true
     },
+    address: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
     id_ward: {
       type: DataTypes.INTEGER,
       allowNull: true,

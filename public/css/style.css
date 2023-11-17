@@ -37,24 +37,16 @@ body {
   position: relative;
 }
 
-.login-container>div::before {
-  background-color: #0B7B31;
+.login-container svg{
   position: absolute;
-  content: "\f007";
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
-  font-size: 4rem;
-  color: #BDF3CF;
-  text-align: center;
-
-  width: 18%;
-  max-width: 18%;
-  aspect-ratio: 1/1;
   top: 0;
   left: 50%;
   transform: translate(-50%, -50%);
-  border-radius: 50%;
-  padding-top: 0.5rem;
+}
+
+.svg-content text {
+  text-anchor: middle; /* Center the icon horizontally */
+  dominant-baseline: middle; /* Center the icon vertically */
 }
 
 .login-container>div>div * {
@@ -70,29 +62,37 @@ body {
   border-color: #0B7B31;
 }
 
-
-
 .login-container form label::after {
   content: ' *';
   color: red;
 }
 
-.login-container form button {
+#login-button{
   margin: 1.5rem auto 0.5rem;
-  background-color: #0B7B31;
-  color: white;
+  /* background-color: #0B7B31;
+  color: white; */
   display: table;
-}
-
-.login-container form button:hover {
-  background-color: #BDF3CF;
-  color: #0B7B31;
 }
 
 .login-container>div a {
   text-decoration-color: #0B7B31;
   color: #0B7B31;
   text-align: center;
+}
+
+.forget-pass-form,
+.enter-email-form,
+.new-pass-form{
+  margin-top: 0.5rem !important;
+}
+
+.forget-pass-form .inform{
+  margin-top: 2rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.forget-pass-form .inform span{
+  text-decoration: underline;
 }
 
 /*header.ejs*/
@@ -594,7 +594,8 @@ label.required::after {
 .loc-report-table td:nth-child(2),
 .loc-report-table td:nth-child(8),
 .ads-table td:nth-child(6),
-.ads-create-table td:nth-child(8){
+.ads-create-table td:nth-child(8),
+.loc-report-table th:nth-child(2){
   text-align: center
 }
 
@@ -612,7 +613,10 @@ label.required::after {
   margin-bottom: -0.5rem;
 }
 
-.form-ads-create .button-group{
+.form-ads-create .button-group,
+.forget-pass-form .button-group,
+.enter-email-form .button-group,
+.new-pass-form .button-group{
   display: flex;
   justify-content: center;
   gap: 1rem;

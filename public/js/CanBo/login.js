@@ -840,7 +840,8 @@ $(document).ready(function () {
                       '',
                       2,
                       'Tố giác sai phạm',
-                      'Bến Thành'
+                      'Bến Thành',
+                      "131 Nam Kỳ Khởi Nghĩa"
                     ],
                     [
                       2,
@@ -860,7 +861,8 @@ $(document).ready(function () {
                       'Để đăng ký quảng cáo, vui lòng truy cập trang chính thức của chúng tôi và làm theo hướng dẫn đăng ký. Nếu gặp vấn đề, liên hệ với bộ phận hỗ trợ.',
                       1,
                       'Giải đáp thắc mắc',
-                      'Bến Nghé'
+                      'Bến Nghé',
+                      "103 Lê Thánh Tôn"
                     ],
                     [
                       3,
@@ -880,7 +882,8 @@ $(document).ready(function () {
                       '',
                       1,
                       'Tố giác sai phạm',
-                      'Bến Nghé'
+                      'Bến Nghé',
+                      "95 Pasteur"
                     ],
                     [
                       7,
@@ -900,7 +903,8 @@ $(document).ready(function () {
                       '',
                       5,
                       'Tố giác sai phạm',
-                      'Cô Giang'
+                      'Cô Giang',
+                      "51 Hồ Hảo Hớn"
                     ]
                   ]
 
@@ -1032,4 +1036,36 @@ $(document).ready(function () {
         }
         
     });
+
+    $("a.forget-pass").on("click", function(){
+      const email = $('#email').val();
+      $(".login-form").hide()
+      $(".user-icon").hide()
+      
+      if (email != ""){
+        $('#email').val("");
+        window.location.href = '/forget-pass?email=' + email;
+      } else{
+        $(".enter-email-form").show()
+        $(".key-icon").show()
+      }
+    })
+
+    $(".enter-email-form").on("click", " .style2-button", function(){
+      $(".login-form").show()
+      $(".user-icon").show()
+      $(".enter-email-form ").hide()
+      $(".key-icon").hide()
+      $('#enter-email').val("")
+    })
+
+    $(".enter-email-form ").on("click", ".style1-button", function(){
+      const email = $('#enter-email').val();
+      if (email == "")
+        alert ("Nhập email để thay đổi mật khẩu")
+      else{
+        $('#enter-email').val("");
+        window.location.href = '/forget-pass?email=' + email
+      } 
+    })
 });

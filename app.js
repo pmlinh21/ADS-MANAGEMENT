@@ -54,6 +54,12 @@ appCanBo.get('/login', function(req, res) {
   res.render('CanBo/login');
 });
 
+appCanBo.get('/forget-pass', function(req, res) {
+  const email = req.query.email;
+
+  res.render('CanBo/forget-pass', { email: email});
+});
+
 appCanBo.get('/', function(req, res) {
   res.render('CanBo/homepageCanBo');
 });
