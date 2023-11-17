@@ -7,14 +7,13 @@ $(document).ready(function () {
         zoom: 15
     });
 
-    var data = QuanAdsLocation;
+    var data = NguoiDanAdsLoc;
+    console.log(data.message);
     info = data.content.map(function (data) {
-        let { id_ads_location, address, ward, loc_type, ads_type,
-            photo, is_zoning, longitude, latitude, hasAds, hasReport } = data
+        let { id_ads_location, address, ward, loc_type, ads_type, photo, is_zoning, longitude, latitude, hasAds, list_report } = data
         let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
         id_ads_location = parseInt(id_ads_location)
-        return [id_ads_location, address, ward, loc_type, ads_type, zoning_text,
-            photo, longitude, latitude, is_zoning, hasAds, hasReport]
+        return [id_ads_location, address, ward, loc_type, ads_type, zoning_text, photo, longitude, latitude, is_zoning, hasAds, list_report]
     })
 
     coordinates = info.map((item) => {
@@ -23,16 +22,16 @@ $(document).ready(function () {
 
     coordinates.forEach(function (coord, index) {
         let colorMarker = '#0B7B31'
-        if (info[index][11] > 0)
+        if (info[index][11])
             colorMarker = 'red';
-        else if (info[index][9] == 0) // chưa quy hoạch
+        else if (!info[index][9]) // chưa quy hoạch
             colorMarker = 'purple';
         else
             colorMarker = 'blue';
 
-        let imagePath = (info[index][6] != "") 
-        ? "image/" + info[index][6]
-        : "image/image-placeholder.jpg"
+        let imagePath = (info[index][6] != "")
+            ? "image/" + info[index][6]
+            : "image/image-placeholder.jpg"
 
         var marker = $('<div class="custom-marker"></div>');
         var svg = $(`<svg viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" fill=${colorMarker} /></svg>`);
@@ -64,85 +63,13 @@ $(document).ready(function () {
         new mapboxgl.Marker(marker[0]).setLngLat(coord).addTo(map);
     });
 
-//     $('#report_form').bootstrapValidator({
-//         feedbackIcons: {
-//             valid: 'glyphicon glyphicon-ok',
-//             invalid: 'glyphicon glyphicon-remove',
-//             validating: 'glyphicon glyphicon-refresh'
-//         },
-//         fields: {
-//             reportType: {
-//                 validators: {
-//                     notEmpty: {
-//                         message: 'Vui lòng chọn hình thức báo cáo'
-//                     }
-//                 }
-//             },
-//             name: {
-//                 validators: {
-//                     stringLength: {
-//                         min: 2,
-//                     },
-//                     notEmpty: {
-//                         message: 'Vui lòng nhập tên của bạn'
-//                     }
-//                 }
-//             },
-//             email: {
-//                 validators: {
-//                     notEmpty: {
-//                         message: 'Vui lòng nhập email của bạn'
-//                     },
-//                     emailAddress: {
-//                         message: 'Vui lòng nhập một email hợp lệ'
-//                     }
-//                 }
-//             },
-//             phone: {
-//                 validators: {
-//                     notEmpty: {
-//                         message: 'Vui lòng nhập SĐT'
-//                     }
-//                 }
-//             },
-//             comment: {
-//                 validators: {
-//                     stringLength: {
-//                         min: 10,
-//                         max: 200,
-//                         message: 'Vui lòng nhập ít nhất 10 ký tự và không quá 20 ký tự'
-//                     },
-//                     notEmpty: {
-//                         message: 'Vui lòng nhập nội dung báo cáo'
-//                     }
-//                 }
-//             }
-//         }
-//     })
-//         .on('success.form.bv', function (e) {
-//             $('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
-//             $('#report_form').data('bootstrapValidator').resetForm();
-
-//             // Prevent form submission
-//             e.preventDefault();
-
-//             // Get the form instance
-//             var $form = $(e.target);
-
-//             // Get the BootstrapValidator instance
-//             var bv = $form.data('bootstrapValidator');
-
-//             // Use Ajax to submit form data
-//             $.post($form.attr('action'), $form.serialize(), function (result) {
-//                 console.log(result);
-//             }, 'json');
-//         });
-
 });
 function closeNav() {
     document.getElementById("sidebar").style.width = "0";
 }
 
+
+//adInfo js
 document.getElementById('details-popup').addEventListener('click', function () {
     document.getElementById('details-popup-data').style.display = 'block';
 });
@@ -165,6 +92,24 @@ document.getElementById('popup-others-report').addEventListener('click', functio
 
 document.getElementById('closePopup-other-report').addEventListener('click', function () {
     document.getElementById('popup-data-others-report').style.display = 'none';
+});
+
+
+// locInfo js
+document.getElementById('report-popup-loc').addEventListener('click', function () {
+    document.getElementById('report-popup-data-loc').style.display = 'block';
+});
+
+document.getElementById('closePopup-report-loc').addEventListener('click', function () {
+    document.getElementById('report-popup-data-loc').style.display = 'none';
+});
+
+document.getElementById('popup-others-report-loc').addEventListener('click', function () {
+    document.getElementById('popup-data-others-report-loc').style.display = 'block';
+});
+
+document.getElementById('closePopup-other-report-loc').addEventListener('click', function () {
+    document.getElementById('popup-data-others-report-loc').style.display = 'none';
 });
 
 // Close the pop-up if the user clicks outside of it
@@ -296,4 +241,3 @@ window.addEventListener('click', function (event) {
 //             }, 'json');
 //         });
 // });
-
