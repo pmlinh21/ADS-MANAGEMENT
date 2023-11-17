@@ -183,8 +183,7 @@ $(document).ready(function() {
 
         $('.btn-back').on('click', function() {
             $('.form-forget').removeClass('visible');
-            //window.location.href('/account');
-            // window.history.back();
+            $('.btn-back').remove();
         });
 
         $('.btn-confirm').on('click', function() {
