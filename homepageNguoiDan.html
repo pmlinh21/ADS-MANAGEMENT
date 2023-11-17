@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADS MAP</title>
+  <!-- Web icon -->
+  <link rel="icon" type="image/x-icon" href="image/favicon.ico">
+
+  <!-- Font awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Assistant&family=Montserrat:wght@400;500&family=RocknRoll+One&display=swap"
+    rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <script defer src='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css' rel='stylesheet' />
+  <script defer
+    src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
+  <link rel="stylesheet"
+    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css"
+    type="text/css" />
+  <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+  <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@5.0.4/css/bootstrap5-toggle.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styleNgDan.css">
+
+</head>
+
+<body>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+    integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ejs@3.1.8/ejs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@5.0.4/js/bootstrap5-toggle.jquery.min.js"></script>
+
+  <div id="headerNgDan">
+    <div class="flex-container">
+      <a class="logo-link" href="/"><img class="logo-img" src="image/logo.png" alt="logo"></a>
+      <i class="bi bi-search"></i>
+      <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="Search"
+        style="height: fit-content;">
+      <a name="" id="" class="btn btn-success ms-auto" href="#" role="button">Báo cáo của bạn</a>
+    </div>
+  </div>
+
+  <div class="homepageNgDan">
+    <div id='map'></div>
+
+    <div id="sidebar">
+      <div class="adInfo">
+        <i class="fa-solid fa-circle-info" style="color: #05ACF4; margin-bottom:1rem"></i> Thông tin bảng quảng cáo
+        <div id="data">
+          <p style="font-size: 1rem;"><strong>Trụ, cụm pano</strong></p>
+          <p>Đồng khởi - Nguyễn Du ( Sở Văn hóa và Thể thao),Phường Bến Nghé, Quận 1</p>
+          <p>Kich thước: 2.5m x 10m</p>
+          <p>Số lượng: 1 trụ/bảng</p>
+          <p>Hình thức: Cổ động chính trị</p>
+          <p>Phân loại: Đất công/ Công viên/ Hành lang an toàn giao thông</p>
+          <div style="flex-direction: row;">
+            <a name="" id="details-popup" class="btn btn-outline-info btn-sm" href="#" role="button">
+              <i class="fa-solid fa-info"></i> Chi tiết
+            </a>
+
+            <div id="details-popup-data" class="popup">
+              <div class="popup-content">
+                <span class="close" id="closePopup-details">&times;</span>
+                <p>Hình ảnh chi tiết biển quảng cáo</p>
+                <img src="/public/image/image1.png" alt="">
+                <p>Hợp đồng quảng cáo đến ngày: 11/11/2013</p>
+              </div>
+            </div>
+
+
+            <a name="" id="report-popup" class="btn btn-danger btn-sm" href="#" role="button">
+              <i class="fa-solid fa-flag"></i> Báo cáo
+            </a>
+
+            <div id="report-popup-data" class="popup">
+              <div class="popup-content">
+                <span class="close" id="closePopup-report">&times;</span>
+                <form class="well form-horizontal" action=" " method="post" id="report_form">
+                  <fieldset>
+                    <legend style="width: 70vw; text-align:center">BÁO CÁO VI PHẠM</legend>
+
+                    <div class="form-group">
+                      <label class=" control-label">Hình thức báo cáo</label>
+                      <div class="selectContainer">
+                        <div class="input-group">
+                          <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                          <select name="reportType" class="form-control selectpicker">
+                            <option>Tố giác sai phạm</option>
+                            <option>Đăng ký nội dung</option>
+                            <option>Đóng góp ý kiến</option>
+                            <option>Giải đáp thắc mắc</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class=" control-label">Họ tên người báo cáo</label>
+                      <div class=" inputGroupContainer">
+                        <div class="input-group">
+                          <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                          <input name="name" placeholder="Nguyễn Văn A" class="form-control" type="text">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class=" control-label">E-Mail</label>
+                      <div class=" inputGroupContainer">
+                        <div class="input-group">
+                          <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                          <input name="email" placeholder="nomeo@gmail.com" class="form-control" type="text">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class=" control-label">Phone</label>
+                      <div class=" inputGroupContainer">
+                        <div class="input-group">
+                          <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+                          <input name="phone" placeholder="0887123123" class="form-control" type="text">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class=" control-label">Nội dung báo cáo</label>
+                      <div class=" inputGroupContainer">
+                        <div class="input-group">
+                          <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                          <textarea class="form-control" name="reportContent"
+                            placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi, maiores placeat."></textarea>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="alert alert-success" role="alert" id="success_message">Success <i
+                        class="glyphicon glyphicon-thumbs-up"></i> Thanks for contacting us, we will get back to you
+                      shortly.</div>
+
+                    <div class="form-group">
+                      <label class=" control-label"></label>
+                      <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-warning">Gửi báo cáo<span
+                            class="glyphicon glyphicon-send"></span></button>
+                      </div>
+                    </div>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+
+            <a name="" id="popup-others-report" class="btn btn-warning btn-sm" href="#" role="button">
+              <i class="fa-solid fa-eye"></i> Xem báo cáo</a>
+
+            <div id="popup-data-others-report" class="popup">
+              <div class="popup-content">
+                <span class="close" id="closePopup-other-report">&times;</span>
+                <p>TỔNG HỢP BÁO CÁO VI PHẠM</p>
+                <div class="my-report">
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem quibusdam ut, sapiente laboriosam eum nobis. Adipisci minus cupiditate nemo est dignissimos. Adipisci suscipit quidem dolor omnis sint cupiditate mollitia neque deleniti commodi porro quia quas, laudantium libero soluta. Dolor, officiis.</p>
+                  <div>Đã xử lý</div>
+                  <div>Tố giác sai phạm</div>
+                </div>
+                <div class="others-report">
+                  <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint nesciunt accusantium dolore at culpa, nobis harum rem voluptatum, dolor suscipit quidem dignissimos voluptates totam. Sapiente voluptas quia quae porro. Obcaecati delectus dolore iure labore eaque dolor totam voluptates soluta magni?</p>
+                  <div>Đã xử lý</div>
+                  <div>Tố giác sai phạm</div>
+                </div>
+                <p>Báo cáo của người khác</p>
+                <p>Báo cáo của bạn</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="locInfo">
+        <i class="fa-solid fa-location-dot"></i> Thông tin địa điểm
+        <div id="data">
+          <p>Nhà thi đấu Lãnh Binh Thăng</p>
+          <p>15 Lý Thường Kiệt, Phường 10, Quận 11</p>
+        </div>
+        <div>
+          <a name="" id="" class="btn btn-danger btn-sm" href="#" role="button">
+            <i class="fa-solid fa-flag"></i> Báo cáo
+          </a>
+
+          <a name="" id="" class="btn btn-warning btn-sm" href="#" role="button" style="float:inline-end; ">
+            <i class="fa-solid fa-eye"></i> Xem báo cáo</a>
+        </div>
+      </div>
+      <a name="" id="" class="btn btn-danger btn-sm" href="#" role="button"
+        style="float:inline-end; margin-right: 1rem;" onclick="closeNav()"> Close </a>
+    </div>
+
+    <!-- toggle switch -->
+    <div class="flex-container">
+      <label class="switch">
+        <input type="checkbox" checked>
+        <span class="slider round" id="switch1"></span>
+      </label>
+      <span id="sub">Quảng cáo</span>
+      <label class="switch">
+        <input type="checkbox" checked>
+        <span class="slider round" id="switch2"></span>
+      </label>
+      <span id="sub">Báo cáo</span>
+      <label class="switch">
+        <input type="checkbox" checked>
+        <span class="slider round" id="switch3"></span>
+      </label>
+      <span id="sub">Chưa quy hoạch</span>
+    </div>
+  </div>
+
+  </body>
+  <script type="text/javascript" src="js/homepageNguoiDan.js"></script>
+  <script type="text/javascript" src="js/data.js"></script>
+
+  </html>
