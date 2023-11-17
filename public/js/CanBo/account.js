@@ -160,23 +160,33 @@ $(document).ready(function() {
   
     $('.btn-forget').on('click', function() {
         const formHtml = `
-        <div class="col-md-12">
-            <label class="form-label" style="font-weight: 600; font-size: 1rem;">Quên mật khẩu</label>
-        </div>
-        <div class="col-md-12">
-            <label for="otp" class="form-label">Mã OTP</label>
-            <input type="text" class="form-control pass-details" id="otp">
-            <div class="error-message mt-2" id="otp-error"></div>
-        </div>
+            <div class="col-md-12">
+                <label class="form-label" style="font-weight: 600; font-size: 1rem;">Quên mật khẩu</label>
+            </div>
+            <div class="col-md-12">
+                <label for="otp" class="form-label">Mã OTP</label>
+                <input type="text" class="form-control pass-details" id="otp">
+                <div class="error-message mt-2" id="otp-error"></div>
+            </div>
 
-        <p class="pass-text" >Chúng tôi đã gửi một mã xác minh gồm 6 chữ số đến địa chỉ email của bạn.</p>
-        <p class="pass-text" style="text-decoration: underline; color: #0B7B31; margin-top: -1rem; cursor: pointer;">Bạn không nhận được mã? Gửi lại mã OTP</p>
-        <button type="button" class="btn style1-button btn-confirm">Xác nhận</button>
-        <div style="margin-top: 9rem"></div>
+            <p class="pass-text" >Chúng tôi đã gửi một mã xác minh gồm 6 chữ số đến địa chỉ email của bạn.</p>
+            <p class="pass-text" style="text-decoration: underline; color: #0B7B31; margin-top: -1rem; cursor: pointer;">Bạn không nhận được mã? Gửi lại mã OTP</p>
+            <button type="button" class="btn style1-button btn-confirm">Xác nhận</button>
+            <div style="margin-top: 9rem"></div>
         `;
-        
+        const btnBack = `
+            <button type="button" class="btn style2-button btn-back" style="margin-left: 26.5rem;">Quay lại</button>
+        `
         $('.form-forget').html(formHtml).addClass('visible');
-        
+        const pos = document.querySelector('.btn-pass');
+        pos.insertAdjacentHTML('afterend', btnBack);
+
+        $('.btn-back').on('click', function() {
+            $('.form-forget').removeClass('visible');
+            //window.location.href('/account');
+            // window.history.back();
+        });
+
         $('.btn-confirm').on('click', function() {
             const otp = $('#otp').val();
             if (otp.trim() === '') {
