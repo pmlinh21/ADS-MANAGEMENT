@@ -31,7 +31,7 @@
                 </div> 
                 <div class="input-field">
                     <label for="coordinates-ads-location">Tọa độ</label>
-                    <input type="text" id="coordinates-ads-location" name="coordinates-ads-location" required>
+                    <input type="text" id="coordinates-ads-location" name="coordinates-ads-location" readonly onclick=mapPopup(this)>
                 </div>
                 <div class="input-field">
                     <label for="ads-location-type">Loại vị trí</label>
@@ -67,6 +67,21 @@
                 <button type="button" value="update" class="button button-delete">Lưu thay đổi</button>
             </div>
         </form>
+
+        <div class="popupmap" id="select-location-map">
+            <div class="popupmap-header">
+                <span class="title">Xác định vị trí điểm đặt</span>
+                <span class="search-bar">
+                    <input type="text" id="search">
+                    <i class="fas fa-search"></i>
+                </span>
+                
+            </div>
+            <div class="popupmap-footer">
+                <div class="chosen-address"></div>
+                <button>Xác nhận</button>
+            </div>
+        </div>
 
     </div>
 </div>

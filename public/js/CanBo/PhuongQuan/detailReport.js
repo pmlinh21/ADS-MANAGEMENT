@@ -111,6 +111,7 @@ $(document).ready(function() {
       $('#office').val(info[2] === 1 ? "Quận" : (info[2] === 2 ? "Phường" : ""));
       if (info[12] === 1) {
         $('#statusProcessed').prop('checked', true);
+        $('#statusPending').prop('disabled', true);
       } else {
         $('#statusPending').prop('checked', true);
       }
