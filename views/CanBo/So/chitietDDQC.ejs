@@ -3,11 +3,11 @@
     <div class="content">
         <div class="title-container">
             <span class="title-icon"><i class="fas fa-pen"></i></span>
-            <span class="title-text"><h1><a href="/diemdatquangcao">Quản lí yêu cầu chỉnh sửa thông tin</a> / Chi tiết yêu cầu</h1></span>
+            <span class="title-text"><h1><a href="/yeucauchinhsua">Quản lí yêu cầu chỉnh sửa thông tin</a> / Chi tiết yêu cầu</h1></span>
         </div>
        
         <form action="" method="post" class="form" id="update-ads-location">
-            <legend><i class="fas fa-info-circle"></i> Thông tin chỉnh sửa điểm đặt</legend>
+            <legend><i class="fas fa-info-circle"></i> Thông tin chỉnh sửa điểm đặt quảng cáo</legend>
             <div class="input-container">
                 <div class="input-field">
                     <label for="id">ID Yêu cầu</label>
@@ -18,49 +18,68 @@
                     <input type="text" id="id-ads-location" name="id-ads-location" disabled>
                 </div>
                 <div class="input-field">
+                    <label for="coordinates">Tọa độ</label>
+                    <input type="text" id="coordinates" name="coordinates" disabled>
+                </div>
+                <div class="input-field">
                     <label for="address">Địa chỉ</label>
                     <input type="text" id="address" name="address" disabled>
                 </div>
-                <div class="input-field">
-                    <label for="coordinates-ads-location">Tọa độ</label>
-                    <input type="text" id="coordinates-ads-location" name="coordinates-ads-location" readonly onclick=mapPopup(this)>
+                <div class="half-half-field">
+                    <div class="input-field">
+                        <label for="ward">Phường</label>
+                        <input type="text" id="ward" name="ward" disabled>
+                    </div>
+                    <div class="input-field">
+                        <label for="district">Quận</label>
+                        <input type="text" id="district" name="district" disabled>
+                    </div>
                 </div>
                 <div class="input-field">
-                    <label for="ads-location-type">Loại vị trí</label>
-                    <select name="ads-location-type" id="ads-location-type" required>
-                    </select>
-                </div>
+                    <label for="location-type">Loại vị trí</label>
+                    <input type="text" name="location-type" id="location-type" disabled>
+                </div> 
                 <div class="input-field">
                     <label for="ads-type">Hình thức quảng cáo</label>
-                    <select name="ads-type" id="ads-type" required>
-                    </select>
+                    <input type="text" name="ads-type" id="ads-type" disabled>
                 </div> 
                 <div class="input-field">
                     <label for="zoning-status">Tình trạng quy hoạch</label>
-                    <select name="zoning-status" id="zoning-status" required>
-                        <option value="">Chọn tình trạng</option>
-                        <option value="1">Đã quy hoạch</option>
-                        <option value="0">Chưa quy hoạch</option>
-                    </select>
+                    <input type="text" name="zoning-status" id="zoning-status" disabled>
+                </div>
+                <div class="input-field">
+                    <label for="reason">Lí do chỉnh sửa</label>
+                    <input type="text" name="reason" id="reason" disabled>
+                </div>
+                <div class="input-field">
+                    <label for="req-time">Thời gian yêu cầu</label>
+                    <input type="text" name="req-time" id="req-time" disabled>
+                </div>
+                <div class="input-field">
+                    <label for="officer">Cán bộ yêu cầu</label>
+                    <input type="text" name="officer" id="officer" disabled>
+                </div>
+                <div class="input-field">
+                    <label for="office">Đơn vị yêu cầu</label>
+                    <input type="text" name="office" id="office" disabled>
                 </div>
                 <div class="input-field image span-4">
                     <label for="ads-location-image">Hình ảnh minh họa</label>
                     <div class="img-container">
-                        <img src="../../../public/image/empty_image.png" alt="" id="ads-location-image-preview">
+                        <img src="../../../public/image/image2.png" alt="" id="ads-location-image-preview">
                         <label for="ads-location-image" class="img-button">Thay đổi</label>
                         <input type="file" id="ads-location-image" name="ads-location-image" accept="image/*" required>
                         <div class="dark-background"></div>
                     </div>
-                    
                 </div>
             </div>
             <div class="button-container">
-                <button type="submit" value="delete" class="button">Xóa điểm đặt</button>
-                <button type="button" value="update" class="button button-delete">Lưu thay đổi</button>
+                <button type="submit" name="process" value="deny" class="button">Từ chối</button>
+                <button type="submit" name="process" value="accept" class="button button-delete">Duyệt thay đổi</button>
             </div>
         </form>
 
-        <div class="popupmap" id="select-location-map">
+        <!-- <div class="popupmap" id="select-location-map">
             <div class="popupmap-header">
                 <span class="title">Xác định vị trí điểm đặt</span>
                 <span class="search-bar">
@@ -73,9 +92,9 @@
                 <div class="chosen-address"></div>
                 <button>Xác nhận</button>
             </div>
-        </div>
+        </div> -->
 
     </div>
 </div>
-<script src="../../../public/js/CanBo/So/chinhsuaDDQC.js"></script>
+<script src="../../../public/js/CanBo/So/chitietDDQC.js"></script>
 <%- include('../../partial/footerSo.ejs') %>
