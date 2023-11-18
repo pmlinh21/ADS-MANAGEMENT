@@ -25,9 +25,9 @@ function renderAds({list_ads, ads_type, loc_type, address, ward, district}){
   <i class="fa-solid fa-circle-info" style="color: #05ACF4; margin-bottom:1rem"></i> 
   Thông tin bảng quảng cáo
 
-  <% for (var i = 0; i < list_ads.length; i++) { %>
+  <% for (var i = 0; i < list_ads?.length; i++) { %>
       <div id="data-<%= list_ads[i].id_ads %>">
-          <p style="font-size: 1rem; margin-bottom: 0.3rem"><strong><%= list_ads[i].board_type %></strong></p>
+          <p style="width: 90%;font-size: 1rem; margin-bottom: 0.3rem"><strong><%= list_ads[i].board_type %></strong></p>
           <p style="font-size: 0.7rem; color: gray; margin-bottom: 0.3rem"><%= address %>, phường <%= ward %>, <%= district %></p>
           <p>Kích thước:  <strong><%= list_ads[i].width %>m x <%= list_ads[i].height %>m</strong></p>
           <p>Số lượng:  <strong><%= list_ads[i].quantity %> trụ / bảng</strong></p>
@@ -58,7 +58,7 @@ function showSidebar(adsloc){
   $('#sidebar').show()
   renderAds(adsloc)
 
-  $(".locInfo .data").attr("id",`data-${adsloc.id_ads_location}`)
+  // $(".locInfo .data").attr("id",`data-${adsloc.id_ads_location}`)
   $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, ${adsloc.district}`)
 
   const list_ads = JSON.parse(adsloc.list_ads)
@@ -110,12 +110,12 @@ function showSidebar(adsloc){
       }
     });
 
-    $('#report-popup').on("click",".style3-button", function(){
+    $('#report-popup').off('click').on("click",".style3-button", function(){
       $('#report-popup form').get(0).reset()
       $("#report-popup").modal("hide")
     })
 
-    $('#report-popup').on("click",".style1-button", function(e){
+    $('#report-popup').off('click').on("click",".style1-button", function(e){
       e.preventDefault()
       if ($("#name").val() == "")
         alert("Trường 'Họ tên người báo cáo' bắt buộc") 
@@ -125,41 +125,119 @@ function showSidebar(adsloc){
         alert("Trường 'Số điện thoại' bắt buộc") 
       else if ( $("#reportContent").val()== "")
         alert("Trường 'Nội dung báo cáo' bắt buộc") 
+      else{
+        imageData1 = imageData2 = null
 
-      const info = [[
-        null,
-        null,
-        id_ads,	
-        $("#reportType").val(),
-        $("#name").val(),
-        $("#email").val(),
-        $("#phone").val(),
-        $("#reportContent").val(),
-        imageData1,
-        imageData2,
-        validateDate(new Date()),
-        0,
-        null
-      ]]
+        const info = [[
+          null,
+          null,
+          id_ads,	
+          $("#reportType").val(),
+          $("#name").val(),
+          $("#email").val(),
+          $("#phone").val(),
+          $("#reportContent").val(),
+          imageData1,
+          imageData2,
+          validateDate(new Date()),
+          0,
+          null
+        ]]
+    
+        const old_report = localStorage.getItem("ads_report") 
+        ? JSON.parse(localStorage.getItem("ads_report") ) : []
+        const new_report = [...old_report, ...info]
+        localStorage.setItem("ads_report", JSON.stringify(new_report))
   
-      const old_report = localStorage.getItem("ads_report") 
-      ? JSON.parse(localStorage.getItem("ads_report") ) : []
-      const new_report = [...old_report, ...info]
-      localStorage.setItem("ads_report", JSON.stringify(new_report))
-
-      console.log( old_report, info, new_report)
-
-      $('#report-popup form').get(0).reset()
-      $("#report-popup").modal("hide")
+        console.log( old_report, info, new_report)
+  
+        $('#report-popup form').get(0).reset()
+        $("#report-popup").modal("hide")
+  
+      }
     })
   })
 
+  $("#sidebar .locInfo").on("click", '.report-button', function(){
+    var imageData3 = null, imageData4 = null
 
+    $('#image1').on('change', function(e) {
+      if (e.target.files[0])
+      if (e.target.files[0].type.startsWith('image/') &&  e.target.files[0].size / 1024 <= 4*1024){
+        imageData3 = e.target.files[0]
+      }
+      else if (!e.target.files[0].type.startsWith('image/')){
+        alert('Hình ảnh minh họa phải có dạng .jpg, .png, .jpeg')
+      }
+      else if (!(e.target.files[0].size / 1024 <= 4)){
+        alert('Hình ảnh minh họa không được vượt quá 4MB')
+      }
+    });
+
+    $('#image2').on('change', function(e) {
+      if (e.target.files[0])
+      if (e.target.files[0].type.startsWith('image/') &&  e.target.files[0].size / 1024 <= 4*1024){
+        imageData4 = e.target.files[0]
+      }
+      else if (!e.target.files[0].type.startsWith('image/')){
+        alert('Hình ảnh minh họa phải có dạng .jpg, .png, .jpeg')
+      }
+      else if (!(e.target.files[0].size / 1024 <= 4)){
+        alert('Hình ảnh minh họa không được vượt quá 4MB')
+      }
+    });
+
+    $('#report-popup').off('click').on("click",".style3-button", function(){
+      $('#report-popup form').get(0).reset()
+      $("#report-popup").modal("hide")
+    })
+
+    $('#report-popup').off('click').on("click",".style1-button", function(e){
+      e.preventDefault()
+      if ($("#name").val() == "")
+        alert("Trường 'Họ tên người báo cáo' bắt buộc") 
+      else if ( $("#email").val()== "")
+        alert("Trường 'Email' bắt buộc") 
+      else if ( $("#phone").val()== "")
+        alert("Trường 'Số điện thoại' bắt buộc") 
+      else if ( $("#reportContent").val()== "")
+        alert("Trường 'Nội dung báo cáo' bắt buộc") 
+      else{
+        imageData3 = null 
+        imageData4 = null
+  
+        const info = [[
+          null,
+          null,
+          adsloc.id_ads_location,	
+          $("#reportType").val(),
+          $("#name").val(),
+          $("#email").val(),
+          $("#phone").val(),
+          $("#reportContent").val(),
+          imageData3,
+          imageData4,
+          validateDate(new Date()),
+          0,
+          null
+        ]]
+    
+        const old_report = localStorage.getItem("adsloc_report") 
+        ? JSON.parse(localStorage.getItem("adsloc_report") ) : []
+        const new_report = [...old_report, ...info]
+        localStorage.setItem("adsloc_report", JSON.stringify(new_report))
+  
+        console.log( old_report, info, new_report)
+  
+        $('#report-popup form').get(0).reset()
+        $("#report-popup").modal("hide")
+      }
+    })
+  })
 
   $("#sidebar").on("click", '.close-button', function(){
     $('#sidebar').hide()
-  })
-
+    })
 
 }
 
@@ -356,7 +434,7 @@ function createMarker(info, map){
 }
 
 $(document).ready(function () {
-  const ads_report = [
+  const adsloc_report = [
     [
         "nnlien21@clc.fitus.edu.vn",
         "2",
@@ -393,13 +471,13 @@ $(document).ready(function () {
         "1",
         "Để đăng ký quảng cáo, vui lòng truy cập trang chính thức của chúng tôi và làm theo hướng dẫn đăng ký. Nếu gặp vấn đề, liên hệ với bộ phận hỗ trợ."
     ]
-]
+  ]
 
-  const adsloc_report = []
+  const ads_report = []
 
   localStorage.setItem("ads_report", JSON.stringify(ads_report))
-  localStorage.setItem("ads_report", JSON.stringify(loc_report))
-  localStorage.setItem("ads_report", JSON.stringify(adsloc_report))
+  localStorage.setItem("loc_report", JSON.stringify(loc_report))
+  localStorage.setItem("adsloc_report", JSON.stringify(adsloc_report))
 
     $(window).on('resize', function(){
         let windowHeight = $(window).height();
