@@ -175,12 +175,12 @@ appCanBo.get('/yeucauchinhsua', function(req, res) {
   res.render('CanBo/So/yeucauchinhsua');
 });
 
-appCanBo.get('/yeucauchinhsua/chitietddqc', function(req, res) {
-  res.render('CanBo/So/chitietDDQC', { id: req.query.id });
+appCanBo.get('/yeucauchinhsua/ddqc', function(req, res) {
+  res.render('CanBo/So/chinhsuaDDQC', { id: req.query.id });
 });
 
-appCanBo.get('/yeucauchinhsua/chitietbqc', function(req, res) {
-  res.render('CanBo/So/chitietBQC', { id: req.query.id });
+appCanBo.get('/yeucauchinhsua/bqc', function(req, res) {
+  res.render('CanBo/So/chinhsuaBQC', { id: req.query.id });
 });  
 
 appCanBo.get('/yeucaucapphep', function(req, res) {
@@ -195,3 +195,14 @@ appCanBo.get('/thongkebaocao', function(req, res) {
   res.render('CanBo/So/thongkebaocao');
 });
 
+appCanBo.get('/thongkebaocao/bqc', function(req, res) {
+  res.render('CanBo/So/baocaoBQC', { id: req.query.id });
+});
+
+appCanBo.get('/thongkebaocao/ddqc', function(req, res) {
+  res.render('CanBo/So/baocaoDDQC', { id: req.query.id });
+});
+
+appCanBo.get('/thongkebaocao/dd', function(req, res) {
+  res.render('CanBo/So/baocaoDD', { id: req.query.id });
+});

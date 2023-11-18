@@ -139,7 +139,7 @@ for (let i = adslocationUpdateRequests.length; i > 0; i--) {
     tr.appendChild(td8);
 
     tr.addEventListener("click", function() {
-        window.location = "/yeucauchinhsua/chitietddqc?id=" + adslocationUpdateRequests[i-1][0];
+        window.location = "/yeucauchinhsua/ddqc?id=" + adslocationUpdateRequests[i-1][0];
     });
     document.querySelector("#update-ads-location-table table tbody").prepend(tr);
 }
@@ -233,7 +233,7 @@ for (let i = adsUpdateRequests.length; i > 0; i--) {
     tr.appendChild(td9);
 
     tr.addEventListener("click", function() {
-        window.location = "/yeucauchinhsua/chitietbqc?id=" + adsUpdateRequests[i-1][0];
+        window.location = "/yeucauchinhsua/bqc?id=" + adsUpdateRequests[i-1][0];
     });
     document.querySelector("#update-ads-table table tbody").prepend(tr);
 }
