@@ -427,11 +427,6 @@ input:checked+.slider:before {
 }
 
 
-
-#map-toggle .baocao .toggle.btn-primary{
-  background-color: red
-}
-
 .custom-marker {
   cursor: pointer;
 }
