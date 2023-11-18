@@ -176,11 +176,11 @@ appCanBo.get('/yeucauchinhsua', function(req, res) {
 });
 
 appCanBo.get('/yeucauchinhsua/ddqc', function(req, res) {
-  res.render('CanBo/So/chinhsuaDDQC', { id: req.query.id });
+  res.render('CanBo/So/chitietDDQC', { id: req.query.id });
 });
 
 appCanBo.get('/yeucauchinhsua/bqc', function(req, res) {
-  res.render('CanBo/So/chinhsuaBQC', { id: req.query.id });
+  res.render('CanBo/So/chitietBQC', { id: req.query.id });
 });  
 
 appCanBo.get('/yeucaucapphep', function(req, res) {
