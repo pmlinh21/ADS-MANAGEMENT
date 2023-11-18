@@ -341,7 +341,7 @@ for (let i = locationReports.length; i > 0; i--) {
   tr.appendChild(td8);
 
   tr.addEventListener("click", function() {
-      window.location = "/thongkebaocao/ddqc?id=" + locationReports[i-1][0];
+      window.location = "/thongkebaocao/dd?id=" + locationReports[i-1][0];
   });
   document.querySelector("#report-location-table table tbody").prepend(tr);
 }
