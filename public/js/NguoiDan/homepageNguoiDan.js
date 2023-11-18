@@ -165,6 +165,24 @@ document.getElementById('closePopup-other-report').addEventListener('click', fun
     document.getElementById('popup-data-others-report').style.display = 'none';
 });
 
+// locInfo js
+document.getElementById('report-popup-loc').addEventListener('click', function () {
+    document.getElementById('report-popup-data-loc').style.display = 'block';
+});
+
+document.getElementById('closePopup-report-loc').addEventListener('click', function () {
+    document.getElementById('report-popup-data-loc').style.display = 'none';
+});
+
+document.getElementById('popup-others-report-loc').addEventListener('click', function () {
+    document.getElementById('popup-data-others-report-loc').style.display = 'block';
+});
+
+document.getElementById('closePopup-other-report-loc').addEventListener('click', function () {
+    document.getElementById('popup-data-others-report-loc').style.display = 'none';
+});
+
+
 // Close the pop-up if the user clicks outside of it
 window.addEventListener('click', function (event) {
     var popup = document.getElementById('popup');
