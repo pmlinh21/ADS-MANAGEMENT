@@ -46,10 +46,19 @@
 
   <div id="headerNgDan">
     <div class="flex-container">
-      <a class="logo-link" href="/"><img class="logo-img" src="../../public/image/logo.png" alt="logo"></a>
+      <img class="logo-img" src="../../public/image/logo.png" alt="logo">
       <i class="bi bi-search"></i>
-      <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="Search"
-        style="height: fit-content;">
+
+
+
+
+      <form id="geocodeForm" action="#" method="get">
+        <input type="text" class="form-control" name="address" id="address" aria-describedby="helpId"
+          placeholder="Search" style="height: fit-content;">
+      </form>
+      <div id="result"></div>
+
+
       <a name="" id="" class="btn btn-success ms-auto" href="#" role="button" onclick="myReportShow()">Báo cáo của
         bạn</a>
     </div>
