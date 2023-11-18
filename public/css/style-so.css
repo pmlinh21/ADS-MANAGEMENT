@@ -175,9 +175,9 @@ body {
 }
 
 .content .title-container .title-icon {
-    width: 30px;
-    font-size: 22px;
-    height: 30px;
+    width: 28px;
+    font-size: 20px;
+    height: 28px;
     display: inline-block;
     text-align: center;
     margin: 0;
@@ -185,9 +185,9 @@ body {
 }
 
 .content .title-container .title-text h1 {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
-    line-height: 30px;
+    line-height: 28px;
     padding: 0;
     margin: 0;
     color: #0B7B31;
@@ -224,7 +224,7 @@ body {
     display: inline-flex;
     /* display: flex; */
     width: calc((100% - 20px) / 3);
-    height: 60px;
+    height: 58px;
     min-width: 280px;
     max-width: 400px;
     background-color: white;
@@ -234,26 +234,26 @@ body {
 
 .statistic-icon {
     background-color: grey;
-    width: 60px;
-    height: 60px;
+    width: 58px;
+    height: 58px;
     color: white;
     text-align: center;
-    line-height: 60px;
-    font-size: 28px;
+    line-height: 58px;
+    font-size: 26px;
     border-radius: 10px 0 0 10px;
     display: inline-block;
 }
 
 .statistic-content {
-    height: 60px;
-    width: calc(100% - 58px);
+    height: 58px;
+    width: calc(100% - 56px);
     border-radius: 0 10px 10px 0;
     padding: 5px 0;
     padding-left: 10px;
 }
 
 .statistic-content .statistic-text {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #7E94AB;
     margin: 0;
@@ -261,15 +261,16 @@ body {
 }
 
 .statistic-content .statistic-number {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 700;
     color: grey;
     margin: 0;
-    margin-top: -4px;
+    margin-top: -1px;
     padding: 0;
 }
 
-#district-statistic {
+#district-statistic,
+#district-report-statistic {
     .statistic-icon {
         background-color: #0B247B;
     }
@@ -279,7 +280,8 @@ body {
     }
 }
 
-#ward-statistic {
+#ward-statistic,
+#ward-report-statistic {
     .statistic-icon {
         background-color: #790B7B;
     }
@@ -319,6 +321,38 @@ body {
     }
 }
 
+#complete-statistic {
+    .statistic-icon {
+        background-color: #2D81E5;
+        line-height: 60px;
+    }
+
+    .statistic-number {
+        color: #2D81E5;
+    }
+}
+
+#incomplete-statistic {
+    .statistic-icon {
+        background-color: #EDAB00;
+        line-height: 60px;
+    }
+
+    .statistic-number {
+        color: #EDAB00;
+    }
+}
+
+#report-statistic {
+    .statistic-icon {
+        background-color: #BC0F24;
+    }
+
+    .statistic-number {
+        color: #BC0F24;
+    }
+}
+
 /* START OF TABLE */
 .table-wrap {
     width: 100%;
@@ -343,7 +377,7 @@ body {
 }
 
 .table-wrap caption {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     color: #0B7B31;
     text-align: left;
@@ -356,7 +390,7 @@ body {
 
 .table-wrap th, .table-wrap td, .table-wrap .add-item {
     padding: 5px 5px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     text-align: center;
 }
@@ -416,7 +450,7 @@ body {
 }
 
 .form legend {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     color: #0B7B31;
     text-align: left;
@@ -442,7 +476,7 @@ body {
 }
 
 .form label {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #0B7B31;
     margin-bottom: 10px;
@@ -555,7 +589,7 @@ body {
 
 .input-field.textarea.span-2 textarea {
     height: 116.5px;
-    font-size: 18px;
+    font-size: 16px;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     color: #7E94AB;
@@ -608,7 +642,7 @@ body {
     width: 120px;
     text-align: center;
     color: #7E94AB;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     background-color: white;
     opacity: 0.8;
@@ -731,7 +765,7 @@ body {
 }
 
 .form input, .form select {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
     color: #7E94AB;
     border: 0;
@@ -763,11 +797,11 @@ body {
     display: block;
     font-family: 'FontAwesome';
     content: '\f073';
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
     position: absolute;
-    top: 8px;
+    top: 6px;
     right: 0;
     color: #7E94AB;
 }
@@ -862,7 +896,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    height: 55px;
+    height: 50px;
     width: 100%;
     background-color: #0B7B31;
     border-radius: 15px 15px 0 0;
@@ -876,18 +910,18 @@ body {
 }
 
 .popupmap-header .title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     color: white;
     margin: 0;
     padding: 0;
-    line-height: 35px;
+    line-height: 30px;
     overflow: hidden;
 }
 
 .popupmap-header .search-bar {
     width: 200px;
-    height: 35px;
+    height: 32px;
     background-color: transparent;
     position: relative;
     transition: 0.2s ease;
@@ -911,19 +945,19 @@ body {
 
 .popupmap-header .search-bar i {
     position: absolute;
-    top: calc(50% - 10px);
+    top: calc(50% - 9px);
     right: 10px;
     color: #7E94AB;
-    font-size: 20px;
+    font-size: 18px;
     cursor: pointer;
-    width: 20px;
+    width: 18px;
 }
 
 .popupmap-footer {
     position: absolute;
     bottom: 0;
     left: 0;
-    height: 55px;
+    height: 50px;
     width: 100%;
     background-color: #0B7B31;
     border-radius: 0 0 15px 15px;
@@ -944,7 +978,7 @@ body {
     font-weight: 600;
     font-family: 'Montserrat', sans-serif;
     box-sizing: border-box;
-    line-height: 15px;
+    line-height: 10px;
 }
 
 .popupmap-footer button:hover {
@@ -953,7 +987,7 @@ body {
 
 .popupmap-footer .chosen-address {
     position: absolute;
-    bottom: 55px;
+    bottom: 50px;
     left: 0;
     height: fit-content;
     width: fit-content;
@@ -976,7 +1010,7 @@ body {
 }
 
 .chart-title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     color: #0B7B31;
     margin: 0;
@@ -1030,7 +1064,7 @@ body {
 .blue { background-color: #2b5797; }
 
 .label .text {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #7E94AB;
 }
