@@ -76,8 +76,10 @@ $(document).ready(function () {
                     zoom: 20
                 })
                 // Create a new marker.
-                const marker = new mapboxgl.Marker().setLngLat(center).addTo(map);
-
+                marker = new mapboxgl.Marker().setLngLat(center).addTo(map);
+                document.querySelector(".adInfo #data").style.display = 'none';
+                document.querySelectorAll("#sidebar")[0].style.width = "22%";
+                
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -91,6 +93,7 @@ $(document).ready(function () {
 
 function closeNav() {
     document.getElementById("sidebar").style.width = "0";
+    marker.remove();
 }
 
 document.getElementById('details-popup').addEventListener('click', function () {
@@ -154,3 +157,9 @@ window.addEventListener('click', function (event) {
     }
 });
 
+const script = document.getElementById('search-js');
+script.onload = function () {
+  mapboxsearch.autofill({
+    accessToken: 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w'
+  });
+};
