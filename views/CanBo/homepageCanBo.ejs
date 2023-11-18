@@ -7,6 +7,38 @@
 </div>  
 
 <%- include("../partial/navbar"); %>
+<!-- <div id = "map-toggle">
+    <div class="form-check quangcao">
+        <input id="quangcao" class="form-check-input" type="checkbox" data-toggle="toggle"  data-size = "xs" checked>
+        <label for="quangcao" class="form-check-label">Bảng quảng cáo</label>
+    </div>
+    <div class="form-check baocao">
+        <input id="baocao" class="form-check-input" type="checkbox" data-toggle="toggle" data-size = "xs" checked>
+        <label for="baocao" class="form-check-label">Báo cáo vi phạm</label>
+    </div>
+    <div class="form-check chuaquyhoach">
+        <input id="chuaquyhoach" class="form-check-input" type="checkbox" data-toggle="toggle" data-size = "xs" checked>
+        <label for="chuaquyhoach" class="form-check-label">Chưa quy hoạch</label>
+    </div>
+</div> -->
+<div class="flex-container">
+    <label class="switch">
+      <input type="checkbox" id = "quangcao" checked>
+      <span class="slider round" id="switch1"></span>
+    </label>
+    <span id="sub">Bảng quảng cáo</span>
+    <label class="switch">
+      <input type="checkbox" id = "baocao" checked>
+      <span class="slider round" id="switch2"></span>
+    </label>
+    <span id="sub">Báo cáo vi phạm</span>
+    <label class="switch">
+      <input type="checkbox" id = "quyhoach" checked>
+      <span class="slider round" id="switch3"></span>
+    </label>
+    <span id="sub">Chưa quy hoạch</span>
+  </div>
+</div>
 
 <div id='map' class = "container-fluid"></div> 
  
