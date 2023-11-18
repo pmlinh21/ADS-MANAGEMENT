@@ -909,9 +909,9 @@ $(document).ready(function () {
                   ]
 
                 const cbquan = [['quan@gmail.com', 'Nguyễn Trần Minh Anh', '123@nhomsau', '0903342521', '2002-06-25', 1],
-                ['21127350@student.hcmus.edu.vn', 'Nguyễn Cao Luận', '123@nhomsau', '0987654321', '1989-05-02', 1],
-                ['21127637@student.hcmus.edu.vn', 'Phan Mỹ Linh', '123@nhomsau', '0781122345', '1998-08-06', 3],
-                ['cbphuong1@gmail.com', 'Trần Đăng Khôi', '123@nhomsau', '0903112233', '1986-10-14', 3]]
+                ['nthphuc21@clc.fitus.edu.vn', 'Phan Đức Long', '123@nhomsau', '0987654321', '1989-05-02', 1],
+                ['pmlinh21@clc.fitus.edu.vn', 'Ngô Minh Tuấn', '123@nhomsau', '0781122345', '1998-08-06', 3],
+                ['ncluan21@clc.fitus.edu.vn', 'Nguyễn Hồng Nhung', '123@nhomsau', '0903112233', '1986-10-14', 3]]
 
                 localStorage.setItem('ads_create', JSON.stringify(QuanAdsCreate));
                 localStorage.setItem('ads_report', JSON.stringify(QuanAdsReport));
@@ -1031,6 +1031,11 @@ $(document).ready(function () {
             if (email == "so@gmail.com"){
                 localStorage.setItem('role', '3');
                 localStorage.setItem('email', email);
+
+                const cbso = [['so@gmail.com', 'Ngô Ngọc Liên', '123@nhomsau', '0903342521', '2002-06-25'],
+                ['21127672@student.hcmus.edu.vn', 'Nguyễn Trần Hồng Phúc', '123@nhomsau', '0987654321', '1989-05-02'],
+                ['21127637@student.hcmus.edu.vn', 'Phan Mỹ Linh', '123@nhomsau', '0781122345', '1998-08-06'],
+                ['21127350@student.hcmus.edu.vn', 'Nguyễn Cao Luận', '123@nhomsau', '0903112233', '1986-10-14']]
             }
             window.location.href = "/";
         }

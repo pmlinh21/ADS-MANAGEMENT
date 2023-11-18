@@ -13,6 +13,7 @@ function renderWard(wards){
   var rendered = ejs.render(template, { wards: wards });
   $("#ward-container").html(rendered);
 }
+
 function createLayer(map, features){
   map.addSource('adsloc', {
     type: 'geojson',
@@ -68,9 +69,6 @@ function createLayer(map, features){
   'circle-radius': 10,
   }
   });
-
-  const sourceFeatures = map.querySourceFeatures('adsloc', { sourceLayer: 'unclustered-point' });
-  console.log(sourceFeatures)
    
   // inspect a cluster on click
   map.on('click', 'clusters', (e) => {
@@ -134,15 +132,21 @@ function createLayer(map, features){
 }
 
 function createMarker(info, map){
+  const quangcao = $('#quangcao').prop("checked")
+  const baocao = $('#baocao').prop("checked")
+  const chuaquyhoach = $('#quyhoach').prop("checked")
+  console.log(info)
+
   const features = info.map(item => {
     let colorMarker
-    if (item[11] > 0)
+    if (item[11] > 0 && baocao)
       colorMarker = 'red';
-    else if (item[9] == 0) // chưa quy hoạch
+    else if (item[9] == 0 && chuaquyhoach) // chưa quy hoạch
       colorMarker = 'purple'; 
-    else 
+    else if (item[10] > 0 && quangcao)
       colorMarker = 'blue'; 
-
+    else 
+      colorMarker = '#0B7B31'; 
     let imagePath
     if (item[6] != "")
       imagePath = "../../../public/image/" + item[6]
@@ -169,7 +173,7 @@ function createMarker(info, map){
       latitude: item[8], 
       is_zoning: item[9],  
       hasAds: item[10], 
-      hasReport: item[10]
+      hasReport: item[11]
     }
   }});
   // console.log(features)
@@ -190,7 +194,6 @@ function createMarker(info, map){
   }
 }
 
-
 // hard code
 $(document).ready(function () {
 const role = parseInt(localStorage.getItem('role'))
@@ -198,7 +201,7 @@ console.log(role);
 if (isNaN(role))
   window.location.href = "/login"
 const id_district = 1;
-var wards, info
+var wards, info, filter_info
 
 $(window).on('resize', function(){
   let windowHeight = $(window).height();
@@ -278,6 +281,7 @@ else if (role === 1) {
     })
     // console.log(info)
     createMarker(info, map);
+    filter_info = [...info]
 
     wards = Ward.content
     console.log("!");
@@ -308,14 +312,14 @@ else if (role === 1) {
           return this.id
       }).get();
 
-      let filter_info  = []
+      let result  = []
       info.forEach(function(item){
         if (selected_ward.includes(item[2])){
-          filter_info.push(item)
+          result.push(item)
         } 
       })
-
-      console.log(filter_info)
+      filter_info = [...result]
+      // console.log(filter_info)
       // clearMarker(map);
       createMarker(filter_info, map);
       // console.log(markers)
@@ -328,10 +332,16 @@ else if (role === 1) {
       return
     })
   })
+
+  $(".flex-container input").on('click', function(e){
+    createMarker(filter_info, map)
+  })
+  
 }
 else{
   $("#select-ward").hide();
 }
+
 });
 
 // api
