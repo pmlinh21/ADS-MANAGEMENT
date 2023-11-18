@@ -56,87 +56,14 @@ $(document).ready(function () {
         });
 
         marker.on('mousedown', function () {
-            document.querySelectorAll("#sidebar")[0].style.width = "25rem";
+            document.querySelectorAll("#sidebar")[0].style.width = "22%";
         })
 
         new mapboxgl.Marker(marker[0]).setLngLat(coord).addTo(map);
     });
 
-//     $('#report_form').bootstrapValidator({
-//         feedbackIcons: {
-//             valid: 'glyphicon glyphicon-ok',
-//             invalid: 'glyphicon glyphicon-remove',
-//             validating: 'glyphicon glyphicon-refresh'
-//         },
-//         fields: {
-//             reportType: {
-//                 validators: {
-//                     notEmpty: {
-//                         message: 'Vui lòng chọn hình thức báo cáo'
-//                     }
-//                 }
-//             },
-//             name: {
-//                 validators: {
-//                     stringLength: {
-//                         min: 2,
-//                     },
-//                     notEmpty: {
-//                         message: 'Vui lòng nhập tên của bạn'
-//                     }
-//                 }
-//             },
-//             email: {
-//                 validators: {
-//                     notEmpty: {
-//                         message: 'Vui lòng nhập email của bạn'
-//                     },
-//                     emailAddress: {
-//                         message: 'Vui lòng nhập một email hợp lệ'
-//                     }
-//                 }
-//             },
-//             phone: {
-//                 validators: {
-//                     notEmpty: {
-//                         message: 'Vui lòng nhập SĐT'
-//                     }
-//                 }
-//             },
-//             comment: {
-//                 validators: {
-//                     stringLength: {
-//                         min: 10,
-//                         max: 200,
-//                         message: 'Vui lòng nhập ít nhất 10 ký tự và không quá 20 ký tự'
-//                     },
-//                     notEmpty: {
-//                         message: 'Vui lòng nhập nội dung báo cáo'
-//                     }
-//                 }
-//             }
-//         }
-//     })
-//         .on('success.form.bv', function (e) {
-//             $('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
-//             $('#report_form').data('bootstrapValidator').resetForm();
-
-//             // Prevent form submission
-//             e.preventDefault();
-
-//             // Get the form instance
-//             var $form = $(e.target);
-
-//             // Get the BootstrapValidator instance
-//             var bv = $form.data('bootstrapValidator');
-
-//             // Use Ajax to submit form data
-//             $.post($form.attr('action'), $form.serialize(), function (result) {
-//                 console.log(result);
-//             }, 'json');
-//         });
-
 });
+
 function closeNav() {
     document.getElementById("sidebar").style.width = "0";
 }
@@ -165,6 +92,35 @@ document.getElementById('closePopup-other-report').addEventListener('click', fun
     document.getElementById('popup-data-others-report').style.display = 'none';
 });
 
+// locInfo js
+document.getElementById('report-popup-loc').addEventListener('click', function () {
+    document.getElementById('report-popup-data-loc').style.display = 'block';
+});
+
+document.getElementById('closePopup-report-loc').addEventListener('click', function () {
+    document.getElementById('report-popup-data-loc').style.display = 'none';
+});
+
+document.getElementById('popup-others-report-loc').addEventListener('click', function () {
+    document.getElementById('popup-data-others-report-loc').style.display = 'block';
+});
+
+document.getElementById('closePopup-other-report-loc').addEventListener('click', function () {
+    document.getElementById('popup-data-others-report-loc').style.display = 'none';
+});
+
+
+// myReport
+function myReportShow() {
+    console.log("falskdj");
+    document.getElementById('myReport').style.display = 'block';
+}
+
+document.getElementById('closePopup-myReport').addEventListener('click', function () {
+    document.getElementById('myReport').style.display = 'none';
+});
+
+
 // Close the pop-up if the user clicks outside of it
 window.addEventListener('click', function (event) {
     var popup = document.getElementById('popup');
@@ -172,126 +128,3 @@ window.addEventListener('click', function (event) {
         popup.style.display = 'none';
     }
 });
-
-// $(document).ready(function () {
-//     $('#contact_form').bootstrapValidator({
-//         // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
-//         feedbackIcons: {
-//             valid: 'glyphicon glyphicon-ok',
-//             invalid: 'glyphicon glyphicon-remove',
-//             validating: 'glyphicon glyphicon-refresh'
-//         },
-//         fields: {
-//             first_name: {
-//                 validators: {
-//                     stringLength: {
-//                         min: 2,
-//                     },
-//                     notEmpty: {
-//                         message: 'Please supply your first name'
-//                     }
-//                 }
-//             },
-//             last_name: {
-//                 validators: {
-//                     stringLength: {
-//                         min: 2,
-//                     },
-//                     notEmpty: {
-//                         message: 'Please supply your last name'
-//                     }
-//                 }
-//             },
-//             email: {
-//                 validators: {
-//                     notEmpty: {
-//                         message: 'Please supply your email address'
-//                     },
-//                     emailAddress: {
-//                         message: 'Please supply a valid email address'
-//                     }
-//                 }
-//             },
-//             phone: {
-//                 validators: {
-//                     notEmpty: {
-//                         message: 'Please supply your phone number'
-//                     },
-//                     phone: {
-//                         country: 'US',
-//                         message: 'Please supply a vaild phone number with area code'
-//                     }
-//                 }
-//             },
-//             address: {
-//                 validators: {
-//                     stringLength: {
-//                         min: 8,
-//                     },
-//                     notEmpty: {
-//                         message: 'Please supply your street address'
-//                     }
-//                 }
-//             },
-//             city: {
-//                 validators: {
-//                     stringLength: {
-//                         min: 4,
-//                     },
-//                     notEmpty: {
-//                         message: 'Please supply your city'
-//                     }
-//                 }
-//             },
-//             reportType: {
-//                 validators: {
-//                     notEmpty: {
-//                         message: 'Vui lòng chọn hình thức báo cáo'
-//                     }
-//                 }
-//             },
-//             zip: {
-//                 validators: {
-//                     notEmpty: {
-//                         message: 'Please supply your zip code'
-//                     },
-//                     zipCode: {
-//                         country: 'US',
-//                         message: 'Please supply a vaild zip code'
-//                     }
-//                 }
-//             },
-//             comment: {
-//                 validators: {
-//                     stringLength: {
-//                         min: 10,
-//                         max: 200,
-//                         message: 'Please enter at least 10 characters and no more than 200'
-//                     },
-//                     notEmpty: {
-//                         message: 'Please supply a description of your project'
-//                     }
-//                 }
-//             }
-//         }
-//     })
-//         .on('success.form.bv', function (e) {
-//             $('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
-//             $('#contact_form').data('bootstrapValidator').resetForm();
-
-//             // Prevent form submission
-//             e.preventDefault();
-
-//             // Get the form instance
-//             var $form = $(e.target);
-
-//             // Get the BootstrapValidator instance
-//             var bv = $form.data('bootstrapValidator');
-
-//             // Use Ajax to submit form data
-//             $.post($form.attr('action'), $form.serialize(), function (result) {
-//                 console.log(result);
-//             }, 'json');
-//         });
-// });
-

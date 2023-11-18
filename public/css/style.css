@@ -101,7 +101,7 @@ body {
 #header {
   background-color: #0B7B31;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   /* max-width: 100vw; */
   padding-left: 0.5rem;
@@ -115,7 +115,7 @@ body {
 .logo-link {
   display: flex;
   align-items: center;
-  margin-right: auto;
+  margin-right: 5%;
 }
 
 .logo-img {
@@ -133,7 +133,8 @@ body {
   width: 30rem;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
+  margin-right: auto;
+  margin-top: 0
 }
 
 .select-ward-bar {
