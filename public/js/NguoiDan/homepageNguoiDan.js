@@ -8,6 +8,17 @@ function validateSQLDate(dateString) {
   return formattedDate;
 }
 
+function validateDate(date){
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  
+  return formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 function renderAds({list_ads, ads_type, loc_type, address, ward, district}){
   list_ads = JSON.parse(list_ads)
   var template = `
@@ -27,7 +38,7 @@ function renderAds({list_ads, ads_type, loc_type, address, ward, district}){
             <i class="fa-solid fa-circle-info"></i>
           </div>
 
-          <div class = "button-group data-<%= list_ads[i].id_ads %>">
+          <div class = "button-group ads-<%= list_ads[i].id_ads %>">
                 <button data-target="#report-popup" data-toggle="modal" class="btn style3-button report-button">
                   <i class="fa-solid fa-flag"></i> Báo cáo
                 </button>
@@ -50,12 +61,14 @@ function showSidebar(adsloc){
   $(".locInfo .data").attr("id",`data-${adsloc.id_ads_location}`)
   $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, ${adsloc.district}`)
 
+  const list_ads = JSON.parse(adsloc.list_ads)
+
   $("#sidebar").on("click", '.detail-button', function(){
     let str_id_ads = $(this).attr("class").split(" ")[1];
     let id_ads= parseInt(str_id_ads.split("-")[1])
     console.log(id_ads)
 
-    list_ads = JSON.parse(adsloc.list_ads)
+    // list_ads = JSON.parse(adsloc.list_ads)
     ads = list_ads.filter(item => item.id_ads == id_ads)[0]
   
     let imagePath = (!ads.photo 
@@ -65,6 +78,83 @@ function showSidebar(adsloc){
     $("#detail-popup .expired-date").text("Ngày hết hạn: " + validateSQLDate(ads.expired_date))
     console.log(imagePath)
   })
+
+  $("#sidebar .adInfo").on("click", '.report-button', function(){
+    let str_id_ads = $(this).closest(".button-group").attr("class").split(" ")[1];
+    let id_ads= parseInt(str_id_ads.split("-")[1])
+    var imageData1 = imageData2 = null
+
+    $('#image1').on('change', function(e) {
+      if (e.target.files[0])
+      if (e.target.files[0].type.startsWith('image/') &&  e.target.files[0].size / 1024 <= 4*1024){
+        imageData1 = e.target.files[0]
+      }
+      else if (!e.target.files[0].type.startsWith('image/')){
+        alert('Hình ảnh minh họa phải có dạng .jpg, .png, .jpeg')
+      }
+      else if (!(e.target.files[0].size / 1024 <= 4)){
+        alert('Hình ảnh minh họa không được vượt quá 4MB')
+      }
+    });
+
+    $('#image2').on('change', function(e) {
+      if (e.target.files[0])
+      if (e.target.files[0].type.startsWith('image/') &&  e.target.files[0].size / 1024 <= 4*1024){
+        imageData2 = e.target.files[0]
+      }
+      else if (!e.target.files[0].type.startsWith('image/')){
+        alert('Hình ảnh minh họa phải có dạng .jpg, .png, .jpeg')
+      }
+      else if (!(e.target.files[0].size / 1024 <= 4)){
+        alert('Hình ảnh minh họa không được vượt quá 4MB')
+      }
+    });
+
+    $('#report-popup').on("click",".style3-button", function(){
+      $('#report-popup form').get(0).reset()
+      $("#report-popup").modal("hide")
+    })
+
+    $('#report-popup').on("click",".style1-button", function(e){
+      e.preventDefault()
+      if ($("#name").val() == "")
+        alert("Trường 'Họ tên người báo cáo' bắt buộc") 
+      else if ( $("#email").val()== "")
+        alert("Trường 'Email' bắt buộc") 
+      else if ( $("#phone").val()== "")
+        alert("Trường 'Số điện thoại' bắt buộc") 
+      else if ( $("#reportContent").val()== "")
+        alert("Trường 'Nội dung báo cáo' bắt buộc") 
+
+      const info = [[
+        null,
+        null,
+        id_ads,	
+        $("#reportType").val(),
+        $("#name").val(),
+        $("#email").val(),
+        $("#phone").val(),
+        $("#reportContent").val(),
+        imageData1,
+        imageData2,
+        validateDate(new Date()),
+        0,
+        null
+      ]]
+  
+      const old_report = localStorage.getItem("ads_report") 
+      ? JSON.parse(localStorage.getItem("ads_report") ) : []
+      const new_report = [...old_report, ...info]
+      localStorage.setItem("ads_report", JSON.stringify(new_report))
+
+      console.log( old_report, info, new_report)
+
+      $('#report-popup form').get(0).reset()
+      $("#report-popup").modal("hide")
+    })
+  })
+
+
 
   $("#sidebar").on("click", '.close-button', function(){
     $('#sidebar').hide()
@@ -266,6 +356,51 @@ function createMarker(info, map){
 }
 
 $(document).ready(function () {
+  const ads_report = [
+    [
+        "nnlien21@clc.fitus.edu.vn",
+        "2",
+        "20",
+        "1",
+        "Lê Văn Đức",
+        "lvduc@gmail.com",
+        "0836677889",
+        "Quảng cáo tại góc đường thiếu ánh sáng ban đêm, tạo ra tình trạng an toàn không tốt. Yêu cầu sửa chữa để tránh tai nạn giao thông.",
+        "",
+        "",
+        "2023-09-03",
+        "1",
+        "Gửi thông báo cho công ty quảng cáo, yêu cầu tăng cường ánh sáng xung quanh quảng cáo để đảm bảo an toàn giao thông."
+    ]
+  ]
+
+  const loc_report = [
+    [
+        "nthphuc21@clc.fitus.edu.vn",
+        "1",
+        "10.7751",
+        "106.7002",
+        "103 Lê Thánh Tôn",
+        "1",
+        "4",
+        "Lê Văn Đức",
+        "lvduc@gmail.com",
+        "0934567890",
+        " Tôi muốn đăng ký quảng cáo tại đây. Xin hướng dẫn tôi qua quy trình đăng ký và các bước cần thực hiện để quảng cáo của tôi xuất hiện trên bản đồ.",
+        "",
+        "",
+        "2023-08-12",
+        "1",
+        "Để đăng ký quảng cáo, vui lòng truy cập trang chính thức của chúng tôi và làm theo hướng dẫn đăng ký. Nếu gặp vấn đề, liên hệ với bộ phận hỗ trợ."
+    ]
+]
+
+  const adsloc_report = []
+
+  localStorage.setItem("ads_report", JSON.stringify(ads_report))
+  localStorage.setItem("ads_report", JSON.stringify(loc_report))
+  localStorage.setItem("ads_report", JSON.stringify(adsloc_report))
+
     $(window).on('resize', function(){
         let windowHeight = $(window).height();
         let headerHeight = $('#header').height();

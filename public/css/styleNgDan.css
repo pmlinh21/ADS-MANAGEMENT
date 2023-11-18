@@ -343,15 +343,47 @@ border-radius: 50%;
     cursor: pointer
 }
 
-#detail-popup .modal-header{
+.modal-header{
     justify-content: center;
     border: none;
     padding-bottom: 0
 }
 
+.modal-body{
+    padding-top: 0;
+}
+
 #detail-popup .image img{
     width: 100%;
     margin: 0rem auto 1rem;
+}
+
+#report-popup label{
+    margin-top: 0.5rem;
+    font-size: 0.8rem
+}
+
+label.required::after{
+    content: " *";
+    color: red;
+}
+
+.form-control,
+.form-select,
+.form-control-file{
+    font-size: 0.85rem
+}
+
+.form-control:focus,
+.form-control:hover,
+.form-select:focus,
+.form-select:hover {
+  box-shadow: 0 0 0 0.2rem rgba(11, 123, 49, 0.25);
+  border-color: #0B7B31;
+}
+
+.form-control-file{
+    margin-top: 0.7rem;
 }
 
 .close-button{
