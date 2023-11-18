@@ -571,6 +571,30 @@ body {
     grid-row: 5 / span 2;
 }
 
+/* REPORT ADS & ADS LOCATION */
+#report-ads-location.form .input-container,
+#report-ads.form .input-container,
+#report-location.form .input-container {
+    display: grid;
+    grid-template-columns: calc(50% - 30px) calc(50% - 30px);
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 0 60px;
+}
+
+#report-ads-location.form .input-field.textarea.report-content,
+#report-ads.form .input-field.textarea.report-content,
+#report-location.form .input-field.textarea.report-content {
+    grid-column: 2 / 3;
+    grid-row: 3 / span 3;
+}
+
+#report-ads-location.form .input-field.textarea.resolve,
+#report-ads.form .input-field.textarea.resolve,
+#report-location.form .input-field.textarea.resolve {
+    grid-column: 2 / 3;
+    grid-row: 6 / span 3;
+}
+
 .form .input-field.image.span-4 .img-container {
     width: 100%;
     max-width: 600px;
@@ -589,6 +613,24 @@ body {
 
 .input-field.textarea.span-2 textarea {
     height: 116.5px;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    color: #7E94AB;
+    border: none;
+    border-bottom: 2px solid #7E94AB;
+    resize: none;
+    white-space: pre-line;
+    word-wrap: break-word;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    -o-hyphens: auto;
+    hyphens: auto;
+    text-align: justify;
+}
+
+.input-field.textarea.span-3 textarea {
+    height: 194px;
     font-size: 16px;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
@@ -754,6 +796,29 @@ body {
 
     #create-ads.form .input-field.textarea {
         grid-row: 15 / span 4;
+        grid-column: 1 / 2;
+    }
+
+    /* REPORT ADS & ADS LOCATION */
+    #report-ads-location.form .input-container,
+    #report-ads.form .input-container,
+    #report-location.form .input-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(16, 1fr);
+        gap: 0 0;
+    }
+
+    #report-ads-location.form .input-field.textarea.report-content,
+    #report-ads.form .input-field.textarea.report-content,
+    #report-location.form .input-field.textarea.report-content {
+        grid-row: 11 / span 3;
+        grid-column: 1 / 2;
+    }
+
+    #report-ads-location.form .input-field.textarea.resolve,
+    #report-ads.form .input-field.textarea.resolve,
+    #report-location.form .input-field.textarea.resolve {
+        grid-row: 14 / span 3;
         grid-column: 1 / 2;
     }
 
@@ -1007,6 +1072,19 @@ body {
     width: 100%;
     margin-bottom: 20px;
     text-align: center;
+    /* position: fixed;
+    top: calc(50% - 150px);
+    left: 0;
+    z-index: -1; */
+    /* width: fit-content; */
+    /* margin: 0 auto; */
+    box-sizing: border-box;
+    border-radius: 10px;
+    box-shadow: 4px 4px 5px rgba(5, 5, 5, 0.3);
+    background-color: white;
+    padding: 20px;
+    height: 400px;
+    min-width: 800px;
 }
 
 .chart-title {
