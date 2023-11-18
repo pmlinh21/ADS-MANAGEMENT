@@ -22,54 +22,198 @@ function clearMarker(markers){
 
 }
 
-function createMarker(info, map, markers){
-  coordinates = info.map((item) => {
-    return [item[7], item[8]]
-  })
 
-  coordinates.forEach(function (coord, index) {
-    let colorMarker = '#0B7B31'
-    if (info[index][11] > 0)
-      colorMarker = 'red';
-    else if (info[index][9] == 0) // chưa quy hoạch
-      colorMarker = 'purple'; 
-    else 
-      colorMarker = 'blue'; 
-    
-    let imagePath
-    if (info[index][6] != "")
-      imagePath = "../../../public/image/" + info[index][6]
-    else
-      imagePath = "../../../public/image/image-placeholder.jpg"
-    // console.log(imagePath)
+  function createMarker(info, map, markers){
+    let colorMarker
+    // if (info[index][11] > 0)
+//       colorMarker = 'red';
+//     else if (info[index][9] == 0) // chưa quy hoạch
+//       colorMarker = 'purple'; 
+//     else 
+//       colorMarker = 'blue'; 
 
-    var marker = $('<div class="custom-marker"></div>');
-    var svg = $(`<svg class = ${info[index][0]} viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" fill=${colorMarker} /></svg>`);
-    marker.append(svg);
+    const features = info.map(item => {
+      let colorMarker
+      if (item[11] > 0)
+        colorMarker = 'red';
+      else if (item[9] == 0) // chưa quy hoạch
+        colorMarker = 'purple'; 
+      else 
+        colorMarker = 'blue'; 
 
-    var popup = new mapboxgl.Popup({
-      closeButton: false,
-      offset: 15
-    }).setHTML(`<div class="popup-content"> 
-      <p class = "ads-type"  style = "font-weight: 900">${info[index][4]}</p>
-      <p class = "loc-type">${info[index][3]}</p>
-      <p class = "address">${info[index][1]}</p>
-      <p class = "zoning-text" style = "font-weight: 900; font-style: italic">${info[index][5]}</p>
-      <img src = ${imagePath} class = "img-thumbnail" />
-    </div>`);
+      return {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [item[7], item[8]]
+      },
+      properties: {
+        colorMarker
+      }
+    }});
 
-    marker.on('mouseenter', function() {
-      popup.setLngLat(coord).addTo(map);
-    });
+    // console.log(features)
 
-    marker.on('mouseleave', function() {
-      popup.remove();
-    });
+    map.on('load', () => {
+      
+      map.addSource('adsloc', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: features
+        },
+        cluster: true,
+        clusterMaxZoom: 14,
+        clusterRadius: 50
+      });
+      // console.log(info)
+       
+      map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'adsloc',
+      filter: ['has', 'point_count'],
+      paint: {
+      'circle-color': '#51bbd6',
+      'circle-radius': [
+      'step',
+      ['get', 'point_count'],
+      20,
+      100,
+      30,
+      750,
+      40
+      ]
+      }
+      });
 
-    let mark = new mapboxgl.Marker(marker[0]).setLngLat(coord).addTo(map);
-    markers.push(mark);
-  });
+      map.addLayer({
+        id: 'cluster-count',
+        type: 'symbol',
+        source: 'adsloc',
+        filter: ['has', 'point_count'],
+        layout: {
+        'text-field': ['get', 'point_count_abbreviated'],
+        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+        'text-size': 20
+        }
+        });
+      
+       
+      map.addLayer({
+      id: 'unclustered-point',
+      type: 'circle',
+      source: 'adsloc',
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+      'circle-color': ['get', 'colorMarker'],
+      'circle-radius': 10,
+      }
+      });
+       
+      // inspect a cluster on click
+      // map.on('click', 'clusters', (e) => {
+      // const features = map.queryRenderedFeatures(e.point, {
+      // layers: ['clusters']
+      // });
+      // const clusterId = features[0].properties.cluster_id;
+      // map.getSource('adsloc').getClusterExpansionZoom(
+      // clusterId,
+      // (err, zoom) => {
+      // if (err) return;
+       
+      // map.easeTo({
+      // center: features[0].geometry.coordinates,
+      // zoom: zoom
+      // });
+      // }
+      // );
+      // });
+       
+      // map.on('click', 'unclustered-point', (e) => {
+      // const coordinates = e.features[0].geometry.coordinates.slice();
+      // const mag = e.features[0].properties.mag;
+      // const tsunami =
+      // e.features[0].properties.tsunami === 1 ? 'yes' : 'no';
+
+      // while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+      // coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+      // }
+       
+      // new mapboxgl.Popup()
+      // .setLngLat(coordinates)
+      // .setHTML(
+      // `magnitude: ${mag}<br>Was there a tsunami?: ${tsunami}`
+      // )
+      // .addTo(map);
+      // });
+       
+      // map.on('mouseenter', 'clusters', () => {
+      // map.getCanvas().style.cursor = 'pointer';
+      // });
+      // map.on('mouseleave', 'clusters', () => {
+      // map.getCanvas().style.cursor = '';
+      // });
+      });
 }
+
+
+// function createMarker(info, map, markers){
+//   coordinates = info.map((item) => {
+//     return [item[7], item[8]]
+//   })
+
+//   coordinates.forEach(function (coord, index) {
+//     let colorMarker = '#0B7B31'
+//     if (info[index][11] > 0)
+//       colorMarker = 'red';
+//     else if (info[index][9] == 0) // chưa quy hoạch
+//       colorMarker = 'purple'; 
+//     else 
+//       colorMarker = 'blue'; 
+    
+//     let imagePath
+//     if (info[index][6] != "")
+//       imagePath = "../../../public/image/" + info[index][6]
+//     else
+//       imagePath = "../../../public/image/image-placeholder.jpg"
+//     // console.log(imagePath)
+
+//     var marker = $('<div class="custom-marker"></div>');
+//     var svg = $(`<svg class = ${info[index][0]} viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" fill=${colorMarker} /></svg>`);
+//     marker.append(svg);
+
+//     var popup = new mapboxgl.Popup({
+//       closeButton: false,
+//       offset: 15
+//     }).setHTML(`<div class="popup-content"> 
+//       <p class = "ads-type"  style = "font-weight: 900">${info[index][4]}</p>
+//       <p class = "loc-type">${info[index][3]}</p>
+//       <p class = "address">${info[index][1]}</p>
+//       <p class = "zoning-text" style = "font-weight: 900; font-style: italic">${info[index][5]}</p>
+//       <img src = ${imagePath} class = "img-thumbnail" />
+//     </div>`);
+
+//     marker.on('mouseenter', function() {
+//       popup.setLngLat(coord).addTo(map);
+//     });
+
+//     marker.on('mouseleave', function() {
+//       popup.remove();
+//     });
+
+//     let mark = new mapboxgl.Marker(marker[0]).setLngLat(coord).addTo(map);
+//     markers.push(mark);
+//   });
+
+//   var markerCluster = new MarkerClusterGroup();
+
+//   // Add the marker objects to the MarkerClusterGroup
+//   markerCluster.addLayers(markers);
+
+//   // Add the MarkerClusterGroup to the map
+//   map.addLayer(markerCluster);
+// }
 
 // hard code
 $(document).ready(function () {
@@ -94,15 +238,21 @@ $(document).ready(function () {
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [106.6974, 10.7743],
-      zoom: 15
+      zoom: 15,
+      language: 'vi'
   });
 
-  // set geocoder
+  var language = new MapboxLanguage({
+    defaultLanguage: 'vi'
+  });
+  map.addControl(language);
 
   var geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
-    mapboxgl: mapboxgl,
+    language: 'vi', // Set the language to Vietnamese for geocoding
+    countries: 'vn' // Limit results to Vietnam
   });
+  // map.addControl(geocoder);
 
   if (role === 2) {
       $("#select-ward").hide();

@@ -82,10 +82,16 @@ $(document).ready(function () {
       zoom: 17
     });
 
+    var language = new MapboxLanguage({
+      defaultLanguage: 'vi'
+    });
+    map.addControl(language);
+
     var geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl,
+      mapboxgl: mapboxgl
     });
+    geocoder.setLanguage('vi');
 
     let canvas = $('.mapboxgl-canvas')
     canvas.width('100%');
@@ -106,7 +112,8 @@ $(document).ready(function () {
         url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(address) + '.json',
         type: 'GET',
         data: {
-          access_token: mapboxgl.accessToken
+          access_token: mapboxgl.accessToken,
+          language: "vi"
         },
         success: function(response) {
           // Xử lý kết quả geocoding
@@ -114,7 +121,7 @@ $(document).ready(function () {
           if (features.length > 0) {
             var firstFeature = features[0];
             var coordinates = firstFeature.center;
-
+            console.log(firstFeature)
             result = firstFeature.place_name;
             // ward = firstFeature.context[0];
             // district = firstFeature.context[1];
@@ -158,7 +165,7 @@ $(document).ready(function () {
         success: function(response) {
           // Lấy địa chỉ từ kết quả Geocoding
           result = response.features[0].place_name;
-    
+          console.log(response.features[0])
           // Gán địa chỉ vào phần tử HTML
           $("#address").val(`${result} [${longitude}, ${latitude}]`);
         },
