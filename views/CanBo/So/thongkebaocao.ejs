@@ -2,9 +2,52 @@
 <%- include('../../partial/sidebarSo.ejs') %>
     <div class="content">
         <div class="title-container">
-            <span class="title-icon"><i class="fas fa-exclamation-triangle"></i></span>
+            <span class="title-icon"><i class="fa-solid fa-exclamation-triangle"></i></span>
             <span class="title-text"><h1>Thống kê báo cáo</h1></span>
         </div>
+
+        <div class="statistic-container">
+            <div class="statistic-card" id="report-statistic">
+                <div class="statistic-icon"><i class="fa-solid fa-exclamation-triangle"></i></div>
+                <div class="statistic-content">
+                    <p class="statistic-text">Tổng số báo cáo</p>
+                    <p class="statistic-number">57</p>
+                </div>
+            </div>
+
+            <div class="statistic-card" id="complete-statistic">
+                <div class="statistic-icon"><i class="fa-regular fa-circle-check"></i></div>
+                <div class="statistic-content">
+                    <p class="statistic-text">Báo cáo đã xử lí</p>
+                    <p class="statistic-number">24</p>
+                </div>
+            </div>
+
+            <div class="statistic-card" id="incomplete-statistic">
+                <div class="statistic-icon"><i class="fa-regular fa-circle-xmark"></i></div>
+                <div class="statistic-content">
+                    <p class="statistic-text">Báo cáo chưa xử lí</p>
+                    <p class="statistic-number">33</p>
+                </div>
+            </div>
+
+            <div class="statistic-card" id="district-report-statistic">
+                <div class="statistic-icon"><i class="fa-solid fa-landmark"></i></div>
+                <div class="statistic-content">
+                    <p class="statistic-text">Báo cáo do Quận xử lí</p>
+                    <p class="statistic-number">12</p>
+                </div>
+            </div>
+
+            <div class="statistic-card" id="ward-report-statistic">
+                <div class="statistic-icon"><i class="fa-solid fa-building"></i></div>
+                <div class="statistic-content">
+                    <p class="statistic-text">Báo cáo do Phường xử lí</p>
+                    <p class="statistic-number">12</p>
+                </div>
+            </div>
+        </div>
+        <!-- END OF STATISTICS -->
         
         <div class="chart-container">
             <h2 class="chart-title">Thống kê tỉ lệ báo cáo theo loại hình báo cáo</h2>
@@ -21,7 +64,7 @@
         </div>
 
         <!-- TABLE 1 -->
-        <div class="table-wrap" id="ads-report-table">
+        <div class="table-wrap" id="report-ads-table">
             <table>
                 <caption>Danh sách báo cáo bảng quảng cáo</caption>
                 <thead>
@@ -39,7 +82,7 @@
             </table>
         </div>
 
-        <div class="table-wrap" id="ads-location-report-table">
+        <div class="table-wrap" id="report-ads-location-table">
             <table>
                 <caption>Danh sách báo cáo điểm đặt quảng cáo</caption>
                 <thead>
@@ -57,7 +100,7 @@
             </table>
         </div>
 
-        <div class="table-wrap" id="location-report-table">
+        <div class="table-wrap" id="report-location-table">
             <table>
                 <caption>Danh sách báo cáo địa điểm</caption>
                 <thead>

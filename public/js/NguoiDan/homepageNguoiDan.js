@@ -62,10 +62,38 @@ $(document).ready(function () {
         new mapboxgl.Marker(marker[0]).setLngLat(coord).addTo(map);
     });
 
+
+    document.getElementById('geocodeForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const address = document.getElementById('address').value;
+
+        fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(address)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
+            .then(response => response.json())
+            .then(data => {
+                let center = data.features[0].center
+                map.flyTo({
+                    center: center,
+                    zoom: 20
+                })
+                // Create a new marker.
+                marker = new mapboxgl.Marker().setLngLat(center).addTo(map);
+                document.querySelector(".adInfo #data").style.display = 'none';
+                document.querySelectorAll("#sidebar")[0].style.width = "22%";
+                
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = '<p>Error during geocoding.</p>';
+            });
+    });
+
+
 });
 
 function closeNav() {
     document.getElementById("sidebar").style.width = "0";
+    marker.remove();
 }
 
 document.getElementById('details-popup').addEventListener('click', function () {
@@ -128,3 +156,10 @@ window.addEventListener('click', function (event) {
         popup.style.display = 'none';
     }
 });
+
+const script = document.getElementById('search-js');
+script.onload = function () {
+  mapboxsearch.autofill({
+    accessToken: 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w'
+  });
+};
