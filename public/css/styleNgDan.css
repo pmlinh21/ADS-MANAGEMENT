@@ -16,7 +16,7 @@ body {
     font-weight: 500;
 }
 
-#header {
+/* #header {
     background-color: #0B7B31;
     display: flex;
     justify-content: center;
@@ -27,7 +27,7 @@ body {
     position: fixed;
     width: 100%;
     z-index: 10;
-}
+} */
 
 .logo-link {
     display: flex;
@@ -47,6 +47,7 @@ body {
     background-color: #0B7B31;
     display: flex;
     padding: 0 0.5rem;
+    /* display: none; */
 }
 
 #headerNgDan .flex-container {
@@ -66,14 +67,16 @@ body {
 
 .homepageNgDan {
     height: calc(100% - 3.5rem);
-    position: relative;
-    background-color: #0B7B31;
+    position: absolute;
+    top: 3.5rem;
+    /* background-color: #0B7B31; */
 }
 
 .homepageNgDan #map {
     height: 100%;
     width: 100vw;
     z-index: 0;
+    position: fixed;
 }
 
 .mapboxgl-popup-tip {
@@ -95,9 +98,12 @@ body {
 }
 
 #sidebar {
-    height: calc(100% - 3.5rem);
+    height: 100%;
+    /* height: fit-content; */
     /* width: 0; */
     width: 28%;
+    min-width: 20rem;
+    max-width: 20rem;
     left: 0;
     position: fixed;
     top: 3.5rem;
@@ -153,11 +159,14 @@ body {
     vertical-align: middle;
     padding: 0.5rem 1rem;
     border-radius: 0 1rem 0 0;
-
+    display: flex;
+    gap: 0.5rem;
+    
 }
 
 span#sub {
     vertical-align: middle;
+    white-space: nowrap;
     /* margin-right: 5%; */
 }
 
@@ -411,14 +420,20 @@ label.required::after {
     background-color: #d9d9d9;
 }
 
-#other-report-popup .col-md-12{
+#other-report-popup .col-md-12,
+#my-report .col-md-12{
     display: flex;
     justify-content: end;
     gap: 0.8rem;
     margin-top: 0.5rem;
 }
 
-#other-report-popup .view-image{
+#my-report .col-md-12.location{
+    display: block
+}
+
+#other-report-popup .view-image,
+#my-report .view-image{
     background-color: #d9d9d9;
     margin-top: 0.5rem;
     display: flex;
@@ -430,24 +445,30 @@ label.required::after {
     border-radius: 0.3rem;
 }
 
-#other-report-popup .resolved{
+#other-report-popup .resolved,
+#my-report .resolved{
     background-color: #0B7B31;
 }
 
 #other-report-popup .resolved,
 #other-report-popup .unresolved,
-#other-report-popup .report-type {
+#other-report-popup .report-type,
+#my-report .resolved,
+#my-report .unresolved,
+#my-report .report-type {
     color: white;
     display: inline-block;
     padding: 0.15rem 0.5rem;
     border-radius: 0.2rem;
 }
 
-#other-report-popup .unresolved {
+#other-report-popup .unresolved,
+#my-report .unresolved {
     background-color: #BC0F24;
 }
 
-#other-report-popup .report-type {
+#other-report-popup .report-type,
+#my-report .report-type {
     background-color: #05ACF4;
 }
 

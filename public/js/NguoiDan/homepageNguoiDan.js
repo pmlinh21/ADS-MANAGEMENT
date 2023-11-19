@@ -131,13 +131,13 @@ function showSidebar(adsloc) {
     $(".locInfo .address").text(`${adsloc.address}, ${adsloc.ward}, ${adsloc.district}`)
 
 
-  $("#sidebar").on("click", '.detail-button', function () {
+  $("#sidebar .detail-button").on("click", function () {
     let str_id_ads = $(this).attr("class").split(" ")[1];
     let id_ads = parseInt(str_id_ads.split("-")[1])
     console.log(id_ads)
 
     const list_ads = JSON.parse(adsloc.list_ads)
-    ads = list_ads.filter(item => item.id_ads == id_ads)[0]
+    ads = list_ads?.filter(item => item.id_ads == id_ads)[0]
 
     let imagePath = (!ads.photo
       ? `../../../public/image/image-placeholder.jpg`
@@ -971,7 +971,7 @@ $(document).ready(function () {
       "lvduc@gmail.com",
       "0934567890",
       " Tôi muốn đăng ký quảng cáo tại đây. Xin hướng dẫn tôi qua quy trình đăng ký và các bước cần thực hiện để quảng cáo của tôi xuất hiện trên bản đồ.",
-      "",
+      "image1.png",
       "",
       "2023-08-12",
       "1",
@@ -1304,7 +1304,7 @@ $(document).ready(function () {
       "0836677889",
       "Quảng cáo tại góc đường thiếu ánh sáng ban đêm, tạo ra tình trạng an toàn không tốt. Yêu cầu sửa chữa để tránh tai nạn giao thông.",
       "",
-      "",
+      "image4.png",
       "2023-09-03",
       "1",
       "Gửi thông báo cho công ty quảng cáo, yêu cầu tăng cường ánh sáng xung quanh quảng cáo để đảm bảo an toàn giao thông."
@@ -1455,11 +1455,13 @@ $(document).ready(function () {
   // thay đổi kích thước bản đồ khi resize cửa sổ trình duyệt
   $(window).on('resize', function () {
     let windowHeight = $(window).height();
-    let headerHeight = $('#header').height();
+    let headerHeight = $('#headerNgDan').height();
     let mapHeight = windowHeight - headerHeight;
     $('#map').css('top', headerHeight);
+    $('#sidebar').css('top', headerHeight);
     // console.log(windowHeight, headerHeight, mapHeight)
     $('#map').height(mapHeight);
+    $('#sidebar').height(mapHeight);
   });
 
   // tạo bản đồ
@@ -1618,5 +1620,108 @@ $(document).ready(function () {
         const resultDiv = document.getElementById('result');
         resultDiv.innerHTML = '<p>Error during geocoding.</p>';
       });
+  })
+
+  $(".my-report").on("click", ()=>{
+    let email = localStorage.getItem('email');
+    email = (email) ? JSON.parse(email) : ''
+
+    let adsloc = localStorage.getItem('adsloc_report');
+    adsloc = (adsloc) ? JSON.parse(adsloc) : []
+    adsloc = adsloc.filter(item => item[5] == email)
+    adsloc = adsloc.map(item => {
+      const id = parseInt(item[2])
+      const info = NguoiDanAdsLoc.content.filter(item => item.id_ads_location == id)[0]
+      return [`${info.address}, phường ${info.ward}, quận ${info.id_district}`,
+    item[7], parseInt(item[3]), item[11], item[8], item[9], item[12]]
+    })
+    //  address, content, report_type, status, image1, image2, resolve, 
+
+    let ads = localStorage.getItem('ads_report');
+    ads = (ads) ? JSON.parse(ads) : []
+    ads = ads.filter(item => item[5] == email)
+    ads = ads.map(item => {
+      const id = parseInt(item[2])
+      const info = NguoiDanAdsLoc.content.filter(item => {
+        const result = item.list_ads?.filter(i => i.id_ads = id)
+        if (result?.length > 0)
+          return item
+      })[0]
+      return [`${info.address}, phường ${info.ward}, ${info.district}`,
+    item[7], parseInt(item[3]), item[11], item[8], item[9], item[12]]
+    })
+
+    let loc = localStorage.getItem('loc_report');
+    loc = (loc) ? JSON.parse(loc) : []
+    loc = loc.filter(item => item[8] == email)
+    loc = loc.map(item => {
+      if (!item[5])
+        return [item[4], item[10], parseInt(item[6]), item[14], item[11], item[12], item[15]]
+      else{
+        let ward = Ward.content.filter(i => i.id_ward == parseInt(item[5]))[0]
+        let district = ", quận " + ward.id_district
+        ward = ", phường " + ward.ward
+        return [ item[4] + ward + district, 
+        item[10], parseInt(item[6]), item[14], item[11], item[12], item[15]]
+      }
+    })
+
+    const list_report = [...adsloc, ...loc, ...ads]
+    console.log(list_report)
+
+    const note = list_report?.map(item => {
+      const statusClass = parseInt((item[14])) ? "resolved" : "unresolved";
+      const statusText = parseInt((item[14])) ? "Đã xử lí" : "Chưa xử lí"
+      var report_type = null;
+      if (item[2] == 1)
+        report_type = "Tố cáo sai phạm"
+      else if (item[2] == 2)
+        report_type = "Đăng kí nội dung"
+      else if (item[2] == 3)
+        report_type = "Đóng góp ý kiến"
+      else if (item[2] == 4)
+        report_type = "Giải đáp thắc mắc"
+
+      return {
+        statusClass: statusClass,
+        statusText: statusText,
+        report_type: report_type,
+        imagePath1: item[4] ? `../../../public/image/${item[4]}` : '',
+        imagePath2: item[5] ? `../../../public/image/${item[5]}` : ''
+      }
+  })
+
+  console.log(note)
+  // list_report.forEach((item, index) => console.log(item, note[index]))
+  var template = `
+  <% for (var i = 0; i < list_report?.length; i++) { %>
+    <div class="other-report row" >
+    <div class="col-md-12 location">
+        <strong>Địa điểm:</strong> <%= list_report[i][0] %>
+      </div>
+      <div class="col-md-12">
+        "<%= list_report[i][1] %> "
+      </div>
+      <div class="col-md-12 view-image">
+      <% if (note[i].imagePath1) { %>
+        <img class="col-md-6 image1" src="<%= note[i].imagePath1 %>">
+      <% } %>
+      <% if (note[i].imagePath2) { %>
+        <img class="col-md-6 image2" src="<%= note[i].imagePath2 %>">
+      <% } %>
+      </div>
+      <div class="col-md-12 ">
+          <div class = <%= note[i].statusClass %> >
+            <%= note[i].statusText %>
+          </div>
+          <div class = "report-type">
+            <%= note[i].report_type %>
+          </div>
+      </div>
+    </div>
+  <% } %>
+  `;
+  var rendered = ejs.render(template, { list_report, note });
+  $('#my-report .modal-body').html(rendered);
   })
 });
