@@ -60,9 +60,9 @@ function mapPopup(e) {
     //     }
     // }
 
-    if (document.querySelector("#select-location-map .chosen-address").textContent == "") {
-        document.querySelector("#select-location-map .chosen-address").style.display = "none";
-    }
+    // if (document.querySelector("#select-location-map .chosen-address").textContent == "") {
+    //     document.querySelector("#select-location-map .chosen-address").style.display = "none";
+    // }
 
     let div = document.createElement("div");
     div.className = "popup-background";

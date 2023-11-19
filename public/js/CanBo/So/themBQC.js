@@ -92,29 +92,28 @@ document.querySelector("#ads-image").addEventListener("change", function() {
 
 
 // open map popup
-function mapPopup(e) {
-    let id_adsLocation = e.value;
+function mapPopup() {
 
     document.querySelector("#select-location-map").style.display = "block";
-    for (let i = 0; i < adslocations.length; i++) {
-        if (id_adsLocation == adslocations[i][0]) {
-            let w, d, lat, lng;
-            lat = adslocations[i][1];
-            lng = adslocations[i][2];
-            for (let j = 0; j < wards.length; j++) {
-                if (wards[j][0] == adslocations[i][4]) {
-                    w = wards[j][1];
-                    d = wards[j][2];
-                    break;
-                }
-            }
-            document.querySelector("#select-location-map .chosen-address").textContent = "[" + lat + ", " + lng + "] " + adslocations[i][3] + ", Phường " + w + ", Quận " + d;
-            break;
-        }
-    }
-    if (document.querySelector("#select-location-map .chosen-address").textContent == "") {
-        document.querySelector("#select-location-map .chosen-address").style.display = "none";
-    }
+    // for (let i = 0; i < adslocations.length; i++) {
+    //     if (id_adsLocation == adslocations[i][0]) {
+    //         let w, d, lat, lng;
+    //         lat = adslocations[i][1];
+    //         lng = adslocations[i][2];
+    //         for (let j = 0; j < wards.length; j++) {
+    //             if (wards[j][0] == adslocations[i][4]) {
+    //                 w = wards[j][1];
+    //                 d = wards[j][2];
+    //                 break;
+    //             }
+    //         }
+    //         document.querySelector("#select-location-map .chosen-address").textContent = "[" + lat + ", " + lng + "] " + adslocations[i][3] + ", Phường " + w + ", Quận " + d;
+    //         break;
+    //     }
+    // }
+    // if (document.querySelector("#select-location-map .chosen-address").textContent == "") {
+    //     document.querySelector("#select-location-map .chosen-address").style.display = "none";
+    // }
 
     let div = document.createElement("div");
     div.className = "popup-background";

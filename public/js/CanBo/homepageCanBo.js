@@ -62,7 +62,7 @@ function createLayer(map, features){
   
    
   map.addLayer({
-  id: 'unclustered-point',
+  id: 'unclustered-point', 
   type: 'circle',
   source: 'adsloc',
   filter: ['!', ['has', 'point_count']],
@@ -717,6 +717,16 @@ else if (role === 1) {
 }
 else{
   $("#select-ward").hide();
+  info = AdsLocation.content.map(function(data){
+      let {id_ads_location, address, ward, loc_type, ads_type, 
+        photo, is_zoning, longitude, latitude, hasAds, hasReport} = data
+      let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
+      id_ads_location = parseInt(id_ads_location)
+      return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, 
+        photo, longitude, latitude, is_zoning,  hasAds, hasReport]
+  })
+    // console.log(info)
+  createMarker(info, map);
 }
 
 let marker = new mapboxgl.Marker();
