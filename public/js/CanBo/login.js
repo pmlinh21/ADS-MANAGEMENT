@@ -1,8 +1,40 @@
 $(document).ready(function () {
-    localStorage.clear()
+  var keysToKeep = ["cbphuong", "cbso", "cbquan"];
+for (var i = 0; i < localStorage.length; i++) {
+  var key = localStorage.key(i);
+  if (!keysToKeep.includes(key)) {
+    localStorage.removeItem(key);
+  }
+}
+
+    let cbphuong = [
+      ['21127341@student.hcmus.edu.vn', 'Ngô Ngọc Liên', '123@nhomsau', '0903342521', '2002-06-25', 25],
+      ['21127350@student.hcmus.edu.vn', 'Nguyễn Cao Luận', '123@nhomsau', '0987654321', '1989-05-02', 32],
+      ['21127637@student.hcmus.edu.vn', 'Phan Mỹ Linh', '123@nhomsau', '0781122345', '1998-08-06', 9],
+      ['cbphuong1@gmail.com', 'Trần Đăng Khôi', '123@nhomsau', '0903112233', '1986-10-14', 1],
+      ['cbphuong2@gmail.com', 'Phạm Ngọc Nga', '123@nhomsau', '0978543210', '1993-08-30', 3],
+      ['cbphuong3@gmail.com', 'Nguyễn Hải Đăng', '123@nhomsau', '0912345678', '1992-03-05', 4],
+      ['cbphuong4@gmail.com', 'Nguyễn Minh Huy', '123@nhomsau', '0945321654', '1990-04-23', 5],
+      ['phuong@gmail.com', 'Nguyễn Trần Hồng Phúc', '123@nhomsau', '0900012345', '1995-04-01', 2]
+  ];
+
+    let cbso = [['so@gmail.com', 'Ngô Ngọc Liên', '123@nhomsau', '0903342521', '2002-06-25'],
+    ['21127672@student.hcmus.edu.vn', 'Nguyễn Trần Hồng Phúc', '123@nhomsau', '0987654321', '1989-05-02'],
+    ['21127637@student.hcmus.edu.vn', 'Phan Mỹ Linh', '123@nhomsau', '0781122345', '1998-08-06'],
+    ['21127350@student.hcmus.edu.vn', 'Nguyễn Cao Luận', '123@nhomsau', '0903112233', '1986-10-14']]
+
+    
+    const cbquan = [['quan@gmail.com', 'Nguyễn Trần Minh Anh', '123@nhomsau', '0903342521', '2002-06-25', 1],
+    ['nthphuc21@clc.fitus.edu.vn', 'Phan Đức Long', '123@nhomsau', '0987654321', '1989-05-02', 1],
+    ['pmlinh21@clc.fitus.edu.vn', 'Ngô Minh Tuấn', '123@nhomsau', '0781122345', '1998-08-06', 3],
+    ['ncluan21@clc.fitus.edu.vn', 'Nguyễn Hồng Nhung', '123@nhomsau', '0903112233', '1986-10-14', 3]]
+
+
+    localStorage.setItem('cbquan', JSON.stringify(cbquan));
+    localStorage.setItem('cbphuong', JSON.stringify(cbphuong));
+    localStorage.setItem('cbso', JSON.stringify(cbso));
 
     const loginBtn = $('#login-button');
-    
     loginBtn.on('click', function (e) {
         e.preventDefault();
 
@@ -908,16 +940,12 @@ $(document).ready(function () {
                     ]
                   ]
 
-                const cbquan = [['quan@gmail.com', 'Nguyễn Trần Minh Anh', '123@nhomsau', '0903342521', '2002-06-25', 1],
-                ['nthphuc21@clc.fitus.edu.vn', 'Phan Đức Long', '123@nhomsau', '0987654321', '1989-05-02', 1],
-                ['pmlinh21@clc.fitus.edu.vn', 'Ngô Minh Tuấn', '123@nhomsau', '0781122345', '1998-08-06', 3],
-                ['ncluan21@clc.fitus.edu.vn', 'Nguyễn Hồng Nhung', '123@nhomsau', '0903112233', '1986-10-14', 3]]
 
                 localStorage.setItem('ads_create', JSON.stringify(QuanAdsCreate));
                 localStorage.setItem('ads_report', JSON.stringify(QuanAdsReport));
                 localStorage.setItem('ads_loc_report', JSON.stringify(QuanAdsLocReport));
                 localStorage.setItem('loc_report', JSON.stringify(QuanLocReport));
-                localStorage.setItem('cbquan', JSON.stringify(cbquan));
+                
             }
                 
             if (email == "phuong@gmail.com"){
@@ -1015,27 +1043,10 @@ $(document).ready(function () {
                     [7, '', null, 10.9448, 106.818,	"51 Hồ Hảo Hớn", 1, 'Đỗ Thị Thanh Thảo',	'dtthao@gmail.com', '0921122334', 'Địa điểm có gắn quảng cáo trái phép, chưa đăng ký hợp pháp', '', '', "2023-09-08 00:00:00", 0, '', 5]
                 ];
                 localStorage.setItem('loc_report', JSON.stringify(loc_report));
-
-                let cbphuong = [
-                    ['21127341@student.hcmus.edu.vn', 'Ngô Ngọc Liên', '123@nhomsau', '0903342521', '2002-06-25', 25],
-                    ['21127350@student.hcmus.edu.vn', 'Nguyễn Cao Luận', '123@nhomsau', '0987654321', '1989-05-02', 32],
-                    ['21127637@student.hcmus.edu.vn', 'Phan Mỹ Linh', '123@nhomsau', '0781122345', '1998-08-06', 9],
-                    ['cbphuong1@gmail.com', 'Trần Đăng Khôi', '123@nhomsau', '0903112233', '1986-10-14', 1],
-                    ['cbphuong2@gmail.com', 'Phạm Ngọc Nga', '123@nhomsau', '0978543210', '1993-08-30', 3],
-                    ['cbphuong3@gmail.com', 'Nguyễn Hải Đăng', '123@nhomsau', '0912345678', '1992-03-05', 4],
-                    ['cbphuong4@gmail.com', 'Nguyễn Minh Huy', '123@nhomsau', '0945321654', '1990-04-23', 5],
-                    ['phuong@gmail.com', 'Nguyễn Trần Hồng Phúc', '123@nhomsau', '0900012345', '1995-04-01', 2]
-                ];
-                localStorage.setItem('cbphuong', JSON.stringify(cbphuong)); 
             }
             if (email == "so@gmail.com"){
                 localStorage.setItem('role', '3');
                 localStorage.setItem('email', email);
-
-                const cbso = [['so@gmail.com', 'Ngô Ngọc Liên', '123@nhomsau', '0903342521', '2002-06-25'],
-                ['21127672@student.hcmus.edu.vn', 'Nguyễn Trần Hồng Phúc', '123@nhomsau', '0987654321', '1989-05-02'],
-                ['21127637@student.hcmus.edu.vn', 'Phan Mỹ Linh', '123@nhomsau', '0781122345', '1998-08-06'],
-                ['21127350@student.hcmus.edu.vn', 'Nguyễn Cao Luận', '123@nhomsau', '0903112233', '1986-10-14']]
             }
             window.location.href = "/";
         }
@@ -1046,14 +1057,15 @@ $(document).ready(function () {
       const email = $('#email').val();
       $(".login-form").hide()
       $(".user-icon").hide()
-      
-      if (email != ""){
+
+      if (email != "" && (email == "phuong@gmail.com" || email == "quan@gmail.com" || email == "so@gmail.com")){
         $('#email').val("");
         window.location.href = '/forget-pass?email=' + email;
-      } else{
+      } else if (email != ""){
         $(".enter-email-form").show()
         $(".key-icon").show()
-      }
+      } else if (email == "phuong@gmail.com" || email == "quan@gmail.com" || email == "so@gmail.com")
+        alert("Email không được liên kết với bất cứ tài khoản nào")
     })
 
     $(".enter-email-form").on("click", " .style2-button", function(){
@@ -1068,6 +1080,8 @@ $(document).ready(function () {
       const email = $('#enter-email').val();
       if (email == "")
         alert ("Nhập email để thay đổi mật khẩu")
+      else if ((email != "phuong@gmail.com" && email != "quan@gmail.com" && email != "so@gmail.com"))
+        alert ("Email không được liên kết với bất cứ tài khoản nào")
       else{
         $('#enter-email').val("");
         window.location.href = '/forget-pass?email=' + email

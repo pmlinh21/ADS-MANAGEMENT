@@ -390,31 +390,50 @@ $(document).ready(function() {
           // Xử lý lỗi nếu cần
         });
     }
+    console.log(info)
     
     if (info.length > 0) {
       $('#id_loc_report').val(info[0]);
-      if (role == 2)
+      if (role == 2){
         $('#address').val(info[5]);
-      else if (role == 1){
-        $('#address').val(info[18]);
+        $('#report_type').val(report_type[info[6] - 1][1]);
+        $('#name').val(info[7]);
+        $('#email').val(info[8]);
+        $('#phone').val(info[9]);
+        $('#report').val(info[10]);
+        $('#time').val(formatDate(info[13]));
+        if (info[14] === 1) {
+          $('#statusProcessed').prop('checked', true);
+          $('#statusPending').prop('disabled', true);
+        } else {
+          $('#statusPending').prop('checked', true);
+        }
+        $('#method').val(info[15]);
+        $('.image-report-1').attr('src', info[9] ? `../../../../public/image/${info[11]}` : `../../../../public/image/image-placeholder.jpg`);
+        $('.image-report-2').attr('src', info[10] ? `../../../../public/image/${info[12]}` : `../../../../public/image/image-placeholder.jpg`);
+
+      } else if (role == 1){
+        $('#address').val(`${info[18]}, phường ${info[17]}`);
+        $('#report_type').val(info[16]);
+        $('#name').val(info[6]);
+        $('#email').val(info[7]);
+        $('#phone').val(info[8]);
+        $('#report').val(info[9]);
+        $('#time').val(formatDate(info[12]));
+        if (info[13] === 1) {
+          $('#statusProcessed').prop('checked', true);
+          $('#statusPending').prop('disabled', true);
+        } else {
+          $('#statusPending').prop('checked', true);
+        }
+        $('#method').val(info[14]);
+        $('.image-report-1').attr('src', info[10] ? `../../../../public/image/${info[10]}` : `../../../../public/image/image-placeholder.jpg`);
+        $('.image-report-2').attr('src', info[11] ? `../../../../public/image/${info[11]}` : `../../../../public/image/image-placeholder.jpg`);
       }
-      $('#report_type').val(report_type[info[6] - 1][1]);
-      $('#name').val(info[7]);
-      $('#email').val(info[8]);
-      $('#phone').val(info[9]);
-      $('#report').val(info[10]);
-      $('#time').val(formatDate(info[13]));
+    
       $('#officer').val(info[1]);
       $('#office').val(info[2] === 1 ? "Quận" : (info[2] === 2 ? "Phường" : ""));
-      if (info[14] === 1) {
-        $('#statusProcessed').prop('checked', true);
-        $('#statusPending').prop('disabled', true);
-      } else {
-        $('#statusPending').prop('checked', true);
-      }
-      $('#method').val(info[15]);
-      $('.image-report-1').attr('src', info[9] ? `../../../../public/image/${info[11]}` : '');
-      $('.image-report-2').attr('src', info[10] ? `../../../../public/image/${info[12]}` : '');
+       
     }
 
     $('.style1-button').on('click', function() {

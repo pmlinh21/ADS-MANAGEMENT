@@ -361,7 +361,8 @@ button:active{
 .modal-header {
     justify-content: center;
     border: none;
-    padding-bottom: 0
+    padding-bottom: 0;
+    color: #0B7B31
 }
 
 .modal-body {
