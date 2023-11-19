@@ -23,6 +23,23 @@
             </button>
       </div>
       </div>
+      <div class="diem-bat-ky" style = "display: none">
+        <i class="fa-solid fa-location-dot"></i> Thông tin địa điểm
+        <div class = "data">
+          <p class="place"></p>
+          <p class="address"></p>
+        </div>
+        <div class = "button-group">
+            <button data-target="#report-popup" data-toggle="modal" 
+            class="btn style3-button report-button">
+              <i class="fa-solid fa-flag"></i> Báo cáo
+            </button>
+            <button data-target="#other-report-popup" data-toggle="modal" 
+            class="btn style1-button other-report-button">
+              <i class="fa-solid fa-eye"></i> Xem báo cáo
+            </button>
+      </div>
+      </div>
       <button type = "button" class="btn close-button btn-sm" role="button"
        > <i class="fa-solid fa-arrow-left"></i> Close
     </button>
@@ -136,7 +153,27 @@
     </div>
     </div>
 
-
+    <div class="modal fade" id="other-report-popup" tabindex="-1" role="dialog" aria-labelledby="edit-request" 
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header ">
+            <h5 class="modal-title" id="edit-request">TỔNG HỢP BÁO CÁO VI PHẠM </h5>
+        </div>
+        <div class="modal-body">
+          
+        </div>
+        <div class="modal-footer">
+          <div class = "other-symbol">
+            <i class="fa-solid fa-circle"></i> Báo cáo của người khác
+          </div>
+          <div class = "mine-symbol">
+            <i class="fa-solid fa-circle"></i> Báo cáo của bạn
+          </div>
+        </div>
+        </div>
+    </div>
+    </div>
     <!-- toggle switch -->
     <div class="flex-container">
       <label class="switch">
