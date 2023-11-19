@@ -47,8 +47,8 @@ function renderReport(list_report, container, user_email) {
             statusClass: statusClass,
             statusText: statusText,
             report_type: report_type,
-            imagePath1: item[8] ? `../../../public/image/${item[8]}` : '',
-            imagePath2: item[9] ? `../../../public/image/${item[9]}` : ''
+            imagePath1: item[8] ? `../image/${item[8]}` : '',
+            imagePath2: item[9] ? `../image/${item[9]}` : ''
         }
     })
     console.log(note)
@@ -140,8 +140,8 @@ function showSidebar(adsloc) {
         ads = list_ads?.filter(item => item.id_ads == id_ads)[0]
 
         let imagePath = (!ads.photo
-            ? `../../../public/image/image-placeholder.jpg`
-            : `../../../public/image/${ads.photo}`)
+            ? `../image/image-placeholder.jpg`
+            : `../image/${ads.photo}`)
         $("#detail-popup .image img").attr("src", imagePath)
         $("#detail-popup .expired-date").text("Ngày hết hạn hợp đồng: " + validateSQLDate(ads.expired_date))
         console.log(imagePath)
@@ -498,9 +498,9 @@ function createMarker(info, map) {
             colorMarker = '#0B7B31';
         let imagePath
         if (item[7] != "")
-            imagePath = "../../../public/image/" + item[7]
+            imagePath = "../image/" + item[7]
         else
-            imagePath = "../../../public/image/image-placeholder.jpg"
+            imagePath = "../image/image-placeholder.jpg"
         // console.log(imagePath)
 
         return {
@@ -1685,8 +1685,8 @@ $(document).ready(function () {
                 statusClass: statusClass,
                 statusText: statusText,
                 report_type: report_type,
-                imagePath1: item[4] ? `../../../public/image/${item[4]}` : '',
-                imagePath2: item[5] ? `../../../public/image/${item[5]}` : ''
+                imagePath1: item[4] ? `../image/${item[4]}` : '',
+                imagePath2: item[5] ? `../image/${item[5]}` : ''
             }
         })
 
