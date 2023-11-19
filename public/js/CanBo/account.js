@@ -175,7 +175,7 @@ $(document).ready(function() {
             <div style="margin-top: 9rem"></div>
         `;
         const btnBack = `
-            <button type="button" class="btn style2-button btn-back" style="margin-left: 26.3rem;">Quay lại</button>
+            <button type="button" class="btn style2-button btn-back" style="margin-left: 27.5rem;">Quay lại</button>
         `
         $('.form-forget').html(formHtml).addClass('visible');
         const pos = document.querySelector('.btn-pass');

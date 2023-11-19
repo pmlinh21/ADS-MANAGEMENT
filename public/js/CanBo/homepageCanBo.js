@@ -755,7 +755,6 @@ let marker = new mapboxgl.Marker();
   });
 
 })
-
 // api
 // $(document).ready(function () {
 //     // 2 = Quan, 1 = Phuong, 3 = Sở
