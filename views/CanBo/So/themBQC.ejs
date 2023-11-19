@@ -16,7 +16,7 @@
                 </div> -->
                 <div class="input-field">
                     <label for="id-ads-location">ID Điểm đặt</label>
-                    <input type="text" id="id-ads-location" name="id-ads-location" onclick=mapPopup(this) readonly>
+                    <input type="text" id="id-ads-location" name="id-ads-location" onclick=mapPopup() readonly>
                     <span class="tooltiptext">Chỉnh sửa bằng tọa độ</span>
                 </div>
                 <div class="input-field">
@@ -54,7 +54,7 @@
                 </div>
             </div>
             <div class="button-container">
-                <button type="button" value="update" class="button button-delete">Thêm bảng</button>
+                <button type="button" value="update" class="button">Thêm bảng</button>
             </div>
         </form>
 
@@ -65,14 +65,16 @@
                     <input type="text" id="search">
                     <i class="fas fa-search"></i>
                 </span>
-                
             </div>
+            <div class="map" id="map"></div>
             <div class="popupmap-footer">
-                <div class="chosen-address"></div>
+                <div class="chosen-address" id="chosen-address" style="z-index: 1000;"></div>
                 <button>Xác nhận</button>
             </div>
         </div>
+
     </div>
 </div>
+<script src="../../../public/js/CanBo/So/viewmap.js"></script>
 <script src="../../../public/js/CanBo/So/themBQC.js"></script>
 <%- include('../../partial/footerSo.ejs') %>

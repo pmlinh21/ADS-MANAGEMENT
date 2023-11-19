@@ -62,7 +62,7 @@ function createLayer(map, features){
   
    
   map.addLayer({
-  id: 'unclustered-point',
+  id: 'unclustered-point', 
   type: 'circle',
   source: 'adsloc',
   filter: ['!', ['has', 'point_count']],
@@ -313,6 +313,7 @@ function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
 }
 
 function renderReport(list_report, container) {
+function renderReport(list_report, container) {
   // list_report = JSON.parse(list_report);
   console.log("list_report: ", list_report)
   const note = list_report?.map(item => {
@@ -407,6 +408,7 @@ function showSidebar(adsloc) {
     list_report = list_report.filter(item => item[3] == id_ads)
 
     renderReport(list_report, "#other-report-popup .modal-body")
+    renderReport(list_report, "#other-report-popup .modal-body")
   })
 
   $("#sidebar .locInfo .other-report-button").on("click", function () {
@@ -418,6 +420,7 @@ function showSidebar(adsloc) {
       list_report = list_report.filter(item => item[3] == adsloc.id_ads_location)
       console.log(list_report)
       renderReport(list_report, "#other-report-popup .modal-body")
+      renderReport(list_report, "#other-report-popup .modal-body")
     } else{
       let tmp = localStorage.getItem('loc_report')
       let list_report = (tmp) ? JSON.parse(tmp) : [];
@@ -425,6 +428,7 @@ function showSidebar(adsloc) {
       list_report = list_report.filter(item => 
         (item[3] == adsloc.longitude && item[4] == adsloc.latitude) || (item[5]) == adsloc.address)
         console.log(list_report)
+      renderReport(list_report, "#other-report-popup .modal-body")
       renderReport(list_report, "#other-report-popup .modal-body")
     }
     
@@ -713,6 +717,16 @@ else if (role === 1) {
 }
 else{
   $("#select-ward").hide();
+  info = AdsLocation.content.map(function(data){
+      let {id_ads_location, address, ward, loc_type, ads_type, 
+        photo, is_zoning, longitude, latitude, hasAds, hasReport} = data
+      let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
+      id_ads_location = parseInt(id_ads_location)
+      return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, 
+        photo, longitude, latitude, is_zoning,  hasAds, hasReport]
+  })
+    // console.log(info)
+  createMarker(info, map);
 }
 
 let marker = new mapboxgl.Marker();

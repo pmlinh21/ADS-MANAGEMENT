@@ -188,33 +188,27 @@ $(document).ready(function(){
         });
     }
     
-    const filtered_loc_report = loc_report.filter(row => row[15] === id_ward);
+    const filtered_loc_report = loc_report.filter(row => row[16] === id_ward);
     filtered_loc_report.forEach(function(row) {
-        let report_type_index = row[5] - 1;
+        let report_type_index = row[6] - 1;
         let report_type_text = report_type[report_type_index][1];
     
-        getAddressFromCoordinates(row[3], row[4], function(address) {
-            row[3] = address;
-            row[5] = report_type_text;
-            row[12] = formatDate(row[12]);
-            row[13] = row[13] === 1 ? "Đã xử lý" : "Chưa xử lý";
-    
-            // Sau khi cập nhật giá trị địa chỉ, cập nhật dữ liệu cho DataTable
-            $('#example3').DataTable().clear().rows.add(filtered_loc_report).draw();
-        });
+        row[6] = report_type_text;
+        row[13] = formatDate(row[13]);
+        row[14] = row[14] === 1 ? "Đã xử lý" : "Chưa xử lý";
     });
     
     $('#example3').DataTable({
         data: filtered_loc_report,
         columns: [
             { title: "ID Báo cáo", data: 0 },
-            { title: "Địa chỉ", class: "diachi", data: 3 },
-            { title: "Loại hình báo cáo", class: "diachi", data: 5 },
-            { title: "Người báo cáo", data: 6 },
-            { title: "Email", data: 7 },
-            // { title: "Số điện thoại", data: 8 },
-            { title: "Thời điểm gửi", class: "diachi", data: 12 },
-            { title: "Trạng thái", class: "diachi", data: 13 },
+            { title: "Địa chỉ", class: "diachi", data: 5 },
+            { title: "Loại hình báo cáo", class: "diachi", data: 6 },
+            { title: "Người báo cáo", data: 7 },
+            { title: "Email", data: 8 },
+            // { title: "Số điện thoại", data: 9 },
+            { title: "Thời điểm gửi", class: "diachi", data: 13 },
+            { title: "Trạng thái", class: "diachi", data: 14 },
             { title: "", render: function() {
                 return '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>';
             } }
