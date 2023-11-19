@@ -575,6 +575,10 @@ input:checked+.slider:before {
   font-size: 0.8rem
 }
 
+.other-report {
+  background-color: #d9d9d9;
+}
+
 #other-report-popup .col-md-12{
     display: flex;
     justify-content: end;

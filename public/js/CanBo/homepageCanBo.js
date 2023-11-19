@@ -314,10 +314,9 @@ function renderReport(list_report, container, user_email) {
   // list_report = JSON.parse(list_report);
   console.log("list_report: ", list_report)
   const note = list_report?.map(item => {
-    const is_user = (item[5] === user_email) ? "mine" : "other"
-    const statusClass = parseInt((item[11])) ? "resolved" : "unresolved";
-    const statusText = parseInt((item[11])) ? "Đã xử lí" : "Chưa xử lí"
-    const id_report_type = parseInt((item[3]))
+    const statusClass = parseInt((item[12])) ? "resolved" : "unresolved";
+    const statusText = parseInt((item[12])) ? "Đã xử lí" : "Chưa xử lí"
+    const id_report_type = parseInt((item[4]))
     var report_type = null;
     if (id_report_type == 1)
       report_type = "Tố cáo sai phạm"
@@ -329,21 +328,20 @@ function renderReport(list_report, container, user_email) {
       report_type = "Giải đáp thắc mắc"
 
     return {
-      is_user: is_user,
       statusClass: statusClass,
       statusText: statusText,
       report_type: report_type,
-      imagePath1: item[8] ? `../../public/image/${item[8]}` : '',
-      imagePath2: item[9] ? `../../public/image/${item[9]}` : ''
+      imagePath1: item[8] ? `../../public/image/${item[9]}` : '',
+      imagePath2: item[9] ? `../../public/image/${item[10]}` : ''
     }
   })
   console.log(note)
   // list_report.forEach((item, index) => console.log(item, note[index]))
   var template = `
   <% for (var i = 0; i < list_report?.length; i++) { %>
-    <div class="<%=note[i].is_user%>-report row" >
+    <div class="other-report row" >
       <div class="col-md-12">
-        <%= list_report[i][7] %>
+        <%= list_report[i][8] %>
       </div>
       <div class="col-md-12 view-image">
       <% if (note[i].imagePath1) { %>
@@ -400,10 +398,11 @@ function showSidebar(adsloc) {
   $("#sidebar .adInfo .other-report-button").on("click", function () {
     let str_id_ads = $(this).closest(".button-group").attr("class").split(" ")[1];
     let id_ads = parseInt(str_id_ads.split("-")[1])
-
+    console.log("id_ads: ", id_ads)
     let tmp = localStorage.getItem('ads_report')
-    let list_report = (tmp) ? JSON.parse(tmp) : []
-    list_report = list_report.filter(item => item[2] == id_ads)
+    let list_report = (tmp) ? JSON.parse(tmp) : [];
+    console.log("list_report: ", list_report);
+    list_report = list_report.filter(item => item[3] == id_ads)
 
     const user_email = localStorage.getItem('email');
     console.log("user_email: ", user_email)
@@ -487,9 +486,15 @@ if (role === 2) {
   cb = cbphuong.find(item => item[0] === email);
   const id_ward = cb[5];
 
-  let ward_2 = [
+  let phuong = [
     [1, 'Bến Nghé', '1'], [2, 'Bến Thành', '1'], [3, 'Cầu Kho', '1'], [4, 'Cầu Ông Lãnh', '1'], [5, 'Cô Giang', '1'], 
-    [6, 'Đa Kao', '1'], [7, 'Nguyễn Cư Trinh', '1'], [8, 'Nguyễn Thái Bình', '1'], [9, 'Phạm Ngũ Lão', '1'], [10, 'Tân Định', '1']
+    [6, 'Đa Kao', '1'], [7, 'Nguyễn Cư Trinh', '1'], [8, 'Nguyễn Thái Bình', '1'], [9, 'Phạm Ngũ Lão', '1'], [10, 'Tân Định', '1'], 
+    [11, 'An Khánh', '2'], [12, 'An Lợi Đông', '2'], [13, 'An Phú', '2'], [14, 'Bình An', '2'], [15, 'Bình Khánh', '2'], 
+    [16, 'Cát Lái', '2'], [17, 'Thạnh Mỹ Lợi', '2'], [18, 'Thảo Điền', '2'], [19, 'Thủ Thiêm', '2'], [20, 'Bình Trưng Đông', '2'], 
+    [21, '1', '3'], [22, '2', '3'], [23, '3', '3'], [24, '4', '3'], [25, '5', '3'], [26, '9', '3'], [27, '10', '3'],
+    [28, '11', '3'], [29, '12', '3'], [30, '13', '3'], [31, '14', '3'], [32, 'Võ Thị Sáu', '3'],
+    [33, '1', '4'], [34, '2', '4'], [35, '3', '4'], [36, '4', '4'], [37, '6', '4'], [38, '8', '4'], [39, '9', '4'], [40, '10', '4'],
+    [41, '13', '4'], [42, '14', '4'], [43, '15', '4'], [44, '16', '4'], [45, '18', '4']
   ];
 
   var info = NguoiDanAdsLoc.content.map(function (item) {
@@ -502,11 +507,8 @@ if (role === 2) {
   })
 
   let filteredInfo = info.filter(function(item) {
-    for (let i = 0; i < ward_2.length; i++) {
-        let ward_text = ward_2[i][1];
-        if (item[2] === ward_text) {
-          return true;
-        }
+    if (item[2] === phuong[id_ward-1][1]) {
+      return true;
     }
     return false;
   });
