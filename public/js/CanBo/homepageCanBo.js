@@ -312,7 +312,7 @@ function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
 
 function renderReport(list_report, container, user_email) {
   // list_report = JSON.parse(list_report);
-  console.log(list_report)
+  console.log("list_report: ", list_report)
   const note = list_report?.map(item => {
     const is_user = (item[5] === user_email) ? "mine" : "other"
     const statusClass = parseInt((item[11])) ? "resolved" : "unresolved";
@@ -333,8 +333,8 @@ function renderReport(list_report, container, user_email) {
       statusClass: statusClass,
       statusText: statusText,
       report_type: report_type,
-      imagePath1: item[8] ? `../../../public/image/${item[8]}` : '',
-      imagePath2: item[9] ? `../../../public/image/${item[9]}` : ''
+      imagePath1: item[8] ? `../../public/image/${item[8]}` : '',
+      imagePath2: item[9] ? `../../public/image/${item[9]}` : ''
     }
   })
   console.log(note)
@@ -405,16 +405,13 @@ function showSidebar(adsloc) {
     let list_report = (tmp) ? JSON.parse(tmp) : []
     list_report = list_report.filter(item => item[2] == id_ads)
 
-    const user_email = localStorage.getItem('email')
-      ? JSON.parse(localStorage.getItem('email'))
-      : ""
+    const user_email = localStorage.getItem('email');
+    console.log("user_email: ", user_email)
     renderReport(list_report, "#other-report-popup .modal-body", user_email)
   })
 
   $("#sidebar .locInfo .other-report-button").on("click", function () {
-    const user_email = localStorage.getItem('email')
-      ? JSON.parse(localStorage.getItem('email'))
-      : ""
+    const user_email = localStorage.getItem('email');
 
     if (adsloc.id_ads_location) {
       let tmp = localStorage.getItem('adsloc_report')
