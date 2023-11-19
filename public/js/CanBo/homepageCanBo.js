@@ -129,6 +129,16 @@ function createLayer(map, features){
   });
 
   });
+  // nhấn vào điểm đặt
+  map.on('mousedown', 'unclustered-point', (e) => {
+    const feature = e.features[0];
+    if (feature.popup) {
+      feature.popup.remove();
+      delete feature.popup;
+    }
+
+    showSidebar(e.features[0].properties);
+  })
 }
 
 function createMarker(info, map){
@@ -194,6 +204,243 @@ function createMarker(info, map){
   }
 }
 
+function createMarker_2(info, map) {
+  const quangcao = $('#quangcao').prop("checked")
+  const baocao = $('#baocao').prop("checked")
+  const chuaquyhoach = $('#quyhoach').prop("checked")
+  // console.log(quangcao, baocao, chuaquyhoach)
+
+  const features = info.map(item => {
+    let colorMarker
+    if (item[12] && baocao)
+      colorMarker = 'red';
+    else if (item[10] == 0 && chuaquyhoach) // chưa quy hoạch
+      colorMarker = 'purple';
+    else if (item[11] && quangcao)
+      colorMarker = 'blue';
+    else
+      colorMarker = '#0B7B31';
+    let imagePath
+    if (item[7] != "")
+      imagePath = "../../../public/image/" + item[7]
+    else
+      imagePath = "../../../public/image/image-placeholder.jpg"
+    // console.log(imagePath)
+
+    return {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [item[8], item[9]]
+      },
+      properties: {
+        colorMarker,
+        id_ads_location: item[0],
+        address: item[1],
+        ward: item[2],
+        district: item[3],
+        loc_type: item[4],
+        ads_type: item[5],
+        zoning_text: item[6],
+        imagePath,
+        longitude: item[8],
+        latitude: item[9],
+        is_zoning: item[10],
+        list_ads: item[11],
+        list_report: item[12]
+      }
+    }
+  });
+  const existingSource = map.getSource('adsloc');
+  if (existingSource) {
+    map.removeLayer('unclustered-point');
+    map.removeLayer('cluster-count');
+    map.removeLayer('clusters');
+    map.removeSource('adsloc');
+
+    createLayer(map, features)
+
+  } else {
+    map.on('load', () => {
+      createLayer(map, features)
+    });
+  }
+}  
+
+function validateSQLDate(dateString) {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  const formattedDate = `${day}-${month}-${year}`;
+  return formattedDate;
+}
+
+var flag = false;
+// hiển thị danh sách các bảng quảng cáo
+function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
+  list_ads = JSON.parse(list_ads)
+  var template = `
+  <i class="fa-solid fa-circle-info" style="color: #05ACF4; margin-bottom:1rem"></i> 
+  Thông tin bảng quảng cáo
+
+  <% for (var i = 0; i < list_ads?.length; i++) { %>
+      <div id="data-<%= list_ads[i].id_ads %>">
+          <p style="width: 90%;font-size: 1rem; margin-bottom: 0.3rem"><strong><%= list_ads[i].board_type %></strong></p>
+          <p style="font-size: 0.7rem; color: gray; margin-bottom: 0.3rem"><%= address %>, phường <%= ward %>, <%= district %></p>
+          <p>Kích thước:  <strong><%= list_ads[i].width %>m x <%= list_ads[i].height %>m</strong></p>
+          <p>Số lượng:  <strong><%= list_ads[i].quantity %> trụ / bảng</strong></p>
+          <p>Hình thức:  <strong><%= ads_type %></strong></p>
+          <p>Phân loại:  <strong><%= loc_type %></strong></p>
+
+          <div class="detail-button data-<%= list_ads[i].id_ads %>" data-target="#detail-popup" data-toggle="modal">
+            <i class="fa-solid fa-circle-info"></i>
+          </div>
+
+          <div class = "button-group ads-<%= list_ads[i].id_ads %>">
+              <button data-target="#other-report-popup" data-toggle="modal" class="btn style1-button other-report-button">
+                <i class="fa-solid fa-eye"></i> Xem báo cáo
+              </button>
+          </div>
+      </div>
+  <% } %>
+  `;
+  var rendered = ejs.render(template, { list_ads, ads_type, address, loc_type, ward, district });
+  $(".adInfo").html(rendered);
+}
+
+function renderReport(list_report, container, user_email) {
+  // list_report = JSON.parse(list_report);
+  console.log(list_report)
+  const note = list_report?.map(item => {
+    const is_user = (item[5] === user_email) ? "mine" : "other"
+    const statusClass = parseInt((item[11])) ? "resolved" : "unresolved";
+    const statusText = parseInt((item[11])) ? "Đã xử lí" : "Chưa xử lí"
+    const id_report_type = parseInt((item[3]))
+    var report_type = null;
+    if (id_report_type == 1)
+      report_type = "Tố cáo sai phạm"
+    else if (id_report_type == 2)
+      report_type = "Đăng kí nội dung"
+    else if (id_report_type == 3)
+      report_type = "Đóng góp ý kiến"
+    else if (id_report_type == 4)
+      report_type = "Giải đáp thắc mắc"
+
+    return {
+      is_user: is_user,
+      statusClass: statusClass,
+      statusText: statusText,
+      report_type: report_type,
+      imagePath1: item[8] ? `../../../public/image/${item[8]}` : '',
+      imagePath2: item[9] ? `../../../public/image/${item[9]}` : ''
+    }
+  })
+  console.log(note)
+  // list_report.forEach((item, index) => console.log(item, note[index]))
+  var template = `
+  <% for (var i = 0; i < list_report?.length; i++) { %>
+    <div class="<%=note[i].is_user%>-report row" >
+      <div class="col-md-12">
+        <%= list_report[i][7] %>
+      </div>
+      <div class="col-md-12 view-image">
+      <% if (note[i].imagePath1) { %>
+        <img class="col-md-6 image1" src="<%= note[i].imagePath1 %>">
+      <% } %>
+      <% if (note[i].imagePath2) { %>
+        <img class="col-md-6 image2" src="<%= note[i].imagePath2 %>">
+      <% } %>
+      </div>
+      <div class="col-md-12 ">
+          <div class = <%= note[i].statusClass %> >
+            <%= note[i].statusText %>
+          </div>
+          <div class = "report-type">
+            <%= note[i].report_type %>
+          </div>
+      </div>
+    </div>
+  <% } %>
+  `;
+  var rendered = ejs.render(template, { list_report, email, note });
+  $(container).html(rendered);
+}
+
+// hiển thị sidebar và bắt sự kiện trên sidebar
+function showSidebar(adsloc) {
+  $(".flex-container.toggle").hide();
+  $('#sidebar').show()
+  renderAds(adsloc)
+  flag = true;
+
+  if (adsloc.id_ads_location)
+    $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, ${adsloc.district}`)
+  else
+    $(".locInfo .address").text(`${adsloc.address}, ${adsloc.ward}, ${adsloc.district}`)
+
+
+  $("#sidebar .detail-button").on("click", function () {
+    let str_id_ads = $(this).attr("class").split(" ")[1];
+    let id_ads = parseInt(str_id_ads.split("-")[1])
+    console.log(id_ads)
+
+    const list_ads = JSON.parse(adsloc.list_ads)
+    ads = list_ads?.filter(item => item.id_ads == id_ads)[0]
+
+    let imagePath = (!ads.photo
+      ? `../../../public/image/image-placeholder.jpg`
+      : `../../../public/image/${ads.photo}`)
+    $("#detail-popup .image img").attr("src", imagePath)
+    $("#detail-popup .expired-date").text("Ngày hết hạn hợp đồng: " + validateSQLDate(ads.expired_date))
+    console.log(imagePath)
+  })
+
+  $("#sidebar .adInfo .other-report-button").on("click", function () {
+    let str_id_ads = $(this).closest(".button-group").attr("class").split(" ")[1];
+    let id_ads = parseInt(str_id_ads.split("-")[1])
+
+    let tmp = localStorage.getItem('ads_report')
+    let list_report = (tmp) ? JSON.parse(tmp) : []
+    list_report = list_report.filter(item => item[2] == id_ads)
+
+    const user_email = localStorage.getItem('email')
+      ? JSON.parse(localStorage.getItem('email'))
+      : ""
+    renderReport(list_report, "#other-report-popup .modal-body", user_email)
+  })
+
+  $("#sidebar .locInfo .other-report-button").on("click", function () {
+    const user_email = localStorage.getItem('email')
+      ? JSON.parse(localStorage.getItem('email'))
+      : ""
+
+    if (adsloc.id_ads_location) {
+      let tmp = localStorage.getItem('adsloc_report')
+      let list_report = (tmp) ? JSON.parse(tmp) : []
+      list_report = list_report.filter(item => item[2] == adsloc.id_ads_location)
+      console.log(list_report)
+      renderReport(list_report, "#other-report-popup .modal-body", user_email)
+    } else{
+      let tmp = localStorage.getItem('loc_report')
+      let list_report = (tmp) ? JSON.parse(tmp) : []
+      list_report = list_report.filter(item => 
+        (item[3] == adsloc.longitude && item[4] == adsloc.latitude) || (item[5]) == adsloc.address)
+        console.log(list_report)
+      renderReport(list_report, "#other-report-popup .modal-body", user_email)
+    }
+    
+    
+  })
+
+  $("#sidebar").on("click", '.close-button', function () {
+    $('#sidebar').hide()
+    $(".flex-container.toggle").show()
+  })
+
+}
+
 // hard code
 $(document).ready(function () {
 const role = parseInt(localStorage.getItem('role'))
@@ -208,8 +455,10 @@ $(window).on('resize', function(){
   let headerHeight = $('#header').height();
   let mapHeight = windowHeight - headerHeight;
   $('#map').css('top', headerHeight);
+  $('#sidebar').css('top', headerHeight);
   // console.log(windowHeight, headerHeight, mapHeight)
   $('#map').height(mapHeight);
+  $('#sidebar').height(mapHeight);
 });
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
@@ -234,40 +483,160 @@ var geocoder = new MapboxGeocoder({
 // map.addControl(geocoder);
 
 if (role === 2) {
-    $("#select-ward").hide();
-    const storedCBPhuong = localStorage.getItem('cbphuong');
-    cbphuong = storedCBPhuong ? JSON.parse(storedCBPhuong) : [];
-    email = localStorage.getItem('email');
-    cb = cbphuong.find(item => item[0] === email);
-    const id_ward = cb[5];
-    let ads_location = [
-      [1, 10.773695, 106.689636, '59 Nguyễn Thị Minh Khai', 2, 1, 2, 'image1.png', 1, 1],
-      [2, 10.77143, 106.693526, '70 Phạm Hồng Thái', 2, 1, 2, 'image2.png', 3, 0],
-      [3, 10.770072, 106.693823, '84 Lê Lai', 9, 1, 3, 'image3.png', 3, 0],
-      [4, 10.777637, 106.693007, '128 Nguyễn Thị Minh Khai', 32, 3, 5, '', 1, 1],
-      [5, 10.778513, 106.693939, '118 Nguyễn Thị Minh Khai', 32, 3, 6, '', 2, 1],
-      [6, 10.774799, 106.690473, '138 Nguyễn Thị Minh Khai', 32, 3, 5, '', 1, 0],
-      [7, 10.775846, 106.689544, '9 Võ Văn Tần', 32, 3, 2, '', 1, 0],
-      [8, 10.772591, 106.69093, '2 Bùi Thị Xuân', 2, 1, 5, 'image1.png', 3, 0],
-      [9, 10.774308, 106.688328, '141 Cách Mạng Tháng 8', 25, 3, 4, '', 2, 1],
-      [10, 10.775101, 106.686973, '70 Cách Mạng Tháng 8', 25, 3, 3, '', 2, 1],
-      [11, 10.776877, 106.688484, '36 Bà Huyện Thanh Quan', 32, 3, 5, '', 3, 1],
-      [12, 10.776843, 106.690665, '55-25 Trương Định', 32, 3, 2, '', 1, 1],
-      [13, 10.772553, 106.691073, '1 Bùi Thị Xuân', 2, 1, 2, 'image2.png', 3, 0],
-      [14, 10.774375, 106.690221, '59 Nguyễn Thị Minh Khai', 2, 1, 3, 'image3.png', 1, 1],
-      [15, 10.772146, 106.69246, '161-141 Nguyễn Du', 2, 1, 2, 'image1.png', 1, 1],
-      [16, 10.776332, 106.691408, '2-10 Trương Định', 32, 3, 6, '', 2, 1],
-      [17, 10.77632696, 106.6891595, '16 Nguyễn Thị Diệu', 32, 3, 1, '', 1, 1],
-      [18, 10.7729249, 106.695438, '66 Trương Định', 2, 1, 3, 'image2.png', 2, 1],
-      [19, 10.780619, 106.695861, '188 Pasteur', 32, 3, 3, '', 1, 0],
-      [20, 10.77915627, 106.6961993, '14 Alexandre de Rhodes', 1, 1, 6, 'image3.png', 1, 0],
-      [21, 10.775649, 106.697036, '108 Nguyễn Du', 2, 1, 6, 'image1.png', 3, 1],
-      [22, 10.779572, 106.69514, '55-53 Nguyễn Thị Minh Khai', 1, 1, 3, 'image2.png', 1, 1],
-      [23, 10.776907, 106.69798, '132 Nam Kỳ Khởi Nghĩa', 2, 1, 1, 'image3.png', 2, 1],
-      [24, 10.771666, 106.693518, '550 Lý Tự Trọng', 2, 1, 4, 'image1.png', 3, 1],
-      [25, 10.776379, 106.691306, '2-10 Trương Định', 32, 3, 5, '', 3, 0]
-    ];
-    const filtered_ads_loc = ads_location.filter(row => row[4] === id_ward);
+  $("#select-ward").hide();
+  email = localStorage.getItem('email');
+  const storedCBPhuong = localStorage.getItem('cbphuong');
+  cbphuong = storedCBPhuong ? JSON.parse(storedCBPhuong) : [];
+  cb = cbphuong.find(item => item[0] === email);
+  const id_ward = cb[5];
+
+  let ward_2 = [
+    [1, 'Bến Nghé', '1'], [2, 'Bến Thành', '1'], [3, 'Cầu Kho', '1'], [4, 'Cầu Ông Lãnh', '1'], [5, 'Cô Giang', '1'], 
+    [6, 'Đa Kao', '1'], [7, 'Nguyễn Cư Trinh', '1'], [8, 'Nguyễn Thái Bình', '1'], [9, 'Phạm Ngũ Lão', '1'], [10, 'Tân Định', '1']
+  ];
+
+  var info = NguoiDanAdsLoc.content.map(function (item) {
+    let { id_ads_location, address, ward, district, loc_type, ads_type,
+      photo, is_zoning, longitude, latitude, list_ads, list_report } = item;
+    let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch";
+  
+    return [id_ads_location, address, ward, district, loc_type, ads_type, zoning_text,
+        photo, longitude, latitude, is_zoning, list_ads, list_report];
+  })
+
+  let filteredInfo = info.filter(function(item) {
+    for (let i = 0; i < ward_2.length; i++) {
+        let ward_text = ward_2[i][1];
+        if (item[2] === ward_text) {
+          return true;
+        }
+    }
+    return false;
+  });
+  info = filteredInfo;
+  console.log(info);
+
+  createMarker_2(info, map);
+  filter_info = [...info];
+
+  $(".flex-container input").on('click', function(e){
+    createMarker_2(filter_info, map)
+  })
+
+  let marker = new mapboxgl.Marker();
+  map.on('click', function (e) {
+    let lngLat = e.lngLat;
+    longitude = lngLat.lng;
+    latitude = lngLat.lat;
+    marker.remove()
+    marker = new mapboxgl.Marker({
+      color: '#0B7B31'
+    }).setLngLat(lngLat).addTo(map);
+    map.flyTo({
+      center: lngLat,
+      zoom: 17
+    })
+
+    let locObject = {
+      "colorMarker": null,
+      "id_ads_location": null,
+      "address": null,
+      "ward": null,
+      "district": null,
+      "loc_type": null,
+      "ads_type": null,
+      "zoning_text": null,
+      "imagePath": null,
+      "longitude": null,
+      "latitude": null,
+      "is_zoning": null,
+      "list_ads": "null",
+      "list_report": "null"
+    }
+    
+    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(longitude)},${(latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        locObject.ward = data.features[0].context[0].text;
+        locObject.district = data.features[0].context[2].text;
+        locObject.address = data.features[0].properties.address;
+        locObject.longitude = longitude
+        locObject.latitude = latitude
+
+          if (!flag){
+            console.log(flag) 
+            showSidebar(locObject) 
+          } else{
+            console.log(flag) 
+          }
+          
+          flag = false
+          
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
+    // Lắng nghe sự kiện mousedown trên bản đồ
+    map.on('mousedown', function () {
+      // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
+      map.getCanvas().style.cursor = 'grab';
+    });
+
+    // Lắng nghe sự kiện mouseup trên bản đồ
+    map.on('mouseup', function () {
+      // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
+      map.getCanvas().style.cursor = 'pointer';
+    })
+
+  });
+
+  document.getElementById('geocodeForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const address = document.getElementById('address').value;
+
+    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(address)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
+      .then(response => response.json())
+      .then(data => {
+        let locObject = {
+          "colorMarker": null,
+          "id_ads_location": null,
+          "address": null,
+          "ward": null,
+          "district": null,
+          "loc_type": null,
+          "ads_type": null,
+          "zoning_text": null,
+          "imagePath": null,
+          "longitude": null,
+          "latitude": null,
+          "is_zoning": null,
+          "list_ads": "null",
+          "list_report": "null"
+        }
+
+        let center = data.features[0].center;
+        map.flyTo({
+          center: center,
+          zoom: 17
+        })
+        // Create a new marker.
+        marker.remove()
+        marker = new mapboxgl.Marker().setLngLat(center).addTo(map);
+        locObject.ward = data.features[0].context[0].text;
+        locObject.district = data.features[0].context[2].text;
+        locObject.address = data.features[0].properties.address;
+        if ($('#sidebar').is(':visible')) { } else {
+          showSidebar(locObject)
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = '<p>Error during geocoding.</p>';
+      });
+  })
     
 }
 else if (role === 1) {
@@ -478,4 +847,3 @@ else{
 //     }
 
 // });
-
