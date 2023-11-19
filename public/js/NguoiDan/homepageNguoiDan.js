@@ -117,17 +117,6 @@ function showSidebar(adsloc){
   renderAds(adsloc)
   flag = true;
 
-  // fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(adsloc.longitude)},${(adsloc.latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
-  //   .then(response => response.json())
-  //   .then(data => {
-  //     adsloc.ward = data.features[0].context[0].text;
-  //     adsloc.district = data.features[0].context[2].text;
-  //     adsloc.address = data.features[0].properties.address;
-  //   })
-  //   .catch(error => {
-  //     console.error('Error:', error);
-  //   });
-
   if (adsloc.id_ads_location )
     $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, ${adsloc.district}`)
   else
@@ -1498,7 +1487,9 @@ localStorage.setItem("email", JSON.stringify("lvduc@gmail.com"))
       longitude = lngLat.lng;
       latitude = lngLat.lat;
       marker.remove()
-      marker = new mapboxgl.Marker().setLngLat(lngLat).addTo(map);
+      marker = new mapboxgl.Marker({
+        color: '#0B7B31' 
+      }).setLngLat(lngLat).addTo(map);
       map.flyTo({
         center: lngLat,
         zoom: 17
