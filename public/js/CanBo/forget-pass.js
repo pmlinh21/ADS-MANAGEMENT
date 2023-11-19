@@ -31,7 +31,24 @@ $(document).ready(function () {
       alert("Mật khẩu xác nhận phải trùng khớp với mật khẩu mới")
     }
     else{
-    // update db
+      var data
+      if (email == "phuong@gmail.com")
+        data = "cbphuong"
+      if (email == "quan@gmail.com")
+        data = "cbquan"
+      if (email == "so@gmail.com")
+        data = "cbso"
+      let arr = localStorage.getItem(data)
+      arr = (arr) ? JSON.parse(arr) : []
+
+      newArr = arr?.map(item => {
+        if (item[0] == email)
+          item[2] = newPass
+        return item
+      })
+
+      localStorage.setItem(data,JSON.stringify(newArr))
+
       window.location.href = "/login"
     }
   })
