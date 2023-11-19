@@ -110,6 +110,7 @@ function renderAds({list_ads, ads_type, loc_type, address, ward, district}){
 // hiển thị sidebar và bắt sự kiện trên sidebar
 function showSidebar(adsloc){
   // console.log(adsloc)
+  $(".flex-container.toggle").hide()
   $('#sidebar').show()
   renderAds(adsloc)
 
@@ -330,6 +331,7 @@ function showSidebar(adsloc){
 
   $("#sidebar").on("click", '.close-button', function(){
     $('#sidebar').hide()
+    $(".flex-container.toggle").show()
     })
 
 }
@@ -1484,108 +1486,19 @@ localStorage.setItem("email", JSON.stringify("lvduc@gmail.com"))
     $(".flex-container input").on('click', function(e){
         createMarker(info, map)
     })
-      
-    // map.on('click', function(e) {
-    //   let lngLat = e.lngLat;
-    //   longitude = lngLat.lng;
-    //   latitude = lngLat.lat;
-    
-    //   const coordinates = [longitude,latitude]
-    //   $.ajax({
-    //     url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json`,
-    //     method: 'GET',
-    //     data: {
-    //       access_token: mapboxgl.accessToken,
-    //       language: 'vi'
-    //     },
-    //     success: function(response) {
-    //       // Lấy địa chỉ từ kết quả Geocoding
-    //       result = response.features[0].place_name;
-    //       console.log(response.features[0])
 
-    //       map.flyTo({
-    //         center: coordinates,
-    //         zoom: 17
-    //       });
+    let marker = new mapboxgl.Marker();  
+    map.on('click', function (e) {
+      let lngLat = e.lngLat;
+      longitude = lngLat.lng;
+      latitude = lngLat.lat;
+      marker.remove()
+      marker = new mapboxgl.Marker().setLngLat(lngLat).addTo(map);
+      map.flyTo({
+        center: lngLat,
+        zoom: 17
+      })
 
-    //       new mapboxgl.Marker( {color: '#0B7B31' })
-    //       .setLngLat(coordinates) // Specify the marker longitude and latitude
-    //       .addTo(map);
-
-    //       console.log(result)
-    //       $('#sidebar').show()
-    //       $('#sidebar .locInfo').hide()
-    //       $('#sidebar .diem-bat-ky').show()
-    //       $('#sidebar .diem-bat-ky .address').text(result)
-    //     },
-    //     error: function(error) {
-    //       console.log(error);
-    //     }
-    //   });
-    // });
-
-    // Lắng nghe sự kiện mousedown trên bản đồ
-    map.on('mousedown', function() {
-      // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
-      map.getCanvas().style.cursor = 'grab';
-    });
-
-    // Lắng nghe sự kiện mouseup trên bản đồ
-    map.on('mouseup', function() {
-      // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
-      map.getCanvas().style.cursor = 'pointer';
-    });
-
-    // document.getElementById('geocodeForm').addEventListener('submit', function (event) {
-    //     event.preventDefault();
-    //     const address = document.getElementById('address').value;
-
-    //     fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(address)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             let center = data.features[0].center
-    //             map.flyTo({
-    //                 center: center,
-    //                 zoom: 20
-    //             })
-    //             // Create a new marker.
-    //             marker = new mapboxgl.Marker().setLngLat(center).addTo(map);
-    //             document.querySelector(".adInfo #data").style.display = 'none';
-    //             // document.querySelectorAll("#sidebar")[0].style.width = "22%";
-                
-    //         })
-    //         .catch(error => {
-    //             console.error('Error:', error);
-    //             const resultDiv = document.getElementById('result');
-    //             resultDiv.innerHTML = '<p>Error during geocoding.</p>';
-    //         });
-    // });
-});
-
-
-// document.getElementById('details-popup').addEventListener('click', function () {
-//     document.getElementById('details-popup-data').style.display = 'block';
-// });
-
-// document.getElementById('closePopup-details').addEventListener('click', function () {
-//     document.getElementById('details-popup-data').style.display = 'none';
-// });
-
-// document.getElementById('report-popup').addEventListener('click', function () {
-//     document.getElementById('report-popup-data').style.display = 'block';
-// });
-  // map.on('scroll', function () {
-  //   $('#sidebar').hide()
-  // });
-// });
-
-document.getElementById('geocodeForm').addEventListener('submit', function (event) {
-  event.preventDefault();
-  const address = document.getElementById('address').value;
-
-  fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(address)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
-    .then(response => response.json())
-    .then(data => {
       let locObject = {
         "colorMarker": null,
         "id_ads_location": null,
@@ -1603,80 +1516,105 @@ document.getElementById('geocodeForm').addEventListener('submit', function (even
         "list_report": "null"
       }
 
-      let center = data.features[0].center;
-      map.flyTo({
-        center: center,
-        zoom: 17
+      fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(longitude)},${(latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
+      .then(response => response.json())
+      .then(data => {
+        locObject.ward = data.features[0].context[0].text;
+        locObject.district = data.features[0].context[2].text;
+        locObject.address = data.features[0].properties.address;
+        if ($('#sidebar').is(':visible')) { } else {
+          showSidebar(locObject)
+        }
       })
-      // Create a new marker.
-      marker.remove()
-      marker = new mapboxgl.Marker().setLngLat(center).addTo(map);
-      locObject.ward = data.features[0].context[0].text;
-      locObject.district = data.features[0].context[2].text;
-      locObject.address = data.features[0].properties.address;
-      if ($('#sidebar').is(':visible')) { } else {
-        showSidebar(locObject)
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = '<p>Error during geocoding.</p>';
+      .catch(error => {
+        console.error('Error:', error);
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = '<p>Error during geocoding.</p>';
+      });
+
+      $.ajax({
+        url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json`,
+        method: 'GET',
+        data: {
+          access_token: mapboxgl.accessToken
+        },
+        success: function (response) {
+          // Lấy địa chỉ từ kết quả Geocoding
+          result = response.features[0].place_name;
+          console.log(response.features[0])
+          // Gán địa chỉ vào phần tử HTML
+          $("#address").val(`${result} [${longitude}, ${latitude}]`);
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      });
+  });    
+
+    // Lắng nghe sự kiện mousedown trên bản đồ
+    map.on('mousedown', function () {
+      // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
+      map.getCanvas().style.cursor = 'grab';
     });
-})
 
-// document.getElementById('closePopup-report').addEventListener('click', function () {
-//     document.getElementById('report-popup-data').style.display = 'none';
-// });
+    // Lắng nghe sự kiện mouseup trên bản đồ
+    map.on('mouseup', function () {
+      // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
+      map.getCanvas().style.cursor = 'pointer';
+    });
 
-// document.getElementById('popup-others-report').addEventListener('click', function () {
-//     document.getElementById('popup-data-others-report').style.display = 'block';
-// });
+    map.on('scroll', function () {
+      $('#sidebar').hide()
+    });
 
-// document.getElementById('closePopup-other-report').addEventListener('click', function () {
-//     document.getElementById('popup-data-others-report').style.display = 'none';
-// });
+    document.getElementById('geocodeForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const address = document.getElementById('address').value;
+    
+      fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(address)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
+        .then(response => response.json())
+        .then(data => {
+          let locObject = {
+            "colorMarker": null,
+            "id_ads_location": null,
+            "address": null,
+            "ward": null,
+            "district": null,
+            "loc_type": null,
+            "ads_type": null,
+            "zoning_text": null,
+            "imagePath": null,
+            "longitude": null,
+            "latitude": null,
+            "is_zoning": null,
+            "list_ads": "null",
+            "list_report": "null"
+          }
+    
+          let center = data.features[0].center;
+          map.flyTo({
+            center: center,
+            zoom: 17
+          })
+          // Create a new marker.
+          marker.remove()
+          marker = new mapboxgl.Marker().setLngLat(center).addTo(map);
+          locObject.ward = data.features[0].context[0].text;
+          locObject.district = data.features[0].context[2].text;
+          locObject.address = data.features[0].properties.address;
+          if ($('#sidebar').is(':visible')) { } else {
+            showSidebar(locObject)
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          const resultDiv = document.getElementById('result');
+          resultDiv.innerHTML = '<p>Error during geocoding.</p>';
+        });
+    })
+});
 
-// // locInfo js
-// document.getElementById('report-popup-loc').addEventListener('click', function () {
-//     document.getElementById('report-popup-data-loc').style.display = 'block';
-// });
-
-// document.getElementById('closePopup-report-loc').addEventListener('click', function () {
-//     document.getElementById('report-popup-data-loc').style.display = 'none';
-// });
-
-// document.getElementById('popup-others-report-loc').addEventListener('click', function () {
-//     document.getElementById('popup-data-others-report-loc').style.display = 'block';
-// });
-
-// document.getElementById('closePopup-other-report-loc').addEventListener('click', function () {
-//     document.getElementById('popup-data-others-report-loc').style.display = 'none';
-// });
 
 
-// // myReport
-// function myReportShow() {
-//     console.log("falskdj");
-//     document.getElementById('myReport').style.display = 'block';
-// }
-
-// document.getElementById('closePopup-myReport').addEventListener('click', function () {
-//     document.getElementById('myReport').style.display = 'none';
-// });
 
 
-// // Close the pop-up if the user clicks outside of it
-// window.addEventListener('click', function (event) {
-//     var popup = document.getElementById('popup');
-//     if (event.target == popup) {
-//         popup.style.display = 'none';
-//     }
-// });
-
-// const script = document.getElementById('search-js');
-// script.onload = function () {
-//   mapboxsearch.autofill({
-//     accessToken: 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w'
-//   });
-// };

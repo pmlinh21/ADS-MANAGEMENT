@@ -97,7 +97,7 @@ body {
 #sidebar {
     height: calc(100% - 3.5rem);
     /* width: 0; */
-    width: 35%;
+    width: 28%;
     left: 0;
     position: fixed;
     top: 3.5rem;
