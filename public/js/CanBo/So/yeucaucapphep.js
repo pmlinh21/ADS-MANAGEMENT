@@ -55,7 +55,7 @@ let ads = [
     [23, 25, "Trụ/Cụm pano", 6.44, 4.21, 1, "2024-08-29"]
 ];
 
-let adsCreateRequests = [ 
+let createAdsRequests = [ 
     [1, "nnlien21@clc.fitus.edu.vn", 1, 10, 5, 8.12, 1.23, 1, "Vẻ đẹp tự nhiên trong từng món trang sức. Khám phá sự quý phái tại chúng tôi.", "Công ty TNHH Vàng Bạc Đá Quý", "contact@vangbacdaquy.com", "0912345678", "123 Điện Biên Phủ, Phường 7, Quận 3", "2023-08-05", "2023-12-01", 0],
     [2, "nthphuc21@clc.fitus.edu.vn", 2, 5, 3, 3.76, 3.78, 1, "Hương vị tươi mới từ nông trại đến bát. Sự tươi mới trong mỗi khẩu phần.", "FreshHarvest Foods", "info@freshharvestfoods.com", "0712345678", "56 Cao Thắng, Phường 4, Quận 3", "2023-08-10", "2023-12-05", 1],
     [3, "pmlinh21@clc.fitus.edu.vn", 1, 20, 8, 11.23, 5.42, 3, "Xây dựng ước mơ của bạn. Chất lượng đến từng chi tiết.", "Công ty Xây dựng Tiến Đạt", "info@tiendatconstruction.vn", "0123456789", "789 Lê Văn Sỹ, Phường 2, Quận Tân Bình", "2023-08-15", "2023-12-11", 1],
@@ -79,7 +79,7 @@ let adsCreateRequests = [
 ];
 // id_create 0	officer 1	office 2	id_ads_location 3	id_board_type 4	width 5	height 6	quantity 7	content 8	company 9	email 10	phone 11	address 12	start_date 13	end_date 14	status 15
 
-for (let i = adsCreateRequests.length; i > 0; i--) {
+for (let i = createAdsRequests.length; i > 0; i--) {
     let tr = document.createElement("tr");
     let td1 = document.createElement("td");
     let td2 = document.createElement("td");
@@ -90,13 +90,13 @@ for (let i = adsCreateRequests.length; i > 0; i--) {
     let td7 = document.createElement("td");
     let td8 = document.createElement("td");
 
-    td1.innerHTML = adsCreateRequests[i-1][0];
+    td1.innerHTML = createAdsRequests[i-1][0];
     td1.className = "id";
-    td2.innerHTML = adsCreateRequests[i-1][2];
+    td2.innerHTML = createAdsRequests[i-1][2];
     td2.className = "id-ads-location";
     let k;
     for (let j = 0; j < adslocations.length; j++) {
-        if (adslocations[j][0] == adsCreateRequests[i-1][2]) {
+        if (adslocations[j][0] == createAdsRequests[i-1][2]) {
             for (k = 0; k < wards.length; k++) {
                 if (adslocations[j][4] == wards[k][0]) {
                     td3.innerHTML = adslocations[j][3] + ", Phường " + wards[k][1] + ", Quận " + wards[k][2];
@@ -107,25 +107,25 @@ for (let i = adsCreateRequests.length; i > 0; i--) {
             break;
         }
     }
-    td4.innerHTML = adsCreateRequests[i-1][9];
+    td4.innerHTML = createAdsRequests[i-1][9];
     td4.className = "company";
-    td5.innerHTML = adsCreateRequests[i-1][13];
+    td5.innerHTML = createAdsRequests[i-1][13];
     td5.className = "start-date";
-    td6.innerHTML = adsCreateRequests[i-1][14];
+    td6.innerHTML = createAdsRequests[i-1][14];
     td6.className = "end-date";
 
-    if (adsCreateRequests[i-1][2] == 1) {
+    if (createAdsRequests[i-1][2] == 1) {
         td7.innerHTML = "Phường " + wards[k][1];
         td7.className = "office";
-    } else if (adsCreateRequests[i-1][2] == 2) {
+    } else if (createAdsRequests[i-1][2] == 2) {
         td7.innerHTML = "Quận " + wards[k][2];
         td7.className = "office";
     }
 
-    if (adsCreateRequests[i-1][15] == 1) {
+    if (createAdsRequests[i-1][15] == 1) {
         td8.innerHTML = "Đã quy hoạch";
         td8.className = "zoning";
-    } else if (adsCreateRequests[i-1][15] == 0) {
+    } else if (createAdsRequests[i-1][15] == 0) {
         td8.innerHTML = "Chưa quy hoạch";
         td8.className = "zoning";
     }
@@ -139,7 +139,7 @@ for (let i = adsCreateRequests.length; i > 0; i--) {
     tr.appendChild(td8);
 
     tr.addEventListener("click", function() {
-        window.location = "/yeucaucapphep/chitiet?id=" + adsCreateRequests[i-1][0];
+        window.location = "/yeucaucapphep/chitiet?id=" + createAdsRequests[i-1][0];
     });
     document.querySelector("#create-ads-table table tbody").prepend(tr);
 }
