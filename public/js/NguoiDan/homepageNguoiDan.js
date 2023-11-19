@@ -1560,8 +1560,6 @@ localStorage.setItem("email", JSON.stringify("lvduc@gmail.com"))
     //             resultDiv.innerHTML = '<p>Error during geocoding.</p>';
     //         });
     // });
-
-
 });
 
 
