@@ -1,7 +1,5 @@
 document.querySelector("#baocao").classList.add("snb-li-active");
 
-document.querySelector("#baocao").classList.add("snb-li-active");
-
 let locationReports = [
     [1, "nnlien21@clc.fitus.edu.vn", 2, 10.7762, 106.6985, "131 Nam Kỳ Khởi Nghĩa", 2, 1, "Trần Thị Hương Giang", "thgiang@gmail.com", "0901122334", "Tôi phát hiện một quảng cáo không hợp pháp tại địa chỉ này. Xin kiểm tra và loại bỏ nó khỏi trang web của bạn.", "2023-08-05", 0, ""],
     [2, "21127637@student.hcmus.edu.vn", 1, 10.7751, 106.7002, "103 Lê Thánh Tôn", 1, 4, "Lê Văn Đức", "lvduc@gmail.com", "0934567890", "Tôi muốn đăng ký quảng cáo tại đây. Xin hướng dẫn tôi qua quy trình đăng ký và các bước cần thực hiện để quảng cáo của tôi xuất hiện trên bản đồ.", "2023-08-12", 1, "Để đăng ký quảng cáo, vui lòng truy cập trang chính thức của chúng tôi và làm theo hướng dẫn đăng ký. Nếu gặp vấn đề, liên hệ với bộ phận hỗ trợ."],

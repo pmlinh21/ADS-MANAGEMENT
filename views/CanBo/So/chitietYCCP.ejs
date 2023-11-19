@@ -18,8 +18,8 @@
                     <input type="text" id="id-ads-location" name="id-ads-location" disabled>
                 </div>
                 <div class="input-field">
-                    <label for="address-ads-location">Địa chỉ điểm đặt</label>
-                    <input type="text" id="address-ads-location" name="address-ads-location" disabled>
+                    <label for="address">Địa chỉ điểm đặt</label>
+                    <input type="text" id="address" name="address" disabled>
                 </div>
                 <div class="input-field">
                     <label for="board-type">Loại bảng</label>
@@ -28,7 +28,7 @@
                 <div class="half-half-field">
                     <div class="input-field">
                         <label for="board-length">Chiều dài</label>
-                        <input type="text" address="board-length" name="board-length" disabled>
+                        <input type="text" id="board-length" name="board-length" disabled>
                     </div>
                     <div class="input-field">
                         <label for="board-width">Chiều rộng</label>
@@ -60,12 +60,12 @@
                     <input type="date" name="start-date" id="start-date" disabled>
                 </div>
                 <div class="input-field">
-                    <label for="expired-date">Ngày hết hạn hợp đồng</label>
-                    <input type="date" name="expired-date" id="expired-date" disabled>
+                    <label for="end-date">Ngày hết hạn hợp đồng</label>
+                    <input type="date" name="end-date" id="end-date" disabled>
                 </div>
                 <div class="input-field textarea span-2">
-                    <label for="reason">Nội dung quảng cáo</label>
-                    <textarea name="reason" id="reason" disabled></textarea>
+                    <label for="content">Nội dung quảng cáo</label>
+                    <textarea name="content" id="content" disabled></textarea>
                 </div>
                 <!-- <div class="input-field">
                     <label for="req-time">Thời gian yêu cầu</label>
@@ -83,9 +83,6 @@
                     <label for="ads-location-image">Hình ảnh minh họa</label>
                     <div class="img-container">
                         <img src="../../../public/image/image5.png" alt="" id="ads-location-image-preview">
-                        <label for="ads-location-image" class="img-button">Thay đổi</label>
-                        <input type="file" id="ads-location-image" name="ads-location-image" accept="image/*" required>
-                        <div class="dark-background"></div>
                     </div>
                 </div>
             </div>
@@ -112,5 +109,5 @@
 
     </div>
 </div>
-<script src="../../../public/js/CanBo/So/chitietBQC.js"></script>
+<script src="../../../public/js/CanBo/So/chitietYCCP.js"></script>
 <%- include('../../partial/footerSo.ejs') %>
