@@ -313,6 +313,7 @@ function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
 }
 
 function renderReport(list_report, container) {
+function renderReport(list_report, container) {
   // list_report = JSON.parse(list_report);
   console.log("list_report: ", list_report)
   const note = list_report?.map(item => {
@@ -407,6 +408,7 @@ function showSidebar(adsloc) {
     list_report = list_report.filter(item => item[3] == id_ads)
 
     renderReport(list_report, "#other-report-popup .modal-body")
+    renderReport(list_report, "#other-report-popup .modal-body")
   })
 
   $("#sidebar .locInfo .other-report-button").on("click", function () {
@@ -418,6 +420,7 @@ function showSidebar(adsloc) {
       list_report = list_report.filter(item => item[3] == adsloc.id_ads_location)
       console.log(list_report)
       renderReport(list_report, "#other-report-popup .modal-body")
+      renderReport(list_report, "#other-report-popup .modal-body")
     } else{
       let tmp = localStorage.getItem('loc_report')
       let list_report = (tmp) ? JSON.parse(tmp) : [];
@@ -425,6 +428,7 @@ function showSidebar(adsloc) {
       list_report = list_report.filter(item => 
         (item[3] == adsloc.longitude && item[4] == adsloc.latitude) || (item[5]) == adsloc.address)
         console.log(list_report)
+      renderReport(list_report, "#other-report-popup .modal-body")
       renderReport(list_report, "#other-report-popup .modal-body")
     }
     

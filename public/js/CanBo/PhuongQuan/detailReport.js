@@ -174,29 +174,29 @@ $(document).ready(function() {
           <textarea type="text" class="form-control input-details fixed-size-textarea" id="report" readonly></textarea>
       </div>
 
-      <div class="col-md-6">
-          <label for="time" class="form-label">Thời điểm gửi</label>
-          <input type="date" class="form-control input-details" id="time" readonly>
+      <div class="col-md-4">
+        <label for="time" class="form-label">Thời điểm gửi</label>
+        <input type="date" class="form-control input-details" id="time" readonly>
       </div>
-      <div class="col-md-6">
-          <label for="officer" class="form-label">Người xử lý</label>
-          <input type="text" class="form-control input-details" id="officer" readonly>
+      <div class="col-md-4">
+        <label for="officer" class="form-label">Người xử lý</label>
+        <input type="text" class="form-control input-details" id="officer" readonly>
       </div>
-
-      <div class="col-md-6">
-          <label for="office" class="form-label">Đơn vị xử lý</label>
-          <input type="text" class="form-control input-details" id="office" readonly>
+      <div class="col-md-4">
+        <label for="office" class="form-label">Đơn vị xử lý</label>
+        <input type="text" class="form-control input-details" id="office" readonly>
       </div>
-      <div class="col-md-6">
-          <label for="status" class="form-label">Trạng thái xử lý</label>
-          <div class="form-check">
-            <input type="radio" class="form-check-input" id="statusProcessed" name="status" value="1" readonly>
-            <label class="form-check-label" for="statusProcessed">Đã xử lý</label>
-          </div>
-          <div class="form-check">
-            <input type="radio" class="form-check-input" id="statusPending" name="status" value="0" readonly>
-            <label class="form-check-label" for="statusPending">Chưa xử lý</label>
-          </div>
+      
+      <div class="col-md-12">
+        <label for="status" class="form-label" style="display: block;">Trạng thái xử lý</label>
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="statusProcessed" name="status" value="1" readonly>
+          <label class="form-check-label" for="statusProcessed">Đã xử lý</label>
+        </div>
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="statusPending" name="status" value="0" readonly>
+          <label class="form-check-label" for="statusPending">Chưa xử lý</label>
+        </div>
       </div>
 
       <div class="col-md-12">
@@ -236,6 +236,7 @@ $(document).ready(function() {
       $('#office').val(info[2] === 1 ? "Quận" : (info[2] === 2 ? "Phường" : ""));
       if (info[12] === 1) {
         $('#statusProcessed').prop('checked', true);
+        $('#statusPending').prop('disabled', true);
       } else {
         $('#statusPending').prop('checked', true);
       }
@@ -298,29 +299,29 @@ $(document).ready(function() {
           <textarea type="text" class="form-control input-details" id="report" readonly></textarea>
       </div>
 
-      <div class="col-md-6">
-          <label for="time" class="form-label">Thời điểm gửi</label>
-          <input type="date" class="form-control input-details" id="time" readonly>
+      <div class="col-md-4">
+        <label for="time" class="form-label">Thời điểm gửi</label>
+        <input type="date" class="form-control input-details" id="time" readonly>
       </div>
-      <div class="col-md-6">
-          <label for="officer" class="form-label">Người xử lý</label>
-          <input type="text" class="form-control input-details" id="officer" readonly>
+      <div class="col-md-4">
+        <label for="officer" class="form-label">Người xử lý</label>
+        <input type="text" class="form-control input-details" id="officer" readonly>
       </div>
-
-      <div class="col-md-6">
-          <label for="office" class="form-label">Đơn vị xử lý</label>
-          <input type="text" class="form-control input-details" id="office" readonly>
+      <div class="col-md-4">
+        <label for="office" class="form-label">Đơn vị xử lý</label>
+        <input type="text" class="form-control input-details" id="office" readonly>
       </div>
-      <div class="col-md-6">
-          <label for="status" class="form-label">Trạng thái xử lý</label>
-          <div class="form-check">
-            <input type="radio" class="form-check-input" id="statusProcessed" name="status" value="1" readonly>
-            <label class="form-check-label" for="statusProcessed">Đã xử lý</label>
-          </div>
-          <div class="form-check">
-            <input type="radio" class="form-check-input" id="statusPending" name="status" value="0" readonly>
-            <label class="form-check-label" for="statusPending">Chưa xử lý</label>
-          </div>
+      
+      <div class="col-md-12">
+        <label for="status" class="form-label" style="display: block;">Trạng thái xử lý</label>
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="statusProcessed" name="status" value="1" readonly>
+          <label class="form-check-label" for="statusProcessed">Đã xử lý</label>
+        </div>
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="statusPending" name="status" value="0" readonly>
+          <label class="form-check-label" for="statusPending">Chưa xử lý</label>
+        </div>
       </div>
 
       <div class="col-md-12">
@@ -393,26 +394,27 @@ $(document).ready(function() {
     if (info.length > 0) {
       $('#id_loc_report').val(info[0]);
       if (role == 2)
-        updateAddressField(info[3], info[4]);
+        $('#address').val(info[5]);
       else if (role == 1){
         $('#address').val(info[18]);
       }
-      $('#report_type').val(report_type[info[5] - 1][1]);
-      $('#name').val(info[6]);
-      $('#email').val(info[7]);
-      $('#phone').val(info[8]);
-      $('#report').val(info[9]);
-      $('#time').val(formatDate(info[12]));
+      $('#report_type').val(report_type[info[6] - 1][1]);
+      $('#name').val(info[7]);
+      $('#email').val(info[8]);
+      $('#phone').val(info[9]);
+      $('#report').val(info[10]);
+      $('#time').val(formatDate(info[13]));
       $('#officer').val(info[1]);
       $('#office').val(info[2] === 1 ? "Quận" : (info[2] === 2 ? "Phường" : ""));
-      if (info[13] === 1) {
+      if (info[14] === 1) {
         $('#statusProcessed').prop('checked', true);
+        $('#statusPending').prop('disabled', true);
       } else {
         $('#statusPending').prop('checked', true);
       }
-      $('#method').val(info[14]);
-      $('.image-report-1').attr('src', info[9] ? `../../../../public/image/${info[10]}` : '');
-      $('.image-report-2').attr('src', info[10] ? `../../../../public/image/${info[11]}` : '');
+      $('#method').val(info[15]);
+      $('.image-report-1').attr('src', info[9] ? `../../../../public/image/${info[11]}` : '');
+      $('.image-report-2').attr('src', info[10] ? `../../../../public/image/${info[12]}` : '');
     }
 
     $('.style1-button').on('click', function() {
@@ -420,10 +422,10 @@ $(document).ready(function() {
       const updatedStatus = $('input[name="status"]:checked').val();
       const indexToUpdate = loc_report.findIndex(item => item[0] == id_report);
 
-      loc_report[indexToUpdate][14] = updatedMethod;
+      loc_report[indexToUpdate][15] = updatedMethod;
       loc_report[indexToUpdate][1] = storedEmail;
       loc_report[indexToUpdate][2] = parseInt(role);
-      loc_report[indexToUpdate][13] = parseInt(updatedStatus);
+      loc_report[indexToUpdate][14] = parseInt(updatedStatus);
       localStorage.setItem('loc_report', JSON.stringify(loc_report)); 
       location.reload();
     });
