@@ -413,14 +413,16 @@ function showSidebar(adsloc) {
     const user_email = localStorage.getItem('email');
 
     if (adsloc.id_ads_location) {
-      let tmp = localStorage.getItem('adsloc_report')
-      let list_report = (tmp) ? JSON.parse(tmp) : []
-      list_report = list_report.filter(item => item[2] == adsloc.id_ads_location)
+      let tmp = localStorage.getItem('ads_loc_report')
+      let list_report = (tmp) ? JSON.parse(tmp) : [];
+      console.log("list_report: ", list_report);
+      list_report = list_report.filter(item => item[3] == adsloc.id_ads_location)
       console.log(list_report)
       renderReport(list_report, "#other-report-popup .modal-body", user_email)
     } else{
       let tmp = localStorage.getItem('loc_report')
-      let list_report = (tmp) ? JSON.parse(tmp) : []
+      let list_report = (tmp) ? JSON.parse(tmp) : [];
+      console.log("list_report: ", list_report);
       list_report = list_report.filter(item => 
         (item[3] == adsloc.longitude && item[4] == adsloc.latitude) || (item[5]) == adsloc.address)
         console.log(list_report)
