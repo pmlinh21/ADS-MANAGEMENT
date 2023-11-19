@@ -1,3 +1,7 @@
+$("form").submit(function(event){
+    event.preventDefault();
+});
+
 document.querySelector("#chung").classList.add("snb-li-active");
 
 let locationType = ["Đất công/Công viên/Hành lang an toàn giao thông", "Đất tư nhân/Nhà ở riêng lẻ", "Trung tâm thương mại", "Chợ", "Cây xăng", "Nhà chờ xe buýt"];

@@ -1,5 +1,9 @@
 document.querySelector("#phuong").classList.add("snb-li-active");
 
+$("form").submit(function(event){
+    event.preventDefault();
+});
+
 let wards = [[1, 'Bến Nghé', 1, 5, 12, 2], [2, 'Bến Thành', 1, 7, 14, 2], [3, 'Cầu Kho', 1, 4, 9, 1], [4, 'Cầu Ông Lãnh', 1, 3, 6, 1], [5, 'Cô Giang', 1, 16, 18, 2], [6, 'Đa Kao', 1, 11, 14, 3], [7, 'Nguyễn Cư Trinh', 1, 9, 13, 1], [8, 'Nguyễn Thái Bình', 1, 8, 12, 1], [9, 'Phạm Ngũ Lão', 1, 9, 8, 1], [10, 'Tân Định', 1, 7, 4, 1], [21, '1', 3, 5, 8, 2], [22, '2', 3, 12, 5, 1], [23, '3', 3, 15, 12, 2], [24, '4', 3, 4, 10, 1], [25, '5', 3, 9, 16, 2], [26, '9', 3, 12, 15, 1], [27, '10', 3, 14, 6, 1], [28, '11', 3, 8, 4, 2], [29, '12', 3, 6, 13, 1], [30, '13', 3, 12, 3, 2], [31, '14', 3, 17, 15, 2], [32, 'Võ Thị Sáu', 3, 12, 26, 3]];
 for (let i = wards.length; i > 0; i--) {
     let tr = document.createElement("tr");

@@ -1,5 +1,9 @@
 document.querySelector("#bang").classList.add("snb-li-active");
 
+$("form").submit(function(event){
+    event.preventDefault();
+});
+
 var boardTypes = [
     [1, "Trụ bảng hiflex"], 
     [2, "Trụ màn hình điện tử LED"], 

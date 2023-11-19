@@ -1,5 +1,9 @@
 document.querySelector("#diemdat").classList.add("snb-li-active");
 
+$("form").submit(function(event){
+    event.preventDefault();
+});
+
 var adsLocTypes = [[1, "Đất công/Công viên/Hành lang an toàn giao thông"], [2, "Đất tư nhân/Nhà ở riêng lẻ"], [3, "Trung tâm thương mại"], [4, "Chợ"], [5, "Cây xăng"], [6, "Nhà chờ xe buýt"]];
 var select = document.querySelector("#ads-location-type");
 
