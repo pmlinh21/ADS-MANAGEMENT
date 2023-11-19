@@ -98,11 +98,26 @@ function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
 
 // hiển thị sidebar và bắt sự kiện trên sidebar
 function showSidebar(adsloc) {
-  console.log(adsloc)
+  // console.log(adsloc)
+  $('#sidebar').hide()
   $('#sidebar').show()
   renderAds(adsloc)
+  // console.log('check')
+  // console.log(adsloc);
+  // console.log('chh')
 
-  // $(".locInfo .data").attr("id",`data-${adsloc.id_ads_location}`)
+  fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(adsloc.longitude)},${(adsloc.latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
+    .then(response => response.json())
+    .then(data => {
+      adsloc.ward = data.features[0].context[0].text;
+      adsloc.district = data.features[0].context[2].text;
+      adsloc.address = data.features[0].properties.address;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+
+  $(".locInfo .data").attr("id", `data-${adsloc.id_ads_location}`)
   $(".locInfo .address").text(`${adsloc.address}, Phường ${adsloc.ward}, ${adsloc.district}`)
 
 
@@ -1483,10 +1498,10 @@ $(document).ready(function () {
       .then(data => {
         locObject.ward = data.features[0].context[0].text;
         locObject.district = data.features[0].context[2].text;
-        locObject.address = data.features[0].properties.address
-        // console.log("checkkk")
-        // console.log(data)
-        showSidebar(locObject);
+        locObject.address = data.features[0].properties.address;
+        if ($('#sidebar').is(':visible')) { } else {
+          showSidebar(locObject)
+        }
       })
       .catch(error => {
         console.error('Error:', error);
@@ -1523,6 +1538,10 @@ $(document).ready(function () {
   map.on('mouseup', function () {
     // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
     map.getCanvas().style.cursor = 'pointer';
+  });
+
+  map.on('scroll', function () {
+    $('#sidebar').hide()
   });
 });
 
