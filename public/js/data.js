@@ -1580,3 +1580,59 @@ let NguoiDanAdsLoc = {
     }
   ]
 }
+
+let Ward = {
+  message: "Get thành công",
+  content: [
+    {
+      id_ward: 1,
+      ward: "Bến Nghé",
+      id_district: 1
+    },
+    {
+      id_ward: 2,
+      ward: "Bến Thành",
+      id_district: 1
+    },
+    {
+      id_ward: 3,
+      ward: "Cầu Kho",
+      id_district: 1
+    },
+    {
+      id_ward: 4,
+      ward: "Cầu Ông Lãnh",
+      id_district: 1
+    },
+    {
+      id_ward: 5,
+      ward: "Cô Giang",
+      id_district: 1
+    },
+    {
+      id_ward: 6,
+      ward: "Đa Kao",
+      id_district: 1
+    },
+    {
+      id_ward: 7,
+      ward: "Nguyễn Cư Trinh",
+      id_district: 1
+    },
+    {
+      id_ward: 8,
+      ward: "Nguyễn Thái Bình",
+      id_district: 1
+    },
+    {
+      id_ward: 9,
+      ward: "Phạm Ngũ Lão",
+      id_district: 1
+    },
+    {
+      id_ward: 10,
+      ward: "Tân Định",
+      id_district: 1
+    }
+  ]
+}
