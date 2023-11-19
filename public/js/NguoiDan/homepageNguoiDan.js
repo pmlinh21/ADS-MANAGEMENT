@@ -1,3 +1,5 @@
+var flag = false
+
 // DATETIME (SQL) -> dd/mm/yyyy
 function validateSQLDate(dateString) {
   const date = new Date(dateString);
@@ -113,6 +115,7 @@ function showSidebar(adsloc){
   $(".flex-container.toggle").hide()
   $('#sidebar').show()
   renderAds(adsloc)
+  flag = true;
 
   // fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(adsloc.longitude)},${(adsloc.latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
   //   .then(response => response.json())
@@ -125,8 +128,10 @@ function showSidebar(adsloc){
   //     console.error('Error:', error);
   //   });
 
-
-  // $(".locInfo .data").attr("id",`data-${adsloc.id_ads_location}`)
+  if (adsloc.id_ads_location )
+    $(".locInfo").attr("id",`adsloc`)
+  else 
+  $(".locInfo").attr("id",`not-adsloc`)
   $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, ${adsloc.district}`)
 
   
@@ -1441,6 +1446,7 @@ localStorage.setItem("email", JSON.stringify("lvduc@gmail.com"))
   localStorage.setItem("loc_report", JSON.stringify(loc_report))
   localStorage.setItem("adsloc_report", JSON.stringify(adsloc_report))
 
+
   // thay đổi kích thước bản đồ khi resize cửa sổ trình duyệt
     $(window).on('resize', function(){
         let windowHeight = $(window).height();
@@ -1515,6 +1521,7 @@ localStorage.setItem("email", JSON.stringify("lvduc@gmail.com"))
         "list_ads": "null",
         "list_report": "null"
       }
+      // $('#sidebar').hide()
 
       fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(longitude)},${(latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
       .then(response => response.json())
@@ -1522,50 +1529,44 @@ localStorage.setItem("email", JSON.stringify("lvduc@gmail.com"))
         locObject.ward = data.features[0].context[0].text;
         locObject.district = data.features[0].context[2].text;
         locObject.address = data.features[0].properties.address;
-        if ($('#sidebar').is(':visible')) { } else {
-          showSidebar(locObject)
-        }
+        
+        const clickedFeatures = map.queryRenderedFeatures(e.point);
+        const clickedFeature = clickedFeatures[0];
+
+          if (!flag){
+            console.log(flag) 
+            showSidebar(locObject)
+            flag = false
+          } else{
+            console.log(flag) 
+            flag = false
+          }
+          
+          
       })
       .catch(error => {
         console.error('Error:', error);
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = '<p>Error during geocoding.</p>';
+        // const resultDiv = document.getElementById('result');
+        // resultDiv.innerHTML = '<p>Error during geocoding.</p>';
       });
 
-      $.ajax({
-        url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json`,
-        method: 'GET',
-        data: {
-          access_token: mapboxgl.accessToken
-        },
-        success: function (response) {
-          // Lấy địa chỉ từ kết quả Geocoding
-          result = response.features[0].place_name;
-          console.log(response.features[0])
-          // Gán địa chỉ vào phần tử HTML
-          $("#address").val(`${result} [${longitude}, ${latitude}]`);
-        },
-        error: function (error) {
-          console.log(error);
-        }
+        // Lắng nghe sự kiện mousedown trên bản đồ
+      map.on('mousedown', function () {
+        // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
+        map.getCanvas().style.cursor = 'grab';
       });
-  });    
 
-    // Lắng nghe sự kiện mousedown trên bản đồ
-    map.on('mousedown', function () {
-      // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
-      map.getCanvas().style.cursor = 'grab';
-    });
+      // Lắng nghe sự kiện mouseup trên bản đồ
+      map.on('mouseup', function () {
+        // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
+        map.getCanvas().style.cursor = 'pointer';
+      })
 
-    // Lắng nghe sự kiện mouseup trên bản đồ
-    map.on('mouseup', function () {
-      // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
-      map.getCanvas().style.cursor = 'pointer';
-    });
+    });    
 
-    map.on('scroll', function () {
-      $('#sidebar').hide()
-    });
+    // map.on('scroll', function () {
+    //   $('#sidebar').hide()
+    // });
 
     document.getElementById('geocodeForm').addEventListener('submit', function (event) {
       event.preventDefault();
