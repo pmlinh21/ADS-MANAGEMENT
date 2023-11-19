@@ -208,7 +208,8 @@ hr{
 
 #ward-container input:focus,
 .ward-table input:focus,
-[type=radio]:focus {
+[type=radio]:focus,
+.close-button:focus {
   box-shadow: none;
   border-color: #867F7F
 }

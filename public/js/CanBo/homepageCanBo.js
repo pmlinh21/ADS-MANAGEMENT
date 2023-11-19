@@ -1,3 +1,5 @@
+var flag = false;
+
 function renderWard(wards){
   var template = ` 
       <% for (var i = 0; i < wards.length; i++) { %>
@@ -277,7 +279,7 @@ function validateSQLDate(dateString) {
   return formattedDate;
 }
 
-var flag = false;
+
 // hiển thị danh sách các bảng quảng cáo
 function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
   list_ads = JSON.parse(list_ads)
@@ -310,7 +312,7 @@ function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
   $(".adInfo").html(rendered);
 }
 
-function renderReport(list_report, container, user_email) {
+function renderReport(list_report, container) {
   // list_report = JSON.parse(list_report);
   console.log("list_report: ", list_report)
   const note = list_report?.map(item => {
@@ -362,7 +364,7 @@ function renderReport(list_report, container, user_email) {
     </div>
   <% } %>
   `;
-  var rendered = ejs.render(template, { list_report, email, note });
+  var rendered = ejs.render(template, { list_report, note });
   $(container).html(rendered);
 }
 
@@ -404,13 +406,10 @@ function showSidebar(adsloc) {
     console.log("list_report: ", list_report);
     list_report = list_report.filter(item => item[3] == id_ads)
 
-    const user_email = localStorage.getItem('email');
-    console.log("user_email: ", user_email)
-    renderReport(list_report, "#other-report-popup .modal-body", user_email)
+    renderReport(list_report, "#other-report-popup .modal-body")
   })
 
   $("#sidebar .locInfo .other-report-button").on("click", function () {
-    const user_email = localStorage.getItem('email');
 
     if (adsloc.id_ads_location) {
       let tmp = localStorage.getItem('ads_loc_report')
@@ -418,7 +417,7 @@ function showSidebar(adsloc) {
       console.log("list_report: ", list_report);
       list_report = list_report.filter(item => item[3] == adsloc.id_ads_location)
       console.log(list_report)
-      renderReport(list_report, "#other-report-popup .modal-body", user_email)
+      renderReport(list_report, "#other-report-popup .modal-body")
     } else{
       let tmp = localStorage.getItem('loc_report')
       let list_report = (tmp) ? JSON.parse(tmp) : [];
@@ -426,7 +425,7 @@ function showSidebar(adsloc) {
       list_report = list_report.filter(item => 
         (item[3] == adsloc.longitude && item[4] == adsloc.latitude) || (item[5]) == adsloc.address)
         console.log(list_report)
-      renderReport(list_report, "#other-report-popup .modal-body", user_email)
+      renderReport(list_report, "#other-report-popup .modal-body")
     }
     
     
@@ -641,16 +640,20 @@ if (role === 2) {
     
 }
 else if (role === 1) {
-    info = QuanAdsLocation.content.map(function(data){
-      let {id_ads_location, address, ward, loc_type, ads_type, 
-        photo, is_zoning, longitude, latitude, hasAds, hasReport} = data
-      let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
-      id_ads_location = parseInt(id_ads_location)
-      return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, 
-        photo, longitude, latitude, is_zoning,  hasAds, hasReport]
+
+    info = NguoiDanAdsLoc.content.map(function (item) {
+      let { id_ads_location, address, ward, district, loc_type, ads_type,
+        photo, is_zoning, longitude, latitude, list_ads, list_report, id_district } = item;
+      let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch";
+    
+      return [id_ads_location, address, ward, district, loc_type, ads_type, zoning_text,
+          photo, longitude, latitude, is_zoning, list_ads, list_report, id_district];
     })
-    // console.log(info)
-    createMarker(info, map);
+  
+    info = info.filter(item => item[13] == 1)
+    console.log(info);
+
+    createMarker_2(info, map);
     filter_info = [...info]
 
     wards = Ward.content
@@ -691,7 +694,7 @@ else if (role === 1) {
       filter_info = [...result]
       // console.log(filter_info)
       // clearMarker(map);
-      createMarker(filter_info, map);
+      createMarker_2(filter_info, map);
       // console.log(markers)
 
       $('#manage').css('pointer-events', 'auto');
@@ -704,13 +707,85 @@ else if (role === 1) {
   })
 
   $(".flex-container input").on('click', function(e){
-    createMarker(filter_info, map)
+    createMarker_2(filter_info, map)
   })
   
 }
 else{
   $("#select-ward").hide();
 }
+
+let marker = new mapboxgl.Marker();
+  map.on('click', function (e) {
+    let lngLat = e.lngLat;
+    longitude = lngLat.lng;
+    latitude = lngLat.lat;
+    marker.remove()
+    marker = new mapboxgl.Marker({
+      color: '#0B7B31'
+    }).setLngLat(lngLat).addTo(map);
+    map.flyTo({
+      center: lngLat,
+      zoom: 17
+    })
+
+    let locObject = {
+      "colorMarker": null,
+      "id_ads_location": null,
+      "address": null,
+      "ward": null,
+      "district": null,
+      "loc_type": null,
+      "ads_type": null,
+      "zoning_text": null,
+      "imagePath": null,
+      "longitude": null,
+      "latitude": null,
+      "is_zoning": null,
+      "list_ads": "null",
+      "list_report": "null"
+    }
+    // $('#sidebar').hide()
+
+    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(longitude)},${(latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
+      .then(response => response.json())
+      .then(data => {
+        // console.log(data)
+        locObject.ward = data.features[0].context[0].text;
+        locObject.district = data.features[0].context[2].text;
+        locObject.address = data.features[0].properties.address;
+        locObject.longitude = longitude
+        locObject.latitude = latitude
+
+          if (!flag){
+            console.log(flag) 
+            showSidebar(locObject) 
+          } else{
+            console.log(flag) 
+          }
+          
+          flag = false
+          
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // const resultDiv = document.getElementById('result');
+        // resultDiv.innerHTML = '<p>Error during geocoding.</p>';
+      });
+
+    // Lắng nghe sự kiện mousedown trên bản đồ
+    map.on('mousedown', function () {
+      // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
+      map.getCanvas().style.cursor = 'grab';
+    });
+
+    // Lắng nghe sự kiện mouseup trên bản đồ
+    map.on('mouseup', function () {
+      // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
+      map.getCanvas().style.cursor = 'pointer';
+    })
+
+  });
 
 });
 

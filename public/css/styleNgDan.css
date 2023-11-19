@@ -320,6 +320,11 @@ input:checked+.slider:before {
     padding: 0.2rem 0.3rem;
 }
 
+button:active{
+  transform: translateY(4px);
+  cursor: pointer;
+}
+
 .style1-button,
 .style1-button:hover,
 .style1-button:focus {
