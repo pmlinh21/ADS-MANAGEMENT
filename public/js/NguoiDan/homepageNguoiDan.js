@@ -46,28 +46,36 @@ function renderReport(list_report, container, user_email){
       is_user: is_user, 
       statusClass: statusClass, 
       statusText: statusText,
-      report_type: report_type
+      report_type: report_type,
+      imagePath1: item[8] ? `../../../public/image/${item[8]}` : '',
+      imagePath2: item[9] ? `../../../public/image/${item[9]}` : ''
     }
   })
+  console.log(note)
   // list_report.forEach((item, index) => console.log(item, note[index]))
   var template = `
   <% for (var i = 0; i < list_report?.length; i++) { %>
     <div class="<%=note[i].is_user%>-report row" >
-    <div class="col-md-3">
-      <i class="fa-solid fa-file-lines"></i>
-    </div>
-    <div class="col-md-9">
-      <%= list_report[i][7] %>
-    </div>
-    <div class="col-md-12">
-      <div class = <%= note[i].statusClass %> >
-        <%= note[i].statusText %>
+      <div class="col-md-12">
+        <%= list_report[i][7] %>
       </div>
-      <div class = "report-type">
-        <%= note[i].report_type %>
+      <div class="col-md-12 view-image">
+      <% if (note[i].imagePath1) { %>
+        <img class="col-md-6 image1" src="<%= note[i].imagePath1 %>">
+      <% } %>
+      <% if (note[i].imagePath2) { %>
+        <img class="col-md-6 image2" src="<%= note[i].imagePath2 %>">
+      <% } %>
+      </div>
+      <div class="col-md-12 ">
+          <div class = <%= note[i].statusClass %> >
+            <%= note[i].statusText %>
+          </div>
+          <div class = "report-type">
+            <%= note[i].report_type %>
+          </div>
       </div>
     </div>
-  </div>
   <% } %>
   `;
     var rendered = ejs.render(template, { list_report, email, note });
@@ -267,26 +275,23 @@ function showSidebar(adsloc){
         imageData3 = null 
         imageData4 = null
   
-        const info = [[
-          null,
-          null,
-          adsloc.id_ads_location,	
-          $("#reportType").val(),
-          $("#name").val(),
-          $("#email").val(),
-          $("#phone").val(),
-          $("#reportContent").val(),
-          imageData3,
-          imageData4,
-          validateDate(new Date()),
-          0,
-          null
-        ]]
-    
-        const old_report = localStorage.getItem("adsloc_report") 
-        ? JSON.parse(localStorage.getItem("adsloc_report") ) : []
+        const info = (adsloc.id_ads_location) 
+        // adsloc report
+        ? 
+        [[ null, null, adsloc.id_ads_location,$("#reportType").val(), $("#name").val(), 
+        $("#email").val(), $("#phone").val(), $("#reportContent").val(), imageData3, imageData4, 
+        validateDate(new Date()), 0, null ]] 
+        // loc report
+        : 
+        [[ null, null, adsloc.latitude, adsloc.longitude, adsloc.address, null, $("#reportType").val(), 
+        $("#name").val(), $("#email").val(), $("#phone").val(), $("#reportContent").val(), imageData3, imageData4, 
+        validateDate(new Date()), 0, null ]] 
+
+        const table = (adsloc.id_ads_location) ? "adsloc_report" : "loc_report"
+        const old_report = localStorage.getItem(table) 
+        ? JSON.parse(localStorage.getItem(table) ) : []
         const new_report = [...old_report, ...info]
-        localStorage.setItem("adsloc_report", JSON.stringify(new_report))
+        localStorage.setItem(table, JSON.stringify(new_report))
   
         console.log( old_report, info, new_report)
   
@@ -315,11 +320,22 @@ function showSidebar(adsloc){
     ? JSON.parse(localStorage.getItem('email')) 
     : ""
 
-    let tmp = localStorage.getItem('adsloc_report')
-    let list_report = (tmp) ? JSON.parse(tmp) : []
-    list_report = list_report.filter(item => item[2] == adsloc.id_ads_location)
-
-    renderReport(list_report, "#other-report-popup .modal-body", user_email)
+    if (adsloc.id_ads_location) {
+      let tmp = localStorage.getItem('adsloc_report')
+      let list_report = (tmp) ? JSON.parse(tmp) : []
+      list_report = list_report.filter(item => item[2] == adsloc.id_ads_location)
+      console.log(list_report)
+      renderReport(list_report, "#other-report-popup .modal-body", user_email)
+    } else{
+      let tmp = localStorage.getItem('loc_report')
+      let list_report = (tmp) ? JSON.parse(tmp) : []
+      list_report = list_report.filter(item => 
+        (item[3] == adsloc.longitude && item[4] == adsloc.latitude) || (item[5]) == adsloc.address)
+        console.log(list_report)
+      renderReport(list_report, "#other-report-popup .modal-body", user_email)
+    }
+    
+    
   })
 
   $("#sidebar").on("click", '.close-button', function(){
@@ -1256,8 +1272,8 @@ $(document).ready(function () {
         "hvthang@gmail.com",
         "0854455667",
         "Biển quảng cáo chứa thông tin không chính xác về một sự kiện sắp tới. Mong được sửa chữa.",
-        "",
-        "",
+        "image3.png",
+        "image1.png",
         "2023-10-21",
         "1",
         "Thông báo lỗi đến công ty quảng cáo, yêu cầu cập nhật thông tin chính xác về sự kiện và theo dõi việc điều chỉnh."
@@ -1316,7 +1332,7 @@ $(document).ready(function () {
         "dmtam@gmail.com",
         "0818899001",
         "Đề xuất tạo quy định rõ ràng về kích thước quảng cáo tại trung tâm thương mại để giữ gìn vẻ đẹp của thành phố.",
-        "",
+        "image1.png",
         "",
         "2023-10-08",
         "0",
@@ -1519,7 +1535,9 @@ localStorage.setItem("email", JSON.stringify("lvduc@gmail.com"))
         locObject.ward = data.features[0].context[0].text;
         locObject.district = data.features[0].context[2].text;
         locObject.address = data.features[0].properties.address;
-      
+        locObject.longitude = longitude
+        locObject.latitude = latitude
+
           if (!flag){
             console.log(flag) 
             showSidebar(locObject) 

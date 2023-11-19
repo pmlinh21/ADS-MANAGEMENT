@@ -135,12 +135,13 @@ body {
     padding: 1rem;
     border-radius: 0.5rem;
     margin: 1rem;
-    font-size: 0.8rem;
+    
 }
 
 #sidebar .locInfo .data p {
     margin: 0.2rem;
     color: black;
+    font-size: 0.8rem;
 }
 
 /* switch */
@@ -407,18 +408,23 @@ label.required::after{
     background-color: #d9d9d9;
 }
 
-#other-report-popup .col-md-3{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 4.5rem;
-}
-
 #other-report-popup .col-md-12{
     display: flex;
     justify-content: end;
     gap: 0.8rem;
     margin-top: 0.5rem;
+}
+
+#other-report-popup .view-image{
+    background-color: #d9d9d9;
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.view-image img{
+    width: 50%;
+    border-radius: 0.3rem;
 }
 
 #other-report-popup .resolved{

@@ -56,31 +56,30 @@
       </form>
       <div id="result"></div>
 
-
-      <a name="" id="" class="btn btn-success ms-auto" href="#" role="button" onclick="myReportShow()">Báo cáo của
-        bạn</a>
+      <button data-target="#my-report" data-toggle="modal" class="btn style2-button my-report ms-auto my-auto">
+       Báo cáo của bạn
+      </button>
     </div>
   </div>
 
-  <div id="myReport" class="popup">
-    <div class="popup-content">
-      <span class="close" id="closePopup-myReport">&times;</span>
-      <p>BÁO CÁO VI PHẠM CỦA BẠN</p>
-      <div class="my-report">
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem quibusdam ut, sapiente laboriosam
-          eum nobis. Adipisci minus cupiditate nemo est dignissimos. Adipisci suscipit quidem dolor omnis sint
-          cupiditate mollitia neque deleniti commodi porro quia quas, laudantium libero soluta. Dolor,
-          officiis.</p>
-        <div>Đã xử lý</div>
-        <div>Tố giác sai phạm</div>
-      </div>
-      <div class="others-report">
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint nesciunt accusantium dolore at
-          culpa, nobis harum rem voluptatum, dolor suscipit quidem dignissimos voluptates totam. Sapiente
-          voluptas quia quae porro. Obcaecati delectus dolore iure labore eaque dolor totam voluptates soluta
-          magni?</p>
-        <div>Đã xử lý</div>
-        <div>Tố giác sai phạm</div>
+  <div class="modal fade" id="my-report" tabindex="-1" role="dialog" aria-labelledby="edit-request"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header ">
+            <h5 class="modal-title" id="edit-request">BÁO CÁO VI PHẠM CỦA BẠN</h5>
+          </div>
+          <div class="modal-body">
+
+          </div>
+          <div class="modal-footer">
+            <div class="other-symbol">
+              <i class="fa-solid fa-circle"></i> Báo cáo của người khác
+            </div>
+            <div class="mine-symbol">
+              <i class="fa-solid fa-circle"></i> Báo cáo của bạn
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
