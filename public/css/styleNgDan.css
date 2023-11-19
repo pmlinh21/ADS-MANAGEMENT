@@ -98,9 +98,7 @@ body {
 }
 
 #sidebar {
-    height: 100%;
-    /* height: fit-content; */
-    /* width: 0; */
+    height: calc(100% - 3.5rem);
     width: 28%;
     min-width: 20rem;
     max-width: 20rem;

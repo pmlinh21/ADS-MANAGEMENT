@@ -333,8 +333,8 @@ function renderReport(list_report, container) {
       statusClass: statusClass,
       statusText: statusText,
       report_type: report_type,
-      imagePath1: item[8] ? `../../public/image/${item[9]}` : '',
-      imagePath2: item[9] ? `../../public/image/${item[10]}` : ''
+      imagePath1: item[9] ? `../../../public/image/${item[9]}` : '',
+      imagePath2: item[10] ? `../../../public/image/${item[10]}` : ''
     }
   })
   console.log(note)
