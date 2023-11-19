@@ -114,6 +114,15 @@ body {
 }  
 
 /******** BEGIN OF SIDE-NAVBAR ********/
+@media (max-width: 500px) {
+    .side-navbar {
+        padding-top: 100px;
+    }
+    .content {
+        top: 120px;
+    }
+}
+
 .side-navbar {
     position: fixed;
     left: 0;
