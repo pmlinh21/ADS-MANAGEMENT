@@ -16,19 +16,18 @@ body {
     font-weight: 500;
 }
 
-#header {
+/* #header {
     background-color: #0B7B31;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* max-width: 100vw; */
     padding-left: 0.5rem;
     flex-wrap: wrap;
     height: fit-content;
     position: fixed;
     width: 100%;
     z-index: 10;
-}
+} */
 
 .logo-link {
     display: flex;
@@ -37,10 +36,10 @@ body {
 }
 
 .logo-img {
-    width: auto;
-    /* Adjust the width as needed */
+    width: fit-content;
+    align-items: flex-start;
     height: 2.5rem;
-    margin: 0.5rem auto;
+    margin: 0.5rem 1rem 0.5rem 2rem;
 }
 
 /* headerNgDan */
@@ -48,6 +47,7 @@ body {
     background-color: #0B7B31;
     display: flex;
     padding: 0 0.5rem;
+    /* display: none; */
 }
 
 #headerNgDan .flex-container {
@@ -65,62 +65,74 @@ body {
     width: 20rem;
 }
 
-/*homepageNguoiDan.ejs*/
-.circle-marker {
-    width: 1.1rem;
-    height: 1.1rem;
-    border-radius: 50%;
-    background-color: #0B7B31;
-    border: 0.1rem solid #ffffff;
-}
-
-.blue-circle-marker {
-    background-color: blue;
-}
-
 .homepageNgDan {
     height: calc(100% - 3.5rem);
-    position: relative;
-    background-color: #0B7B31;
+    position: absolute;
+    top: 3.5rem;
+    /* background-color: #0B7B31; */
 }
 
 .homepageNgDan #map {
     height: 100%;
     width: 100vw;
     z-index: 0;
+    position: fixed;
+}
+
+.mapboxgl-popup-tip {
+    display: none;
+}
+
+.popup-content {
+    font-family: Montserrat;
+}
+
+.popup-content p {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+
+.popup-content img {
+    width: 100%;
+    margin-top: 5%
 }
 
 #sidebar {
-    height: calc(100% - 3.5rem);
+    height: 100%;
+    /* height: fit-content; */
     /* width: 0; */
-    width: 25rem;
+    width: 28%;
+    min-width: 20rem;
+    max-width: 20rem;
     left: 0;
     position: fixed;
     top: 3.5rem;
     background-color: white;
     overflow-x: hidden;
     transition: 0.2s;
-    z-index: 2;
+    z-index: 100;
 }
 
 #sidebar .adInfo {
     background-color: #C7EBFF;
     color: #05ACF4;
-    padding: 1rem;
+    padding: 0.8rem;
     border-radius: 0.5rem;
-    margin: 1rem;
+    margin: 0.8rem;
 }
 
-#sidebar .adInfo #data {
+#sidebar .adInfo>div {
     background-color: white;
     color: black;
     border-radius: 0.5rem;
-    padding: 1rem;
+    padding: 0.8rem;
     font-size: 0.8rem;
+    position: relative;
+    margin-bottom: 0.8rem;
 }
 
-#sidebar .adInfo #data p {
-    margin: 0.2rem;
+#sidebar .adInfo>div p {
+    margin-bottom: 0rem;
 }
 
 #sidebar .locInfo {
@@ -129,32 +141,39 @@ body {
     padding: 1rem;
     border-radius: 0.5rem;
     margin: 1rem;
+    
 }
 
-#sidebar .locInfo #data p {
+#sidebar .locInfo .data p {
     margin: 0.2rem;
     color: black;
+    font-size: 0.8rem;
 }
 
 /* switch */
 .homepageNgDan .flex-container {
     background-color: white;
     position: absolute;
-    z-index: 1;
+    z-index: 99;
     bottom: 0;
     vertical-align: middle;
-    padding: 0.3rem 2rem;
-    border-radius: 0 4rem 0 0;
+    padding: 0.5rem 1rem;
+    border-radius: 0 1rem 0 0;
+    display: flex;
+    gap: 0.5rem;
+    
 }
 
 span#sub {
-    vertical-align: bottom;
+    vertical-align: middle;
+    white-space: nowrap;
+    /* margin-right: 5%; */
 }
 
 .switch {
     position: relative;
-    width: 55px;
-    height: 30px;
+    width: 50px;
+    height: 25px;
 }
 
 .switch input {
@@ -178,10 +197,11 @@ span#sub {
 .slider:before {
     position: absolute;
     content: "";
-    height: 21px;
-    width: 21px;
-    left: 4px;
-    bottom: 4px;
+    height: 15px;
+    width: 15px;
+    top: 20%;
+    left: 10%;
+    /* transform: translate(-50%, -50%); */
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
@@ -200,9 +220,9 @@ input:checked+.slider#switch3 {
 }
 
 input:checked+.slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    -webkit-transform: translateX(165%);
+    -ms-transform: translateX(165%);
+    transform: translateX(165%);
 }
 
 /* Rounded sliders */
@@ -221,8 +241,9 @@ input:checked+.slider:before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.85);
     /* display: block; */
+    z-index: 3;
 }
 
 .adInfo .popup-content {
@@ -247,6 +268,17 @@ input:checked+.slider:before {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
+#myReport .popup-content {
+    background-color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
 .close {
     position: absolute;
     top: 10px;
@@ -255,18 +287,203 @@ input:checked+.slider:before {
     cursor: pointer;
 }
 
-#success_message{ display: none;}
+#success_message {
+    display: none;
+}
 
-#popup-data-others-report  .my-report, #popup-data-others-report-loc  .my-report{
+.my-report {
     background-color: #BDF3CF;
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
     padding: 0.5rem;
 }
 
-#popup-data-others-report .others-report, #popup-data-others-report-loc .others-report{
+.others-report {
     background-color: gray;
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
     padding: 0.5rem;
+}
+
+
+
+.button-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    gap: 3%;
+    margin-top: 3%;
+}
+
+.btn {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.3rem;
+}
+
+.style1-button,
+.style1-button:hover,
+.style1-button:focus {
+    background-color: #0B7B31;
+    color: white;
+    box-shadow: none;
+}
+
+.style2-button,
+.style2-button:hover,
+.style2-button:active,
+.style2-button:focus,
+.style2-button:focus-within {
+    background-color: #BDF3CF;
+    color: #0B7B31;
+    box-shadow: none;
+}
+
+.style3-button,
+.style3-button:hover,
+.style3-button:focus {
+    background-color: #BC0F24;
+    color: white;
+    box-shadow: none;
+}
+
+.detail-button {
+    color: lightgray;
+    font-size: 1.3rem;
+    position: absolute;
+    top: 3.5%;
+    right: 5%;
+    cursor: pointer
+}
+
+.modal-header {
+    justify-content: center;
+    border: none;
+    padding-bottom: 0
+}
+
+.modal-body {
+    padding-top: 0;
+    border: none;
+    padding-bottom: 0
+}
+
+#detail-popup .image img {
+    width: 100%;
+    margin: 0rem auto 1rem;
+}
+
+#report-popup label {
+    margin-top: 0.5rem;
+    font-size: 0.8rem
+}
+
+label.required::after {
+    content: " *";
+    color: red;
+}
+
+.form-control,
+.form-select,
+.form-control-file {
+    font-size: 0.85rem
+}
+
+.form-control:focus,
+.form-control:hover,
+.form-select:focus,
+.form-select:hover {
+    box-shadow: 0 0 0 0.2rem rgba(11, 123, 49, 0.25);
+    border-color: #0B7B31;
+}
+
+.form-control-file {
+    margin-top: 0.7rem;
+}
+
+.modal-footer {
+    justify-content: space-around;
+    border: none;
+    padding-top: 0
+}
+
+.other-report,
+.mine-report {
+    background-color: #BDF3CF;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    width: 95%;
+    padding: 0.9rem 0.5rem 0.5rem;
+    margin: 0.5rem auto 1rem;
+}
+
+.other-report {
+    background-color: #d9d9d9;
+}
+
+#other-report-popup .col-md-12,
+#my-report .col-md-12{
+    display: flex;
+    justify-content: end;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+#my-report .col-md-12.location{
+    display: block
+}
+
+#other-report-popup .view-image,
+#my-report .view-image{
+    background-color: #d9d9d9;
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.view-image img{
+    width: 50%;
+    border-radius: 0.3rem;
+}
+
+#other-report-popup .resolved,
+#my-report .resolved{
+    background-color: #0B7B31;
+}
+
+#other-report-popup .resolved,
+#other-report-popup .unresolved,
+#other-report-popup .report-type,
+#my-report .resolved,
+#my-report .unresolved,
+#my-report .report-type {
+    color: white;
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.2rem;
+}
+
+#other-report-popup .unresolved,
+#my-report .unresolved {
+    background-color: #BC0F24;
+}
+
+#other-report-popup .report-type,
+#my-report .report-type {
+    background-color: #05ACF4;
+}
+
+.other-symbol i {
+    color: #D9D9D9;
+}
+
+.mine-symbol i {
+    color: #BDF3CF;
+}
+
+.close-button {
+    background-color: lightgray;
+    float: inline-end;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: none;
 }
