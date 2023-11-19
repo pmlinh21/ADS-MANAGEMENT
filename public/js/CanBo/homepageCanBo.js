@@ -313,7 +313,6 @@ function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
 }
 
 function renderReport(list_report, container) {
-function renderReport(list_report, container) {
   // list_report = JSON.parse(list_report);
   console.log("list_report: ", list_report)
   const note = list_report?.map(item => {
@@ -527,120 +526,74 @@ if (role === 2) {
     createMarker_2(filter_info, map)
   })
 
-  let marker = new mapboxgl.Marker();
-  map.on('click', function (e) {
-    let lngLat = e.lngLat;
-    longitude = lngLat.lng;
-    latitude = lngLat.lat;
-    marker.remove()
-    marker = new mapboxgl.Marker({
-      color: '#0B7B31'
-    }).setLngLat(lngLat).addTo(map);
-    map.flyTo({
-      center: lngLat,
-      zoom: 17
-    })
+  // let marker = new mapboxgl.Marker();
+  // map.on('click', function (e) {
+  //   let lngLat = e.lngLat;
+  //   longitude = lngLat.lng;
+  //   latitude = lngLat.lat;
+  //   marker.remove()
+  //   marker = new mapboxgl.Marker({
+  //     color: '#0B7B31'
+  //   }).setLngLat(lngLat).addTo(map);
+  //   map.flyTo({
+  //     center: lngLat,
+  //     zoom: 17
+  //   })
 
-    let locObject = {
-      "colorMarker": null,
-      "id_ads_location": null,
-      "address": null,
-      "ward": null,
-      "district": null,
-      "loc_type": null,
-      "ads_type": null,
-      "zoning_text": null,
-      "imagePath": null,
-      "longitude": null,
-      "latitude": null,
-      "is_zoning": null,
-      "list_ads": "null",
-      "list_report": "null"
-    }
+  //   let locObject = {
+  //     "colorMarker": null,
+  //     "id_ads_location": null,
+  //     "address": null,
+  //     "ward": null,
+  //     "district": null,
+  //     "loc_type": null,
+  //     "ads_type": null,
+  //     "zoning_text": null,
+  //     "imagePath": null,
+  //     "longitude": null,
+  //     "latitude": null,
+  //     "is_zoning": null,
+  //     "list_ads": "null",
+  //     "list_report": "null"
+  //   }
     
-    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(longitude)},${(latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        locObject.ward = data.features[0].context[0].text;
-        locObject.district = data.features[0].context[2].text;
-        locObject.address = data.features[0].properties.address;
-        locObject.longitude = longitude
-        locObject.latitude = latitude
+  //   fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(longitude)},${(latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       console.log(data)
+  //       locObject.ward = data.features[0].context[0].text;
+  //       locObject.district = data.features[0].context[2].text;
+  //       locObject.address = data.features[0].properties.address;
+  //       locObject.longitude = longitude
+  //       locObject.latitude = latitude
 
-          if (!flag){
-            console.log(flag) 
-            showSidebar(locObject) 
-          } else{
-            console.log(flag) 
-          }
+  //         if (!flag){
+  //           console.log(flag) 
+  //           showSidebar(locObject) 
+  //         } else{
+  //           console.log(flag) 
+  //         }
           
-          flag = false
+  //         flag = false
           
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+  //     })
+  //     .catch(error => {
+  //       console.error('Error:', error);
+  //     });
 
-    // Lắng nghe sự kiện mousedown trên bản đồ
-    map.on('mousedown', function () {
-      // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
-      map.getCanvas().style.cursor = 'grab';
-    });
+  //   // Lắng nghe sự kiện mousedown trên bản đồ
+  //   map.on('mousedown', function () {
+  //     // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
+  //     map.getCanvas().style.cursor = 'grab';
+  //   });
 
-    // Lắng nghe sự kiện mouseup trên bản đồ
-    map.on('mouseup', function () {
-      // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
-      map.getCanvas().style.cursor = 'pointer';
-    })
+  //   // Lắng nghe sự kiện mouseup trên bản đồ
+  //   map.on('mouseup', function () {
+  //     // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
+  //     map.getCanvas().style.cursor = 'pointer';
+  //   })
 
-  });
-
-  document.getElementById('geocodeForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    const address = document.getElementById('address').value;
-
-    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(address)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
-      .then(response => response.json())
-      .then(data => {
-        let locObject = {
-          "colorMarker": null,
-          "id_ads_location": null,
-          "address": null,
-          "ward": null,
-          "district": null,
-          "loc_type": null,
-          "ads_type": null,
-          "zoning_text": null,
-          "imagePath": null,
-          "longitude": null,
-          "latitude": null,
-          "is_zoning": null,
-          "list_ads": "null",
-          "list_report": "null"
-        }
-
-        let center = data.features[0].center;
-        map.flyTo({
-          center: center,
-          zoom: 17
-        })
-        // Create a new marker.
-        marker.remove()
-        marker = new mapboxgl.Marker().setLngLat(center).addTo(map);
-        locObject.ward = data.features[0].context[0].text;
-        locObject.district = data.features[0].context[2].text;
-        locObject.address = data.features[0].properties.address;
-        if ($('#sidebar').is(':visible')) { } else {
-          showSidebar(locObject)
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = '<p>Error during geocoding.</p>';
-      });
-  })
+  // });
     
 }
 else if (role === 1) {
@@ -801,7 +754,7 @@ let marker = new mapboxgl.Marker();
 
   });
 
-});
+})
 
 // api
 // $(document).ready(function () {
