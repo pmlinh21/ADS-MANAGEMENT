@@ -129,10 +129,9 @@ function showSidebar(adsloc){
   //   });
 
   if (adsloc.id_ads_location )
-    $(".locInfo").attr("id",`adsloc`)
-  else 
-  $(".locInfo").attr("id",`not-adsloc`)
-  $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, ${adsloc.district}`)
+    $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, ${adsloc.district}`)
+  else
+  $(".locInfo .address").text(`${adsloc.address || ""}`)
 
   
   $("#sidebar").on("click", '.detail-button', function(){
@@ -1529,19 +1528,15 @@ localStorage.setItem("email", JSON.stringify("lvduc@gmail.com"))
         locObject.ward = data.features[0].context[0].text;
         locObject.district = data.features[0].context[2].text;
         locObject.address = data.features[0].properties.address;
-        
-        const clickedFeatures = map.queryRenderedFeatures(e.point);
-        const clickedFeature = clickedFeatures[0];
-
+      
           if (!flag){
             console.log(flag) 
-            showSidebar(locObject)
-            flag = false
+            showSidebar(locObject) 
           } else{
             console.log(flag) 
-            flag = false
           }
           
+          flag = false
           
       })
       .catch(error => {
