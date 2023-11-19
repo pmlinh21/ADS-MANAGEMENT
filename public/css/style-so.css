@@ -114,7 +114,7 @@ body {
 }  
 
 /******** BEGIN OF SIDE-NAVBAR ********/
-@media (max-width: 500px) {
+@media (max-width: 300) {
     .side-navbar {
         padding-top: 100px;
     }
@@ -127,7 +127,7 @@ body {
     position: fixed;
     left: 0;
     padding-top: 60px;
-    height: 100vh;
+    height: 100%;
     width: 300px;
     background: #0E5025;
     transition: 0.5s ease;
