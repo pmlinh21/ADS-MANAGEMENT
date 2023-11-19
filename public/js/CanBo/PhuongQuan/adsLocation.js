@@ -193,10 +193,10 @@ $(document).ready(function () {
         imageData = e.target.files[0]
       }
       else if (!e.target.files[0].type.startsWith('image/')){
-        alert('Avatar must be an image file (.jpg, .png, .jpeg)')
+        alert('Hình ảnh minh họa phải có dạng .jpg, .png, .jpeg')
       }
       else if (!(e.target.files[0].size / 1024 <= 4)){
-        alert('Avatar must not exceed 4MB')
+        alert('Hình ảnh minh họa không được vượt quá 4MB')
       }
     });
 

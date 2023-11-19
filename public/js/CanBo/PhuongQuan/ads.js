@@ -101,18 +101,18 @@ $(document).ready(function () {
       });
 
     
-    $('#photo').on('change', function(e) {
-      if (e.target.files[0])
-      if (e.target.files[0].type.startsWith('image/') &&  e.target.files[0].size / 1024 <= 4*1024){
-        imageData = e.target.files[0]
-      }
-      else if (!e.target.files[0].type.startsWith('image/')){
-        alert('Avatar must be an image file (.jpg, .png, .jpeg)')
-      }
-      else if (!(e.target.files[0].size / 1024 <= 4)){
-        alert('Avatar must not exceed 4MB')
-      }
-    });
+      $('#photo').on('change', function(e) {
+        if (e.target.files[0])
+        if (e.target.files[0].type.startsWith('image/') &&  e.target.files[0].size / 1024 <= 4*1024){
+          imageData = e.target.files[0]
+        }
+        else if (!e.target.files[0].type.startsWith('image/')){
+          alert('Hình ảnh minh họa phải có dạng .jpg, .png, .jpeg')
+        }
+        else if (!(e.target.files[0].size / 1024 <= 4)){
+          alert('Hình ảnh minh họa không được vượt quá 4MB')
+        }
+      });
 
     $('#edit-info .style3-button').off('click').on('click', function(e) {
       $("#address").val("")
