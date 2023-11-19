@@ -1,4 +1,4 @@
-#header {
+/* #header {
     background-color: #0B7B31;
     box-shadow: 4px 4px 5px rgba(5, 5, 5, 0.4);
     z-index: 10;
@@ -7,13 +7,7 @@
     left: 0;
     height: 60px;
     width: 100%;
-}
-
-.logo-img {
-    width: auto;
-    height: 50px;
-    object-fit: cover;
-}
+} */
 
 body {
     background-color: #F4F4F4;
@@ -33,11 +27,97 @@ body {
     position: fixed;
 }
 
+#header {
+    background-color: #0B7B31;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    /* max-width: 100vw; */
+    
+    padding-left: 0.5rem;
+    flex-wrap: wrap;
+    height: fit-content;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    margin: 0;
+    box-shadow: 4px 4px 5px rgba(5, 5, 5, 0.4);
+    box-sizing: border-box;
+}
+
+.logo-img {
+    width: auto;
+    height: 2.5rem;
+    margin: 0.5rem auto;
+}
+
+.logo-link {
+    /* position: absolute; */
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+    /* margin-left: 0rem; */
+}
+
+#navbar {
+    margin: 0;
+    /* margin-left: auto; */
+}
+  
+#navbar ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+  
+#navbar li {
+    transition: background-color 0.2s;
+    position: relative;
+    word-wrap: break-word;
+    height: 100%;
+    display: flex;
+}
+
+#navbar li .nav-link {
+    color: white;
+    text-decoration: none;
+    transition: color 0.2s;
+    align-self: center;
+    /* height: 100%; */
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+  
+#navbar li:hover {
+    background-color: #BDF3CF;
+    transition-duration: 0.2s;
+    cursor: pointer;
+}
+  
+#navbar li:hover .nav-link {
+    color: #0B7B31;
+    transition-duration: 0.2s;
+}
+
+.black-bg{
+    /* display: none;  */
+    background-color: rgba(0,0,0,0.1);
+    position: absolute;
+    z-index: 9;
+}  
+
 /******** BEGIN OF SIDE-NAVBAR ********/
 .side-navbar {
     position: fixed;
     left: 0;
-    padding-top: 65px;
+    padding-top: 60px;
     height: 100vh;
     width: 300px;
     background: #0E5025;
@@ -160,7 +240,7 @@ body {
 .content {
     position: absolute;
     left: 320px;
-    top: 80px;
+    top: 65px;
     width: calc(100% - 340px);
     box-sizing: border-box;
 }
