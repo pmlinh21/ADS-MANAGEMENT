@@ -21,21 +21,6 @@
           </button>
         </div>
       </div>
-      <div class="diem-bat-ky" style="display: none">
-        <i class="fa-solid fa-location-dot"></i> Thông tin địa điểm
-        <div class="data">
-          <p class="place"></p>
-          <p class="address"></p>
-        </div>
-        <div class="button-group">
-          <button data-target="#report-popup" data-toggle="modal" class="btn style3-button report-button">
-            <i class="fa-solid fa-flag"></i> Báo cáo
-          </button>
-          <button data-target="#other-report-popup" data-toggle="modal" class="btn style1-button other-report-button">
-            <i class="fa-solid fa-eye"></i> Xem báo cáo
-          </button>
-        </div>
-      </div>
       <button type="button" class="btn close-button btn-sm" role="button"> <i class="fa-solid fa-arrow-left"></i> Close
       </button>
     </div>
@@ -48,10 +33,10 @@
             <h5 class="modal-title" id="edit-request">Hình ảnh chi tiết bảng quảng cáo </h5>
           </div>
           <div class="modal-body">
-            <div class="col-md-12 image">
+            <div class="col-md-12 image mt-2">
               <img>
             </div>
-            <div class="col-md-12 expired-date"></div>
+            <div class="col-md-12 expired-date mb-2"></div>
           </div>
         </div>
       </div>
@@ -147,7 +132,7 @@
     </div>
 
     <div class="modal fade" id="other-report-popup" tabindex="-1" role="dialog" aria-labelledby="edit-request"
-      aria-hidden="true">
+      aria-hidden="true" data-keyboard="false">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header ">
