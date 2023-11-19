@@ -24,7 +24,7 @@ for (let i = 0; i < boardTypes.length; i++) {
     option.value = boardTypes[i][0];
     option.textContent = boardTypes[i][1];
     select.appendChild(option);
-}s
+};
 
 let adslocations = [
     [1, 10.773695, 106.689636, "59 Nguyễn Thị Minh Khai", 2, 1, 2, 1, 1],
@@ -55,7 +55,6 @@ let adslocations = [
 ];
 
 var wards = [[1, 'Bến Nghé', 1], [2, 'Bến Thành', 1], [3, 'Cầu Kho', 1], [4, 'Cầu Ông Lãnh', 1], [5, 'Cô Giang', 1], [6, 'Đa Kao', 1], [7, 'Nguyễn Cư Trinh', 1], [8, 'Nguyễn Thái Bình', 1], [9, 'Phạm Ngũ Lão', 1], [10, 'Tân Định', 1], [21, '1', 3], [22, '2', 3], [23, '3', 3], [24, '4', 3], [25, '5', 3], [26, '9', 3], [27, '10', 3], [28, '11', 3], [29, '12', 3], [30, '13', 3], [31, '14', 3], [32, 'Võ Thị Sáu', 3]];
-
 
 
 let ads = [
@@ -129,9 +128,9 @@ function mapPopup(e) {
             break;
         }
     }
-    if (document.querySelector("#select-location-map .chosen-address").textContent == "") {
-        document.querySelector("#select-location-map .chosen-address").style.display = "none";
-    }
+    // if (document.querySelector("#select-location-map .chosen-address").textContent == "") {
+    //     document.querySelector("#select-location-map .chosen-address").style.display = "none";
+    // }
 
     let div = document.createElement("div");
     div.className = "popup-background";

@@ -54,8 +54,8 @@
                 </div>
             </div>
             <div class="button-container">
-                <button type="submit" value="delete" class="button">Xóa bảng</button>
-                <button type="button" value="update" class="button button-delete">Lưu thay đổi</button>
+                <button type="submit" value="delete" class="button button-delete">Xóa bảng</button>
+                <button type="button" value="update" class="button">Lưu thay đổi</button>
             </div>
         </form>
 
@@ -66,14 +66,16 @@
                     <input type="text" id="search">
                     <i class="fas fa-search"></i>
                 </span>
-                
             </div>
+            <div class="map" id="map"></div>
             <div class="popupmap-footer">
-                <div class="chosen-address"></div>
+                <div class="chosen-address" id="chosen-address" style="z-index: 1000;"></div>
                 <button>Xác nhận</button>
             </div>
         </div>
+
     </div>
 </div>
+<script src="../../../public/js/CanBo/So/viewmap.js"></script>
 <script src="../../../public/js/CanBo/So/chinhsuaBQC.js"></script>
 <%- include('../../partial/footerSo.ejs') %>
