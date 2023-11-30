@@ -50,7 +50,7 @@ $(document).ready(function () {
               error: function(xhr, status, error) {
                 if (xhr.status === 400 || xhr.status === 500) {
                   // Handle specific 400 error
-                  const errorMessage = xhr.responseJSON.message;
+                  const errorMessage = xhr.responseJSON?.message;
                   alert(errorMessage);
                 } 
               }

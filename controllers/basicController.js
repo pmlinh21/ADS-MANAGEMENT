@@ -82,7 +82,7 @@ const login = async(req, res) =>{
                 return;
             }
             else{
-                failCode(res, "", "Password or email is wrong!");
+                failCode(res, "", "Email hay mật khẩu không đúng");
                 return;
             }
         } 
@@ -101,7 +101,7 @@ const login = async(req, res) =>{
                 return;
             }
             else{
-                failCode(res, "", "Password or email is wrong!");
+                failCode(res, "", "Email hay mật khẩu không đúng");
                 return;
             }
             
@@ -121,12 +121,12 @@ const login = async(req, res) =>{
                 return;
             }
             else{
-                failCode(res, "", "Password or email is wrong!");
+                failCode(res, "", "Email hay mật khẩu không đúng");
                 return;
             }
         }
 
-        failCode(res, "", "Password or email is wrong!");
+        failCode(res, "", "Email hay mật khẩu không đúng");
 
     }catch(err){
         errorCode(res,"Lỗi BE")
@@ -134,21 +134,21 @@ const login = async(req, res) =>{
 }
 
 const updatePassword = async(req,res) => {
-    // let {email} = req.params
+    let {email} = req.params
 
-    // try{
-    //     const data = await model.CanboSo.findOne({email: email})
+    try{
+        const data = await model.CanboSo.findOne({where: {email}})
 
-    //     let passWordHash = bcrypt.hashSync(data.password, 10);
+        let passWordHash = bcrypt.hashSync(data.password, 10);
     
-    //     const newdata = await model.CanboSo.update({ password: passWordHash }, {
-    //         where: {email}
-    //     });
-    //     sucessCode(res,newdata,"Get thành công")
+        const newdata = await model.CanboSo.update({ password: passWordHash }, {
+            where: {email}
+        });
+        sucessCode(res,data,"Get thành công")
 
-    // }catch(err){
-    //     errorCode(res,"Lỗi BE")
-    // }
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
 }
 
 module.exports = { getAdsType, getBoardType, getReportType, getLocType, login, updatePassword}

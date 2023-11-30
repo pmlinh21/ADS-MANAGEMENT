@@ -1,263 +1,330 @@
-// hard code
 $(document).ready(function () {
-  // const role = 1; 
-  // const email = "nnlien21@clc.fitus.edu.vn"
-  const id_district = 1;
+  const role = parseInt(localStorage.getItem('role'))
+  console.log(role);
+
   mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
 
-  var loc_type = LocType.content, ads_type = AdsType.content
+  var loc_type, ads_type
   var info, filter_info, wards
 
-  wards = Ward.content.map(ward => ward.ward); 
-  console.log("!");
-  renderWard(wards);
-
-  info = QuanAdsLocation.content.map(function(data){
-    let {id_ads_location, address, ward, loc_type, ads_type, 
-      photo, is_zoning, longitude, latitude} = data
-    let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
-    id_ads_location = parseInt(id_ads_location)
-    return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, 
-      '<button data-target="#view-image" data-toggle="modal" class="btn-cell btn view-btn"><i class="fa-solid fa-eye"></i></button>',
-      '<button data-target="#edit-info" data-toggle="modal" class="btn-cell btn edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>',
-      photo, longitude, latitude]
-  })
-  filter_info = [...info]
-  console.log(filter_info)
-  $("#example").DataTable({
-    data: filter_info
+  $.get(`http://localhost:8080/api/basic/getLocType`, function(data) {
+    loc_type = data.content
+  }).fail(function(error) {
+    console.log(error);
   });
 
-  $('#example_wrapper').on('click', ".view-btn", function(){
-    let row = $(this).closest('tr').index();
-    console.log(filter_info[row][8]);
-    let path  = "../../../public/image/image-placeholder.jpg"
-    if (filter_info[row][8] != "")
-      path  = `../../../../public/image/${filter_info[row][8]}`
-    $('#view-image .photo').attr('src', path );
-    return
-  })
-
-  $('.ward-table input').click(function() {
-    var id_ward = $(this).attr('id');
-    id_ward = id_ward.slice(id_ward.indexOf("-") + 1)
-
-    if ($(this).is(':checked')) {
-      for (var i = 0; i < info.length; i++){
-        if (info[i][2] == wards[id_ward])
-        filter_info.push(info[i]);
-      }
-    } else {
-      var result = []
-      for (var i = 0; i < filter_info.length; i++){
-        if (filter_info[i][2] != wards[id_ward])
-          result.push(filter_info[i]);
-      }
-      filter_info = [...result]
-    }
-
-    $("#example").DataTable().clear().rows.add(filter_info.sort(function(a, b) {
-      return a[0] - b[0];
-    })).draw();
-    // return
+  $.get(`http://localhost:8080/api/basic/getAdsType`, function(data) {
+    ads_type = data.content
+  }).fail(function(error) {
+    console.log(error);
   });
+  
+  if (role == 2){
 
-  $("#example_wrapper").on('click', '.edit-btn', function(event){
-    var click_row = $(event.target).closest('tr').index();
-    var ward = district = result = longitude = latitude = imageData = null
+
+
+
+
+
     
-    // console.log(filter_info[click_row][0])
-    loc_type?.forEach(function(type){
-      $('#id_loc_type').append(`<option value=${type.id_loc_type}>${type.loc_type}</option>`);
-    })
+  } else if (role == 1){
+    const id_district = parseInt(localStorage.getItem('id_district'));
+    const email = localStorage.getItem('email');
 
-    ads_type?.forEach(function(type){
-      $('#id_ads_type').append(`<option value=${type.id_ads_type}>${type.ads_type}</option>`);
-    })
-
-    var map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [filter_info[click_row][9], filter_info[click_row][10]],
-      zoom: 17
+    $.get(`http://localhost:8080/api/quan/getWard/${id_district}`, function(data) {
+      wards = data.content.map(ward => ward.ward);
+      console.log("!");
+      renderWard(wards);
+    }).fail(function(error) {
+      console.log(error);
     });
 
-    var language = new MapboxLanguage({
-      defaultLanguage: 'vi'
-    });
-    map.addControl(language);
+    $.get(`http://localhost:8080/api/quan/getAdsLocation/${id_district}`, function(data) {
+      info = data.content.map(function(data){
+        let {id_ads_location, address, ward, loc_type, ads_type, 
+          photo, is_zoning, longitude, latitude, district} = data
+        let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
+        id_ads_location = parseInt(id_ads_location)
+        return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, 
+          '<button data-target="#view-image" data-toggle="modal" class="btn-cell btn view-btn"><i class="fa-solid fa-eye"></i></button>',
+          '<button data-target="#edit-info" data-toggle="modal" class="btn-cell btn edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>',
+          photo, longitude, latitude, is_zoning, district]
+      })
+      filter_info = [...info].sort(function(a, b) {
+        return a[0] - b[0];
+      })
+      console.log(filter_info)
 
-    var geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl
-    });
-    geocoder.setLanguage('vi');
+      $("#example").DataTable({
+        data: filter_info
+      });
 
-    let canvas = $('.mapboxgl-canvas')
-    canvas.width('100%');
-
-    $('#search').append(geocoder.onAdd(map));
-
-    $(".header-map i").on('click', geocoding);
-    $('#search').on('keydown', function(event) {
-      if (event.keyCode === 13) { // Kiểm tra phím Enter
-        geocoding();
-      }
-    });
-
-    function geocoding(){
-      var address = $('#search').val()
-
-      $.ajax({
-        url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(address) + '.json',
-        type: 'GET',
-        data: {
-          access_token: mapboxgl.accessToken,
-          language: "vi"
-        },
-        success: function(response) {
-          // Xử lý kết quả geocoding
-          var features = response.features;
-          if (features.length > 0) {
-            var firstFeature = features[0];
-            var coordinates = firstFeature.center;
-            console.log(firstFeature)
-            result = firstFeature.place_name;
-            // ward = firstFeature.context[0];
-            // district = firstFeature.context[1];
-            longitude = coordinates[0];
-            latitude= coordinates[1]
-            // console.log(firstFeature)
-
-            // Cập nhật tọa độ và zoom của map
-            map.flyTo({
-              center: coordinates,
-              zoom: 17
-            });
-
-            new mapboxgl.Marker( {color: '#0B7B31' })
-            .setLngLat(coordinates) // Specify the marker longitude and latitude
-            .addTo(map);
-
-            $("#address").val(`${result} [${coordinates[0]}, ${coordinates[1]}]` )
-            
-          } else {
-            alert('No results found');
+      $('#example_wrapper').on('click', ".view-btn", function(){
+        let row = $(this).closest('tr').index();
+        console.log(filter_info[row][8]);
+        let path  = "../../../public/image/image-placeholder.jpg"
+        if (filter_info[row][8] != "")
+          path  = `../../../../public/image/${filter_info[row][8]}`
+        $('#view-image .photo').attr('src', path );
+        return
+      })
+    
+      $('.ward-table input').click(function() {
+        var id_ward = $(this).attr('id');
+        id_ward = id_ward.slice(id_ward.indexOf("-") + 1)
+    
+        if ($(this).is(':checked')) {
+          for (var i = 0; i < info.length; i++){
+            if (info[i][2] == wards[id_ward])
+            filter_info.push(info[i]);
           }
-        },
-        error: function() {
-          alert('Error occurred during geocoding');
+        } else {
+          var result = []
+          for (var i = 0; i < filter_info.length; i++){
+            if (filter_info[i][2] != wards[id_ward])
+              result.push(filter_info[i]);
+          }
+          filter_info = [...result]
         }
+
+        $("#example").DataTable().clear().rows.add(filter_info.sort(function(a, b) {
+          return a[0] - b[0];
+        })).draw();
+        // return
       });
-    }
-
-    map.on('click', function(e) {
-      let lngLat = e.lngLat;
-      longitude = lngLat.lng;
-      latitude = lngLat.lat;
-    
-      $.ajax({
-        url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json`,
-        method: 'GET',
-        data: {
-          access_token: mapboxgl.accessToken
-        },
-        success: function(response) {
-          // Lấy địa chỉ từ kết quả Geocoding
-          result = response.features[0].place_name;
-          console.log(response.features[0])
-          // Gán địa chỉ vào phần tử HTML
-          $("#address").val(`${result} [${longitude}, ${latitude}]`);
-        },
-        error: function(error) {
-          console.log(error);
-        }
-      });
-    });
-
-    // Lắng nghe sự kiện mousedown trên bản đồ
-    map.on('mousedown', function() {
-      // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
-      map.getCanvas().style.cursor = 'grab';
-    });
-
-    // Lắng nghe sự kiện mouseup trên bản đồ
-    map.on('mouseup', function() {
-      // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
-      map.getCanvas().style.cursor = 'pointer';
-    });
-    
-    $('#photo').on('change', function(e) {
-      if (e.target.files[0])
-      if (e.target.files[0].type.startsWith('image/') &&  e.target.files[0].size / 1024 <= 4*1024){
-        imageData = e.target.files[0]
-      }
-      else if (!e.target.files[0].type.startsWith('image/')){
-        alert('Hình ảnh minh họa phải có dạng .jpg, .png, .jpeg')
-      }
-      else if (!(e.target.files[0].size / 1024 <= 4)){
-        alert('Hình ảnh minh họa không được vượt quá 4MB')
-      }
-    });
-
-    $('#edit-info .style3-button').off('click').on('click', function(e) {
-      $("#address").val("")
-      $('#id_loc_type').val("")
-      $('#id_ads_type').val("")
-      $('#is_zoning').val("")
-      $('#reason').val("")
-      $('#photo').val("")
-    })
-
-    $('#edit-info .style1-button').off('click').on('click', function(e) {
-      e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
       
-      // console.log(longitude, latitude, filter_info[click_row][0]);
-      let reason = $('#reason').val();
-      if (!reason){
-        alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
-      }
-      else{
-        var formData = new FormData();
-        formData.append('id_ads_location',filter_info[click_row][0]);
-        formData.append('latitude', latitude);
-        formData.append('longitude', longitude);
-        formData.append('address', null);
-        formData.append('id_ward', null);
-        formData.append('id_district', null);
-        formData.append('id_loc_type', $('#id_loc_type').val());
-        formData.append('file', imageData);
-        formData.append('id_ads_type', $('#id_ads_type').val());
-        formData.append('is_zoning', $('#is_zoning').val());
-        formData.append('req_time', validateDate(new Date()));
-        formData.append('reason', $('#reason').val());
-        formData.append('office', role);
+      $("#example_wrapper").on('click', '.edit-btn', function(event){
+        var click_row = $(event.target).closest('tr').index();
+        var imageData = null
+        var address = filter_info[click_row][1], ward = filter_info[click_row][2],  district = filter_info[click_row][12] 
+        var longitude = filter_info[click_row][9], latitude = filter_info[click_row][10]
+
+        // console.log(filter_info[click_row])
+
+        $("#address").val(`${address}, phường ${ward}, ${district} [${longitude},${latitude}]`)
+
+        if (filter_info[click_row][11])
+          $("#yes").addClass('selected')
+        else
+          $("#no").addClass('selected')
+
+        loc_type?.forEach(function(type){
+          if (filter_info[click_row][3] == type.loc_type) 
+            $('#id_loc_type').append(`<option selected value=${type.id_loc_type}>${type.loc_type}</option>`);
+          else 
+            $('#id_loc_type').append(`<option value=${type.id_loc_type}>${type.loc_type}</option>`);
+        })
+    
+        ads_type?.forEach(function(type){
+          if (filter_info[click_row][4] == type.ads_type) 
+            $('#id_ads_type').append(`<option selected value=${type.id_ads_type}>${type.ads_type}</option>`);
+          else
+            $('#id_ads_type').append(`<option value=${type.id_ads_type}>${type.ads_type}</option>`);
+        })
+    
+        var map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/streets-v11',
+          center: [longitude, latitude],
+          zoom: 17,
+          language: 'vi'
+        });
+        // console.log(longitude, latitude);
+        var language = new MapboxLanguage({
+          defaultLanguage: 'vi'
+        });
+        map.addControl(language);
+    
+        // var geocoder = new MapboxGeocoder({
+        //   accessToken: mapboxgl.accessToken,
+        //   mapboxgl: mapboxgl
+        // });
+        // geocoder.setLanguage('vi');
+    
+        let canvas = $('.mapboxgl-canvas')
+        canvas.width('100%');
+    
+        // $('#search').append(geocoder.onAdd(map));
+    
+        // $(".header-map i").on('click', geocoding);
+        // $('#search').on('keydown', function(event) {
+        //   if (event.keyCode === 13) { // Kiểm tra phím Enter
+        //     geocoding();
+        //   }
+        // });
+    
+        // function geocoding(){
+        //   var address = $('#search').val()
+    
+        //   $.ajax({
+        //     url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(address) + '.json',
+        //     type: 'GET',
+        //     data: {
+        //       access_token: mapboxgl.accessToken,
+        //       language: "vi"
+        //     },
+        //     success: function(response) {
+        //       // Xử lý kết quả geocoding
+        //       var features = response.features;
+        //       if (features.length > 0) {
+        //         var firstFeature = features[0];
+        //         var coordinates = firstFeature.center;
+        //         console.log(firstFeature)
+        //         result = firstFeature.place_name;
+        //         // ward = firstFeature.context[0];
+        //         // district = firstFeature.context[1];
+        //         longitude = coordinates[0];
+        //         latitude= coordinates[1]
+        //         // console.log(firstFeature)
+    
+        //         // Cập nhật tọa độ và zoom của map
+        //         map.flyTo({
+        //           center: coordinates,
+        //           zoom: 17
+        //         });
+    
+        //         new mapboxgl.Marker( {color: '#0B7B31' })
+        //         .setLngLat(coordinates) // Specify the marker longitude and latitude
+        //         .addTo(map);
+    
+        //         $("#address").val(`${result} [${coordinates[0]}, ${coordinates[1]}]` )
+                
+        //       } else {
+        //         alert('No results found');
+        //       }
+        //     },
+        //     error: function() {
+        //       alert('Error occurred during geocoding');
+        //     }
+        //   });
+        // }
+    
+        let marker = new mapboxgl.Marker();
+        map.on('click', function(e) {
+          let lngLat = e.lngLat;
+          longitude = lngLat.lng;
+          latitude = lngLat.lat;
+          marker.remove()
+          marker = new mapboxgl.Marker({
+            color: '#0B7B31'
+          }).setLngLat(lngLat).addTo(map);
+          map.flyTo({
+            center: lngLat,
+            zoom: 17
+          })
+
+          $.ajax({
+            url: `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${latitude}%2C${longitude}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc&lang=vi`,
+            method: 'GET',
+            success: function(response) {
+              console.log(response)
+              const feature = response.items[0].address
+              ward = feature?.district.substring(7)
+              district = feature?.city
+              address = (feature?.houseNumber && feature?.street)
+              ? feature?.houseNumber + " " +  feature?.street
+              : feature?.label.substring(0, feature?.label.indexOf(", Phường") )
+              
+              $("#address").val(`${address}, phường ${ward}, ${district} [${longitude}, ${latitude}]`);
+            },
+            error: function(error) {
+              console.log(error);
+            }
+          });
+        });
+    
+        // Lắng nghe sự kiện mousedown trên bản đồ
+        map.on('mousedown', function() {
+          // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
+          map.getCanvas().style.cursor = 'grab';
+        });
+    
+        // Lắng nghe sự kiện mouseup trên bản đồ
+        map.on('mouseup', function() {
+          // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
+          map.getCanvas().style.cursor = 'pointer';
+        });
         
-        $("form").get(0).reset();
-        $("#edit-info").modal("hide")
+        $('#photo').on('change', function(e) {
+          if (e.target.files[0])
+          if (e.target.files[0].type.startsWith('image/') &&  e.target.files[0].size / 1024 <= 4*1024){
+            imageData = e.target.files[0]
+          }
+          else if (!e.target.files[0].type.startsWith('image/')){
+            alert('Hình ảnh minh họa phải có dạng .jpg, .png, .jpeg')
+          }
+          else if (!(e.target.files[0].size / 1024 <= 4)){
+            alert('Hình ảnh minh họa không được vượt quá 4MB')
+          }
+        });
+    
+        $('#edit-info .style3-button').off('click').on('click', function(e) {
+          $("#address").val("")
+          $('#id_loc_type').val("")
+          $('#id_ads_type').val("")
+          $('#is_zoning').val("")
+          $('#reason').val("")
+          $('#photo').val("")
+        })
+    
+        $('#edit-info .style1-button').off('click').on('click', function(e) {
+          e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
+          
+          // console.log(longitude, latitude, filter_info[click_row][0]);
+          let reason = $('#reason').val();
+          if (!reason){
+            alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
+          }
+          else{
+            var formData = new FormData();
+            formData.append('id_ads_location',filter_info[click_row][0]);
+            formData.append('latitude', latitude);
+            formData.append('longitude', longitude);
+            formData.append('address', address);
+            formData.append('ward', ward);
+            formData.append('district', district);
+            formData.append('id_loc_type', $('#id_loc_type').val());
+            formData.append('file', imageData);
+            formData.append('id_ads_type', $('#id_ads_type').val());
+            formData.append('is_zoning', $('#is_zoning').val());
+            formData.append('req_time', validateDate(new Date()));
+            formData.append('reason', $('#reason').val());
+            formData.append('office', role);
+            
+            $("form").get(0).reset();
+            $("#edit-info").modal("hide")
 
-      }
+            $.ajax({
+              url: `http://localhost:8080/api/quan/updateAdsLoc/${email}`,
+              type: 'POST',
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function(response) {
+                // Handle the successful response here
+                console.log(response);
+              },
+              error: function(xhr, status, error) {
+                // Handle the error here
+                console.error(error);
+              }
+            });
+    
+          }
+        })
+      })
+
+    }).fail(function(error) {
+      console.log(error);
     })
-  })
+  } else if (role == 3){
 
-
-const manageButton = $('#manage');
-const manageMenu = $('#manage .manage-menu');
-
-manageButton.hover(
-  function () {
-    $(this).addClass('li-hover');
-    $('#manage .nav-link').addClass('nav-link-hover');
-    manageMenu.show();
-    $('.black-bg').show()
-  },
-  function () {
-    $(this).removeClass('li-hover');
-    $('#manage .nav-link').removeClass('nav-link-hover');
-    manageMenu.hide();
-    $('.black-bg').hide()
   }
-);
+
+
+  
+
+
 });
 
 // gọi api
