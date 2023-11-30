@@ -135,11 +135,11 @@ $(document).ready(function () {
         });
         map.addControl(language);
     
-        // var geocoder = new MapboxGeocoder({
-        //   accessToken: mapboxgl.accessToken,
-        //   mapboxgl: mapboxgl
-        // });
-        // geocoder.setLanguage('vi');
+        var geocoder = new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+          mapboxgl: mapboxgl
+        });
+        geocoder.setLanguage('vi');
     
         let canvas = $('.mapboxgl-canvas')
         canvas.width('100%');
@@ -217,7 +217,7 @@ $(document).ready(function () {
             url: `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${latitude}%2C${longitude}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc&lang=vi`,
             method: 'GET',
             success: function(response) {
-              console.log(response)
+              // console.log(response)
               const feature = response.items[0].address
               ward = feature?.district.substring(7)
               district = feature?.city
