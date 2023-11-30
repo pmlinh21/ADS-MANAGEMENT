@@ -12,8 +12,10 @@ const storage = (folderName) => multer.diskStorage({
     }
 })
 
+const uploadNone = multer()
+
 const upload = (folderName) => multer({
     storage: storage(folderName)
 });
 
-module.exports = { upload }
+module.exports = { upload, uploadNone }

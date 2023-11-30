@@ -58,7 +58,7 @@ const getAdsLoc = async(req, res) =>{
                 
             let list_ads = []
             for (let j = 0; j < ads.length; j++) {
-                if (ads[j].id_ads_location = adsloc[i].id_ads_location){
+                if (ads[j].id_ads_location == adsloc[i].id_ads_location){
                     list_ads.push(ads[j])
                 }
             }

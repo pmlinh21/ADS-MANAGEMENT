@@ -32,3 +32,7 @@ if (role == 2){
     $('.manage-menu li:nth-child(3) a').attr('href',  "/report") 
     $('.manage-menu li:nth-child(4) a').attr('href', "/createAds")  
 }
+
+$("#logout").on('click', function(){
+  localStorage.clear();
+})

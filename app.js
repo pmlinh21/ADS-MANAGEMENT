@@ -12,14 +12,14 @@ const cors = require('cors');
 app.use(cors());
 
 // Kết nối tới cơ sở dữ liệu MySQL bằng Sequelize
-// sequelize
-//   .authenticate()
-//   .then(() => {
-//     console.log('Connected to the database successfully');
-//   })
-//   .catch((err) => {
-//     console.error('Unable to connect to the database:', err);
-//   });
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connected to the database successfully');
+  })
+  .catch((err) => {
+    console.error('Unable to connect to the database:', err);
+  });
 
 // const appNguoiDan = express();
 // appNguoiDan.listen(portNguoiDan, () => {
