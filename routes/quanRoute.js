@@ -11,8 +11,6 @@ const { upload } = require('../middlewares/upload');
 
 quanRoute.get("/getAllAdsLoc", getAllAdsLoc)
 
-quanRoute.get("/getInfo/:email", getInfo);
-
 quanRoute.put("/updateInfo/:id_district", updateInfo);
 
 quanRoute.put("/updatePassword/:id_district", updatePassword);

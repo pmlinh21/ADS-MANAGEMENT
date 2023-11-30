@@ -37,6 +37,7 @@ $(document).ready(function () {
               processData: false,
               contentType: false,
               success: function(response) {
+                // console.log(response);
                 const role = response.content.role
                 localStorage.setItem('email', response.content.info.email)
                 localStorage.setItem('role', role)
@@ -47,7 +48,7 @@ $(document).ready(function () {
                 window.location.href = "/"
               },
               error: function(xhr, status, error) {
-                if (xhr.status === 400) {
+                if (xhr.status === 400 || xhr.status === 500) {
                   // Handle specific 400 error
                   const errorMessage = xhr.responseJSON.message;
                   alert(errorMessage);
