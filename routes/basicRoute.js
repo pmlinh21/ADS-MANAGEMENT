@@ -1,6 +1,8 @@
 const express = require('express');
 const basicRoute = express.Router();
 const { getLocType, getAdsType, getBoardType, getReportType,
+    getAdsReportByID, getAdsLocReportByID, getLocReportByID,
+    updateAdsReportByID,
     login, updatePassword } = require('../controllers/basicController')
 const { upload, uploadNone } = require('../middlewares/upload');
 
@@ -13,6 +15,18 @@ basicRoute.get("/getBoardType", getBoardType);
 basicRoute.get("/getReportType", getReportType);
 
 basicRoute.get("/updatePwd/:email", updatePassword);
+
+basicRoute.get("/getAdsReportByID/:id_report", getAdsReportByID);
+
+basicRoute.get("/getAdsLocReportByID/:id_report", getAdsLocReportByID);
+
+basicRoute.get("/getLocReportByID/:id_report", getLocReportByID);
+
+basicRoute.put("/updateAdsReportByID/:id_report", updateAdsReportByID);
+
+// basicRoute.put("/updateAdsLocReportByID/:id_report", updateAdsReportByID);
+
+// basicRoute.put("/updateLocReportByID/:id_report", updateAdsReportByID);
 
 basicRoute.post("/login", uploadNone.none(), login);
 

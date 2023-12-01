@@ -151,4 +151,85 @@ const updatePassword = async(req,res) => {
     }
 }
 
-module.exports = { getAdsType, getBoardType, getReportType, getLocType, login, updatePassword}
+const getAdsReportByID = async(req, res) =>{
+    try{
+        let { id_report } = req.params;
+
+        const [data, metadata] = await sequelize.query
+            (`SELECT ar.*, rt.report_type, w.ward
+            FROM Ads_report ar
+            INNER JOIN Report_type rt ON rt.id_report_type = ar.id_report_type
+            INNER JOIN Ads a ON a.id_ads = ar.id_ads
+            INNER JOIN Ads_location al ON al.id_ads_location = a.id_ads_location
+            INNER JOIN Ward w ON w.id_ward = al.id_ward
+            WHERE ar.id_report = ${id_report}`);
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
+const getAdsLocReportByID = async(req, res) =>{
+    try{
+        let { id_report } = req.params;
+
+        const [data, metadata] = await sequelize.query
+            (`SELECT ar.*, rt.report_type, w.ward
+            FROM Ads_loc_report ar
+            INNER JOIN Report_type rt ON rt.id_report_type = ar.id_report_type
+            INNER JOIN Ads_location al ON al.id_ads_location = ar.id_ads_location
+            INNER JOIN Ward w ON w.id_ward = al.id_ward
+            WHERE ar.id_report = ${id_report}`);
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
+const getLocReportByID = async(req, res) =>{
+    try{
+        let { id_report } = req.params;
+
+        const [data, metadata] = await sequelize.query
+            (`SELECT ar.*, rt.report_type, w.ward, d.district
+            FROM Location_report ar
+            INNER JOIN Report_type rt ON rt.id_report_type = ar.id_report_type
+            INNER JOIN Ward w ON w.id_ward = ar.id_ward
+            INNER JOIN District d ON d.id_district = w.id_district
+            WHERE ar.id_report = ${id_report}`);
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
+const updateAdsReportByID = async(req, res) =>{
+    try{
+        let { id_report } = req.params;
+
+        let {resolve, status, role, email} = req.body
+
+        await model.Ads_report.update({
+            resolve, status, 
+            office: role, 
+            officer: email
+        }, {
+            where:{
+                id_report
+            }
+       })
+
+        sucessCode(res,{resolve, status, role, email},"Update thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
+module.exports = { getAdsType, getBoardType, getReportType, getLocType,
+    getAdsReportByID, getAdsLocReportByID, getLocReportByID,
+    updateAdsReportByID,
+    login, updatePassword}

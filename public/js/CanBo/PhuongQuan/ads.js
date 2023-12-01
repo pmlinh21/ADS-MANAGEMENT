@@ -38,7 +38,7 @@ $(document).ready(function () {
         let {id_ads, id_ads_location, address, ward, loc_type, board_type, photo,
           width, height, quantity, expired_date, longitude, latitude, id_board_type } = data
         return [parseInt(id_ads), board_type, `${address}, phường ${ward}`, loc_type, `${width}m x ${height}m`, quantity, 
-        validateSQLDate(expired_date), 
+        formatSQLDate_dmy(expired_date), 
         '<button data-target="#view-image" data-toggle="modal" class="btn-cell btn view-btn"><i class="fa-solid fa-eye"></i></button>',
         '<button data-target="#edit-info" data-toggle="modal" class="btn-cell btn edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>',
         photo, parseInt(id_ads_location), ward, longitude, latitude, parseInt(id_board_type), width, height]

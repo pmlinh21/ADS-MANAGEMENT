@@ -26,7 +26,17 @@ function validateDate(date){
     return formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-function validateSQLDate(dateString) {
+function formatSQLDate_ymd(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+}
+
+function formatSQLDate_dmy(dateString) {
     const date = new Date(dateString);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -34,4 +44,4 @@ function validateSQLDate(dateString) {
     
     const formattedDate = `${day}-${month}-${year}`;
     return formattedDate;
-  }
+}

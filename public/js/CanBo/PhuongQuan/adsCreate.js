@@ -18,7 +18,7 @@ $(document).ready(function () {
     let statusText = item[16] ? "Đã xét duyệt" : "Chưa xét duyệt"
 
     return [item[0], item[17], `${item[13]}, phường ${item[18]}`, item[8], item[10],
-    validateSQLDate(item[14]), validateSQLDate(item[15]), statusText, 
+    formatSQLDate_dmy(item[14]), formatSQLDate_dmy(item[15]), statusText, 
     '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>', 
     item[5], item[6], item[7], item[9], item[11], item[12], item[18]]
   })

@@ -5,7 +5,3 @@ $.extend($.fn.dataTable.defaults, {
   info: false,
   pageLength: 5,
 });
-
-$(document).ready(function () {
-    
-  });

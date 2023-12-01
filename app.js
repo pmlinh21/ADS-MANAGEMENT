@@ -1,12 +1,12 @@
 const express = require('express');
 const app = express();
-// const portNguoiDan = 8081; 
-const portCanBo = 8080;
+const port = 8080;
 
 const sequelize = require('./models/index');
 const config = require('./config/index');
 const path = require('path');
 app.use(express.json());
+app.use(express.urlencoded({ extended: false}))
 
 const cors = require('cors');
 app.use(cors());
@@ -21,188 +21,176 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
-// const appNguoiDan = express();
-// appNguoiDan.listen(portNguoiDan, () => {
-//   console.log(`Phân hệ người dân đang chạy trên cổng ${portNguoiDan}`);
-// });
-
-const appCanBo = express();
-appCanBo.listen(portCanBo, () => {
-  console.log(`Phân hệ cán bộ đang chạy trên cổng ${portCanBo}`);
+app.listen(port, () => {
+  console.log(`Phân hệ cán bộ đang chạy trên cổng ${port}`);
 });
 
-// Thiết lập EJS cho appNguoiDan
-// appNguoiDan.set('view engine', 'ejs');
-// appNguoiDan.set('views', path.join(__dirname, 'views'));
-// appNguoiDan.use('/public', express.static('public'));
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
 
-// Thiết lập EJS cho appCanBo
-appCanBo.set('view engine', 'ejs');
-appCanBo.set('views', path.join(__dirname, 'views'));
-appCanBo.use('/public', express.static('public'));
+
+// Thiết lập EJS cho app
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use('/public', express.static('public'));
 
 // Sử dụng rootRoute cho cả hai ứng dụng
 const rootRoute = require('./routes');
-// appNguoiDan.use('/api', rootRoute);
-appCanBo.use('/api', rootRoute);
+app.use('/api', rootRoute);
 
-// appNguoiDan.get('/', function(req, res) {
-//   res.render('NguoiDan/homepageNguoiDan');
-// });
-
-appCanBo.get('/login', function(req, res) {
+app.get('/login', function(req, res) {
   res.render('CanBo/login');
 });
 
-appCanBo.get('/forget-pass', function(req, res) {
+app.get('/forget-pass', function(req, res) {
   const email = req.query.email;
 
   res.render('CanBo/forget-pass', { email: email});
 });
 
-appCanBo.get('/', function(req, res) {
+app.get('/', function(req, res) {
   res.render('CanBo/homepageCanBo');
 });
 
-appCanBo.get('/adsLocation', function(req, res) {
+app.get('/adsLocation', function(req, res) {
   res.render('CanBo/PhuongQuan/adsLocation');
 });
 
-appCanBo.get('/ads', function(req, res) {
+app.get('/ads', function(req, res) {
   res.render('CanBo/PhuongQuan/ads');
 });
 
-appCanBo.get('/report', function(req, res) {
+app.get('/report', function(req, res) {
   res.render('CanBo/PhuongQuan/report');
 });
 
-appCanBo.get('/detailReport', function(req, res) {
+app.get('/detailReport', function(req, res) {
   const id_report = req.query.id_report;
   const table = req.query.table;
 
   res.render('CanBo/PhuongQuan/detailReport', { id_report: id_report, table: table });
 });
 
-appCanBo.get('/createAds', function(req, res) {
+app.get('/createAds', function(req, res) {
   res.render('CanBo/PhuongQuan/adsCreate');
 });
 
-appCanBo.get('/detailAdsCreate', function(req, res) {
+app.get('/detailAdsCreate', function(req, res) {
   const id_create = req.query.id_create;
 
   res.render('CanBo/PhuongQuan/detailAdsCreate', { id_create: id_create});
 });
 
-appCanBo.get('/account', function(req, res) {
+app.get('/account', function(req, res) {
   res.render('CanBo/account');
 });
 
 // PHUONG
-appCanBo.get('/adsLocationPhuong', function(req, res) {
+app.get('/adsLocationPhuong', function(req, res) {
   res.render('CanBo/PhuongQuan/adsLocationPhuong');
 });
 
-appCanBo.get('/adsPhuong', function(req, res) {
+app.get('/adsPhuong', function(req, res) {
   res.render('CanBo/PhuongQuan/adsPhuong');
 });
 
-appCanBo.get('/reportPhuong', function(req, res) {
+app.get('/reportPhuong', function(req, res) {
   res.render('CanBo/PhuongQuan/reportPhuong');
 });
 
-appCanBo.get('/createAdsPhuong', function(req, res) {
+app.get('/createAdsPhuong', function(req, res) {
   res.render('CanBo/PhuongQuan/adsCreatePhuong');
 });
 
 // SO
-appCanBo.get('/quanlichung', function(req, res) {
+app.get('/quanlichung', function(req, res) {
   res.render('CanBo/So/quanlichung');
 });
 
-appCanBo.get('/quanliquan', function(req, res) {
+app.get('/quanliquan', function(req, res) {
   res.render('CanBo/So/quanliquan');
 });
 
-appCanBo.get('/quanliphuong', function(req, res) {
+app.get('/quanliphuong', function(req, res) {
   res.render('CanBo/So/quanliphuong');
 });
 
-appCanBo.get('/quanlicanbo', function(req, res) {
+app.get('/quanlicanbo', function(req, res) {
   res.render('CanBo/So/quanlicanbo');
 });
 
-appCanBo.get('/quanlicanbo/chinhsuacbquan', function(req, res) {
+app.get('/quanlicanbo/chinhsuacbquan', function(req, res) {
   res.render('CanBo/So/chinhsuaCBQuan', { id: req.query.id });
 });
 
-appCanBo.get('/quanlicanbo/themcbquan', function(req, res) {
+app.get('/quanlicanbo/themcbquan', function(req, res) {
   res.render('CanBo/So/themCBQuan');
 });
 
-appCanBo.get('/quanlicanbo/chinhsuacbphuong', function(req, res) {
+app.get('/quanlicanbo/chinhsuacbphuong', function(req, res) {
   res.render('CanBo/So/chinhsuaCBPhuong', { id: req.query.id });
 });
 
-appCanBo.get('/quanlicanbo/themcbphuong', function(req, res) {
+app.get('/quanlicanbo/themcbphuong', function(req, res) {
   res.render('CanBo/So/themCBPhuong');
 });
 
-appCanBo.get('/diemdatquangcao', function(req, res) {
+app.get('/diemdatquangcao', function(req, res) {
   res.render('CanBo/So/diemdatquangcao');
 });
 
-appCanBo.get('/diemdatquangcao/chinhsua', function(req, res) {
+app.get('/diemdatquangcao/chinhsua', function(req, res) {
   res.render('CanBo/So/chinhsuaDDQC', { id: req.query.id });
 });
 
-appCanBo.get('/diemdatquangcao/them', function(req, res) {
+app.get('/diemdatquangcao/them', function(req, res) {
   res.render('CanBo/So/themDDQC');
 });
 
-appCanBo.get('/bangquangcao', function(req, res) {  
+app.get('/bangquangcao', function(req, res) {  
   res.render('CanBo/So/bangquangcao');
 });
 
-appCanBo.get('/bangquangcao/chinhsua', function(req, res) {
+app.get('/bangquangcao/chinhsua', function(req, res) {
   res.render('CanBo/So/chinhsuaBQC', { id: req.query.id });
 });
 
-appCanBo.get('/bangquangcao/them', function(req, res) {
+app.get('/bangquangcao/them', function(req, res) {
   res.render('CanBo/So/themBQC');
 });
 
-appCanBo.get('/yeucauchinhsua', function(req, res) {
+app.get('/yeucauchinhsua', function(req, res) {
   res.render('CanBo/So/yeucauchinhsua');
 });
 
-appCanBo.get('/yeucauchinhsua/ddqc', function(req, res) {
+app.get('/yeucauchinhsua/ddqc', function(req, res) {
   res.render('CanBo/So/chitietDDQC', { id: req.query.id });
 });
 
-appCanBo.get('/yeucauchinhsua/bqc', function(req, res) {
+app.get('/yeucauchinhsua/bqc', function(req, res) {
   res.render('CanBo/So/chitietBQC', { id: req.query.id });
 });  
 
-appCanBo.get('/yeucaucapphep', function(req, res) {
+app.get('/yeucaucapphep', function(req, res) {
   res.render('CanBo/So/yeucaucapphep');
 });
 
-appCanBo.get('/yeucaucapphep/chitiet', function(req, res) {
+app.get('/yeucaucapphep/chitiet', function(req, res) {
   res.render('CanBo/So/chitietYCCP', { id: req.query.id });
 });
 
-appCanBo.get('/thongkebaocao', function(req, res) {
+app.get('/thongkebaocao', function(req, res) {
   res.render('CanBo/So/thongkebaocao');
 });
 
-appCanBo.get('/thongkebaocao/bqc', function(req, res) {
+app.get('/thongkebaocao/bqc', function(req, res) {
   res.render('CanBo/So/baocaoBQC', { id: req.query.id });
 });
 
-appCanBo.get('/thongkebaocao/ddqc', function(req, res) {
+app.get('/thongkebaocao/ddqc', function(req, res) {
   res.render('CanBo/So/baocaoDDQC', { id: req.query.id });
 });
 
-appCanBo.get('/thongkebaocao/dd', function(req, res) {
+app.get('/thongkebaocao/dd', function(req, res) {
   res.render('CanBo/So/baocaoDD', { id: req.query.id });
 });
