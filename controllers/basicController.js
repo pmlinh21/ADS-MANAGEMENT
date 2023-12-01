@@ -221,7 +221,6 @@ const updateAdsReportByID = async(req, res) =>{
                 id_report
             }
        })
-
         sucessCode(res,{resolve, status, role, email},"Update thành công")
 
     }catch(err){
@@ -229,7 +228,52 @@ const updateAdsReportByID = async(req, res) =>{
     }
 }
 
+const updateAdsLocReportByID = async(req, res) =>{
+    try{
+        let { id_report } = req.params;
+
+        let {resolve, status, role, email} = req.body
+
+        await model.Ads_loc_report.update({
+            resolve, status, 
+            office: role, 
+            officer: email
+        }, {
+            where:{
+                id_report
+            }
+       })
+        sucessCode(res,{resolve, status, role, email},"Update thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
+const updateLocReportByID = async(req, res) =>{
+    try{
+        let { id_report } = req.params;
+
+        let {resolve, status, role, email} = req.body
+
+        await model.Location_report.update({
+            resolve, status, 
+            office: role, 
+            officer: email
+        }, {
+            where:{
+                id_report
+            }
+       })
+        sucessCode(res,{resolve, status, role, email},"Update thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
+
 module.exports = { getAdsType, getBoardType, getReportType, getLocType,
     getAdsReportByID, getAdsLocReportByID, getLocReportByID,
-    updateAdsReportByID,
+    updateAdsReportByID, updateAdsLocReportByID, updateLocReportByID,
     login, updatePassword}
