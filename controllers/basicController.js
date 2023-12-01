@@ -6,21 +6,21 @@ const { Op } = require("sequelize");
 
 const bcrypt = require('bcrypt'); 
 
-function validateObj(obj) {
-    Object.keys(obj).forEach(function(key) {
-        var value = obj[key];
-        if (value === "" || value === "null") {
-            obj[key] = null;
-        }else {
-            try {
-              obj[key] = JSON.parse(value);
-            } catch (error) {
-              obj[key] = value;
-            }
-          }
-      });
-    return obj;
-}
+// function validateObj(obj) {
+//     Object.keys(obj).forEach(function(key) {
+//         var value = obj[key];
+//         if (value === "" || value === "null") {
+//             obj[key] = null;
+//         }else {
+//             try {
+//               obj[key] = JSON.parse(value);
+//             } catch (error) {
+//               obj[key] = value;
+//             }
+//           }
+//       });
+//     return obj;
+// }
 
 const getReportType = async(req, res) =>{
     try{
@@ -63,9 +63,9 @@ const getBoardType = async(req, res) =>{
 }
 
 const login = async(req, res) =>{
-    const obj = validateObj(req.body)
+    // const obj = validateObj(req.body)
 
-    let { email, pwd} = obj
+    let { email, pwd} = req.body
 
     try{
         let cbphuong = await model.CanboPhuong.findOne({
@@ -272,8 +272,46 @@ const updateLocReportByID = async(req, res) =>{
     }
 }
 
+const getAdsCreateByID = async(req, res) =>{
+    try{
+        let { id_create } = req.params;
+
+        const [data, metadata] = await sequelize.query
+        (`SELECT ac.*, bt.board_type, w.ward, d.district, al.address as address_adsloc
+        FROM Ads_create ac
+        INNER JOIN Board_type bt ON bt.id_board_type = ac.id_board_type
+        INNER JOIN Ads_location al ON al.id_ads_location = ac.id_ads_location
+        INNER JOIN Ward w ON w.id_ward = al.id_ward
+        INNER JOIN District d ON d.id_district = w.id_district
+        WHERE ac.id_create = ${id_create}`);
+        
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
+const deleteAdsCreateByID = async(req, res) =>{
+    try{
+        let { id_create } = req.params;
+
+        await model.Ads_create.destroy(
+            { where:{
+            id_create
+        }})
+        
+        sucessCode(res,"","Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
+
 
 module.exports = { getAdsType, getBoardType, getReportType, getLocType,
-    getAdsReportByID, getAdsLocReportByID, getLocReportByID,
+    getAdsReportByID, getAdsLocReportByID, getLocReportByID, 
     updateAdsReportByID, updateAdsLocReportByID, updateLocReportByID,
+    getAdsCreateByID, deleteAdsCreateByID,
     login, updatePassword}

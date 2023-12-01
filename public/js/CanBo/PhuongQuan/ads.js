@@ -1,5 +1,6 @@
 $(document).ready(function () {
   const role = parseInt(localStorage.getItem('role'))
+  const email = localStorage.getItem('email');
   console.log(role);
 
   mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
@@ -22,17 +23,7 @@ $(document).ready(function () {
 
     
   } else if (role == 1){
-    const id_district = parseInt(localStorage.getItem('id_district'));
-    const email = localStorage.getItem('email');
-
-    $.get(`http://localhost:8080/api/quan/getWard/${id_district}`, function(data) {
-      wards = data.content.map(ward => ward.ward);
-      console.log("!");
-      renderWard(wards);
-    }).fail(function(error) {
-      console.log(error);
-    });
-
+    
     $.get(`http://localhost:8080/api/quan/getAds/${id_district}`, function(data) {
       info = data.content.map(function(data){
         let {id_ads, id_ads_location, address, ward, loc_type, board_type, photo,
@@ -218,14 +209,5 @@ $(document).ready(function () {
       console.log(error);
     })
 
-  } else if (role == 3){
-
-
-
-
-
-
   }
-
-
 })

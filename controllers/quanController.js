@@ -4,21 +4,21 @@ const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
 const { Op } = require("sequelize");
 
-function validateObj(obj) {
-    Object.keys(obj).forEach(function(key) {
-        var value = obj[key];
-        if (value === "" || value === "null") {
-            obj[key] = null;
-        }else {
-            try {
-              obj[key] = JSON.parse(value);
-            } catch (error) {
-              obj[key] = value;
-            }
-          }
-      });
-    return obj;
-}
+// function validateObj(obj) {
+//     Object.keys(obj).forEach(function(key) {
+//         var value = obj[key];
+//         if (value === "" || value === "null") {
+//             obj[key] = null;
+//         }else {
+//             try {
+//               obj[key] = JSON.parse(value);
+//             } catch (error) {
+//               obj[key] = value;
+//             }
+//           }
+//       });
+//     return obj;
+// }
 
 const getAllAdsLoc = async(req, res) =>{
     try{
@@ -247,11 +247,12 @@ const getAdsCreate = async(req, res) =>{
         let { id_district } = req.params;
 
         const [data, metadata] = await sequelize.query
-        (`SELECT ac.*, bt.board_type, w.ward, al.address
+        (`SELECT ac.*, bt.board_type, w.ward, al.address as address_adsloc, d.district
         FROM Ads_create ac
         INNER JOIN Board_type bt ON bt.id_board_type = ac.id_board_type
         INNER JOIN Ads_location al ON al.id_ads_location = ac.id_ads_location
         INNER JOIN Ward w ON w.id_ward = al.id_ward
+        INNER JOIN District d ON d.id_district = w.id_district
         WHERE al.id_district = ${id_district}`);
         
         sucessCode(res,data,"Get thành công")
@@ -292,10 +293,10 @@ const updateAdsLoc = async(req, res) =>{
     try{
         let { email } = req.params;
         const file = req.file;
-        const obj = validateObj(req.body)
+        // const obj = validateObj(req.body)
 
         let { id_ads_location, latitude, longitude, address, ward, district, 
-            id_loc_type, id_ads_type, is_zoning, req_time, reason, office} = obj
+            id_loc_type, id_ads_type, is_zoning, req_time, reason, office} = req.body
 
        
         let findDistrict = await model.District.findOne({where:{district: district}})
@@ -325,10 +326,10 @@ const updateAds = async(req, res) =>{
     try{
         let { email } = req.params;
         const file = req.file;
-        const obj = validateObj(req.body)
+        // const obj = validateObj(req.body)
 
         let { id_ads, id_ads_location, id_board_type, quantity, width, height, 
-            expired_date, req_time, reason, office} = obj
+            expired_date, req_time, reason, office} = req.body
 
         const data = await model.Ads_update.create({
             id_ads, id_ads_location, quantity, width, height, 
@@ -347,9 +348,9 @@ const updateAds = async(req, res) =>{
 const updateAdsLocReport = async(req, res) =>{
     try{
         let { id_req } = req.params;
-        const obj = validateObj(req.body)
+        // const obj = validateObj(req.body)
 
-        let { status, resolve, office, officer} = obj
+        let { status, resolve, office, officer} = req.body
         let data = await model.Ads_loc_report.update({
             office, officer, resolve, status
         },{
@@ -367,9 +368,8 @@ const updateAdsLocReport = async(req, res) =>{
 const updateAdsReport = async(req, res) =>{
     try{
         let { id_req } = req.params;
-        const obj = validateObj(req.body)
 
-        let { status, resolve, office, officer} = obj
+        let { status, resolve, office, officer} = req.body
         let data = await model.Ads_report.update({
             office, officer, resolve, status
         },{
@@ -387,9 +387,8 @@ const updateAdsReport = async(req, res) =>{
 const updateLocReport = async(req, res) =>{
     try{
         let { id_req } = req.params;
-        const obj = validateObj(req.body)
 
-        let { status, resolve, office, officer} = obj
+        let { status, resolve, office, officer} = req.body
         let data = await model.Location_report.update({
             office, officer, resolve, status
         },{
@@ -406,11 +405,9 @@ const updateLocReport = async(req, res) =>{
 
 const adsCreate = async(req, res) =>{
     try{
-        let { id_district } = req.params;
         const file = req.file
-        const obj = validateObj(req.body);
         let {officer, office, id_ads_location, id_board_type, width, height, quantity,
-            content, company, email, phone, address, start_date, end_date} = obj
+            content, company, email, phone, address, start_date, end_date} = req.body
 
         await model.Ads_create.create({
             officer, office, id_ads_location, id_board_type, width, height, quantity,
@@ -418,7 +415,7 @@ const adsCreate = async(req, res) =>{
             photo: file?.filename,
             status: 0
         })
-        sucessCode(res,req.body,"Get thành công")
+        sucessCode(res,"","Get thành công")
     }catch(err){
         errorCode(res,"Lỗi BE")
     }
@@ -427,7 +424,6 @@ const adsCreate = async(req, res) =>{
 //  xóa hình ảnh nếu có
 const deleteAdsCreate = async(req, res) =>{
     try{
-        let { id_district } = req.params;
         sucessCode(res,req.body,"Get thành công")
     }catch(err){
         errorCode(res,"Lỗi BE")
