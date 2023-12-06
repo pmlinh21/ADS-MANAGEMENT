@@ -132,22 +132,56 @@ body {
 #select-ward {
   position: relative;
   min-width: 15rem;
-  width: 30rem;
+  width: 28rem;
   display: flex;
   flex-direction: column;
-  margin-right: auto;
+  margin-right: 2rem;
   margin-top: 0
 }
 
-.select-ward-bar {
+.search-address{
+  margin-right: auto;
+  min-width: 8rem;
+  width: 20rem;
+  position: relative;
+}
+
+.search-address-bar:focus-within,
+.search-address-bar:focus,
+.search-address-bar:hover{
+  box-shadow: none;
+  border: none;
+}
+
+.resultapi-address {
+  min-width: 8rem;
+  width: 100%;
+  height: fit-content;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 3rem 1rem 1rem;
+  z-index: -1;
+  /* display: grid;
+  grid-template-columns: repeat(3, 3fr);
+  gap: 0.5rem; */
+  background-color: white;
+  border-radius: 1.5rem;
+  /* margin: 0 1rem; */
+}
+
+.select-ward-bar,
+.search-address-bar {
   width: 100%;
   background-color: white;
   height: fit-content;
-  padding: 0.5rem 1rem 0.5rem;
+  padding: 0.3rem 1rem 0.3rem;
   border-radius: 0.5rem;
   color: #867F7F;
   cursor: pointer;
   z-index: 2;
+  font-size: 0.9rem;
+  border:none;
 }
 
 hr{
@@ -334,7 +368,7 @@ button:active,
   color: #0B7B31;
 }
 
-.black-bg{
+.black-bg, .gray-bg{
   /* display: none;  */
   background-color: rgba(0,0,0,0.1);
   position: absolute;
@@ -350,7 +384,7 @@ body > #map{
 .flex-container {
   background-color: white;
   position: absolute;
-  z-index: 99;
+  z-index: 1;
   bottom: 0;
   vertical-align: middle;
   padding: 0.5rem 1rem;
@@ -570,7 +604,38 @@ input:checked+.slider:before {
 #detail-popup .image img {
   width: 100%;
   margin: 0rem auto 1rem;
+  border-radius: 0.8rem;
 }
+
+#detail-popup .modal-dialog {
+  max-width: 52rem;
+}
+
+#detail-popup .modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#detail-popup .form-ads-create-details{
+  margin: 1.5rem;
+  background-color: #dffce8;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  box-shadow: none;
+}
+
+#detail-popup .form-ads-create-details input,
+#detail-popup .form-ads-create-details textarea {
+  background-color: #dffce8;
+  font-size: 0.8rem;
+}
+
+#detail-popup .form-ads-create-details label{
+  margin-bottom: 0;
+  font-size: 0.8rem;
+}
+
 
 .other-report {
   background-color: #d9d9d9;

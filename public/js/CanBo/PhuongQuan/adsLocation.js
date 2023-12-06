@@ -144,62 +144,57 @@ $(document).ready(function () {
         let canvas = $('.mapboxgl-canvas')
         canvas.width('100%');
     
-        // $('#search').append(geocoder.onAdd(map));
-    
-        // $(".header-map i").on('click', geocoding);
-        // $('#search').on('keydown', function(event) {
-        //   if (event.keyCode === 13) { // Kiểm tra phím Enter
-        //     geocoding();
-        //   }
-        // });
-    
-        // function geocoding(){
-        //   var address = $('#search').val()
-    
-        //   $.ajax({
-        //     url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(address) + '.json',
-        //     type: 'GET',
-        //     data: {
-        //       access_token: mapboxgl.accessToken,
-        //       language: "vi"
-        //     },
-        //     success: function(response) {
-        //       // Xử lý kết quả geocoding
-        //       var features = response.features;
-        //       if (features.length > 0) {
-        //         var firstFeature = features[0];
-        //         var coordinates = firstFeature.center;
-        //         console.log(firstFeature)
-        //         result = firstFeature.place_name;
-        //         // ward = firstFeature.context[0];
-        //         // district = firstFeature.context[1];
-        //         longitude = coordinates[0];
-        //         latitude= coordinates[1]
-        //         // console.log(firstFeature)
-    
-        //         // Cập nhật tọa độ và zoom của map
-        //         map.flyTo({
-        //           center: coordinates,
-        //           zoom: 17
-        //         });
-    
-        //         new mapboxgl.Marker( {color: '#0B7B31' })
-        //         .setLngLat(coordinates) // Specify the marker longitude and latitude
-        //         .addTo(map);
-    
-        //         $("#address").val(`${result} [${coordinates[0]}, ${coordinates[1]}]` )
-                
-        //       } else {
-        //         alert('No results found');
-        //       }
-        //     },
-        //     error: function() {
-        //       alert('Error occurred during geocoding');
-        //     }
-        //   });
-        // }
-    
         let marker = new mapboxgl.Marker();
+
+        $('#search').append(geocoder.onAdd(map));
+    
+        $(".header-map i").on('click', geocoding);
+        $('#search').on('keydown', function(event) {
+          if (event.keyCode === 13) { // Kiểm tra phím Enter
+            geocoding();
+          }
+        });
+
+        function geocoding(){
+          var address = $('#search').val()
+    
+          $.ajax({
+            url: `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(address)}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc`,
+            type: 'GET',
+            data: {
+              access_token: mapboxgl.accessToken,
+              language: "vi"
+            },
+            success: function(response) {
+              
+              const features = response.items[0];
+              longitude = features.position.lng;
+              latitude = features.position.lat;
+
+              map.flyTo({
+                center: [longitude, latitude],
+                zoom: 17
+              });
+  
+              marker.remove()
+              marker = new mapboxgl.Marker( {color: '#0B7B31' })
+              .setLngLat([longitude, latitude]) 
+              .addTo(map);
+
+              ward = features?.address?.district.substring(7)
+              district = features?.address?.city
+              address = (features?.address?.houseNumber && features?.address?.street)
+              ? features?.address?.houseNumber + " " +  features?.address?.street
+              : features?.address?.label.substring(0, features?.address?.label.indexOf(", Phường") )                 
+            
+              $("#address").val(`${address}, phường ${ward}, ${district} [${longitude}, ${latitude}]` )
+            },
+            error: function() {
+              alert('Error occurred during geocoding');
+            }
+          });
+        }
+    
         map.on('click', function(e) {
           let lngLat = e.lngLat;
           longitude = lngLat.lng;
