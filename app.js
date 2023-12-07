@@ -1,16 +1,16 @@
 const express = require('express');
 const app = express();
 const port = 8080;
+require("dotenv").config();
 
-const sequelize = require('./models/index');
-const config = require('./config/index');
-const path = require('path');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false}))
 
 const cors = require('cors');
 app.use(cors());
 
+const sequelize = require('./models/index');
+const config = require('./config/index');
 // Kết nối tới cơ sở dữ liệu MySQL bằng Sequelize
 sequelize
   .authenticate()
@@ -21,6 +21,9 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
+// const authRouter = require('./routes/authRoute')
+require('./passport') 
+
 app.listen(port, () => {
   console.log(`Phân hệ cán bộ đang chạy trên cổng ${port}`);
 });
@@ -28,7 +31,7 @@ app.listen(port, () => {
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
-
+const path = require('path');
 // Thiết lập EJS cho app
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
