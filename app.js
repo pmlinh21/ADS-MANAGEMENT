@@ -11,6 +11,7 @@ app.use(cors());
 
 const sequelize = require('./models/index');
 const config = require('./config/index');
+
 // Kết nối tới cơ sở dữ liệu MySQL bằng Sequelize
 sequelize
   .authenticate()

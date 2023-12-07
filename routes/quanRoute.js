@@ -1,6 +1,6 @@
 const express = require('express');
 const quanRoute = express.Router();
-const {
+const { 
     getAllAdsLoc, getMapInfo,
     getInfo, getWard, updateInfo, updatePassword, forgetPassword,
     getAdsLocation, getAds, updateAdsLoc, updateAds,
