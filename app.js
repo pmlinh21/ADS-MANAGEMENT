@@ -11,6 +11,7 @@ app.use(cors());
 
 const sequelize = require('./models/index');
 const config = require('./config/index');
+
 sequelize
   .authenticate()
   .then(() => {

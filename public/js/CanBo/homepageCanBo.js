@@ -428,7 +428,6 @@ function changeMapSize(){
   $('#sidebar').height(mapHeight);
 }
 
-
 // hard code
 $(document).ready(function () {
   

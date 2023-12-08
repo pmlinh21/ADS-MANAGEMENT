@@ -127,7 +127,7 @@ body {
     position: fixed;
     left: 0;
     padding-top: 60px;
-    height: 100%;
+    height: 100vh;
     width: 300px;
     background: #0E5025;
     transition: 0.5s ease;
@@ -987,6 +987,10 @@ body {
     border-width: 5px;
     border-style: solid;
     border-color: #7E94AB transparent transparent transparent;
+}
+
+.form input.disabled {
+    background-color: #F4F4F4;
 }
 
 .form input:disabled:hover+.tooltiptext,
