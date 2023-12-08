@@ -10,5 +10,4 @@ rootRoute.use("/quan", quanRoute);
 rootRoute.use("/nguoidan", nguoidanRoute);
 rootRoute.use("/auth", authRoute);
 
-
 module.exports = rootRoute;

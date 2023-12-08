@@ -272,9 +272,9 @@ function renderReport(list_report, container) {
       imagePath2: item.photo2 ? `../../../public/image/${item.photo2}` : ''
     }
   })
-  // console.log(note)
+  console.log(list_report)
 
-  if (list_report.length == 0){
+  if (!list_report || list_report.length == 0){
     var template = `
     <p class = "text-center"> (Chưa có báo cáo) </p>
     `;
@@ -337,7 +337,7 @@ function showSidebar(adsloc) {
     $("#detail-popup .image img").attr("src", imagePath)
 
     $.ajax({
-      url: `http://localhost:8080/api/basic/getAdsCreateByID/${ads.id_ads_create}`,
+      url: `/api/basic/getAdsCreateByID/${ads.id_ads_create}`,
       type: "GET",
       dataType: "json",
       success: function (data) {
@@ -392,7 +392,7 @@ function showSidebar(adsloc) {
       const param = isNaN(id_district) ? id_ward : id_district
       console.log(param)
 
-      $.get(`http://localhost:8080/api/quan/getLocReport/${param}`, function(data) {
+      $.get(`/api/quan/getLocReport/${param}`, function(data) {
       console.log("~");
     
       const loc_report = data.content.filter(function(item){
@@ -431,10 +431,6 @@ function changeMapSize(){
 
 // hard code
 $(document).ready(function () {
-  const role = parseInt(localStorage.getItem('role'))
-  console.log(role);
-  if (isNaN(role))
-    window.location.href = "/login"
   
   var wards, info, filter_info
 
@@ -602,54 +598,53 @@ $(document).ready(function () {
     })
   }
 
-  if (role === 2) {
+  if (role === "2") {
     $("#select-ward").hide();
-    email = localStorage.getItem('email');
-    const storedCBPhuong = localStorage.getItem('cbphuong');
-    cbphuong = storedCBPhuong ? JSON.parse(storedCBPhuong) : [];
-    cb = cbphuong.find(item => item[0] === email);
-    const id_ward = cb[5];
+    // email = localStorage.getItem('email');
+    // const storedCBPhuong = localStorage.getItem('cbphuong');
+    // cbphuong = storedCBPhuong ? JSON.parse(storedCBPhuong) : [];
+    // cb = cbphuong.find(item => item[0] === email);
+    // const id_ward = cb[5];
 
-    let phuong = [
-      [1, 'Bến Nghé', '1'], [2, 'Bến Thành', '1'], [3, 'Cầu Kho', '1'], [4, 'Cầu Ông Lãnh', '1'], [5, 'Cô Giang', '1'], 
-      [6, 'Đa Kao', '1'], [7, 'Nguyễn Cư Trinh', '1'], [8, 'Nguyễn Thái Bình', '1'], [9, 'Phạm Ngũ Lão', '1'], [10, 'Tân Định', '1'], 
-      [11, 'An Khánh', '2'], [12, 'An Lợi Đông', '2'], [13, 'An Phú', '2'], [14, 'Bình An', '2'], [15, 'Bình Khánh', '2'], 
-      [16, 'Cát Lái', '2'], [17, 'Thạnh Mỹ Lợi', '2'], [18, 'Thảo Điền', '2'], [19, 'Thủ Thiêm', '2'], [20, 'Bình Trưng Đông', '2'], 
-      [21, '1', '3'], [22, '2', '3'], [23, '3', '3'], [24, '4', '3'], [25, '5', '3'], [26, '9', '3'], [27, '10', '3'],
-      [28, '11', '3'], [29, '12', '3'], [30, '13', '3'], [31, '14', '3'], [32, 'Võ Thị Sáu', '3'],
-      [33, '1', '4'], [34, '2', '4'], [35, '3', '4'], [36, '4', '4'], [37, '6', '4'], [38, '8', '4'], [39, '9', '4'], [40, '10', '4'],
-      [41, '13', '4'], [42, '14', '4'], [43, '15', '4'], [44, '16', '4'], [45, '18', '4']
-    ];
+    // let phuong = [
+    //   [1, 'Bến Nghé', '1'], [2, 'Bến Thành', '1'], [3, 'Cầu Kho', '1'], [4, 'Cầu Ông Lãnh', '1'], [5, 'Cô Giang', '1'], 
+    //   [6, 'Đa Kao', '1'], [7, 'Nguyễn Cư Trinh', '1'], [8, 'Nguyễn Thái Bình', '1'], [9, 'Phạm Ngũ Lão', '1'], [10, 'Tân Định', '1'], 
+    //   [11, 'An Khánh', '2'], [12, 'An Lợi Đông', '2'], [13, 'An Phú', '2'], [14, 'Bình An', '2'], [15, 'Bình Khánh', '2'], 
+    //   [16, 'Cát Lái', '2'], [17, 'Thạnh Mỹ Lợi', '2'], [18, 'Thảo Điền', '2'], [19, 'Thủ Thiêm', '2'], [20, 'Bình Trưng Đông', '2'], 
+    //   [21, '1', '3'], [22, '2', '3'], [23, '3', '3'], [24, '4', '3'], [25, '5', '3'], [26, '9', '3'], [27, '10', '3'],
+    //   [28, '11', '3'], [29, '12', '3'], [30, '13', '3'], [31, '14', '3'], [32, 'Võ Thị Sáu', '3'],
+    //   [33, '1', '4'], [34, '2', '4'], [35, '3', '4'], [36, '4', '4'], [37, '6', '4'], [38, '8', '4'], [39, '9', '4'], [40, '10', '4'],
+    //   [41, '13', '4'], [42, '14', '4'], [43, '15', '4'], [44, '16', '4'], [45, '18', '4']
+    // ];
 
-    var info = NguoiDanAdsLoc.content.map(function (item) {
-      let { id_ads_location, address, ward, district, loc_type, ads_type,
-        photo, is_zoning, longitude, latitude, list_ads, list_report } = item;
-      let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch";
+    // var info = NguoiDanAdsLoc.content.map(function (item) {
+    //   let { id_ads_location, address, ward, district, loc_type, ads_type,
+    //     photo, is_zoning, longitude, latitude, list_ads, list_report } = item;
+    //   let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch";
     
-      return [id_ads_location, address, ward, district, loc_type, ads_type, zoning_text,
-          photo, longitude, latitude, is_zoning, list_ads, list_report];
-    })
+    //   return [id_ads_location, address, ward, district, loc_type, ads_type, zoning_text,
+    //       photo, longitude, latitude, is_zoning, list_ads, list_report];
+    // })
 
-    let filteredInfo = info.filter(function(item) {
-      if (item[2] === phuong[id_ward-1][1]) {
-        return true;
-      }
-      return false;
-    });
-    info = filteredInfo;
-    console.log(info);
+    // let filteredInfo = info.filter(function(item) {
+    //   if (item[2] === phuong[id_ward-1][1]) {
+    //     return true;
+    //   }
+    //   return false;
+    // });
+    // info = filteredInfo;
+    // console.log(info);
 
-    createMarker(info, map);
-    filter_info = [...info];
+    // createMarker(info, map);
+    // filter_info = [...info];
 
-    $(".flex-container input").on('click', function(e){
-      createMarker(filter_info, map)
-    })
+    // $(".flex-container input").on('click', function(e){
+    //   createMarker(filter_info, map)
+    // })
   }
-  else if (role === 1) {
-    const id_district = parseInt(localStorage.getItem('id_district'));
+  else if (role === "1") {
 
-    $.get(`http://localhost:8080/api/quan/getMapInfo/${id_district}`, function(data) {
+    $.get(`/api/quan/getMapInfo/${id_district}`, function(data) {
       console.log("~");
     
       info = data.content.map(function(item){
@@ -668,7 +663,7 @@ $(document).ready(function () {
         console.log(error);
     })
 
-    $.get(`http://localhost:8080/api/quan/getWard/${id_district}`, function(data) {
+    $.get(`/api/quan/getWard/${id_district}`, function(data) {
       wards = data.content
       console.log(wards);
       renderMapWard(wards);

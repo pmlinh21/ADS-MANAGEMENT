@@ -5,34 +5,43 @@ const { getLocType, getAdsType, getBoardType, getReportType,
     updateAdsReportByID, updateAdsLocReportByID, updateLocReportByID,
     getAdsCreateByID, deleteAdsCreateByID,
     login, updatePassword } = require('../controllers/basicController')
-const { upload, uploadNone } = require('../middlewares/upload');
+const { uploadNone } = require('../middlewares/upload');
 
-basicRoute.get("/getLocType", getLocType);
+const cookieParser = require("cookie-parser");
+basicRoute.use(cookieParser(process.env.JWT_SECRET_KEY))
+const { verifyToken } = require('../middlewares/baseToken');
 
-basicRoute.get("/getAdsType", getAdsType);
+basicRoute.get("/getLocType", verifyToken, getLocType);
 
-basicRoute.get("/getBoardType", getBoardType);
+basicRoute.get("/getAdsType", verifyToken, getAdsType);
 
-basicRoute.get("/getReportType", getReportType);
+basicRoute.get("/getBoardType", verifyToken, getBoardType);
 
-basicRoute.get("/updatePwd/:email", updatePassword);
+basicRoute.get("/getReportType", verifyToken, getReportType);
 
-basicRoute.get("/getAdsReportByID/:id_report", getAdsReportByID);
+basicRoute.get("/updatePwd/:email", verifyToken, updatePassword);
 
-basicRoute.get("/getAdsLocReportByID/:id_report", getAdsLocReportByID);
+basicRoute.get("/getAdsReportByID/:id_report", verifyToken, getAdsReportByID);
 
-basicRoute.get("/getLocReportByID/:id_report", getLocReportByID);
+basicRoute.get("/getAdsLocReportByID/:id_report", verifyToken, getAdsLocReportByID);
 
-basicRoute.put("/updateAdsReportByID/:id_report", updateAdsReportByID);
+basicRoute.get("/getLocReportByID/:id_report", verifyToken, getLocReportByID);
 
-basicRoute.put("/updateAdsLocReportByID/:id_report", updateAdsLocReportByID);
+basicRoute.put("/updateAdsReportByID/:id_report", verifyToken, updateAdsReportByID);
 
-basicRoute.put("/updateLocReportByID/:id_report", updateLocReportByID);
+basicRoute.put("/updateAdsLocReportByID/:id_report", verifyToken, updateAdsLocReportByID);
 
-basicRoute.get("/getAdsCreateByID/:id_create", getAdsCreateByID);
+basicRoute.put("/updateLocReportByID/:id_report", verifyToken, updateLocReportByID);
 
-basicRoute.delete("/deleteAdsCreateByID/:id_create", deleteAdsCreateByID);
+basicRoute.get("/getAdsCreateByID/:id_create", verifyToken, getAdsCreateByID);
+
+basicRoute.delete("/deleteAdsCreateByID/:id_create", verifyToken, deleteAdsCreateByID);
+
+// basicRoute.get("/isLoggedIn", isLoggedIn);
 
 basicRoute.post("/login", uploadNone.none(), login);
+
+
+// basicRoute.get("/login-success/:email/:role/:id", basic.loginSuccess)
 
 module.exports = basicRoute;

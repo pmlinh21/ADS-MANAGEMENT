@@ -378,7 +378,8 @@ button:active,
 body > #map{
   position: relative;
   top: 3.5rem;
-  height: calc(100% - 3.5rem)
+  height: calc(100% - 3.5rem);
+  z-index: 0;
 }
 
 .flex-container {

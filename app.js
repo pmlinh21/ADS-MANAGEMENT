@@ -11,7 +11,6 @@ app.use(cors());
 
 const sequelize = require('./models/index');
 const config = require('./config/index');
-// Kết nối tới cơ sở dữ liệu MySQL bằng Sequelize
 sequelize
   .authenticate()
   .then(() => {
@@ -21,15 +20,34 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
-// const authRouter = require('./routes/authRoute')
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
+const rootRoute = require('./routes');
+app.use('/api', rootRoute);
+
 require('./passport') 
+
+const session = require('express-session');
+const cookieParser = require("cookie-parser");
+
+app.use(cookieParser(process.env.JWT_SECRET_KEY))
+
+app.use(session({
+  secret: process.env.JWT_SECRET_KEY, // Replace with your secret key
+  resave: false,
+  saveUninitialized: false,
+  cookie:{
+    secure: false,
+    httpOnly: true,
+    maxAge: 20 * 60 * 1000
+  }
+}));
 
 app.listen(port, () => {
   console.log(`Phân hệ cán bộ đang chạy trên cổng ${port}`);
 });
 
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
 
 const path = require('path');
 // Thiết lập EJS cho app
@@ -37,12 +55,20 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use('/public', express.static('public'));
 
-// Sử dụng rootRoute cho cả hai ứng dụng
-const rootRoute = require('./routes');
-app.use('/api', rootRoute);
+const { decodeToken, verifyToken } = require('./middlewares/baseToken');
 
 app.get('/login', function(req, res) {
-  res.render('CanBo/login');
+  if (req.cookies.token)
+    res.redirect("/")
+
+  const status = req.query.status;
+
+  res.render('CanBo/login',{status: status});
+});
+
+app.get('/logout', function(req, res) {
+  res.clearCookie('token');
+  res.redirect('/login');
 });
 
 app.get('/forget-pass', function(req, res) {
@@ -51,40 +77,44 @@ app.get('/forget-pass', function(req, res) {
   res.render('CanBo/forget-pass', { email: email});
 });
 
-app.get('/', function(req, res) {
-  res.render('CanBo/homepageCanBo');
+app.get('/', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+
+  res.render('CanBo/homepageCanBo', {id_ward: 0, id_district: 0, ...content})
+
 });
 
-app.get('/adsLocation', function(req, res) {
+app.get('/adsLocation', verifyToken, function(req, res) {
   res.render('CanBo/PhuongQuan/adsLocation');
 });
 
-app.get('/ads', function(req, res) {
+app.get('/ads', verifyToken,function(req, res) {
   res.render('CanBo/PhuongQuan/ads');
 });
 
-app.get('/report', function(req, res) {
+app.get('/report', verifyToken,function(req, res) {
   res.render('CanBo/PhuongQuan/report');
 });
 
-app.get('/detailReport', function(req, res) {
+app.get('/detailReport', verifyToken, function(req, res) {
   const id_report = req.query.id_report;
   const table = req.query.table;
 
   res.render('CanBo/PhuongQuan/detailReport', { id_report: id_report, table: table });
 });
 
-app.get('/createAds', function(req, res) {
+app.get('/createAds', verifyToken, function(req, res) {
   res.render('CanBo/PhuongQuan/adsCreate');
 });
 
-app.get('/detailAdsCreate', function(req, res) {
+app.get('/detailAdsCreate', verifyToken, function(req, res) {
   const id_create = req.query.id_create;
 
   res.render('CanBo/PhuongQuan/detailAdsCreate', { id_create: id_create});
 });
 
-app.get('/account', function(req, res) {
+app.get('/account', verifyToken, function(req, res) {
   res.render('CanBo/account');
 });
 

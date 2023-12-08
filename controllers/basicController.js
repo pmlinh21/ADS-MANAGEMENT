@@ -3,24 +3,9 @@ const init_models = require('../models/init-models');
 const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
 const { Op } = require("sequelize");
+const { parseToken } = require('../middlewares/baseToken');
 
 const bcrypt = require('bcrypt'); 
-
-// function validateObj(obj) {
-//     Object.keys(obj).forEach(function(key) {
-//         var value = obj[key];
-//         if (value === "" || value === "null") {
-//             obj[key] = null;
-//         }else {
-//             try {
-//               obj[key] = JSON.parse(value);
-//             } catch (error) {
-//               obj[key] = value;
-//             }
-//           }
-//       });
-//     return obj;
-// }
 
 const getReportType = async(req, res) =>{
     try{
@@ -62,6 +47,13 @@ const getBoardType = async(req, res) =>{
     }
 }
 
+const isLoggedIn = async(req, res, next) =>{
+    if (req.cookies.token){
+        return next()
+      }
+    res.redirect(`/login`)
+}
+
 const login = async(req, res) =>{
     // const obj = validateObj(req.body)
 
@@ -78,7 +70,8 @@ const login = async(req, res) =>{
             let checkPass = bcrypt.compareSync(pwd, cbphuong.password);
             if(checkPass){
                 cbphuong.password = '**********';
-                sucessCode(res, {info: cbphuong, role: 2}, "Login successfully");
+                sucessCode(res, parseToken({email: cbphuong.email, 
+                    id_ward: cbphuong.id_ward, role: 2 }), "Login successfully");
                 return;
             }
             else{
@@ -97,7 +90,10 @@ const login = async(req, res) =>{
             let checkPass = bcrypt.compareSync(pwd, cbquan.password);
             if(checkPass){
                 cbquan.password = '**********';
-                sucessCode(res, {info: cbquan, role: 1}, "Login successfully");
+                sucessCode(res, parseToken({
+                    email: cbquan.email, 
+                    id_district: cbquan.id_district, 
+                    role: 1}), "Login successfully");
                 return;
             }
             else{
@@ -117,7 +113,7 @@ const login = async(req, res) =>{
             let checkPass = bcrypt.compareSync(pwd, cbso.password);
             if(checkPass){
                 cbso.password = '**********';
-                sucessCode(res, {info: cbso, role: 3}, "Login successfully");
+                sucessCode(res, parseToken({email: cbso.email,  role: 3}), "Login successfully");
                 return;
             }
             else{
@@ -314,4 +310,4 @@ module.exports = { getAdsType, getBoardType, getReportType, getLocType,
     getAdsReportByID, getAdsLocReportByID, getLocReportByID, 
     updateAdsReportByID, updateAdsLocReportByID, updateLocReportByID,
     getAdsCreateByID, deleteAdsCreateByID,
-    login, updatePassword}
+    login, updatePassword, isLoggedIn}

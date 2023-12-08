@@ -42,6 +42,21 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@5.0.4/js/bootstrap5-toggle.jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/ejs@3.1.8/ejs.min.js"></script>
+  
+  <script>
+    const email = '<%= email %>';
+    const role = '<%= role %>';
+    let id_district, id_ward;
+    
+    if (role == "1")
+      id_district =  '<%= id_district %>';
+    else if (role == "2")
+      id_ward = '<%= id_ward %>';
+
+    console.log("from header.ejs: ")
+    console.log("email: ", email, ", role: ", role, ", id_district: ", id_district, ", id_ward: ", id_ward)
+  
+  </script>
 
   <div id="header">
 

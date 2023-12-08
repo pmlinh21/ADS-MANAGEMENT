@@ -9,42 +9,46 @@ const {
     getAdsCreate, adsCreate, deleteAdsCreate } = require('../controllers/quanController')
 const { upload } = require('../middlewares/upload');
 
-quanRoute.get("/getAllAdsLoc", getAllAdsLoc)
+const cookieParser = require("cookie-parser");
+quanRoute.use(cookieParser(process.env.JWT_SECRET_KEY))
+const { isCanboQuan } = require('../middlewares/baseToken');
 
-quanRoute.put("/updateInfo/:id_district", updateInfo);
+quanRoute.get("/getAllAdsLoc", isCanboQuan, getAllAdsLoc)
 
-quanRoute.put("/updatePassword/:id_district", updatePassword);
+quanRoute.put("/updateInfo/:id_district", isCanboQuan, updateInfo);
 
-quanRoute.put("/forgetPassword/:id_district", forgetPassword);
+// quanRoute.put("/updatePassword/:id_district", isCanboQuan, updatePassword);
 
-quanRoute.get("/getWard/:id_district", getWard);
+// quanRoute.put("/forgetPassword/:id_district", isCanboQuan, forgetPassword);
 
-quanRoute.get("/getMapInfo/:id_district", getMapInfo);
+quanRoute.get("/getWard/:id_district", isCanboQuan, getWard);
 
-quanRoute.get("/getAdsLocation/:id_district", getAdsLocation);
+quanRoute.get("/getMapInfo/:id_district", isCanboQuan, getMapInfo);
+
+quanRoute.get("/getAdsLocation/:id_district", isCanboQuan, getAdsLocation);
 
 quanRoute.post("/updateAdsLoc/:email", upload('updateAdsLoc').single("file"), updateAdsLoc);
 
-quanRoute.get("/getAds/:id_district", getAds);
+quanRoute.get("/getAds/:id_district", isCanboQuan, getAds);
 
 quanRoute.post("/updateAds/:email", upload('updateAds').single("file"), updateAds);
 
-quanRoute.get("/getAdsLocReport/:id_district", getAdsLocReport);
+quanRoute.get("/getAdsLocReport/:id_district", isCanboQuan, getAdsLocReport);
 
 quanRoute.put("/updateAdsLocReport/:id_req", updateAdsLocReport);
 
-quanRoute.get("/getAdsReport/:id_district", getAdsReport);
+quanRoute.get("/getAdsReport/:id_district", isCanboQuan, getAdsReport);
 
 quanRoute.put("/updateAdsReport/:id_req", updateAdsReport);
 
-quanRoute.get("/getLocReport/:id_district", getLocReport);
+quanRoute.get("/getLocReport/:id_district", isCanboQuan, getLocReport);
 
 quanRoute.put("/updateLocReport/:id_req", updateLocReport);
 
-quanRoute.get("/getAdsCreate/:id_district", getAdsCreate);
+quanRoute.get("/getAdsCreate/:id_district", isCanboQuan, getAdsCreate);
 
 quanRoute.post("/adsCreate/:id_district", upload('adsCreate').single("file"), adsCreate)
 
-quanRoute.put("/deleteAdsCreate/:id_district", deleteAdsCreate)
+quanRoute.put("/deleteAdsCreate/:id_district", isCanboQuan, deleteAdsCreate)
 
 module.exports = quanRoute;

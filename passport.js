@@ -28,12 +28,12 @@ async function(accessToken, refreshToken, profile, cb) {
 
   console.log("true");
   // Return the appropriate user object
-//   if (Phuong) {
-//       return cb(null, {Phuong, role: "2"});
-//   } else if (Quan) {
-//       return cb(null, {Quan, role:  });
-//   } else {
-//       return cb(null, So);
-//   }
+  if (Phuong) {
+      return cb(null, {Phuong, role: "2"});
+  } else if (Quan) {
+      return cb(null, {Quan, role: "1" });
+  } else {
+      return cb(null, {So, role: "3"});
+  }
 }
 )); 
