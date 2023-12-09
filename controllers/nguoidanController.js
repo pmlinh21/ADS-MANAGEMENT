@@ -4,22 +4,6 @@ const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
 const { Op } = require("sequelize");
 
-function validateObj(obj) {
-    Object.keys(obj).forEach(function(key) {
-        var value = obj[key];
-        if (value === "" || value === "null") {
-            obj[key] = null;
-        }else {
-            try {
-              obj[key] = JSON.parse(value);
-            } catch (error) {
-              obj[key] = value;
-            }
-          }
-      });
-    return obj;
-}
-
 const getAdsLoc = async(req, res) =>{
     try{
         const [adsloc, metadata1] = await sequelize.query
@@ -86,7 +70,7 @@ const getReport = async(req, res) =>{
         let { email } = req.params;
         
         const [adsloc, metadata1] = await sequelize.query
-            (`SELECT alr.*, rt.report_type, al.address, w.*, d.*
+            (`SELECT alr.*, rt.report_type, al.address, w.*, d.*, "Điểm đặt" as category
             FROM Ads_loc_report alr
             INNER JOIN Report_type rt ON rt.id_report_type = alr.id_report_type
             INNER JOIN Ads_location al ON al.id_ads_location = alr.id_ads_location
@@ -95,7 +79,7 @@ const getReport = async(req, res) =>{
             WHERE alr.email = '${email}'`);
         
         const [ads, metadata2] = await sequelize.query
-            (`SELECT ar.*, rt.report_type, al.address, w.*, d.*
+            (`SELECT ar.*, rt.report_type, al.address, w.*, d.*, "Quảng cáo" as category
             FROM Ads_report ar
             INNER JOIN Report_type rt ON rt.id_report_type = ar.id_report_type
             INNER JOIN Ads a ON a.id_ads = ar.id_ads
@@ -105,7 +89,7 @@ const getReport = async(req, res) =>{
             WHERE ar.email = '${email}'`);
 
         const [loc, metadata3] = await sequelize.query
-            (`SELECT lr.*, rt.report_type, w.*, d.*
+            (`SELECT lr.*, rt.report_type, w.*, d.*, "Địa điểm bất kì" as category
             FROM Location_report lr
             INNER JOIN Report_type rt ON rt.id_report_type = lr.id_report_type
             INNER JOIN Ward w ON w.id_ward = lr.id_ward
