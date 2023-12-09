@@ -145,6 +145,18 @@ const sendMail = (to, subject, htmlContent) => {
     return transport.sendMail(options);
 }
 
+const formatDate = (now)=>{
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 const sendEmail = async(req, res) =>{
     try{
         let {email} = req.params
@@ -176,16 +188,7 @@ const sendEmail = async(req, res) =>{
             const hashOTP = bcrypt.hashSync(otp, 10)
 
             const now = new Date(Date.now() + 180000);
-
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-
-            const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            const formattedDateTime = formatDate(now);
             
 
             const record = await model.OTP.findOne({where:{email}})
@@ -338,6 +341,32 @@ const getLocReportByID = async(req, res) =>{
     }
 }
 
+const getReportHtmlContent = function(content, report_time, report_type, resolve, type, address ){
+    const htmlContent = `<body>
+    <h1>Thông báo xử lí báo cáo vi phạm</h1>
+    <p>Xin chào,</p>
+    
+    <p>Chúng tôi xin thông báo rằng chúng tôi đã xử lí báo cáo vi phạm từ bạn. Chi tiết về vi phạm và cách thức xử lí được cung cấp dưới đây:</p>
+    
+    <h2>Thông tin báo cáo vi phạm:</h2>
+    <ul>
+      <li><strong>Địa điểm ${type}:</strong> ${address}</li>
+      <li><strong>Ngày báo cáo:</strong> ${report_time}</li>
+      <li><strong>Hình thức báo cáo:</strong> ${report_type}</li>
+      <li><strong>Nội dung báo cáo:</strong> ${content}</li>
+    </ul>
+    
+    <h2>Cách thức xử lí:</h2>
+    <p>"${resolve} "</p>
+    
+    <p>Xin cảm ơn sự hợp tác của bạn trong việc báo cáo vi phạm này. Chúng tôi cam kết duy trì một môi trường an toàn và tuân thủ quy định và chính sách của chúng tôi.</p>
+    
+    <p>Trân trọng,</p>
+    <p><strong>ADS MAP</strong></p>
+  </body>`
+    return htmlContent
+}
+
 const updateAdsReportByID = async(req, res) =>{
     try{
         let { id_report } = req.params;
@@ -352,8 +381,25 @@ const updateAdsReportByID = async(req, res) =>{
             where:{
                 id_report
             }
-       })
-        sucessCode(res,{resolve, status, role, email},"Update thành công")
+        })
+
+        const [data, metadata] = await sequelize.query
+                (`SELECT ar.*, rt.report_type, w.ward, d.district, al.address
+                FROM Ads_report ar
+                INNER JOIN Report_type rt ON rt.id_report_type = ar.id_report_type
+                INNER JOIN Ads a ON a.id_ads = ar.id_ads
+                INNER JOIN Ads_location al ON al.id_ads_location = a.id_ads_location
+                INNER JOIN Ward w ON w.id_ward = al.id_ward
+                INNER JOIN District d ON d.id_district = w.id_district
+                WHERE ar.id_report = ${id_report}`);
+        const record = data[0]
+
+        await sendMail(record.email, "Thông báo xử lí báo cáo vi phạm", 
+            getReportHtmlContent(record.content, formatDate(record.report_time), record.report_type, record.resolve, 
+            "bảng quảng cáo", `${record.address}, phường ${record.ward}, ${record.district}`
+        ))
+
+        sucessCode(res,"","Update thành công")
 
     }catch(err){
         errorCode(res,"Lỗi BE")
