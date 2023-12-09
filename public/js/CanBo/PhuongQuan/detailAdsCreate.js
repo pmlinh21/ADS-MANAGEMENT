@@ -3,7 +3,7 @@ $(document).ready(function() {
   const urlParams = new URLSearchParams(queryString);
   const id_create = parseInt(urlParams.get('id_create'))
   $.ajax({
-    url: `http://localhost:8080/api/basic/getAdsCreateByID/${id_create}`,
+    url: `/api/basic/getAdsCreateByID/${id_create}`,
     type: 'GET',
     dataType: 'json',
     success: function(data) {
@@ -33,7 +33,7 @@ $(document).ready(function() {
       $('.style3-button').on('click', function() {
         if (confirm('Bạn có chắc chắn muốn xóa cấp phép này không?')) {
           $.ajax({
-            url: `http://localhost:8080/api/basic/deleteAdsCreateByID/${id_create}`,
+            url: `/api/basic/deleteAdsCreateByID/${id_create}`,
             type: 'DELETE',
             dataType: 'json',
             success: function(response) {

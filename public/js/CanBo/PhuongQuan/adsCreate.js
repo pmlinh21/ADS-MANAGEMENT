@@ -1,26 +1,20 @@
 $(document).ready(function () {
-  const role = parseInt(localStorage.getItem('role'))
-  const email = localStorage.getItem('email');
   console.log(role);
 
   mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
   
   var wards, filter_info
 
-  if (role == 2){
-
-
-
-
+  if (role == "2"){
 
   } 
-  else if (role == 1){
-    const id_district = parseInt(localStorage.getItem('id_district'));
+  else if (role == "1"){
 
-    $.get(`http://localhost:8080/api/quan/getWard/${id_district}`, function(data) {
+    $.get(`/api/quan/getWard/${id_district}`, function(data) {
       wards = data.content.map(ward => ward.ward);
+      display_wards = data.content.map(ward => (!isNaN(parseInt(ward.ward))) ? `phường ${ward.ward}` : ward.ward);
       console.log("!");
-      renderWard(wards);
+      renderWard(display_wards);
     }).fail(function(error) {
       console.log(error);
     }).always(function(data) { 
@@ -33,7 +27,7 @@ $(document).ready(function () {
       })
       console.log(idArray)
 
-      $.get(`http://localhost:8080/api/quan/getAdsCreate/${id_district}`, function(data) {
+      $.get(`/api/quan/getAdsCreate/${id_district}`, function(data) {
         info = data.content.map(function(item){
           let {id_create, board_type, address, content, company,
             start_date, end_date, status, address_adsloc,district,
@@ -125,7 +119,7 @@ $(document).ready(function () {
       $("form").get(0).reset();
       var board_type, imageData = result = id_adsloc = null
     
-      $.get(`http://localhost:8080/api/basic/getBoardType`, function(data) {
+      $.get(`/api/basic/getBoardType`, function(data) {
         board_type = data.content
         board_type?.forEach(function(type){
           $('#id_board_type').append(`<option value=${type.id_board_type}>${type.board_type}</option>`);
@@ -169,10 +163,11 @@ $(document).ready(function () {
         console.log("a");
     
         // get ads location
-        $.get(`http://localhost:8080/api/quan/getAdsLocation/${id_district}`, function(data) {
+        $.get(`/api/quan/getAdsLocation/${id_district}`, function(data) {
           var select_adsloc = [], index = null
+          // console.log(data.content)
           for (let i = 0; i < data.content.length; i++) {
-            let {id_ads_location, address, ward, is_zoning, longitude, latitude} = QuanAdsLocation.content[i]
+            let {id_ads_location, address, ward, is_zoning, longitude, latitude} =  data.content[i]
             if (is_zoning == 1) 
               select_adsloc.push( {id_ads_location, address, ward, photo, longitude, latitude})
           }
@@ -282,7 +277,7 @@ $(document).ready(function () {
           $("form").get(0).reset();
           
           $.ajax({
-            url: `http://localhost:8080/api/quan/adsCreate/${id_district}`,
+            url: `/api/quan/adsCreate/${id_district}`,
             type: 'POST',
             data: formData,
             processData: false,

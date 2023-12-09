@@ -4,22 +4,56 @@ $(document).ready(function () {
   const email = urlParams.get('email');
   $("span.email").val(email);
   
+  $(".resend").on("click",function(){
+    $.ajax({
+      url: `/api/basic/sendEmail/${email}`,
+      type: "POST",
+      beforeSend: function (data) {
+      },
+      success: function(data){
+      },
+      error: function(xhr, status, error) {
+        
+        if (xhr.status == 400){
+          let errorMessage = JSON.parse(xhr.responseText).message; // Get the error message from the response
+          alert(errorMessage);
+        }else{
+          alert("Gửi mail thất bại");
+        }
+      }
+    })
+  })
+
   $(".forget-pass-form ").on("click", ".style1-button", function(){
     const OTP = $("#OTP").val()
     if ( OTP == "")
       alert("Bạn chưa nhập OTP")
+    else if ( OTP.length != 6)
+      alert("OTP không hợp lệ")
     else{
-      $(".new-pass-form ").show()
-      $(".forget-pass-form").hide()
-      $("#new-pass").val("")
-      $("#confirm-pass").val("")
-    }
-  })
+      $("#OTP").val("")
 
-  $(".new-pass-form ").on("click", ".style2-button", function(){
-    $(".forget-pass-form ").show()
-    $("#OTP").val("")
-    $(".new-pass-form").hide()
+      $.ajax({
+        url: `/api/basic/checkOTP/${email}/${OTP}`,
+        type: "POST",
+        success: function(data){
+          $(".new-pass-form ").show()
+          $(".forget-pass-form").hide()
+          $("#new-pass").val("")
+          $("#confirm-pass").val("")
+        },
+        error: function(xhr, status, error) {
+          if (xhr.status == 400){
+            let errorMessage = JSON.parse(xhr.responseText).message; // Get the error message from the response
+            alert(errorMessage);
+          }else{
+            alert("Hệ thống bảo trì");
+          }
+        }
+
+      })
+      
+    }
   })
 
   $(".new-pass-form ").on("click", ".style1-button", function(){
@@ -31,25 +65,29 @@ $(document).ready(function () {
       alert("Mật khẩu xác nhận phải trùng khớp với mật khẩu mới")
     }
     else{
-      var data
-      if (email == "phuong@gmail.com")
-        data = "cbphuong"
-      if (email == "quan@gmail.com")
-        data = "cbquan"
-      if (email == "so@gmail.com")
-        data = "cbso"
-      let arr = localStorage.getItem(data)
-      arr = (arr) ? JSON.parse(arr) : []
+      console.log(email, newPass)
 
-      newArr = arr?.map(item => {
-        if (item[0] == email)
-          item[2] = newPass
-        return item
+      var passData = {
+        email: email,
+        password: confirmPass
+      };
+
+      $.ajax({
+        url: `/api/basic/createNewPwd`,
+        type: 'POST',
+        data: JSON.stringify(passData),
+        contentType: 'application/json',
+        success: function(response) {
+          window.location.href = "/login"
+          console.log(response);
+        },
+        error: function(xhr, status, error) {
+          // Handle the error here
+          console.error(error);
+        }
       })
 
-      localStorage.setItem(data,JSON.stringify(newArr))
-
-      window.location.href = "/login"
+      
     }
   })
 })

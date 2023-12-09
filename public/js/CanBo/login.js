@@ -75,17 +75,38 @@ $(document).ready(function () {
 
   $("a.forget-pass").on("click", function(){
     const email = $('#email').val();
-    $(".login-form").hide()
-    $(".user-icon").hide()
 
-    if (email != "" && (email == "phuong@gmail.com" || email == "quan@gmail.com" || email == "so@gmail.com")){
+    if (email != ""){
+      
       $('#email').val("");
-      window.location.href = '/forget-pass?email=' + email;
-    } else if (email != ""){
+      $.ajax({
+        url: `/api/basic/sendEmail/${email}`,
+        type: "POST",
+        beforeSend: function (data) {
+        },
+        success: function(data){
+          $(".login-form").hide()
+          $(".user-icon").hide()
+          $('#enter-email').val("");
+          window.location.href = '/forget-pass?email=' + email;
+        },
+        error: function(xhr, status, error) {
+          
+          if (xhr.status == 400){
+            let errorMessage = JSON.parse(xhr.responseText).message; // Get the error message from the response
+            alert(errorMessage);
+          }else{
+            alert("Gửi mail thất bại");
+          }
+        }
+      })
+    } else if (email == ""){
+      $(".login-form").hide()
+      $(".user-icon").hide()
       $(".enter-email-form").show()
       $(".key-icon").show()
-    } else if (email == "phuong@gmail.com" || email == "quan@gmail.com" || email == "so@gmail.com")
-      alert("Email không được liên kết với bất cứ tài khoản nào")
+    }
+
   })
 
   $(".enter-email-form").on("click", " .style2-button", function(){
@@ -100,11 +121,26 @@ $(document).ready(function () {
     const email = $('#enter-email').val();
     if (email == "")
       alert ("Nhập email để thay đổi mật khẩu")
-    else if ((email != "phuong@gmail.com" && email != "quan@gmail.com" && email != "so@gmail.com"))
-      alert ("Email không được liên kết với bất cứ tài khoản nào")
     else{
-      $('#enter-email').val("");
-      window.location.href = '/forget-pass?email=' + email
+      $.ajax({
+        url: `/api/basic/sendEmail/${email}`,
+        type: "POST",
+        beforeSend: function (data) {
+        },
+        success: function(data){
+          $('#enter-email').val("");
+          window.location.href = '/forget-pass?email=' + email;
+        },
+        error: function(xhr, status, error) {
+          if (xhr.status == 400){
+            let errorMessage = JSON.parse(xhr.responseText).message; // Get the error message from the response
+            alert(errorMessage);
+          }else{
+            // console.log(status, error, xhr.responseText)
+            alert("Gửi mail thất bại");
+          }
+        }
+      })
     } 
   })
 });

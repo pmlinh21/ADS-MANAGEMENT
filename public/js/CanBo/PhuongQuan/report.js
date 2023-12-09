@@ -1,10 +1,5 @@
-$(window).on('popstate', function(event) {
-  console.log("2")
-});
-
-
 $(document).ready(function () {
-  const role = parseInt(localStorage.getItem('role'))
+
   if (role == 2){
 
 
@@ -14,15 +9,14 @@ $(document).ready(function () {
 
     
   } else if (role == 1){
-    const id_district = parseInt(localStorage.getItem('id_district'));
-    const email = localStorage.getItem('email');
     var ads_report, ads_loc_report, loc_report
     var info1, info2, info3, wards, wardArray = [], idArray = []
 
-    $.get(`http://localhost:8080/api/quan/getWard/${id_district}`, function(data) {
+    $.get(`/api/quan/getWard/${id_district}`, function(data) {
       wards = data.content.map(ward => ward.ward);
+      display_wards = data.content.map(ward => (!isNaN(parseInt(ward.ward))) ? `phường ${ward.ward}` : ward.ward);
       console.log("!");
-      renderWard(wards);
+      renderWard(display_wards);
 
       $('.ward-table input').prop('checked', true)
 
@@ -39,7 +33,7 @@ $(document).ready(function () {
 
 
     $.ajax({
-      url: `http://localhost:8080/api/quan/getAdsReport/${id_district}`,
+      url: `/api/quan/getAdsReport/${id_district}`,
       type: 'GET',
       cache: false, // Tắt caching
       dataType: 'json',
@@ -85,7 +79,7 @@ $(document).ready(function () {
     })
 
     $.ajax({
-      url: `http://localhost:8080/api/quan/getAdsLocReport/${id_district}`,
+      url: `/api/quan/getAdsLocReport/${id_district}`,
       type: "GET",
       cache: false,
       dataType: "json",
@@ -133,7 +127,7 @@ $(document).ready(function () {
     })
 
     $.ajax({
-      url: `http://localhost:8080/api/quan/getLocReport/${id_district}`, 
+      url: `/api/quan/getLocReport/${id_district}`, 
       type: "GET",
       cache: false,
       dataType: "json",

@@ -22,6 +22,7 @@ sequelize
   });
 
 const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const rootRoute = require('./routes');
@@ -48,7 +49,6 @@ app.use(session({
 app.listen(port, () => {
   console.log(`Phân hệ cán bộ đang chạy trên cổng ${port}`);
 });
-
 
 const path = require('path');
 // Thiết lập EJS cho app
@@ -87,36 +87,57 @@ app.get('/', verifyToken, function(req, res) {
 });
 
 app.get('/adsLocation', verifyToken, function(req, res) {
-  res.render('CanBo/PhuongQuan/adsLocation');
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+
+  res.render('CanBo/PhuongQuan/adsLocation', {id_ward: 0, id_district: 0, ...content});
 });
 
 app.get('/ads', verifyToken,function(req, res) {
-  res.render('CanBo/PhuongQuan/ads');
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+
+  res.render('CanBo/PhuongQuan/ads', {id_ward: 0, id_district: 0, ...content});
 });
 
 app.get('/report', verifyToken,function(req, res) {
-  res.render('CanBo/PhuongQuan/report');
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+
+  res.render('CanBo/PhuongQuan/report', {id_ward: 0, id_district: 0, ...content});
 });
 
 app.get('/detailReport', verifyToken, function(req, res) {
   const id_report = req.query.id_report;
   const table = req.query.table;
 
-  res.render('CanBo/PhuongQuan/detailReport', { id_report: id_report, table: table });
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+
+  res.render('CanBo/PhuongQuan/detailReport', { id_report: id_report, table: table, id_ward: 0, id_district: 0, ...content });
 });
 
 app.get('/createAds', verifyToken, function(req, res) {
-  res.render('CanBo/PhuongQuan/adsCreate');
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  
+  res.render('CanBo/PhuongQuan/adsCreate', {id_ward: 0, id_district: 0, ...content});
 });
 
 app.get('/detailAdsCreate', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+
   const id_create = req.query.id_create;
 
-  res.render('CanBo/PhuongQuan/detailAdsCreate', { id_create: id_create});
+  res.render('CanBo/PhuongQuan/detailAdsCreate', { id_create: id_create, id_ward: 0, id_district: 0, ...content});
 });
 
 app.get('/account', verifyToken, function(req, res) {
-  res.render('CanBo/account');
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+
+  res.render('CanBo/account', {id_ward: 0, id_district: 0, ...content});
 });
 
 // PHUONG

@@ -12,8 +12,7 @@ $(document).ready(function() {
   const urlParams = new URLSearchParams(queryString);
   const id_report = urlParams.get('id_report');
   const table = urlParams.get('table');
-  const storedEmail = localStorage.getItem('email');
-  const role = localStorage.getItem('role');
+  const storedEmail = email
 
   if (table == "ads"){
     $(".title-page p").text("Quản lý báo cáo vi phạm / Chi tiết báo cáo quảng cáo");
@@ -90,7 +89,7 @@ $(document).ready(function() {
     
     pos.insertAdjacentHTML('afterend', formHtml);
 
-    $.get(`http://localhost:8080/api/basic/getAdsReportByID/${id_report}`, function(data) {
+    $.get(`/api/basic/getAdsReportByID/${id_report}`, function(data) {
       info = data.content[0]
       console.log(info)
 
@@ -129,7 +128,7 @@ $(document).ready(function() {
         // console.log(JSON.stringify(data));
 
         $.ajax({
-          url:  `http://localhost:8080/api/basic/updateAdsReportByID/${id_report}`,
+          url:  `/api/basic/updateAdsReportByID/${id_report}`,
           type: 'PUT',
           data: JSON.stringify(data),
           contentType: 'application/json',
@@ -224,7 +223,7 @@ $(document).ready(function() {
     
     pos.insertAdjacentHTML('afterend', formHtml);
 
-    $.get(`http://localhost:8080/api/basic/getAdsLocReportByID/${id_report}`, function(data) {
+    $.get(`/api/basic/getAdsLocReportByID/${id_report}`, function(data) {
       info = data.content[0]
       console.log(info)
 
@@ -261,7 +260,7 @@ $(document).ready(function() {
         }
 
         $.ajax({
-          url:  `http://localhost:8080/api/basic/updateAdsLocReportByID/${id_report}`,
+          url:  `/api/basic/updateAdsLocReportByID/${id_report}`,
           type: 'PUT',
           data: JSON.stringify(data),
           contentType: 'application/json',
@@ -357,7 +356,7 @@ $(document).ready(function() {
     pos.insertAdjacentHTML('afterend', formHtml);
 
     $.ajax({
-      url: `http://localhost:8080/api/basic/getLocReportByID/${id_report}`,
+      url: `/api/basic/getLocReportByID/${id_report}`,
       type: 'GET',
       dataType: 'json',
       success: function(data){
@@ -396,7 +395,7 @@ $(document).ready(function() {
           }
 
           $.ajax({
-            url: `http://localhost:8080/api/basic/updateLocReportByID/${id_report}`,
+            url: `/api/basic/updateLocReportByID/${id_report}`,
             type: 'PUT',
             data: JSON.stringify(data),
             contentType: 'application/json',

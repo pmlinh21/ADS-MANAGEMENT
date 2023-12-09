@@ -34,7 +34,6 @@ class OTP extends Sequelize.Model {
           { name: "expired_time" },
         ]
       },
-    ]
-  });
+    ]  });
   }
 }

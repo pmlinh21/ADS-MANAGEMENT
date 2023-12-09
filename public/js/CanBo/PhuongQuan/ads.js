@@ -1,6 +1,4 @@
 $(document).ready(function () {
-  const role = parseInt(localStorage.getItem('role'))
-  const email = localStorage.getItem('email');
   console.log(role);
 
   mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
@@ -8,13 +6,13 @@ $(document).ready(function () {
   var board_type
   var info, filter_info, wards
 
-  $.get(`http://localhost:8080/api/basic/getBoardType`, function(data) {
+  $.get(`/api/basic/getBoardType`, function(data) {
     board_type = data.content
   }).fail(function(error) {
     console.log(error);
   });
 
-  if (role == 2){
+  if (role == "2"){
 
 
 
@@ -22,19 +20,17 @@ $(document).ready(function () {
 
 
     
-  } else if (role == 1){
-    const id_district = parseInt(localStorage.getItem('id_district'));
-    const email = localStorage.getItem('email');
-
-    $.get(`http://localhost:8080/api/quan/getWard/${id_district}`, function(data) {
+  } else if (role == "1"){
+    $.get(`/api/quan/getWard/${id_district}`, function(data) {
       wards = data.content.map(ward => ward.ward);
+      display_wards = data.content.map(ward => (!isNaN(parseInt(ward.ward))) ? `phường ${ward.ward}` : ward.ward);
       console.log("!");
-      renderWard(wards);
+      renderWard(display_wards);
     }).fail(function(error) {
       console.log(error);
     });
 
-    $.get(`http://localhost:8080/api/quan/getAds/${id_district}`, function(data) {
+    $.get(`/api/quan/getAds/${id_district}`, function(data) {
       info = data.content.map(function(data){
         let {id_ads, id_ads_location, address, ward, loc_type, board_type, photo,
           width, height, quantity, expired_date, longitude, latitude, id_board_type } = data
@@ -121,7 +117,7 @@ $(document).ready(function () {
         let canvas = $('.mapboxgl-canvas')
         canvas.width('100%');
     
-        $.get(`http://localhost:8080/api/quan/getAllAdsLoc`, function(data) {
+        $.get(`/api/quan/getAllAdsLoc`, function(data) {
           adsloc = data.content
     
           adsloc.forEach(function (item, index) {
@@ -197,7 +193,7 @@ $(document).ready(function () {
             $("#edit-info").modal("hide")
     
             $.ajax({
-              url: `http://localhost:8080/api/quan/updateAds/${email}`,
+              url: `/api/quan/updateAds/${email}`,
               type: 'POST',
               data: formData,
               processData: false,
