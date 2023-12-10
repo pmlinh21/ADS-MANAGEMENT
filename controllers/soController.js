@@ -4,6 +4,7 @@ const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
 const { Op } = require("sequelize");
 
+// QUANLICHUNG --- Loai Vi Tri
 const getLoaiViTri = async (req, res) => {
     try {
         const [data, metadata] = await sequelize.query("SELECT * FROM Location_type");
@@ -32,8 +33,7 @@ const updateLoaiViTri = async (req, res) => {
 
 const deleteLoaiViTri = async (req, res) => {
     try {
-        const { id } = parseInt(req.body.id);
-        console.log(id);
+        const id = req.body.id;
         await model.Location_type.destroy({
             where: {
                 id_loc_type: id
@@ -41,10 +41,23 @@ const deleteLoaiViTri = async (req, res) => {
         });
         sucessCode(res, "", "Delete thành công");
     } catch(err) {
-        errorCode(res, "Lỗi BE");
+        errorCode(res, "Lỗi khóa ngoạin");
     }
 }
 
+const addLoaiViTri = async (req, res) => {
+    try {
+        const name = req.body.name;
+        const data = await model.Location_type.create({
+            loc_type: name
+        });
+        sucessCode(res, data, name);
+    } catch(err) {
+        errorCode(res, req.body.name);
+    }
+}
+
+// QUANLICHUNG --- Hinh Thuc Quang Cao
 const getHinhThucQuangCao = async (req, res) => {
     try {
         const [data, metadata] = await sequelize.query("SELECT * FROM Ads_type");
@@ -70,6 +83,34 @@ const updateHinhThucQuangCao = async (req, res) => {
     }
 }
 
+const deleteHinhThucQuangCao = async (req, res) => {
+    try {
+        const id = req.body.id;
+        await model.Ads_type.destroy({
+            where: {
+                id_ads_type: id
+            }
+        });
+        sucessCode(res, "", "Delete thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi khóa ngoại");
+    }
+}
+
+const addHinhThucQuangCao = async (req, res) => {
+    try {
+        const name = req.body.name;
+        const data = await model.Ads_type.create({
+            ads_type: name
+        });
+        sucessCode(res, data, name);
+    } catch(err) {
+        errorCode(res, req.body.name);
+    }
+
+}
+
+// QUANLICHUNG --- Loai Hinh Bao Cao
 const getLoaiHinhBaoCao = async (req, res) => {
     try {
         const [data, metadata] = await sequelize.query("SELECT * FROM Report_type");
@@ -95,6 +136,33 @@ const updateLoaiHinhBaoCao = async (req, res) => {
     }
 }
 
+const deleteLoaiHinhBaoCao = async (req, res) => {
+    try {
+        const id = req.body.id;
+        await model.Report_type.destroy({
+            where: {
+                id_report_type: id
+            }
+        });
+        sucessCode(res, "", "Delete thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi khóa ngoại");
+    }
+}
+
+const addLoaiHinhBaoCao = async (req, res) => {
+    try {
+        const name = req.body.name;
+        const data = await model.Report_type.create({
+            report_type: name
+        });
+        sucessCode(res, data, name);
+    } catch(err) {
+        errorCode(res, req.body.name);
+    }
+}
+
+// QUANLICHUNG --- Loai Bang Quang Cao
 const getLoaiBangQuangCao = async (req, res) => {
     try {
         const [data, metadata] = await sequelize.query("SELECT * FROM Board_type");
@@ -120,38 +188,31 @@ const updateLoaiBangQuangCao = async (req, res) => {
     }
 }
 
-// const updateHinhThucQuangCao = async (req, res) => {
-//     try {
-//         const id = req.params.idHinhThucQuangCao;
-//         const { name } = req.body;
-//         const [data, metadata] = await sequelize.query(`UPDATE Ads_type SET ads_type = '${name}' WHERE id_ads_type = ${id}`);
-//         sucessCode(res, data, "Put thành công");
-//     } catch(err) {
-//         errorCode(res, "Lỗi BE");
-//     }
-// }
+const deleteLoaiBangQuangCao = async (req, res) => {
+    try {
+        const id = req.body.id;
+        await model.Board_type.destroy({
+            where: {
+                id_board_type: id
+            }
+        });
+        sucessCode(res, "", "Delete thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi khóa ngoại");
+    }
+}
 
-// const updateLoaiHinhBaoCao = async (req, res) => {
-//     try {
-//         const id = req.params.idLoaiHinhBaoCao;
-//         const { name } = req.body;
-//         const [data, metadata] = await sequelize.query(`UPDATE Report_type SET report_type = '${name}' WHERE id_report_type = ${id}`);
-//         sucessCode(res, data, "Put thành công");
-//     } catch(err) {
-//         errorCode(res, "Lỗi BE");
-//     }
-// }
-
-// const updateLoaiBangQuangCao = async (req, res) => {
-//     try {
-//         const id = req.params.idLoaiBangQuangCao;
-//         const { name } = req.body;
-//         const [data, metadata] = await sequelize.query(`UPDATE Board_type SET board_type = '${name}' WHERE id_board_type = ${id}`);
-//         sucessCode(res, data, "Put thành công");
-//     } catch(err) {
-//         errorCode(res, "Lỗi BE");
-//     }
-// }
+const addLoaiBangQuangCao = async (req, res) => {
+    try {
+        const name = req.body.name;
+        const data = await model.Board_type.create({
+            board_type: name
+        });
+        sucessCode(res, data, name);
+    } catch(err) {
+        errorCode(res, req.body.name);
+    }
+}
 
 module.exports = { 
     getLoaiViTri, 
@@ -162,5 +223,12 @@ module.exports = {
     updateHinhThucQuangCao,
     updateLoaiHinhBaoCao,
     updateLoaiBangQuangCao,
-    deleteLoaiViTri
+    deleteLoaiViTri,
+    deleteHinhThucQuangCao,
+    deleteLoaiHinhBaoCao,
+    deleteLoaiBangQuangCao,
+    addLoaiViTri,
+    addHinhThucQuangCao,
+    addLoaiHinhBaoCao,
+    addLoaiBangQuangCao
 };

@@ -8,8 +8,16 @@ const { getLoaiViTri,
     updateHinhThucQuangCao,
     updateLoaiHinhBaoCao,
     updateLoaiBangQuangCao,
-    deleteLoaiViTri
-    } = require('../controllers/soController')
+    deleteLoaiViTri,
+    deleteHinhThucQuangCao,
+    deleteLoaiHinhBaoCao,
+    deleteLoaiBangQuangCao,
+    addLoaiViTri,
+    addHinhThucQuangCao,
+    addLoaiHinhBaoCao,
+    addLoaiBangQuangCao
+} = require('../controllers/soController')
+
 // const { upload } = require('../middlewares/upload');
 
 soRoute.get("/getLoaiViTri", getLoaiViTri);
@@ -29,5 +37,19 @@ soRoute.put("/updateLoaiHinhBaoCao", updateLoaiHinhBaoCao);
 soRoute.put("/updateLoaiBangQuangCao", updateLoaiBangQuangCao);
 
 soRoute.delete("/deleteLoaiViTri", deleteLoaiViTri);
+
+soRoute.delete("/deleteHinhThucQuangCao", deleteHinhThucQuangCao);
+
+soRoute.delete("/deleteLoaiHinhBaoCao", deleteLoaiHinhBaoCao);
+
+soRoute.delete("/deleteLoaiBangQuangCao", deleteLoaiBangQuangCao);
+
+soRoute.post("/addLoaiViTri", addLoaiViTri);
+
+soRoute.post("/addHinhThucQuangCao", addHinhThucQuangCao);
+
+soRoute.post("/addLoaiHinhBaoCao", addLoaiHinhBaoCao);
+
+soRoute.post("/addLoaiBangQuangCao", addLoaiBangQuangCao);
 
 module.exports = soRoute;
