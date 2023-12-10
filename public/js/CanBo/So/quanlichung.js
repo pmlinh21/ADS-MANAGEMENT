@@ -1,6 +1,44 @@
 $(document).ready(function() {
     $("#chung").addClass("snb-li-active");
 
+    // STATISTICS
+    let soLuongQuan, soLuongPhuong, soLuongCanBo, soLuongDDQC, soLuongBQC;
+    $.get(`/api/so/getSoLuongQuan`, function(data) {
+        soLuongQuan = data.content[0].soLuongQuan;
+        $("#district-statistic .statistic-number").text(soLuongQuan);
+    }).fail(function(error) {
+        console.log(error);
+    });
+
+    $.get(`/api/so/getSoLuongPhuong`, function(data) {
+        soLuongPhuong = data.content[0].soLuongPhuong;
+        $("#ward-statistic .statistic-number").text(soLuongPhuong);
+    }).fail(function(error) {
+        console.log(error);
+    });
+
+    $.get(`/api/so/getSoLuongCanBo`, function(data) {
+        soLuongCanBo = data.content[0].soLuongCanBo;
+        $("#officer-statistic .statistic-number").text(soLuongCanBo);
+    }).fail(function(error) {
+        console.log(error);
+    });
+
+    $.get(`/api/so/getSoLuongDDQC`, function(data) {
+        soLuongDDQC = data.content[0].soLuongDDQC;
+        $("#location-statistic .statistic-number").text(soLuongDDQC);
+    }).fail(function(error) {
+        console.log(error);
+    });
+
+    $.get(`/api/so/getSoLuongBQC`, function(data) {
+        soLuongBQC = data.content[0].soLuongBQC
+        $("#ad-statistic .statistic-number").text(soLuongBQC);
+    }).fail(function(error) {
+        console.log(error);
+    });
+
+    // UPLOAD DATA FROM DB TO TABLES
     var loaiViTri, hinhThucQuangCao, loaiHinhBaoCao, loaiBangQuangCao;
     $.get(`/api/so/getLoaiViTri`, function(data) {
         loaiViTri = data.content.map(type => [type.id_loc_type, type.loc_type])

@@ -4,6 +4,52 @@ const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
 const { Op } = require("sequelize");
 
+// QUANLICHUNG --- Statistic
+const getSoLuongQuan = async (req, res) => {
+    try {
+        const [data, metadata] = await sequelize.query("SELECT COUNT(id_district) AS soLuongQuan FROM District");
+        sucessCode(res, data, "Get thành công");
+    } catch (err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const getSoLuongPhuong = async (req, res) => {
+    try {
+        const [data, metadata] = await sequelize.query("SELECT COUNT(id_ward) AS soLuongPhuong FROM Ward");
+        sucessCode(res, data, "Get thành công");
+    } catch (err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const getSoLuongCanBo = async (req, res) => {
+    try {
+        const [data, metadata] = await sequelize.query("SELECT COUNT(T.email) AS soLuongCanBo FROM ( (SELECT email FROM CanboSo) UNION (SELECT email FROM CanboQuan ) UNION (SELECT email FROM CanboPhuong)) T");
+        sucessCode(res, data, "Get thành công");
+    } catch (err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const getSoLuongDDQC = async (req, res) => {
+    try {
+        const [data, metadata] = await sequelize.query("SELECT COUNT(id_ads_location) AS soLuongDDQC FROM Ads_location");
+        sucessCode(res, data, "Get thành công");
+    } catch (err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const getSoLuongBQC = async (req, res) => {
+    try {
+        const [data, metadata] = await sequelize.query("SELECT COUNT(id_ads) AS soLuongBQC FROM Ads");
+        sucessCode(res, data, "Get thành công");
+    } catch (err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
 // QUANLICHUNG --- Loai Vi Tri
 const getLoaiViTri = async (req, res) => {
     try {
@@ -215,6 +261,11 @@ const addLoaiBangQuangCao = async (req, res) => {
 }
 
 module.exports = { 
+    getSoLuongQuan,
+    getSoLuongPhuong,
+    getSoLuongCanBo,
+    getSoLuongDDQC,
+    getSoLuongBQC,
     getLoaiViTri, 
     getHinhThucQuangCao, 
     getLoaiHinhBaoCao, 

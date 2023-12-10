@@ -1,6 +1,12 @@
 const express = require('express');
 const soRoute = express.Router();
-const { getLoaiViTri, 
+const { 
+    getSoLuongQuan,
+    getSoLuongPhuong,
+    getSoLuongCanBo,
+    getSoLuongDDQC,
+    getSoLuongBQC,
+    getLoaiViTri, 
     getHinhThucQuangCao, 
     getLoaiHinhBaoCao, 
     getLoaiBangQuangCao,
@@ -20,36 +26,31 @@ const { getLoaiViTri,
 
 // const { upload } = require('../middlewares/upload');
 
+// QUANLICHUNG
+soRoute.get("/getSoLuongQuan", getSoLuongQuan);
+soRoute.get("/getSoLuongPhuong", getSoLuongPhuong);
+soRoute.get("/getSoLuongCanBo", getSoLuongCanBo);
+soRoute.get("/getSoLuongDDQC", getSoLuongDDQC);
+soRoute.get("/getSoLuongBQC", getSoLuongBQC);
+
 soRoute.get("/getLoaiViTri", getLoaiViTri);
-
 soRoute.get("/getHinhThucQuangCao", getHinhThucQuangCao);
-
 soRoute.get("/getLoaiHinhBaoCao", getLoaiHinhBaoCao);
-
 soRoute.get("/getLoaiBangQuangCao", getLoaiBangQuangCao);
 
 soRoute.put("/updateLoaiViTri", updateLoaiViTri);
-
 soRoute.put("/updateHinhThucQuangCao", updateHinhThucQuangCao);
-
 soRoute.put("/updateLoaiHinhBaoCao", updateLoaiHinhBaoCao);
-
 soRoute.put("/updateLoaiBangQuangCao", updateLoaiBangQuangCao);
 
 soRoute.delete("/deleteLoaiViTri", deleteLoaiViTri);
-
 soRoute.delete("/deleteHinhThucQuangCao", deleteHinhThucQuangCao);
-
 soRoute.delete("/deleteLoaiHinhBaoCao", deleteLoaiHinhBaoCao);
-
 soRoute.delete("/deleteLoaiBangQuangCao", deleteLoaiBangQuangCao);
 
 soRoute.post("/addLoaiViTri", addLoaiViTri);
-
 soRoute.post("/addHinhThucQuangCao", addHinhThucQuangCao);
-
 soRoute.post("/addLoaiHinhBaoCao", addLoaiHinhBaoCao);
-
 soRoute.post("/addLoaiBangQuangCao", addLoaiBangQuangCao);
 
 module.exports = soRoute;
