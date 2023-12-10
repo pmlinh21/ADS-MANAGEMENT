@@ -1,72 +1,131 @@
-document.querySelector("#phuong").classList.add("snb-li-active");
+$(document).ready(function(){
+    $("#phuong").addClass("snb-li-active");
 
-$("form").submit(function(event){
-    event.preventDefault();
+    let allPhuong;
+    $.get("/api/so/getAllPhuong", function(data){
+        allPhuong = data.content.map(item => [item.id_ward, item.ward, item.district, item.SLDDQC, item.SLBQC, item.SLCB]);
+        buildWardTable(allPhuong);
+    }).fail(function(err){
+        console.log(err);
+    });
 });
 
-let wards = [[1, 'Bến Nghé', 1, 5, 12, 2], [2, 'Bến Thành', 1, 7, 14, 2], [3, 'Cầu Kho', 1, 4, 9, 1], [4, 'Cầu Ông Lãnh', 1, 3, 6, 1], [5, 'Cô Giang', 1, 16, 18, 2], [6, 'Đa Kao', 1, 11, 14, 3], [7, 'Nguyễn Cư Trinh', 1, 9, 13, 1], [8, 'Nguyễn Thái Bình', 1, 8, 12, 1], [9, 'Phạm Ngũ Lão', 1, 9, 8, 1], [10, 'Tân Định', 1, 7, 4, 1], [21, '1', 3, 5, 8, 2], [22, '2', 3, 12, 5, 1], [23, '3', 3, 15, 12, 2], [24, '4', 3, 4, 10, 1], [25, '5', 3, 9, 16, 2], [26, '9', 3, 12, 15, 1], [27, '10', 3, 14, 6, 1], [28, '11', 3, 8, 4, 2], [29, '12', 3, 6, 13, 1], [30, '13', 3, 12, 3, 2], [31, '14', 3, 17, 15, 2], [32, 'Võ Thị Sáu', 3, 12, 26, 3]];
-for (let i = wards.length; i > 0; i--) {
-    let tr = document.createElement("tr");
-    let td1 = document.createElement("td");
-    let td2 = document.createElement("td");
-    let td3 = document.createElement("td");
-    let td4 = document.createElement("td");
-    let td5 = document.createElement("td");
-    let td6 = document.createElement("td");
-    td1.innerHTML = wards[i-1][0];
-    td1.className = "id";
-    td2.innerHTML = wards[i-1][1];
-    td2.className = "name";
-    td3.innerHTML = wards[i-1][2];
-    td3.className = "in-district";
-    td4.innerHTML = wards[i-1][3];
-    td4.className = "number-of-ads-locations";
-    td5.innerHTML = wards[i-1][4];
-    td5.className = "number-of-ads";
-    td6.innerHTML = wards[i-1][5];
-    td6.className = "number-of-officers";
-    tr.addEventListener("click", editPopup);
-    tr.appendChild(td1);
-    tr.appendChild(td2);
-    tr.appendChild(td3);
-    tr.appendChild(td4);
-    tr.appendChild(td5);
-    tr.appendChild(td6);
+function buildWardTable(wards) {
+    let table = $("#ward-table table tbody");
+    for (let i = 0; i < wards.length; i++) {
+        let tr = $("<tr></tr>");
 
-    document.querySelector("#ward-table table tbody").prepend(tr);
+        let td1 = $("<td></td>").text(wards[i][0]);
+        td1.addClass("id");
+        let td2 = $("<td></td>").text(wards[i][1]);
+        td2.addClass("name");
+        let td3 = $("<td></td>").text(wards[i][2]);
+        td3.addClass("in-district");
+        let td4 = $("<td></td>").text(wards[i][3]);
+        td4.addClass("number-of-ads-locations");
+        let td5 = $("<td></td>").text(wards[i][4]);
+        td5.addClass("number-of-ads");
+        let td6 = $("<td></td>").text(wards[i][5]);
+        td6.addClass("number-of-officers");
+
+        tr.append(td1);
+        tr.append(td2);
+        tr.append(td3);
+        tr.append(td4);
+        tr.append(td5);
+        tr.append(td6);
+        tr.click(editPopup);
+
+        table.append(tr);
+    }
+    // <tr><td colspan="6" class="add-item" onclick=addPopup()><i class="fas fa-plus"></i></td>
+    let tr = $("<tr></tr>");
+    let td = $("<td></td>");
+    td.attr("colspan", "6");
+    td.addClass("add-item");
+    td.click(addPopup);
+    td.html("<i class='fas fa-plus'></i>");
+    tr.append(td);
+    table.append(tr);
 }
 
 function editPopup() {
-    let title = this.parentElement.parentElement.querySelector("caption").textContent.slice(14);
-    document.querySelector("#edit-popup").style.display = "block";
-    document.querySelector("#edit-popup legend").innerHTML = "<i class='far fa-edit'></i> Chỉnh sửa " + title;
+    let title = $(this).parent().parent().find("caption").text().slice(14);
 
-    document.querySelector("#edit-popup .input-field:first-of-type label").textContent = "ID " + title;
-    document.querySelector("#edit-popup .input-field:first-of-type input").value = this.querySelector(".id").textContent;
+    $("#edit-popup").css("display", "block");
+    $("#edit-popup legend").html("<i class='far fa-edit'></i> Chỉnh sửa " + title);
 
-    document.querySelector("#edit-popup .input-field:last-of-type label").textContent = "Tên " + title;
-    document.querySelector("#edit-popup .input-field:last-of-type input").value = this.querySelector(".name").textContent;
+    $("#edit-popup .input-field:first-of-type label").text("ID " + title);
+    $("#edit-popup .input-field:first-of-type input").val($(this).find(".id").text());
 
-    let div = document.createElement("div");
-    div.className = "popup-background";
-    div.addEventListener("click", () => {
+    $("#edit-popup .input-field:last-of-type label").text("Tên " + title);
+    $("#edit-popup .input-field:last-of-type input").val($(this).find(".name").text());
+
+    let div = $("<div></div>");
+    div.addClass("popup-background");
+    div.click(() => {
         div.remove();
-        document.querySelector("#edit-popup").style.display = "none";
+        $("#edit-popup").css("display", "none");
     });
-    document.querySelector("body").appendChild(div);
+    $("body").append(div);
 }
 
-function addPopup(e) {
-    let title = e.parentElement.parentElement.parentElement.querySelector("caption").textContent.slice(14);
-    document.querySelector("#add-popup").style.display = "block";
-    document.querySelector("#add-popup legend").innerHTML = "<i class='fas fa-plus-square'></i> Thêm " + title;
-    document.querySelector("#add-popup .input-field label").textContent = "Tên " + title;
+function addPopup() {
+    let title = $(this).parent().parent().parent().find("caption").text().slice(14);
 
-    let div = document.createElement("div");
-    div.className = "popup-background";
-    div.addEventListener("click", () => {
+    $("#add-popup").css("display", "block");
+    $("#add-popup legend").html("<i class='fas fa-plus-square'></i> Thêm " + title);
+    $("#add-popup .input-field label").text("Tên " + title);
+
+    let div = $("<div></div>");
+    div.addClass("popup-background");
+    div.click(() => {
         div.remove();
-        document.querySelector("#add-popup").style.display = "none";
+        $("#add-popup").css("display", "none");
     });
-    document.querySelector("body").appendChild(div);
+    $("body").append(div);
+}
+
+// Not done
+async function handleButtonClick(e) {
+    if (e.value == "update") {
+        const formData = new FormData($("#edit-popup")[0]);
+        const editData = Object.fromEntries(formData.entries());
+        // let res = await fetch('/api/so/updateQuan', {
+        //     method: 'PUT',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(editData),
+        // });
+        // location.reload();
+    } else if (e.value == "delete") {
+        if (confirm("Bạn có chắc chắn muốn xóa không?")) {
+            const formData = new FormData($("#edit-popup")[0]);
+            const deleteData = Object.fromEntries(formData.entries());
+            // let res = await fetch('/api/so/deleteQuan', {
+            //     method: 'DELETE',
+            //     headers: {
+            //     'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify(deleteData),
+            // });
+            // if (res.status == 500) {
+            //     alert("Không thể xóa vì quận đang được sử dụng");
+            // } else {
+            //     location.reload();
+            // }
+        }
+    } else if (e.value == "add") {
+        const formData = new FormData($("#add-popup")[0]);
+        const addData = Object.fromEntries(formData.entries());
+        // let res = await fetch('/api/so/addQuan', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(addData),
+        // });
+        // location.reload();
+    }
 }

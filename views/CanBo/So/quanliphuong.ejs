@@ -20,33 +20,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="6" class="add-item" onclick=addPopup(this)><i class="fas fa-plus"></i></td>
+                    <!-- <tr><td colspan="6" class="add-item" onclick=addPopup(this)><i class="fas fa-plus"></i></td> -->
                 </tbody>
             </table>
         </div>
          <!-- POPUP EDIT FORM -->
-         <form action="" method="post" class="popup form" id="edit-popup">
+         <form class="popup form" id="edit-popup">
             <legend></legend>
             <div class="input-field">
-                <label for="id-district"></label>
-                <input type="text" id="id-ward" name="id-ward" disabled>
+                <label for="id"></label>
+                <input type="text" id="id" name="id" class="disabled" readonly>
                 <span class="tooltiptext">Không thể chỉnh sửa ID</span>
             </div>
             <div class="input-field">
-                <label for="ward-name"></label>
-                <input type="text" id="ward-name" name="ward-name" required>
+                <label for="name"></label>
+                <input type="text" id="name" name="name" required>
             </div>
             
-            <button type="submit" value="delete" class="button">Lưu thay đổi</button>
-            <button type="button" value="update" class="button button-delete">Xóa bỏ</button>
+            <button type="submit" value="update" class="button">Lưu thay đổi</button>
+            <button type="button" value="delete" class="button button-delete">Xóa bỏ</button>
         </form>
 
         <!-- POPUP ADD FORM -->
-        <form action="" method="post" class="popup form" id="add-popup">
+        <form class="popup form" id="add-popup">
             <legend></legend>
             <div class="input-field">
-                <label for="ward-name"></label>
-                <input type="text" id="ward-name" name="ward-name" required>
+                <label for="name"></label>
+                <input type="text" id="name" name="name" required>
             </div>
             
             <button type="submit" value="add" class="button">Thêm</button>

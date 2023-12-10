@@ -318,6 +318,62 @@ const addQuan = async (req, res) => {
     }
 }
 
+// QUANLIPHUONG
+const getAllPhuong = async (req, res) => {
+    try {
+        const [data, metadata] = await sequelize.query( "SELECT W.id_ward, W.ward, D.district, COUNT(DISTINCT AL.id_ads_location) AS SLDDQC, COUNT(DISTINCT A.id_ads) AS SLBQC " + 
+                                                        "FROM Ward W LEFT JOIN District D ON D.id_district = W.id_district " + 
+                                                        "LEFT JOIN Ads_location AL ON AL.id_ward = W.id_ward " + 
+                                                        "LEFT JOIN Ads A ON A.id_ads_location = AL.id_ads_location " + 
+                                                        "GROUP BY W.id_ward");
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const updatePhuong = async (req, res) => {
+    try {
+        const { id, name } = req.body;
+        const data = await model.Ward.update({
+            ward: name
+        }, {
+            where: {
+                id_ward: id
+            }
+        });
+        sucessCode(res, data, req.body.name);
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const deletePhuong = async (req, res) => {
+    try {
+        const id = req.body.id;
+        await model.Ward.destroy({
+            where: {
+                id_ward: id
+            }
+        });
+        sucessCode(res, "", "Delete thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi khóa ngoại");
+    }
+}
+
+const addPhuong = async (req, res) => {
+    try {
+        const name = req.body.name;
+        const data = await model.Ward.create({
+            ward: name
+        });
+        sucessCode(res, data, "Post thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
 module.exports = { 
     getSoLuongQuan,
     getSoLuongPhuong,
@@ -348,5 +404,10 @@ module.exports = {
     getAllQuan,
     updateQuan,
     deleteQuan,
-    addQuan
+    addQuan,
+
+    getAllPhuong,
+    updatePhuong,
+    deletePhuong,
+    addPhuong
 };

@@ -97,8 +97,7 @@ async function handleButtonClick(e) {
             },
             body: JSON.stringify(editData),
         });
-        alert(res);
-        // location.reload();
+        location.reload();
     } else if (e.value == "delete") {
         if (confirm("Bạn có chắc chắn muốn xóa không?")) {
             const formData = new FormData($("#edit-popup")[0]);
@@ -119,7 +118,6 @@ async function handleButtonClick(e) {
     } else if (e.value == "add") {
         const formData = new FormData($("#add-popup")[0]);
         const addData = Object.fromEntries(formData.entries());
-        console.log(JSON.stringify(addData));
         let res = await fetch('/api/so/addQuan', {
             method: 'POST',
             headers: {

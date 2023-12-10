@@ -26,7 +26,12 @@ const {
     getAllQuan,
     updateQuan,
     deleteQuan,
-    addQuan
+    addQuan,
+
+    getAllPhuong,
+    updatePhuong,
+    deletePhuong,
+    addPhuong
 } = require('../controllers/soController')
 
 // const { upload } = require('../middlewares/upload');
@@ -63,5 +68,11 @@ soRoute.get("/getAllQuan", getAllQuan);
 soRoute.put("/updateQuan", updateQuan);
 soRoute.delete("/deleteQuan", deleteQuan);
 soRoute.post("/addQuan", addQuan);
+
+// QUANLIPHUONG
+soRoute.get("/getAllPhuong", getAllPhuong);
+soRoute.put("/updatePhuong", updatePhuong);
+soRoute.delete("/deletePhuong", deletePhuong);
+soRoute.post("/addPhuong", addPhuong);
 
 module.exports = soRoute;
