@@ -9,6 +9,7 @@ $(document).ready(function () {
 
     
   } else if (role == 1){
+    $("#loading-bg").show()
     var ads_report, ads_loc_report, loc_report
     var info1, info2, info3, wards, wardArray = [], idArray = []
 
@@ -84,6 +85,7 @@ $(document).ready(function () {
       cache: false,
       dataType: "json",
       success: function (data){
+        $("#loading-bg").hide()
         info2 = data.content.map(function(data){
           let {id_report, id_ads_location, report_type, fullname, email, phone, content,
             photo1, photo2, report_time, status, resolve, ward } = data

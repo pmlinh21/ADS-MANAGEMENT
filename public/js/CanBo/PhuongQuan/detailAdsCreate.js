@@ -2,12 +2,14 @@ $(document).ready(function() {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const id_create = parseInt(urlParams.get('id_create'))
+  $("#loading-bg").show()
   $.ajax({
     url: `/api/basic/getAdsCreateByID/${id_create}`,
     type: 'GET',
     dataType: 'json',
     success: function(data) {
       info = data.content[0]
+      $("#loading-bg").hide()
       $('#id').val(info.id_create);
       $('#board_type').val(info.board_type);
       $('#size').val(info.width + 'm x ' + info.height + "m");

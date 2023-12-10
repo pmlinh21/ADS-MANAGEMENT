@@ -18,11 +18,12 @@ class OTP extends Sequelize.Model {
     },
     OTP: {
       type: DataTypes.TEXT,
-      allowNull: true
+      allowNull: true,
+      field: 'otp'
     }
   }, {
     sequelize,
-    tableName: 'OTP',
+    tableName: 'otp',
     timestamps: false,
     indexes: [
       {

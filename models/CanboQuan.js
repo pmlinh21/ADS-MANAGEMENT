@@ -31,13 +31,13 @@ class CanboQuan extends Sequelize.Model {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'District',
+        model: 'district',
         key: 'id_district'
       }
     }
   }, {
     sequelize,
-    tableName: 'CanboQuan',
+    tableName: 'canboquan',
     timestamps: false,
     indexes: [
       {

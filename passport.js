@@ -1,6 +1,6 @@
-const sequelize = require('./models/index');
+const db = require('./models/index');
 const init_models = require('./models/init-models');
-const model = init_models(sequelize);
+const model = init_models(db.sequelize);
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;

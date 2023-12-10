@@ -9,8 +9,9 @@ $(document).ready(function () {
 
   } 
   else if (role == "1"){
-
+    $("#loading-bg").show()
     $.get(`/api/quan/getWard/${id_district}`, function(data) {
+      
       wards = data.content.map(ward => ward.ward);
       display_wards = data.content.map(ward => (!isNaN(parseInt(ward.ward))) ? `phường ${ward.ward}` : ward.ward);
       console.log("!");
@@ -27,93 +28,96 @@ $(document).ready(function () {
       })
       console.log(idArray)
 
-      $.get(`/api/quan/getAdsCreate/${id_district}`, function(data) {
-        info = data.content.map(function(item){
-          let {id_create, board_type, address, content, company,
-            start_date, end_date, status, address_adsloc,district,
-            width, height, quantity, photo, email, phone, ward } = item
-          let statusText = status ? "Đã xét duyệt" : "Chưa xét duyệt"
+      $.ajax({
+        url: `/api/quan/getAdsCreate/${id_district}`,
+        type: "GET",
+        success: function(data) {
+          $("#loading-bg").hide()
+          info = data.content.map(function(item){
+            let {id_create, board_type, address, content, company,
+              start_date, end_date, status, address_adsloc,district,
+              width, height, quantity, photo, email, phone, ward } = item
+            let statusText = status ? "Đã xét duyệt" : "Chưa xét duyệt"
 
-          return [id_create, board_type, `${address_adsloc}, phường ${ward}, ${district}`, content, company,
-          formatSQLDate_dmy(start_date), formatSQLDate_dmy(end_date), statusText, 
-          '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>', 
-          width, height, quantity, photo, email, phone, ward]
-        })
+            return [id_create, board_type, `${address_adsloc}, phường ${ward}, ${district}`, content, company,
+            formatSQLDate_dmy(start_date), formatSQLDate_dmy(end_date), statusText, 
+            '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>', 
+            width, height, quantity, photo, email, phone, ward]
+          })
 
-        filter_info = [...info].sort((a, b) => a[0] - b[0]);
+          filter_info = [...info].sort((a, b) => a[0] - b[0]);
 
-        console.log(filter_info);
-        if (wardArray?.length > 0){
-          let result = []
-          for (let i = 0; i < filter_info.length; i++){
-            if (!wardArray.includes(filter_info[i][15]))
-              result.push(filter_info[i]);
-          }
-          filter_info = [...result]
-      
-          for (let i = 0; i < idArray.length; i++){
-            $(`#ward-${idArray[i]}`).prop('checked', false)
-          }
-        }
-      
-        $(".ads-create-table").DataTable({
-          pageLength: 6,
-          data: filter_info
-        });
-
-        $("#example_wrapper").on('click', '.ads-create-table .view-btn', function(){
-          let row = $(this).closest('tr').index();
-          let page = $("#example_wrapper .page-item.active a").text()
-          let id_create = filter_info[row + 6 * (parseInt(page) - 1)][0]
-          window.location.href = '/detailAdsCreate?id_create=' + id_create;
-          console.log(row);
-        })
-
-        $('.ward-table input').click(function() {
-          let id_ward = $(this).attr('id');
-          id_ward = id_ward.slice(id_ward.indexOf("-") + 1)
-          console.log(id_ward)
-
-          if ($(this).is(':checked')) {
-            for (var i = 0; i < info.length; i++){
-              if (info[i][15] == wards[id_ward])
-              filter_info.push(info[i]);
-            }
-          } else {
-            console.log("hihi")
+          console.log(filter_info);
+          if (wardArray?.length > 0){
             let result = []
-            for (var i = 0; i < filter_info.length; i++){
-              if (filter_info[i][15] != wards[id_ward])
+            for (let i = 0; i < filter_info.length; i++){
+              if (!wardArray.includes(filter_info[i][15]))
                 result.push(filter_info[i]);
             }
             filter_info = [...result]
-          }
-
-          $(".ads-create-table").DataTable().clear().rows.add(filter_info.sort(function(a, b) {
-            return a[0] - b[0];
-          })).draw()
-
-          var checkboxes = $('.ward-table input[type="checkbox"]');
-          var checkboxStates = []; 
-          checkboxes.each(function() {
-            if (!this.checked){
-              let id = parseInt(this.id.substring(this.id.indexOf("-") + 1))
-              checkboxStates.push(id);
+        
+            for (let i = 0; i < idArray.length; i++){
+              $(`#ward-${idArray[i]}`).prop('checked', false)
             }
+          }
+      
+          $(".ads-create-table").DataTable({
+            pageLength: 6,
+            data: filter_info
           });
 
-          let newURL = window.location.href.split('?')[0]; 
-          if (checkboxStates.length > 0){
-            newURL += '?id=' + encodeURIComponent(checkboxStates.join(","));
-            history.replaceState(null, null, newURL);
-          } else{
-            history.replaceState(null, null, newURL);
-          }
+          $("#example_wrapper").on('click', '.ads-create-table .view-btn', function(){
+            let row = $(this).closest('tr').index();
+            let page = $("#example_wrapper .page-item.active a").text()
+            let id_create = filter_info[row + 6 * (parseInt(page) - 1)][0]
+            window.location.href = '/detailAdsCreate?id_create=' + id_create;
+            console.log(row);
+          })
 
-        })
+          $('.ward-table input').on("click",function() {
+            let id_ward = $(this).attr('id');
+            id_ward = id_ward.slice(id_ward.indexOf("-") + 1)
+            console.log(id_ward)
 
-      }).fail(function(error) {
-        console.log(error);
+            if ($(this).is(':checked')) {
+              for (var i = 0; i < info.length; i++){
+                if (info[i][15] == wards[id_ward])
+                filter_info.push(info[i]);
+              }
+            } else {
+              console.log("hihi")
+              let result = []
+              for (var i = 0; i < filter_info.length; i++){
+                if (filter_info[i][15] != wards[id_ward])
+                  result.push(filter_info[i]);
+              }
+              filter_info = [...result]
+            }
+
+            $(".ads-create-table").DataTable().clear().rows.add(filter_info.sort(function(a, b) {
+              return a[0] - b[0];
+            })).draw()
+
+            var checkboxes = $('.ward-table input[type="checkbox"]');
+            var checkboxStates = []; 
+            checkboxes.each(function() {
+              if (!this.checked){
+                let id = parseInt(this.id.substring(this.id.indexOf("-") + 1))
+                checkboxStates.push(id);
+              }
+            });
+
+            let newURL = window.location.href.split('?')[0]; 
+            if (checkboxStates.length > 0){
+              newURL += '?id=' + encodeURIComponent(checkboxStates.join(","));
+              history.replaceState(null, null, newURL);
+            } else{
+              history.replaceState(null, null, newURL);
+            }
+
+          })
+
+        }
       })
 
       $("form").get(0).reset();
@@ -282,6 +286,9 @@ $(document).ready(function () {
             data: formData,
             processData: false,
             contentType: false,
+            beforeSend: function(){
+              $("#loading-bg").show()
+            },
             success: function(response) {
               // Handle the successful response here
               window.location.reload();

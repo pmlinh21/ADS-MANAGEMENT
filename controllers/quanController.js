@@ -1,24 +1,9 @@
-const sequelize = require('../models/index');
+const db = require('../models/index');
+const sequelize = db.sequelize;
 const init_models = require('../models/init-models');
 const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
 const { Op } = require("sequelize");
-
-// function validateObj(obj) {
-//     Object.keys(obj).forEach(function(key) {
-//         var value = obj[key];
-//         if (value === "" || value === "null") {
-//             obj[key] = null;
-//         }else {
-//             try {
-//               obj[key] = JSON.parse(value);
-//             } catch (error) {
-//               obj[key] = value;
-//             }
-//           }
-//       });
-//     return obj;
-// }
 
 const getAllAdsLoc = async(req, res) =>{
     try{
@@ -28,7 +13,7 @@ const getAllAdsLoc = async(req, res) =>{
         FROM Ads_location al
         INNER JOIN Ward w ON al.id_ward = w.id_ward
         INNER JOIN District d ON al.id_district = d.id_district
-        WHERE al.is_zoning = 1`);
+        WHERE al.is_zoning = true`);
 
         sucessCode(res,data,"Get thành công")
 
@@ -148,7 +133,7 @@ const getAdsLocation = async(req, res) =>{
         let { id_district } = req.params;
 
         const [data, metadata] = await sequelize.query
-            (`SELECT al.id_ads_location, al.address, w.ward, d.district, lt.loc_type, at.ads_type, al.is_zoning, 
+            (`SELECT al.id_ads_location, al.address as "address", w.ward, d.district, lt.loc_type, at.ads_type, al.is_zoning, 
             al.photo, al.longitude, al.latitude, COUNT(a.id_ads) as hasAds, COUNT(alr.id_report) as hasReport
             FROM Ads_location al
             INNER JOIN Ward w ON al.id_ward = w.id_ward
@@ -159,7 +144,7 @@ const getAdsLocation = async(req, res) =>{
             LEFT JOIN Ads_loc_report alr ON alr.id_ads_location = al.id_ads_location
             WHERE al.id_district = ${id_district}
             GROUP BY al.id_ads_location, al.address, w.ward, lt.loc_type, at.ads_type, al.is_zoning, 
-            al.photo, al.longitude, al.latitude
+            al.photo, al.longitude, al.latitude, d.district
             ORDER BY al.id_ads_location`);
         sucessCode(res,data,"Get thành công")
 
@@ -293,7 +278,6 @@ const updateAdsLoc = async(req, res) =>{
     try{
         let { email } = req.params;
         const file = req.file;
-        // const obj = validateObj(req.body)
 
         let { id_ads_location, latitude, longitude, address, ward, district, 
             id_loc_type, id_ads_type, is_zoning, req_time, reason, office} = req.body

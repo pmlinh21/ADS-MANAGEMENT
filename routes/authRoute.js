@@ -1,6 +1,5 @@
 const authRouter = require('express').Router()
 const passport = require('passport')
-const authController = require ('../controllers/authController')
 const { parseToken } = require('../middlewares/baseToken');
 require("dotenv").config()
 
@@ -8,17 +7,17 @@ const cookieParser = require("cookie-parser");
 
 authRouter.use(cookieParser(process.env.JWT_SECRET_KEY))
 
-const session = require('express-session');
-authRouter.use(session({
-  secret: process.env.JWT_SECRET_KEY, // Replace with your secret key
-  resave: false,
-  saveUninitialized: false,
-  cookie:{
-    secure: false,
-    httpOnly: true,
-    maxAge: 20 * 60 * 1000
-  }
-}));
+// const session = require('express-session');
+// authRouter.use(session({
+//   secret: process.env.JWT_SECRET_KEY, // Replace with your secret key
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie:{
+//     secure: false,
+//     httpOnly: true,
+//     maxAge: 20 * 60 * 1000
+//   }
+// }));
 
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', "email"], session: false }));
 

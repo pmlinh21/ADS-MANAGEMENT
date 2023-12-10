@@ -39,7 +39,7 @@ function createLayer(map, features){
     clusterMaxZoom: 14,
     clusterRadius: 50
   });
-  // console.log(info)
+  console.log(features)
    
   map.addLayer({
   id: 'clusters',
@@ -159,7 +159,7 @@ function createMarker(info, map) {
   const quangcao = $('#quangcao').prop("checked")
   const baocao = $('#baocao').prop("checked")
   const chuaquyhoach = $('#quyhoach').prop("checked")
-  // console.log(quangcao, baocao, chuaquyhoach)
+  console.log(quangcao, baocao, chuaquyhoach)
 
   const features = info.map(item => {
     let colorMarker
@@ -202,20 +202,17 @@ function createMarker(info, map) {
       }
     }
   });
+
+  
   const existingSource = map.getSource('adsloc');
   if (existingSource) {
     map.removeLayer('unclustered-point');
     map.removeLayer('cluster-count');
     map.removeLayer('clusters');
     map.removeSource('adsloc');
-
-    createLayer(map, features)
-
-  } else {
-    map.on('load', () => {
-      createLayer(map, features)
-    });
   }
+
+  createLayer(map, features)
 }  
 
 function validateSQLDate(dateString) {
@@ -342,6 +339,7 @@ function showSidebar(adsloc) {
       dataType: "json",
       success: function (data) {
         console.log(data)
+        $("#detail-popup").show()
         info = data.content[0]
         $('#id').val(info.id_create);
         $('#board_type').val(info.board_type);
@@ -413,6 +411,7 @@ function showSidebar(adsloc) {
   $("#sidebar").on("click", '.close-button', function () {
     $('#sidebar').hide()
     $(".flex-container.toggle").show()
+    $(".mapboxgl-marker").remove()
   })
 
 }
@@ -643,23 +642,28 @@ $(document).ready(function () {
   }
   else if (role === "1") {
 
-    $.get(`/api/quan/getMapInfo/${id_district}`, function(data) {
-      console.log("~");
-    
-      info = data.content.map(function(item){
-        let { id_ads_location, address, ward, district, loc_type, ads_type,
-          photo, is_zoning, longitude, latitude, list_ads, list_report, id_district } = item;
-        let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch";
-        return [id_ads_location, address, ward, district, loc_type, ads_type, zoning_text,
-          photo, longitude, latitude, is_zoning, list_ads, list_report, id_district];
-      })
-
-      console.log(info)
-      filter_info = [...info]
-      
-      createMarker(info, map);
-      }).fail(function(error) {
-        console.log(error);
+    $.ajax({
+      url: `/api/quan/getMapInfo/${id_district}`,
+      type: "GET",
+      beforeSend: function(){
+        $("#loading-bg").show()
+      },
+      success: function(data){
+        console.log("~");
+        info = data.content.map(function(item){
+          let { id_ads_location, address, ward, district, loc_type, ads_type,
+            photo, is_zoning, longitude, latitude, list_ads, list_report, id_district } = item;
+          let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch";
+          return [id_ads_location, address, ward, district, loc_type, ads_type, zoning_text,
+            photo, longitude, latitude, is_zoning, list_ads, list_report, id_district];
+        })
+  
+        console.log(info)
+        filter_info = [...info]
+        
+        createMarker(info, map);
+        $("#loading-bg").hide()
+      },
     })
 
     $.get(`/api/quan/getWard/${id_district}`, function(data) {

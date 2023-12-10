@@ -74,7 +74,7 @@ class Ads_loc_report extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'Ads_loc_report',
+    tableName: 'ads_loc_report',
     timestamps: false,
     indexes: [
       {

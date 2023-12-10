@@ -36,7 +36,7 @@ class Location_report extends Sequelize.Model {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Ward',
+        model: 'ward',
         key: 'id_ward'
       }
     },
@@ -44,7 +44,7 @@ class Location_report extends Sequelize.Model {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Report_type',
+        model: 'report_type',
         key: 'id_report_type'
       }
     },
@@ -86,7 +86,7 @@ class Location_report extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'Location_report',
+    tableName: 'location_report',
     timestamps: false,
     indexes: [
       {

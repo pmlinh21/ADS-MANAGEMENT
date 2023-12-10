@@ -30,9 +30,6 @@ $(document).ready(function () {
           const loginInfo = new FormData();
           loginInfo.append('email', email);
           loginInfo.append('pwd', password);
-          
-          $('#email').val("");
-          $('#password').val("");
 
           $.ajax({
             url: `/api/basic/login`,
@@ -62,6 +59,8 @@ $(document).ready(function () {
               if (xhr.status === 400 || xhr.status === 500) {
                 // Handle specific 400 error
                 const errorMessage = xhr.responseJSON?.message;
+                $('#email').val("");
+                $('#password').val("");
                 alert(errorMessage);
               } 
             }

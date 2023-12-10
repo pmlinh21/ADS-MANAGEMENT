@@ -9,17 +9,17 @@ app.use(express.urlencoded({ extended: false}))
 const cors = require('cors');
 app.use(cors());
 
-const sequelize = require('./models/index');
-const config = require('./config/index');
+// const db = require('./models/index');
+// const config = require('./config/index');
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connected to the database successfully');
-  })
-  .catch((err) => {
-    console.error('Unable to connect to the database:', err);
-  });
+// db.sequelize
+//   .authenticate()
+//   .then(() => {
+//     console.log('Connected to the database successfully');
+//   })
+//   .catch((err) => {
+//     console.error('Unable to connect to the database:', err);
+//   });
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));

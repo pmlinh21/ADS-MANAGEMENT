@@ -18,7 +18,7 @@ class Board_type extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'Board_type',
+    tableName: 'board_type',
     timestamps: false,
     indexes: [
       {

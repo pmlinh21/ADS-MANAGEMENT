@@ -18,7 +18,7 @@ class Report_type extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'Report_type',
+    tableName: 'report_type',
     timestamps: false,
     indexes: [
       {

@@ -15,7 +15,7 @@ const { isCanboQuan } = require('../middlewares/baseToken');
 
 quanRoute.get("/getAllAdsLoc", isCanboQuan, getAllAdsLoc)
 
-quanRoute.put("/updateInfo/:id_district", isCanboQuan, updateInfo);
+// quanRoute.put("/updateInfo/:id_district", isCanboQuan, updateInfo);
 
 quanRoute.get("/getWard/:id_district", isCanboQuan, getWard);
 
@@ -44,7 +44,5 @@ quanRoute.put("/updateLocReport/:id_req", isCanboQuan, updateLocReport);
 quanRoute.get("/getAdsCreate/:id_district", isCanboQuan, getAdsCreate);
 
 quanRoute.post("/adsCreate/:id_district", isCanboQuan, upload('adsCreate').single("file"), adsCreate)
-
-quanRoute.put("/deleteAdsCreate/:id_district", isCanboQuan, deleteAdsCreate)
 
 module.exports = quanRoute;

@@ -86,7 +86,7 @@ class Ads_create extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'Ads_create',
+    tableName: 'ads_create',
     timestamps: false,
     indexes: [
       {

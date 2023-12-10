@@ -18,7 +18,7 @@ class Location_type extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'Location_type',
+    tableName: 'location_type',
     timestamps: false,
     indexes: [
       {

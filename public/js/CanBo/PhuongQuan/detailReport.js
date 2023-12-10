@@ -14,6 +14,7 @@ $(document).ready(function() {
   const table = urlParams.get('table');
   const storedEmail = email
 
+  $("#loading-bg").show()
   if (table == "ads"){
     $(".title-page p").text("Quản lý báo cáo vi phạm / Chi tiết báo cáo quảng cáo");
     const pos = document.querySelector('.form-pos');
@@ -114,6 +115,8 @@ $(document).ready(function() {
       $('.image-report-1').attr('src', info?.photo1 ? `../../../../public/image/${info?.photo1}` : '`../../../../public/image/image-placeholder.jpg');
       $('.image-report-2').attr('src', info?.photo2 ? `../../../../public/image/${info?.photo2}` : '`../../../../public/image/image-placeholder.jpg');
   
+      $("#loading-bg").hide()
+      
       $('.style1-button').on('click', function() {
         const updatedMethod = $('#method').val();
         const updatedStatus = $('input[name="status"]:checked').val();
@@ -135,6 +138,7 @@ $(document).ready(function() {
           success: function(response) {
             // Handle the successful response here
             console.log(response);
+            window.location.reload();
           },
           error: function(xhr, status, error) {
             // Handle the error here
@@ -226,6 +230,8 @@ $(document).ready(function() {
     $.get(`/api/basic/getAdsLocReportByID/${id_report}`, function(data) {
       info = data.content[0]
       console.log(info)
+
+      $("#loading-bg").hide()
 
       $('#id_ads_loc_report').val(info?.id_report);
       $('#id_ads_loc').val(info?.id_ads_location);
@@ -360,6 +366,7 @@ $(document).ready(function() {
       type: 'GET',
       dataType: 'json',
       success: function(data){
+        $("#loading-bg").hide()
         info = data.content[0]
         console.log(info)
         $('#id_loc_report').val(info.id_report);
@@ -399,9 +406,13 @@ $(document).ready(function() {
             type: 'PUT',
             data: JSON.stringify(data),
             contentType: 'application/json',
+            beforeSend: function(){
+              $("#loading-bg").show()
+            },
             success: function(response) {
               // Handle the successful response here
               console.log(response);
+              $("#loading-bg").hide()
               location.reload();
             },
             error: function(xhr, status, error) {

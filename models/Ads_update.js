@@ -78,7 +78,7 @@ class Ads_update extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'Ads_update',
+    tableName: 'ads_update',
     timestamps: false,
     indexes: [
       {
