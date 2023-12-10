@@ -190,7 +190,7 @@ function buildBoardTypeTable(boardTypes) {
 function editPopup() {
     let idTable = $(this).parent().parent().parent().attr("id");
     let title = $(this).parent().parent().find("caption").text().slice(14);
-    console.log(this);
+    
     $("#edit-popup").css("display", "block");
     $("#edit-popup legend").html("<i class='far fa-edit'></i> Chỉnh sửa " + title);
 
@@ -292,7 +292,6 @@ async function handleButtonClick(e) {
         } else {
             target = "LoaiBangQuangCao";
         }
-        console.log(JSON.stringify(addData));
         let res = await fetch('/api/so/add' + target, {
             method: 'POST',
             headers: {

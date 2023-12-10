@@ -21,7 +21,12 @@ const {
     addLoaiViTri,
     addHinhThucQuangCao,
     addLoaiHinhBaoCao,
-    addLoaiBangQuangCao
+    addLoaiBangQuangCao,
+
+    getAllQuan,
+    updateQuan,
+    deleteQuan,
+    addQuan
 } = require('../controllers/soController')
 
 // const { upload } = require('../middlewares/upload');
@@ -52,5 +57,11 @@ soRoute.post("/addLoaiViTri", addLoaiViTri);
 soRoute.post("/addHinhThucQuangCao", addHinhThucQuangCao);
 soRoute.post("/addLoaiHinhBaoCao", addLoaiHinhBaoCao);
 soRoute.post("/addLoaiBangQuangCao", addLoaiBangQuangCao);
+
+// QUANLIQUAN
+soRoute.get("/getAllQuan", getAllQuan);
+soRoute.put("/updateQuan", updateQuan);
+soRoute.delete("/deleteQuan", deleteQuan);
+soRoute.post("/addQuan", addQuan);
 
 module.exports = soRoute;

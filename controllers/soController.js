@@ -97,9 +97,9 @@ const addLoaiViTri = async (req, res) => {
         const data = await model.Location_type.create({
             loc_type: name
         });
-        sucessCode(res, data, name);
+        sucessCode(res, data, "Post thành công");
     } catch(err) {
-        errorCode(res, req.body.name);
+        errorCode(res, "Lỗi BE");
     }
 }
 
@@ -149,9 +149,9 @@ const addHinhThucQuangCao = async (req, res) => {
         const data = await model.Ads_type.create({
             ads_type: name
         });
-        sucessCode(res, data, name);
+        sucessCode(res, data, "Post thành công");
     } catch(err) {
-        errorCode(res, req.body.name);
+        errorCode(res, "Lỗi BE");
     }
 
 }
@@ -202,9 +202,9 @@ const addLoaiHinhBaoCao = async (req, res) => {
         const data = await model.Report_type.create({
             report_type: name
         });
-        sucessCode(res, data, name);
+        sucessCode(res, data, "Post thành công");
     } catch(err) {
-        errorCode(res, req.body.name);
+        errorCode(res, "Lỗi BE");
     }
 }
 
@@ -254,9 +254,67 @@ const addLoaiBangQuangCao = async (req, res) => {
         const data = await model.Board_type.create({
             board_type: name
         });
-        sucessCode(res, data, name);
+        sucessCode(res, data, "Post thành công");
     } catch(err) {
-        errorCode(res, req.body.name);
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+// QUANLIQUAN
+const getAllQuan = async (req, res) => {
+    try {
+        const [data, metadata] = await sequelize.query( "SELECT D.*, COUNT(DISTINCT W.id_ward) AS SLPhuong, COUNT(DISTINCT AL.id_ads_location) AS SLDDQC, COUNT( DISTINCT A.id_ads) AS SLBQC, COUNT(DISTINCT CB.email) AS SLCB " + 
+                                                        "FROM District D " + 
+                                                        "LEFT JOIN Ward W ON D.id_district = W.id_district " + 
+                                                        "LEFT JOIN Ads_location AL ON AL.id_district = D.id_district " + 
+                                                        "LEFT JOIN Ads A ON A.id_ads_location = AL.id_ads_location " + 
+                                                        "LEFT JOIN CanboQuan CB ON CB.id_district = D.id_district " + 
+                                                        "GROUP BY D.id_district");
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const updateQuan = async (req, res) => {
+    try {
+        const { id, name } = req.body;
+        const data = await model.District.update({
+            district: name
+        }, {
+            where: {
+                id_district: id
+            }
+        });
+        sucessCode(res, data, req.body.name);
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const deleteQuan = async (req, res) => {
+    try {
+        const id = req.body.id;
+        await model.District.destroy({
+            where: {
+                id_district: id
+            }
+        });
+        sucessCode(res, "", "Delete thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi khóa ngoại");
+    }
+}
+
+const addQuan = async (req, res) => {
+    try {
+        const name = req.body.name;
+        const data = await model.District.create({
+            district: name
+        });
+        sucessCode(res, data, "Post thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
     }
 }
 
@@ -266,20 +324,29 @@ module.exports = {
     getSoLuongCanBo,
     getSoLuongDDQC,
     getSoLuongBQC,
+
     getLoaiViTri, 
     getHinhThucQuangCao, 
     getLoaiHinhBaoCao, 
     getLoaiBangQuangCao,
+
     updateLoaiViTri,
     updateHinhThucQuangCao,
     updateLoaiHinhBaoCao,
     updateLoaiBangQuangCao,
+
     deleteLoaiViTri,
     deleteHinhThucQuangCao,
     deleteLoaiHinhBaoCao,
     deleteLoaiBangQuangCao,
+    
     addLoaiViTri,
     addHinhThucQuangCao,
     addLoaiHinhBaoCao,
-    addLoaiBangQuangCao
+    addLoaiBangQuangCao,
+
+    getAllQuan,
+    updateQuan,
+    deleteQuan,
+    addQuan
 };
