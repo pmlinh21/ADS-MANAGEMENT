@@ -1625,102 +1625,116 @@ $(document).ready(function () {
         let email = localStorage.getItem('email');
         email = (email) ? JSON.parse(email) : ''
 
-        let adsloc = localStorage.getItem('adsloc_report');
-        adsloc = (adsloc) ? JSON.parse(adsloc) : []
-        adsloc = adsloc.filter(item => item[5] == email)
-        adsloc = adsloc.map(item => {
-            const id = parseInt(item[2])
-            const info = NguoiDanAdsLoc.content.filter(item => item.id_ads_location == id)[0]
-            return [`${info.address}, phường ${info.ward}, quận ${info.id_district}`,
-            item[7], parseInt(item[3]), item[11], item[8], item[9], item[12]]
-        })
-        //  address, content, report_type, status, image1, image2, resolve, 
+        $.ajax({
+            url: `http://localhost:8080/api/nguoidan/getReport/${email}`,
+            type: "GET",
+            success: function (data) {
+                console.log(data);
 
-        let ads = localStorage.getItem('ads_report');
-        ads = (ads) ? JSON.parse(ads) : []
-        ads = ads.filter(item => item[5] == email)
-        ads = ads.map(item => {
-            const id = parseInt(item[2])
-            const info = NguoiDanAdsLoc.content.filter(item => {
-                const result = item.list_ads?.filter(i => i.id_ads = id)
-                if (result?.length > 0)
-                    return item
-            })[0]
-            return [`${info.address}, phường ${info.ward}, ${info.district}`,
-            item[7], parseInt(item[3]), item[11], item[8], item[9], item[12]]
-        })
+                let adsloc = localStorage.getItem('adsloc_report');
+                adsloc = (adsloc) ? JSON.parse(adsloc) : []
+                adsloc = adsloc.filter(item => item[5] == email)
+                adsloc = adsloc.map(item => {
+                    const id = parseInt(item[2])
+                    const info = NguoiDanAdsLoc.content.filter(item => item.id_ads_location == id)[0]
+                    return [`${info.address}, phường ${info.ward}, quận ${info.id_district}`,
+                    item[7], parseInt(item[3]), item[11], item[8], item[9], item[12]]
+                })
+                //  address, content, report_type, status, image1, image2, resolve, 
 
-        let loc = localStorage.getItem('loc_report');
-        loc = (loc) ? JSON.parse(loc) : []
-        loc = loc.filter(item => item[8] == email)
-        loc = loc.map(item => {
-            if (!item[5])
-                return [item[4], item[10], parseInt(item[6]), item[14], item[11], item[12], item[15]]
-            else {
-                let ward = Ward.content.filter(i => i.id_ward == parseInt(item[5]))[0]
-                let district = ", quận " + ward.id_district
-                ward = ", phường " + ward.ward
-                return [item[4] + ward + district,
-                item[10], parseInt(item[6]), item[14], item[11], item[12], item[15]]
-            }
-        })
+                let ads = localStorage.getItem('ads_report');
+                ads = (ads) ? JSON.parse(ads) : []
+                ads = ads.filter(item => item[5] == email)
+                ads = ads.map(item => {
+                    const id = parseInt(item[2])
+                    const info = NguoiDanAdsLoc.content.filter(item => {
+                        const result = item.list_ads?.filter(i => i.id_ads = id)
+                        if (result?.length > 0)
+                            return item
+                    })[0]
+                    return [`${info.address}, phường ${info.ward}, ${info.district}`,
+                    item[7], parseInt(item[3]), item[11], item[8], item[9], item[12]]
+                })
 
-        const list_report = [...adsloc, ...loc, ...ads]
-        console.log(list_report)
+                let loc = localStorage.getItem('loc_report');
+                loc = (loc) ? JSON.parse(loc) : []
+                loc = loc.filter(item => item[8] == email)
+                loc = loc.map(item => {
+                    if (!item[5])
+                        return [item[4], item[10], parseInt(item[6]), item[14], item[11], item[12], item[15]]
+                    else {
+                        let ward = Ward.content.filter(i => i.id_ward == parseInt(item[5]))[0]
+                        let district = ", quận " + ward.id_district
+                        ward = ", phường " + ward.ward
+                        return [item[4] + ward + district,
+                        item[10], parseInt(item[6]), item[14], item[11], item[12], item[15]]
+                    }
+                })
 
-        const note = list_report?.map(item => {
-            const statusClass = parseInt((item[14])) ? "resolved" : "unresolved";
-            const statusText = parseInt((item[14])) ? "Đã xử lí" : "Chưa xử lí"
-            var report_type = null;
-            if (item[2] == 1)
-                report_type = "Tố cáo sai phạm"
-            else if (item[2] == 2)
-                report_type = "Đăng kí nội dung"
-            else if (item[2] == 3)
-                report_type = "Đóng góp ý kiến"
-            else if (item[2] == 4)
-                report_type = "Giải đáp thắc mắc"
+                const list_report = [...adsloc, ...loc, ...ads]
+                console.log(list_report)
 
-            return {
-                statusClass: statusClass,
-                statusText: statusText,
-                report_type: report_type,
-                imagePath1: item[4] ? `../image/${item[4]}` : '',
-                imagePath2: item[5] ? `../image/${item[5]}` : ''
-            }
-        })
+                const note = list_report?.map(item => {
+                    const statusClass = parseInt((item[14])) ? "resolved" : "unresolved";
+                    const statusText = parseInt((item[14])) ? "Đã xử lí" : "Chưa xử lí"
+                    var report_type = null;
+                    if (item[2] == 1)
+                        report_type = "Tố cáo sai phạm"
+                    else if (item[2] == 2)
+                        report_type = "Đăng kí nội dung"
+                    else if (item[2] == 3)
+                        report_type = "Đóng góp ý kiến"
+                    else if (item[2] == 4)
+                        report_type = "Giải đáp thắc mắc"
 
-        console.log(note)
-        // list_report.forEach((item, index) => console.log(item, note[index]))
-        var template = `
-  <% for (var i = 0; i < list_report?.length; i++) { %>
-    <div class="other-report row" >
-    <div class="col-md-12 location">
-        <strong>Địa điểm:</strong> <%= list_report[i][0] %>
-      </div>
-      <div class="col-md-12">
-        "<%= list_report[i][1] %> "
-      </div>
-      <div class="col-md-12 view-image">
-      <% if (note[i].imagePath1) { %>
-        <img class="col-md-6 image1" src="<%= note[i].imagePath1 %>">
-      <% } %>
-      <% if (note[i].imagePath2) { %>
-        <img class="col-md-6 image2" src="<%= note[i].imagePath2 %>">
-      <% } %>
-      </div>
-      <div class="col-md-12 ">
-          <div class = <%= note[i].statusClass %> >
-            <%= note[i].statusText %>
-          </div>
-          <div class = "report-type">
-            <%= note[i].report_type %>
-          </div>
-      </div>
-    </div>
-  <% } %>
-  `;
+                    return {
+                        statusClass: statusClass,
+                        statusText: statusText,
+                        report_type: report_type,
+                        imagePath1: item[4] ? `/public/image/${item[4]}` : '',
+                        imagePath2: item[5] ? `/public/image/${item[5]}` : ''
+                    }
+                })
+
+                console.log(note)
+                // list_report.forEach((item, index) => console.log(item, note[index]))
+                var template = `
+        <% for (var i = 0; i < list_report?.length; i++) { %>
+            <div class="other-report row" >
+            <div class="col-md-12 location">
+                <strong>Địa điểm:</strong> <%= list_report[i][0] %>
+            </div>
+            <div class="col-md-12">
+                "<%= list_report[i][1] %> "
+            </div>
+            <div class="col-md-12 view-image">
+            <% if (note[i].imagePath1) { %>
+                <img class="col-md-6 image1" src="<%= note[i].imagePath1 %>">
+            <% } %>
+            <% if (note[i].imagePath2) { %>
+                <img class="col-md-6 image2" src="<%= note[i].imagePath2 %>">
+            <% } %>
+            </div>
+            <div class="col-md-12 ">
+                <div class = <%= note[i].statusClass %> >
+                    <%= note[i].statusText %>
+                </div>
+                <div class = "report-type">
+                    <%= note[i].report_type %>
+                </div>
+                <div class = "report-type">
+                    <%= note[i].report_type %>
+                </div>
+            </div>
+            </div>
+        <% } %>
+        `;
         var rendered = ejs.render(template, { list_report, note });
         $('#my-report .modal-body').html(rendered);
+            },
+            error: function (jqXHR, textStatus, errorThrown){
+                console.log(errorThrown);
+            }
+        })
     })
 });
