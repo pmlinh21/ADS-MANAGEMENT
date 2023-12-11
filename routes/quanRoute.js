@@ -1,12 +1,10 @@
 const express = require('express');
 const quanRoute = express.Router();
 const { 
-    getAllAdsLoc, getMapInfo,
-    getInfo, getWard, updateInfo, updatePassword, forgetPassword,
+    getAllAdsLoc, getMapInfo, getWard, 
     getAdsLocation, getAds, updateAdsLoc, updateAds,
     getAdsLocReport, getAdsReport, getLocReport,
-    updateAdsLocReport, updateAdsReport, updateLocReport,
-    getAdsCreate, adsCreate, deleteAdsCreate } = require('../controllers/quanController')
+    getAdsCreate, adsCreate } = require('../controllers/quanController')
 const { upload } = require('../middlewares/upload');
 
 const cookieParser = require("cookie-parser");
@@ -31,15 +29,9 @@ quanRoute.post("/updateAds/:email", isCanboQuan, upload('updateAds').single("fil
 
 quanRoute.get("/getAdsLocReport/:id_district", isCanboQuan, getAdsLocReport);
 
-quanRoute.put("/updateAdsLocReport/:id_req", isCanboQuan, updateAdsLocReport);
-
 quanRoute.get("/getAdsReport/:id_district", isCanboQuan, getAdsReport);
 
-quanRoute.put("/updateAdsReport/:id_req", isCanboQuan, updateAdsReport);
-
 quanRoute.get("/getLocReport/:id_district", isCanboQuan, getLocReport);
-
-quanRoute.put("/updateLocReport/:id_req", isCanboQuan, updateLocReport);
 
 quanRoute.get("/getAdsCreate/:id_district", isCanboQuan, getAdsCreate);
 

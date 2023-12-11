@@ -115,7 +115,11 @@ body {
 
 #loading-bg img{
   width: 10%;
+  /* object-fit: cover; */
+  /* display: inline-block;
   z-index: 6;
+  background-image: url('../../public/image/loading-gif.gif');
+  background-size: cover; */
 }
 
 #header {
@@ -147,6 +151,14 @@ body {
   margin: 0.5rem auto;
 }
 
+.div-in-header{
+  display: flex;
+  justify-content: space-evenly;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
 /*homepageCanBo.ejs*/
 
 #select-ward {
@@ -156,14 +168,15 @@ body {
   display: flex;
   flex-direction: column;
   margin-right: 2rem;
-  margin-top: 0
+  margin-top: 0;
+  margin-bottom: 0.3rem;
 }
 
 .search-address{
-  margin-right: auto;
   min-width: 8rem;
   width: 20rem;
   position: relative;
+  margin-bottom: 0.3rem;
 }
 
 .search-address-bar:focus-within,
@@ -400,6 +413,7 @@ body > #map{
   top: 3.5rem;
   height: calc(100% - 3.5rem);
   z-index: 0;
+
 }
 
 .flex-container {
@@ -430,7 +444,7 @@ span#sub {
   overflow-x: hidden;
   overflow-y: scroll;
   transition: 0.2s;
-  z-index: 100;
+  z-index: 1;
 }
 
 #sidebar .adInfo {

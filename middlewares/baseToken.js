@@ -52,7 +52,7 @@ const decodeToken = (token) => {
 
 const isCanboQuan = (req, res, next) => {
     const token = req.cookies?.token;
-    console.log(token, "-")
+    // console.log(token, "-")
     if (!token) {
         return res.redirect("/")
     }

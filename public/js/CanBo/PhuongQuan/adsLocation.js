@@ -277,6 +277,7 @@ $(document).ready(function () {
               alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
             }
             else{
+              $("#loading-bg").show();
               var formData = new FormData();
               formData.append('id_ads_location',filter_info[click_row][0]);
               formData.append('latitude', latitude);
@@ -302,11 +303,13 @@ $(document).ready(function () {
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                  // Handle the successful response here
+                  $("#loading-bg").hide();
+                  alert("Yêu cầu chỉnh sửa thành công")
                   console.log(response);
                 },
                 error: function(xhr, status, error) {
-                  // Handle the error here
+                  $("#loading-bg").hide();
+                  alert("Yêu cầu chỉnh sửa thất bại")
                   console.error(error);
                 }
               });
@@ -318,12 +321,5 @@ $(document).ready(function () {
       }
     })
 
-  } else if (role == 3){
-
   }
-
-
-  
-
-
 });

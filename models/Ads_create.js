@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
 
 class Ads_create extends Sequelize.Model {
   static init(sequelize, DataTypes) {
-  return super.init({
+  return super.init(
+    {
     id_create: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -84,7 +85,7 @@ class Ads_create extends Sequelize.Model {
       type: DataTypes.BOOLEAN,
       allowNull: true
     }
-  }, {
+  },{
     sequelize,
     tableName: 'ads_create',
     timestamps: false,

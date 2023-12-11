@@ -13,11 +13,12 @@ function renderAddressResult(res){
 }
 
 function renderMapWard(wards){
+  console.log(wards)
   var template = ` 
       <% for (var i = 0; i < wards.length; i++) { %>
           <div class = "form-check">
               <input class = "form-check-input" type="checkbox" id="<%=wards[i].ward%>" checked/>
-              <label chass = "form-check-label" for="<%=wards[i].ward%>"><%= wards[i].ward %></label>
+              <label chass = "form-check-label" for="<%=wards[i].ward%>"><%= wards[i].wardName %></label>
           </div>
       <% } %>
       <div>
@@ -446,7 +447,8 @@ $(document).ready(function () {
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [106.6974, 10.7743],
       zoom: 15,
-      language: 'vi'
+      language: 'vi',
+      interactive: true
   });
 
   var language = new MapboxLanguage({
@@ -668,17 +670,33 @@ $(document).ready(function () {
 
     $.get(`/api/quan/getWard/${id_district}`, function(data) {
       wards = data.content
-      console.log(wards);
-      renderMapWard(wards);
+      display_wards = data.content.map(ward => {
+        const wardName = (!isNaN(parseInt(ward.ward))) ? `phường ${ward.ward}` : ward.ward
+        return{
+          wardName: wardName,
+          ward: ward.ward
+        }
+      })
+      // console.log(display_wards);
+      renderMapWard(display_wards);
 
-      $(".select-ward-bar").on('click', function(){
+      $(document).on('click', function(event){
+        if (!$(event.target).closest('#select-ward').length && $('#ward-container').is(':visible')) {
+          $("#select-ward hr").hide()
+          $("#ward-container").hide();
+        }
+      });
+
+      $(".select-ward-bar").on('click', function(e){
+        $("#sidebar").hide()
         $("#select-ward hr").show()
         $("#ward-container").show();
         $('#manage').css('pointer-events', 'none');
         $('#account').css('pointer-events', 'none');
         $('#logout').css('pointer-events', 'none');
-        $('#map').css('pointer-events', 'none');
-  
+        $('.search-address-bar').prop('readonly', true);
+        map.interactive = !map.interactive;
+        
         // nhấn chọn tất cả
         $("#ward-container .style2-button").off("click").on("click", function(){
           console.log("a")
@@ -711,9 +729,7 @@ $(document).ready(function () {
           $('#manage').css('pointer-events', 'auto');
           $('#account').css('pointer-events', 'auto');
           $('#logout').css('pointer-events', 'auto');
-          $('#map').css('pointer-events', 'auto');
-  
-          return
+          $('.search-address-bar').prop('readonly', false);
         })
       })
     }).fail(function(error) {

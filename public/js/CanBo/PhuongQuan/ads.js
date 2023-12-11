@@ -213,11 +213,13 @@ $(document).ready(function () {
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                  // Handle the successful response here
+                  $("#loading-bg").hide();
+                  alert("Yêu cầu chỉnh sửa thành công")
                   console.log(response);
                 },
                 error: function(xhr, status, error) {
-                  // Handle the error here
+                  $("#loading-bg").hide();
+                  alert("Yêu cầu chỉnh sửa thất bại")
                   console.error(error);
                 }
               });

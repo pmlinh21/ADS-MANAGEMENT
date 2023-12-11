@@ -22,31 +22,6 @@ const getAllAdsLoc = async(req, res) =>{
     }
 }
 
-const getInfo = async(req, res) =>{
-    try{
-        let { email } = req.params;
-        let check_district = await model.CanboQuan.findOne({
-            where:{
-                email
-            }
-        });
-        if(check_district){
-            let data = await model.CanboQuan.findOne({
-                where:{
-                    email
-                }
-            });
-            data.password = "********"
-            sucessCode(res,data,"Get thành công")
-        }
-        else{
-            failCode(res,"","Cán bộ quận không tồn tại")
-        } 
-    }catch(err){
-        errorCode(res,"Lỗi BE")
-    }
-} 
-
 const getWard = async(req, res) =>{
     try{
         let { id_district } = req.params;
@@ -247,33 +222,6 @@ const getAdsCreate = async(req, res) =>{
     }
 }
 
-const updateInfo = async(req, res) =>{
-    try{
-        let { id_district } = req.params;
-        sucessCode(res,req.body,"Get thành công")
-    }catch(err){
-        errorCode(res,"Lỗi BE")
-    }
-}
-
-const updatePassword = async(req, res) =>{
-    try{
-        let { id_district } = req.params;
-        sucessCode(res,req.body,"Get thành công")
-    }catch(err){
-        errorCode(res,"Lỗi BE")
-    }
-} 
-
-const forgetPassword = async(req, res) =>{
-    try{
-        let { id_district } = req.params;
-        sucessCode(res,req.body,"Get thành công")
-    }catch(err){
-        errorCode(res,"Lỗi BE")
-    }
-} 
-
 const updateAdsLoc = async(req, res) =>{
     try{
         let { email } = req.params;
@@ -290,13 +238,13 @@ const updateAdsLoc = async(req, res) =>{
         }})
 
         const data = await model.Ads_loc_update.create({
-            id_ads_location, latitude, longitude, address, 
-            id_loc_type, id_ads_type, is_zoning, req_time, reason, office,
+            id_ads_location: id_ads_location, officer: email, office: office, latitude: latitude, 
+            longitude: longitude, address: address, is_zoning: is_zoning,
+            id_loc_type: id_loc_type, id_ads_type: id_ads_type, req_time: req_time, reason: reason, 
             id_ward: findWard.id_ward, 
             id_district: findWard.id_district, 
-            officer: email,
             photo: file?.filename,
-            status: 0
+            status: false
         });
 
         sucessCode(res,{ findWard}, "Create thành công")
@@ -310,77 +258,19 @@ const updateAds = async(req, res) =>{
     try{
         let { email } = req.params;
         const file = req.file;
-        // const obj = validateObj(req.body)
 
         let { id_ads, id_ads_location, id_board_type, quantity, width, height, 
             expired_date, req_time, reason, office} = req.body
-
+   
         const data = await model.Ads_update.create({
-            id_ads, id_ads_location, quantity, width, height, 
-            id_board_type, expired_date, req_time, reason, office,
+            id_ads: id_ads, id_ads_location: id_ads_location, quantity: quantity, 
+            width: width, height: height, reason: reason, office: office,
+            id_board_type: id_board_type, expired_date: expired_date, req_time: req_time, 
             officer: email,
             photo: file?.filename,
-            status: 0
+            status: false
         });
         sucessCode(res,data, "Create thành công")
-
-    }catch(err){
-        errorCode(res,"Lỗi BE")
-    }
-} 
-
-const updateAdsLocReport = async(req, res) =>{
-    try{
-        let { id_req } = req.params;
-        // const obj = validateObj(req.body)
-
-        let { status, resolve, office, officer} = req.body
-        let data = await model.Ads_loc_report.update({
-            office, officer, resolve, status
-        },{
-            where:{
-                id_req
-            }
-        });
-        sucessCode(res,data,"Get thành công")
-
-    }catch(err){
-        errorCode(res,"Lỗi BE")
-    }
-} 
-
-const updateAdsReport = async(req, res) =>{
-    try{
-        let { id_req } = req.params;
-
-        let { status, resolve, office, officer} = req.body
-        let data = await model.Ads_report.update({
-            office, officer, resolve, status
-        },{
-            where:{
-                id_req
-            }
-        });
-        sucessCode(res,data,"Get thành công")
-
-    }catch(err){
-        errorCode(res,"Lỗi BE")
-    }
-} 
-
-const updateLocReport = async(req, res) =>{
-    try{
-        let { id_req } = req.params;
-
-        let { status, resolve, office, officer} = req.body
-        let data = await model.Location_report.update({
-            office, officer, resolve, status
-        },{
-            where:{
-                id_req
-            }
-        });
-        sucessCode(res,data,"Get thành công")
 
     }catch(err){
         errorCode(res,"Lỗi BE")
@@ -397,7 +287,7 @@ const adsCreate = async(req, res) =>{
             officer, office, id_ads_location, id_board_type, width, height, quantity,
             content, company, email, phone, address, start_date, end_date,
             photo: file?.filename,
-            status: 0
+            status: false
         })
         sucessCode(res,"","Get thành công")
     }catch(err){
@@ -405,19 +295,8 @@ const adsCreate = async(req, res) =>{
     }
 } 
 
-//  xóa hình ảnh nếu có
-const deleteAdsCreate = async(req, res) =>{
-    try{
-        sucessCode(res,req.body,"Get thành công")
-    }catch(err){
-        errorCode(res,"Lỗi BE")
-    }
-} 
-
 module.exports = {
-    getAllAdsLoc, getMapInfo, 
-    getInfo, getWard, updateInfo, updatePassword, forgetPassword,
+    getAllAdsLoc, getMapInfo, getWard,
     getAdsLocation, getAds, updateAdsLoc, updateAds,
     getAdsLocReport, getAdsReport, getLocReport,
-    updateAdsLocReport, updateAdsReport, updateLocReport,
-    getAdsCreate, adsCreate, deleteAdsCreate}
+    getAdsCreate, adsCreate}

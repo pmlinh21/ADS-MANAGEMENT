@@ -343,11 +343,11 @@ $(document).ready(function() {
       <div class="col-md-12">
         <label for="status" class="form-label" style="display: block;">Trạng thái xử lý</label>
         <div class="form-check">
-          <input type="radio" class="form-check-input" id="statusProcessed" name="status" value="1" readonly>
+          <input type="radio" class="form-check-input" id="statusProcessed" name="status" value="true" readonly>
           <label class="form-check-label" for="statusProcessed">Đã xử lý</label>
         </div>
         <div class="form-check">
-          <input type="radio" class="form-check-input" id="statusPending" name="status" value="0" readonly>
+          <input type="radio" class="form-check-input" id="statusPending" name="status" value="false" readonly>
           <label class="form-check-label" for="statusPending">Chưa xử lý</label>
         </div>
       </div>
@@ -391,6 +391,7 @@ $(document).ready(function() {
         $('#office').val(info.office === 1 ? "Quận" : (info.office === 2 ? "Phường" : ""));
 
         $('.style1-button').on('click', function() {
+          $("#loading-bg").show()
           const updatedMethod = $('#method').val();
           const updatedStatus = $('input[name="status"]:checked').val();
           
@@ -406,13 +407,10 @@ $(document).ready(function() {
             type: 'PUT',
             data: JSON.stringify(data),
             contentType: 'application/json',
-            beforeSend: function(){
-              $("#loading-bg").show()
-            },
             success: function(response) {
               // Handle the successful response here
               console.log(response);
-              $("#loading-bg").hide()
+              // $("#loading-bg").hide()
               location.reload();
             },
             error: function(xhr, status, error) {
