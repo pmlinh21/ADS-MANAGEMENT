@@ -2,11 +2,27 @@ $(document).ready(function(){
     $("#phuong").addClass("snb-li-active");
 
     let allPhuong;
-    $.get("/api/so/getAllPhuong", function(data){
+    $.get("/api/so/getAllPhuongData", function(data){
         allPhuong = data.content.map(item => [item.id_ward, item.ward, item.district, item.SLDDQC, item.SLBQC, item.SLCB]);
         buildWardTable(allPhuong);
     }).fail(function(err){
         console.log(err);
+    });
+
+    let selectEdit = $("#edit-popup .input-field:nth-of-type(3) select");
+    let selectAdd = $("#add-popup .input-field:last-of-type select");
+    let districts;
+    $.get("/api/so/getAllQuan", function(data){
+        districts = data.content.map(item => [item.id_district, item.district]);
+        selectEdit.append("<option value=''>Chọn quận</option>")
+        selectAdd.append("<option value=''>Chọn quận</option>")
+        for (let i = 0; i < districts.length; i++) {
+            let option = $("<option></option>");
+            option.val(districts[i][0]);
+            option.text(districts[i][1]);
+            selectEdit.append(option);
+            selectAdd.append(option.clone());
+        }
     });
 });
 
@@ -50,16 +66,10 @@ function buildWardTable(wards) {
 }
 
 function editPopup() {
-    let title = $(this).parent().parent().find("caption").text().slice(14);
-
     $("#edit-popup").css("display", "block");
-    $("#edit-popup legend").html("<i class='far fa-edit'></i> Chỉnh sửa " + title);
-
-    $("#edit-popup .input-field:first-of-type label").text("ID " + title);
-    $("#edit-popup .input-field:first-of-type input").val($(this).find(".id").text());
-
-    $("#edit-popup .input-field:last-of-type label").text("Tên " + title);
-    $("#edit-popup .input-field:last-of-type input").val($(this).find(".name").text());
+    $("#edit-popup .input-field:nth-of-type(1) input").val($(this).find(".id").text());
+    $("#edit-popup .input-field:nth-of-type(2) input").val($(this).find(".name").text());
+    $("#edit-popup .input-field:nth-of-type(3) select").val($(this).find(".in-district").text().slice(5));
 
     let div = $("<div></div>");
     div.addClass("popup-background");
@@ -71,11 +81,8 @@ function editPopup() {
 }
 
 function addPopup() {
-    let title = $(this).parent().parent().parent().find("caption").text().slice(14);
-
     $("#add-popup").css("display", "block");
-    $("#add-popup legend").html("<i class='fas fa-plus-square'></i> Thêm " + title);
-    $("#add-popup .input-field label").text("Tên " + title);
+    $("#add-popup .input-field:last-of-type select").val("");
 
     let div = $("<div></div>");
     div.addClass("popup-background");
@@ -91,41 +98,42 @@ async function handleButtonClick(e) {
     if (e.value == "update") {
         const formData = new FormData($("#edit-popup")[0]);
         const editData = Object.fromEntries(formData.entries());
-        // let res = await fetch('/api/so/updateQuan', {
-        //     method: 'PUT',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(editData),
-        // });
-        // location.reload();
+        alert(JSON.stringify(editData));
+        let res = await fetch('/api/so/updatePhuong', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(editData),
+        });
+        location.reload();
     } else if (e.value == "delete") {
         if (confirm("Bạn có chắc chắn muốn xóa không?")) {
             const formData = new FormData($("#edit-popup")[0]);
             const deleteData = Object.fromEntries(formData.entries());
-            // let res = await fetch('/api/so/deleteQuan', {
-            //     method: 'DELETE',
-            //     headers: {
-            //     'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify(deleteData),
-            // });
-            // if (res.status == 500) {
-            //     alert("Không thể xóa vì quận đang được sử dụng");
-            // } else {
-            //     location.reload();
-            // }
+            let res = await fetch('/api/so/deletePhuong', {
+                method: 'DELETE',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(deleteData),
+            });
+            if (res.status == 500) {
+                alert("Không thể xóa vì phường đang được sử dụng");
+            } else {
+                location.reload();
+            }
         }
     } else if (e.value == "add") {
         const formData = new FormData($("#add-popup")[0]);
         const addData = Object.fromEntries(formData.entries());
-        // let res = await fetch('/api/so/addQuan', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(addData),
-        // });
-        // location.reload();
+        let res = await fetch('/api/so/addPhuong', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(addData),
+        });
+        location.reload();
     }
 }
