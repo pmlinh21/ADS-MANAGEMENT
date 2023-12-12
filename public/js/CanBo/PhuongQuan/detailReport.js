@@ -105,7 +105,7 @@ $(document).ready(function() {
       $('#time').val(formatSQLDate_ymd(info?.report_time));
       $('#officer').val(info?.officer);
       $('#office').val(info?.office === 1 ? "Quận" : (info?.office === 2 ? "Phường" : ""));
-      if (info?.status === 1) {
+      if (info?.status === true) {
         $('#statusProcessed').prop('checked', true);
         $('#statusPending').prop('disabled', true);
       } else {
@@ -243,13 +243,13 @@ $(document).ready(function() {
       $('#time').val(formatSQLDate_ymd(info?.report_time));
       $('#officer').val(info?.officer);
       $('#office').val(info?.office === 1 ? "Quận" : (info?.office === 2 ? "Phường" : ""));
-      if (info?.status === 1) {
+      if (info?.status === true) {
         $('#statusProcessed').prop('checked', true);
         $('#statusPending').prop('disabled', true);
       } else {
         $('#statusPending').prop('checked', true);
       }
-      $('#method').val(info?.resolved);
+      $('#method').val(info?.resolve);
       $('.image-report-1').attr('src', info?.photo1 ? `../../../../public/image/${info?.photo1}` : '`../../../../public/image/image-placeholder.jpg');
       $('.image-report-2').attr('src', info?.photo2 ? `../../../../public/image/${info?.photo2}` : '`../../../../public/image/image-placeholder.jpg');
 
@@ -377,7 +377,7 @@ $(document).ready(function() {
         $('#phone').val(info.phone);
         $('#report').val(info.content);
         $('#time').val(formatSQLDate_ymd(info.report_time));
-        if (info.status === 1) {
+        if (info.status === true) {
           $('#statusProcessed').prop('checked', true);
           $('#statusPending').prop('disabled', true);
         } else {

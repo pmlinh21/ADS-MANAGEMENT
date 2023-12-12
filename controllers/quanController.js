@@ -411,9 +411,65 @@ const getAdsLocationWard = async(req, res) =>{
     }
 } 
 
+const getAdsReportWard = async(req, res) =>{
+    try{
+        let { id_ward } = req.params;
+
+        const [data, metadata] = await sequelize.query
+            (`SELECT ar.*, rt.report_type, w.ward
+            FROM Ads_report ar
+            INNER JOIN Report_type rt ON rt.id_report_type = ar.id_report_type
+            INNER JOIN Ads a ON a.id_ads = ar.id_ads
+            INNER JOIN Ads_location al ON al.id_ads_location = a.id_ads_location
+            INNER JOIN Ward w ON w.id_ward = al.id_ward
+            WHERE al.id_ward = ${id_ward}`);
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+} 
+
+const getAdsLocReportWard = async(req, res) =>{
+    try{
+        let { id_ward } = req.params;
+
+        const [data, metadata] = await sequelize.query
+            (`SELECT alr.*, rt.report_type, w.ward
+            FROM Ads_loc_report alr
+            INNER JOIN Report_type rt ON rt.id_report_type = alr.id_report_type
+            INNER JOIN Ads_location al ON al.id_ads_location = alr.id_ads_location
+            INNER JOIN Ward w ON w.id_ward = al.id_ward
+            WHERE al.id_ward = ${id_ward}
+            `);
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+} 
+
+const getLocReportWard = async(req, res) =>{
+    try{
+        let { id_ward } = req.params;
+
+        const [data, metadata] = await sequelize.query
+            (`SELECT lr.*, rt.report_type, w.ward
+            FROM Location_report lr
+            INNER JOIN Report_type rt ON rt.id_report_type = lr.id_report_type
+            INNER JOIN Ward w ON w.id_ward = lr.id_ward
+            WHERE w.id_ward = ${id_ward}`);
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}  
+
 module.exports = {
     getAllAdsLoc, getMapInfo, getWard,
     getAdsLocation, getAds, updateAdsLoc, updateAds,
     getAdsLocReport, getAdsReport, getLocReport,
     getAdsCreate, adsCreate, 
-    getCanBoPhuong, getMapAdsLoc, getAdsWard, getAdsLocationWard }
+    getCanBoPhuong, getMapAdsLoc, getAdsWard, getAdsLocationWard,
+    getAdsReportWard, getAdsLocReportWard, getLocReportWard }
