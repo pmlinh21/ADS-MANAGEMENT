@@ -110,9 +110,9 @@ $(document).ready(function () {
           $("#address").val(`${address}, phường ${ward}, ${district} [${longitude},${latitude}]`)
 
           if (filter_info[click_row][11])
-            $("#yes").addClass('selected')
+            $("#yes").prop('selected', true);
           else
-            $("#no").addClass('selected')
+            $("#no").prop('selected', true);
 
           loc_type?.forEach(function(type){
             if (filter_info[click_row][3] == type.loc_type) 
@@ -263,9 +263,10 @@ $(document).ready(function () {
             $("#address").val("")
             $('#id_loc_type').val("")
             $('#id_ads_type').val("")
-            $('#is_zoning').val("")
             $('#reason').val("")
             $('#photo').val("")
+            $("#yes").prop('selected', false);
+            $("#no").prop('selected', false);
           })
       
           $('#edit-info .style1-button').off('click').on('click', function(e) {
