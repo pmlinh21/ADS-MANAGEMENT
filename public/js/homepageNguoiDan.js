@@ -1,5 +1,5 @@
 var flag = false
-
+let ads_report
 // DATETIME (SQL) -> dd/mm/yyyy
 function validateSQLDate(dateString) {
     const date = new Date(dateString);
@@ -26,7 +26,7 @@ function validateDate(date) {
 // hiển thị danh sách report
 function renderReport(list_report, container, user_email) {
     // list_report = JSON.parse(list_report);
-    console.log(list_report)
+    // console.log(list_report)
     const note = list_report?.map(item => {
         const is_user = (item[5] === user_email) ? "mine" : "other"
         const statusClass = parseInt((item[11])) ? "resolved" : "unresolved";
@@ -47,11 +47,11 @@ function renderReport(list_report, container, user_email) {
             statusClass: statusClass,
             statusText: statusText,
             report_type: report_type,
-            imagePath1: item[8] ? `../image/${item[8]}` : '',
-            imagePath2: item[9] ? `../image/${item[9]}` : ''
+            imagePath1: item[8] ? `./public/image/${item[8]}` : '',
+            imagePath2: item[9] ? `./public/image/${item[9]}` : ''
         }
     })
-    console.log(note)
+    // console.log(note)
     // list_report.forEach((item, index) => console.log(item, note[index]))
     var template = `
   <% for (var i = 0; i < list_report?.length; i++) { %>
@@ -305,8 +305,10 @@ function showSidebar(adsloc) {
         let str_id_ads = $(this).closest(".button-group").attr("class").split(" ")[1];
         let id_ads = parseInt(str_id_ads.split("-")[1])
 
-        let tmp = localStorage.getItem('ads_report')
-        let list_report = (tmp) ? JSON.parse(tmp) : []
+        // let tmp = ads_report
+        // let list_report = (tmp) ? JSON.parse(tmp) : []
+        let list_report = ads_report
+
         list_report = list_report.filter(item => item[2] == id_ads)
 
         const user_email = localStorage.getItem('email')
@@ -453,7 +455,7 @@ function createLayer(map, features) {
       <p class = "loc-type">${loc_type}</p>
       <p class = "address">${address}, phường ${ward}, quận ${district} </p>
       <p class = "zoning-text" style = "font-weight: 900; font-style: italic">${zoning_text}</p>
-      <img src = ${imagePath} class = "img-thumbnail" />
+      <img src = ./public/${imagePath} class = "img-thumbnail" />
       </div>`
             )
         e.features[0].popup = popup;
@@ -547,410 +549,414 @@ function createMarker(info, map) {
     }
 }
 
-// // tạo bản đồ
-// mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
-// var map = new mapboxgl.Map({
-//     container: 'map',
-//     style: 'mapbox://styles/mapbox/streets-v11',
-//     center: [106.6974, 10.7743],
-//     zoom: 15,
-//     language: 'vi'
-// });
-
-navigator.geolocation.getCurrentPosition(
-    function (position) {
-        var lng = position.coords.longitude;
-        var lat = position.coords.latitude;
-
-        // Update map center with user's current position
-        map.setCenter([lng, lat]);
-    },
-    function (error) {
-        console.error('Error getting user location:', error);
-    }
-);
 
 let marker = new mapboxgl.Marker();
 
 $(document).ready(function () {
     // lưu các report vào local storage
-    const ads_report = [
-        [
-            "nnlien21@clc.fitus.edu.vn",
-            "1",
-            "1",
-            "1",
-            "Nguyễn Văn Anh",
-            "nvanh@gmail.com",
-            "0912345678",
-            "Biển quảng cáo hiển thị thông điệp chính trị không liên quan đến khu vực này. Mong muốn chính quyền địa phương kiểm tra và đảm bảo rằng quảng cáo trên đường không vi phạm các quy định liên quan.",
-            "",
-            "",
-            "2023-08-05",
-            "1",
-            "Kiểm tra thông tin quảng cáo và yêu cầu loại bỏ thông điệp không liên quan. Đảm bảo quảng cáo tuân thủ luật lệ và không gây phiền hà cho cộng đồng."
-        ],
-        [
-            "nthphuc21@clc.fitus.edu.vn",
-            "2",
-            "2",
-            "1",
-            "Lê Thị Bình",
-            "ltb@gmail.com",
-            "0923456789",
-            "Biển quảng cáo chính trị chứa thông điệp không chính xác về chính sách công cộng. Mong muốn chính trị gia hoặc tổ chức liên quan xem xét và điều chỉnh nội dung quảng cáo để tránh thông tin không đúng.",
-            "",
-            "",
-            "2023-08-12",
-            "1",
-            "Liên hệ chính trị gia hoặc tổ chức chính trị liên quan và yêu cầu sửa đổi thông điệp không chính xác. Đảm bảo quảng cáo không truyền đạt thông tin sai lệch về chính sách công cộng."
-        ],
-        [
-            "pmlinh21@clc.fitus.edu.vn",
-            "2",
-            "5",
-            "2",
-            "Trần Minh Châu",
-            "tmc@gmail.com",
-            "0976543210",
-            "Quảng cáo sản phẩm không có thông tin liên hệ hoặc địa chỉ cửa hàng. Mong muốn doanh nghiệp cung cấp thông tin liên lạc để người dùng có thể tìm thấy cửa hàng dễ dàng hơn.",
-            "",
-            "",
-            "2023-08-17",
-            "1",
-            "Liên hệ doanh nghiệp để yêu cầu cung cấp thông tin liên hệ và địa chỉ cửa hàng. Đảm bảo rằng quảng cáo chứa thông tin đầy đủ để người dùng dễ dàng liên hệ và đến cửa hàng."
-        ],
-        [
-            "ncluan21@clc.fitus.edu.vn",
-            "2",
-            "21",
-            "3",
-            "Phạm Thị Dung",
-            "ptdung@gmail.com",
-            "0932123456",
-            "Quảng cáo về chiến dịch xã hội hóa thiếu minh bạch về việc quyên góp và cách thức sử dụng các quỹ được huy động. Mong muốn có thêm thông tin về cách mà quỹ sẽ được sử dụng để hỗ trợ cộng đồng.",
-            "",
-            "",
-            "2023-08-23",
-            "0",
-            ""
-        ],
-        [
-            "nnlien21@clc.fitus.edu.vn",
-            "2",
-            "9",
-            "4",
-            "Hoàng Đức Em",
-            "hdem@gmail.com",
-            "0798765432",
-            "Quảng cáo có chứa thông tin không rõ ràng về ưu đãi hoặc giảm giá. Mong muốn nhận được giải đáp thắc mắc về các điều kiện và điều khoản của ưu đãi được quảng cáo để tránh nhầm lẫn khi mua hàng.",
-            "",
-            "",
-            "2023-08-28",
-            "1",
-            "Liên hệ doanh nghiệp để yêu cầu giải đáp thắc mắc của người tiêu dùng. Đảm bảo thông tin chi tiết và rõ ràng về sản phẩm hoặc dịch vụ để tránh hiểu lầm."
-        ],
-        [
-            "nnlien21@clc.fitus.edu.vn",
-            "1",
-            "10",
-            "2",
-            "Võ Thị Hà",
-            "vtha@gmail.com",
-            "0712345678",
-            "Quảng cáo về chiến dịch xã hội hóa cần thêm thông tin về các hoạt động và dự án cụ thể được hỗ trợ. Mong muốn có thông tin chi tiết để hiểu rõ về tác động của việc quyên góp.",
-            "",
-            "",
-            "2023-09-02",
-            "1",
-            "Liên hệ chính trị gia hoặc tổ chức chính trị liên quan và yêu cầu sửa đổi thông điệp không chính xác. Đảm bảo quảng cáo không truyền đạt thông tin sai lệch về chính sách công cộng."
-        ],
-        [
-            "nthphuc21@clc.fitus.edu.vn",
-            "1",
-            "22",
-            "3",
-            "Đinh Minh Hiếu",
-            "dmhieu@gmail.com",
-            "0776543210",
-            "Quảng cáo không truyền đạt được ưu điểm đặc biệt của sản phẩm hoặc dịch vụ. Mong muốn doanh nghiệp xem xét việc tăng cường thông tin để người tiêu dùng hiểu rõ về giá trị của sản phẩm.",
-            "",
-            "",
-            "2023-09-08",
-            "0",
-            ""
-        ],
-        [
-            "pmlinh21@clc.fitus.edu.vn",
-            "1",
-            "14",
-            "4",
-            "Nguyễn Thị Khánh",
-            "ntkt@gmail.com",
-            "0123456789",
-            "Quảng cáo có chứa thông tin không rõ ràng về các sản phẩm hoặc dịch vụ. Mong muốn nhận được giải đáp thắc mắc về tính năng và đặc điểm chi tiết của sản phẩm để quyết định mua hàng được hiệu quả hơn.",
-            "",
-            "",
-            "2023-09-15",
-            "1",
-            "Liên hệ doanh nghiệp để yêu cầu giải đáp thắc mắc của người tiêu dùng. Đảm bảo rằng mọi thông tin về sản phẩm hoặc dịch vụ được truyền đạt rõ ràng và chi tiết để tránh nhầm lẫn"
-        ],
-        [
-            "pmlinh21@clc.fitus.edu.vn",
-            "2",
-            "19",
-            "1",
-            "Lý Văn Long",
-            "lylong@gmail.com",
-            "0987654321",
-            "Nhận thức về biển quảng cáo chính trị trên đường. Nội dung không chính xác, thiên hướng chống đối một đảng. Đề nghị kiểm tra thông tin và đảm bảo công bằng trong quảng cáo.",
-            "",
-            "",
-            "2023-09-21",
-            "1",
-            "Kiểm tra và xác minh thông tin quảng cáo. Nếu phát hiện không chính xác, yêu cầu rút quảng cáo và yêu cầu thông tin chính xác từ người đăng."
-        ],
-        [
-            "ncluan21@clc.fitus.edu.vn",
-            "1",
-            "17",
-            "2",
-            "Trần Thị Mai",
-            "ttmai@gmail.com",
-            "0943210765",
-            "Ghi nhận quảng cáo chính trị với thông tin đầy đủ. Mong muốn biết rõ về nội dung, nguồn gốc và mục tiêu của quảng cáo để hiểu rõ hơn về các chủ đề chính trị đang được thảo luận.",
-            "",
-            "",
-            "2023-09-26",
-            "0",
-            ""
-        ],
-        [
-            "nnlien21@clc.fitus.edu.vn",
-            "2",
-            "3",
-            "3",
-            "Bùi Văn Nam",
-            "bvn@gmail.com",
-            "0798234567",
-            "Nhìn thấy quảng cáo sản phẩm mới. Đề xuất thêm thông tin về giá cả và cách sử dụng sản phẩm. Cảm thấy quan tâm và muốn biết thêm để đưa ra quyết định mua hàng.",
-            "",
-            "",
-            "2023-10-02",
-            "0",
-            ""
-        ],
-        [
-            "nthphuc21@clc.fitus.edu.vn",
-            "1",
-            "17",
-            "4",
-            "Phan Thị Oanh",
-            "ptoanh@gmail.com",
-            "0732123456",
-            "Quảng cáo một dịch vụ giải quyết vấn đề y tế. Đề xuất cung cấp thông tin chi tiết về cách dịch vụ hoạt động và chi phí liên quan. Đây là một vấn đề quan trọng, nên cần thông tin đầy đủ để đưa ra quyết định.",
-            "",
-            "",
-            "2023-10-09",
-            "0",
-            ""
-        ],
-        [
-            "ncluan21@clc.fitus.edu.vn",
-            "2",
-            "15",
-            "3",
-            "Trịnh Văn Phúc",
-            "tvphuc@gmail.com",
-            "0976543021",
-            "Tôi đề xuất thêm thông tin về mục tiêu và lợi ích của chương trình xã hội hóa này để người dân hiểu rõ hơn về mục đích của hoạt động này.",
-            "",
-            "",
-            "2023-10-15",
-            "0",
-            ""
-        ],
-        [
-            "nnlien21@clc.fitus.edu.vn",
-            "2",
-            "11",
-            "1",
-            "Đỗ Thị Quỳnh",
-            "dtquynh@gmail.com",
-            "0921765432",
-            "Phát hiện quảng cáo xã hội hóa với thông tin không chính xác về việc hỗ trợ cộng đồng. Đề xuất kiểm tra và xác nhận các dự án xã hội để đảm bảo sự minh bạch và trung thực.",
-            "",
-            "",
-            "2023-10-21",
-            "0",
-            ""
-        ],
-        [
-            "nthphuc21@clc.fitus.edu.vn",
-            "1",
-            "7",
-            "2",
-            "Nguyễn Minh Quân",
-            "nmquan@gmail.com",
-            "0712987654",
-            "Nhìn thấy quảng cáo về chương trình xã hội hóa giúp trẻ em. Đề xuất cung cấp thông tin chi tiết về dự án, cách đóng góp và cách giúp đỡ để người dân có thể tham gia tích cực.",
-            "",
-            "",
-            "2023-08-14",
-            "0",
-            ""
-        ],
-        [
-            "nnlien21@clc.fitus.edu.vn",
-            "1",
-            "21",
-            "3",
-            "Lê Văn Sơn",
-            "lson@gmail.com",
-            "0123567890",
-            "Thấy quảng cáo liên quan đến chính sách giáo dục. Gợi ý thêm thông tin về cách áp dụng chính sách và cách hỗ trợ học sinh và giáo viên để tăng cường chất lượng giáo dục.",
-            "",
-            "",
-            "2023-09-03",
-            "1",
-            "Ghi chép ý kiến liên quan đến chính sách giáo dục. Chuyển ý kiến đến cấp quản lý để xem xét và áp dụng các đề xuất tích cực vào chính sách hiện tại."
-        ],
-        [
-            "pmlinh21@clc.fitus.edu.vn",
-            "1",
-            "23",
-            "4",
-            "Hồ Thị Thảo",
-            "htthao@gmail.com",
-            "0798987654",
-            "Quảng cáo về sản phẩm công nghệ mới. Đề xuất cung cấp thông tin về tính năng, hiệu suất và hỗ trợ kỹ thuật để người tiêu dùng có thể đưa ra quyết định mua hàng.",
-            "",
-            "",
-            "2023-09-18",
-            "1",
-            "Cung cấp thông tin chi tiết về sản phẩm công nghệ mới. Hỗ trợ khách hàng giải quyết thắc mắc về tính năng và giá cả để họ có thể đưa ra quyết định mua hàng."
-        ],
-        [
-            "ncluan21@clc.fitus.edu.vn",
-            "1",
-            "1",
-            "1",
-            "Mai Văn Tiến",
-            "mvtien@gmail.com",
-            "0912765432",
-            "Tôi nhận thấy một biển quảng cáo chính trị trên đường với nội dung không chính xác. Biển này chứa thông tin sai lệch về ứng cử viên và chính sách, cần được kiểm tra và sửa chữa.",
-            "",
-            "",
-            "2023-10-08",
-            "1",
-            "Kiểm tra thông tin và yêu cầu chỉnh sửa ngay lập tức."
-        ],
-        [
-            "pmlinh21@clc.fitus.edu.vn",
-            "1",
-            "20",
-            "2",
-            "Vũ Thị Uyên",
-            "vtuyen@gmail.com",
-            "0776543890",
-            "Biển quảng cáo chính trị này cần phải đăng ký nội dung để đảm bảo tính chính xác và minh bạch của thông điệp được truyền đạt.",
-            "",
-            "",
-            "2023-08-31",
-            "1",
-            "Liên hệ với chủ quảng cáo, yêu cầu đăng ký ngay."
-        ],
-        [
-            "nnlien21@clc.fitus.edu.vn",
-            "2",
-            "6",
-            "3",
-            "Nguyễn Minh Vương",
-            "nmvuong@gmail.com",
-            "0932123456",
-            "Tôi muốn đóng góp ý kiến về nội dung của biển quảng cáo chính trị này. Đề xuất cung cấp thông tin chi tiết hơn về chính sách và kế hoạch cụ thể của ứng cử viên để người dân hiểu rõ hơn.",
-            "",
-            "",
-            "2023-10-03",
-            "1",
-            "Ghi nhận ý kiến, đề xuất yêu cầu thêm thông tin chi tiết."
-        ],
-        [
-            "nnlien21@clc.fitus.edu.vn",
-            "1",
-            "4",
-            "1",
-            "Trần Thị Xuân",
-            "ttxuan@gmail.com",
-            "0712654321",
-            "Biển quảng cáo thương mại này có vẻ chứa thông tin không chính xác về sản phẩm. Đề nghị kiểm tra và chỉnh sửa thông tin để tránh gây hiểu lầm cho người tiêu dùng.",
-            "",
-            "",
-            "2023-09-01",
-            "0",
-            ""
-        ],
-        [
-            "pmlinh21@clc.fitus.edu.vn",
-            "1",
-            "14",
-            "2",
-            "Phan Thanh Yến",
-            "ptyen@gmail.com",
-            "0923456701",
-            "Biển quảng cáo này cần được đăng ký nội dung để đảm bảo tính minh bạch và tuân thủ các quy định về quảng cáo thương mại.",
-            "",
-            "",
-            "2023-09-07",
-            "0",
-            ""
-        ],
-        [
-            "ncluan21@clc.fitus.edu.vn",
-            "2",
-            "17",
-            "4",
-            "Lưu Thị Ánh",
-            "lanh@gmail.com",
-            "0123123456",
-            "Tôi có một số thắc mắc về sản phẩm được quảng cáo. Đề xuất cung cấp thông tin liên hệ hoặc website để tôi có thể tìm hiểu thêm về sản phẩm này.",
-            "",
-            "",
-            "2023-09-14",
-            "1",
-            "Cung cấp thông tin liên hệ chính thức để giải quyết thắc mắc."
-        ],
-        [
-            "pmlinh21@clc.fitus.edu.vn",
-            "1",
-            "1",
-            "1",
-            "Đinh Văn Đức",
-            "dvduc@gmail.com",
-            "0798765432",
-            "Biển quảng cáo xã hội hóa này chứa thông tin không chính xác về tổ chức hoặc sự kiện. Đề nghị kiểm tra và sửa chữa để tránh gây hiểu lầm cho cộng đồng.",
-            "",
-            "",
-            "2023-09-22",
-            "0",
-            "Thực hiện kiểm tra thông tin và yêu cầu chỉnh sửa ngay."
-        ],
-        [
-            "nnlien21@clc.fitus.edu.vn",
-            "2",
-            "17",
-            "2",
-            "Nguyễn Thị Hoài",
-            "nthoai@gmail.com",
-            "0712765432",
-            "Biển quảng cáo này cần được đăng ký nội dung để đảm bảo tính minh bạch và tránh vi phạm các quy định về quảng cáo xã hội hóa.",
-            "",
-            "",
-            "2023-10-02",
-            "1",
-            "Liên hệ với tổ chức, yêu cầu đăng ký nội dung ngay lập tức."
-        ]
-    ]
+    // const ads_report = [
+    //     [
+    //         "nnlien21@clc.fitus.edu.vn",
+    //         "1",
+    //         "1",
+    //         "1",
+    //         "Nguyễn Văn Anh",
+    //         "nvanh@gmail.com",
+    //         "0912345678",
+    //         "Biển quảng cáo hiển thị thông điệp chính trị không liên quan đến khu vực này. Mong muốn chính quyền địa phương kiểm tra và đảm bảo rằng quảng cáo trên đường không vi phạm các quy định liên quan.",
+    //         "",
+    //         "",
+    //         "2023-08-05",
+    //         "1",
+    //         "Kiểm tra thông tin quảng cáo và yêu cầu loại bỏ thông điệp không liên quan. Đảm bảo quảng cáo tuân thủ luật lệ và không gây phiền hà cho cộng đồng."
+    //     ],
+    //     [
+    //         "nthphuc21@clc.fitus.edu.vn",
+    //         "2",
+    //         "2",
+    //         "1",
+    //         "Lê Thị Bình",
+    //         "ltb@gmail.com",
+    //         "0923456789",
+    //         "Biển quảng cáo chính trị chứa thông điệp không chính xác về chính sách công cộng. Mong muốn chính trị gia hoặc tổ chức liên quan xem xét và điều chỉnh nội dung quảng cáo để tránh thông tin không đúng.",
+    //         "",
+    //         "",
+    //         "2023-08-12",
+    //         "1",
+    //         "Liên hệ chính trị gia hoặc tổ chức chính trị liên quan và yêu cầu sửa đổi thông điệp không chính xác. Đảm bảo quảng cáo không truyền đạt thông tin sai lệch về chính sách công cộng."
+    //     ],
+    //     [
+    //         "pmlinh21@clc.fitus.edu.vn",
+    //         "2",
+    //         "5",
+    //         "2",
+    //         "Trần Minh Châu",
+    //         "tmc@gmail.com",
+    //         "0976543210",
+    //         "Quảng cáo sản phẩm không có thông tin liên hệ hoặc địa chỉ cửa hàng. Mong muốn doanh nghiệp cung cấp thông tin liên lạc để người dùng có thể tìm thấy cửa hàng dễ dàng hơn.",
+    //         "",
+    //         "",
+    //         "2023-08-17",
+    //         "1",
+    //         "Liên hệ doanh nghiệp để yêu cầu cung cấp thông tin liên hệ và địa chỉ cửa hàng. Đảm bảo rằng quảng cáo chứa thông tin đầy đủ để người dùng dễ dàng liên hệ và đến cửa hàng."
+    //     ],
+    //     [
+    //         "ncluan21@clc.fitus.edu.vn",
+    //         "2",
+    //         "21",
+    //         "3",
+    //         "Phạm Thị Dung",
+    //         "ptdung@gmail.com",
+    //         "0932123456",
+    //         "Quảng cáo về chiến dịch xã hội hóa thiếu minh bạch về việc quyên góp và cách thức sử dụng các quỹ được huy động. Mong muốn có thêm thông tin về cách mà quỹ sẽ được sử dụng để hỗ trợ cộng đồng.",
+    //         "",
+    //         "",
+    //         "2023-08-23",
+    //         "0",
+    //         ""
+    //     ],
+    //     [
+    //         "nnlien21@clc.fitus.edu.vn",
+    //         "2",
+    //         "9",
+    //         "4",
+    //         "Hoàng Đức Em",
+    //         "hdem@gmail.com",
+    //         "0798765432",
+    //         "Quảng cáo có chứa thông tin không rõ ràng về ưu đãi hoặc giảm giá. Mong muốn nhận được giải đáp thắc mắc về các điều kiện và điều khoản của ưu đãi được quảng cáo để tránh nhầm lẫn khi mua hàng.",
+    //         "",
+    //         "",
+    //         "2023-08-28",
+    //         "1",
+    //         "Liên hệ doanh nghiệp để yêu cầu giải đáp thắc mắc của người tiêu dùng. Đảm bảo thông tin chi tiết và rõ ràng về sản phẩm hoặc dịch vụ để tránh hiểu lầm."
+    //     ],
+    //     [
+    //         "nnlien21@clc.fitus.edu.vn",
+    //         "1",
+    //         "10",
+    //         "2",
+    //         "Võ Thị Hà",
+    //         "vtha@gmail.com",
+    //         "0712345678",
+    //         "Quảng cáo về chiến dịch xã hội hóa cần thêm thông tin về các hoạt động và dự án cụ thể được hỗ trợ. Mong muốn có thông tin chi tiết để hiểu rõ về tác động của việc quyên góp.",
+    //         "",
+    //         "",
+    //         "2023-09-02",
+    //         "1",
+    //         "Liên hệ chính trị gia hoặc tổ chức chính trị liên quan và yêu cầu sửa đổi thông điệp không chính xác. Đảm bảo quảng cáo không truyền đạt thông tin sai lệch về chính sách công cộng."
+    //     ],
+    //     [
+    //         "nthphuc21@clc.fitus.edu.vn",
+    //         "1",
+    //         "22",
+    //         "3",
+    //         "Đinh Minh Hiếu",
+    //         "dmhieu@gmail.com",
+    //         "0776543210",
+    //         "Quảng cáo không truyền đạt được ưu điểm đặc biệt của sản phẩm hoặc dịch vụ. Mong muốn doanh nghiệp xem xét việc tăng cường thông tin để người tiêu dùng hiểu rõ về giá trị của sản phẩm.",
+    //         "",
+    //         "",
+    //         "2023-09-08",
+    //         "0",
+    //         ""
+    //     ],
+    //     [
+    //         "pmlinh21@clc.fitus.edu.vn",
+    //         "1",
+    //         "14",
+    //         "4",
+    //         "Nguyễn Thị Khánh",
+    //         "ntkt@gmail.com",
+    //         "0123456789",
+    //         "Quảng cáo có chứa thông tin không rõ ràng về các sản phẩm hoặc dịch vụ. Mong muốn nhận được giải đáp thắc mắc về tính năng và đặc điểm chi tiết của sản phẩm để quyết định mua hàng được hiệu quả hơn.",
+    //         "",
+    //         "",
+    //         "2023-09-15",
+    //         "1",
+    //         "Liên hệ doanh nghiệp để yêu cầu giải đáp thắc mắc của người tiêu dùng. Đảm bảo rằng mọi thông tin về sản phẩm hoặc dịch vụ được truyền đạt rõ ràng và chi tiết để tránh nhầm lẫn"
+    //     ],
+    //     [
+    //         "pmlinh21@clc.fitus.edu.vn",
+    //         "2",
+    //         "19",
+    //         "1",
+    //         "Lý Văn Long",
+    //         "lylong@gmail.com",
+    //         "0987654321",
+    //         "Nhận thức về biển quảng cáo chính trị trên đường. Nội dung không chính xác, thiên hướng chống đối một đảng. Đề nghị kiểm tra thông tin và đảm bảo công bằng trong quảng cáo.",
+    //         "",
+    //         "",
+    //         "2023-09-21",
+    //         "1",
+    //         "Kiểm tra và xác minh thông tin quảng cáo. Nếu phát hiện không chính xác, yêu cầu rút quảng cáo và yêu cầu thông tin chính xác từ người đăng."
+    //     ],
+    //     [
+    //         "ncluan21@clc.fitus.edu.vn",
+    //         "1",
+    //         "17",
+    //         "2",
+    //         "Trần Thị Mai",
+    //         "ttmai@gmail.com",
+    //         "0943210765",
+    //         "Ghi nhận quảng cáo chính trị với thông tin đầy đủ. Mong muốn biết rõ về nội dung, nguồn gốc và mục tiêu của quảng cáo để hiểu rõ hơn về các chủ đề chính trị đang được thảo luận.",
+    //         "",
+    //         "",
+    //         "2023-09-26",
+    //         "0",
+    //         ""
+    //     ],
+    //     [
+    //         "nnlien21@clc.fitus.edu.vn",
+    //         "2",
+    //         "3",
+    //         "3",
+    //         "Bùi Văn Nam",
+    //         "bvn@gmail.com",
+    //         "0798234567",
+    //         "Nhìn thấy quảng cáo sản phẩm mới. Đề xuất thêm thông tin về giá cả và cách sử dụng sản phẩm. Cảm thấy quan tâm và muốn biết thêm để đưa ra quyết định mua hàng.",
+    //         "",
+    //         "",
+    //         "2023-10-02",
+    //         "0",
+    //         ""
+    //     ],
+    //     [
+    //         "nthphuc21@clc.fitus.edu.vn",
+    //         "1",
+    //         "17",
+    //         "4",
+    //         "Phan Thị Oanh",
+    //         "ptoanh@gmail.com",
+    //         "0732123456",
+    //         "Quảng cáo một dịch vụ giải quyết vấn đề y tế. Đề xuất cung cấp thông tin chi tiết về cách dịch vụ hoạt động và chi phí liên quan. Đây là một vấn đề quan trọng, nên cần thông tin đầy đủ để đưa ra quyết định.",
+    //         "",
+    //         "",
+    //         "2023-10-09",
+    //         "0",
+    //         ""
+    //     ],
+    //     [
+    //         "ncluan21@clc.fitus.edu.vn",
+    //         "2",
+    //         "15",
+    //         "3",
+    //         "Trịnh Văn Phúc",
+    //         "tvphuc@gmail.com",
+    //         "0976543021",
+    //         "Tôi đề xuất thêm thông tin về mục tiêu và lợi ích của chương trình xã hội hóa này để người dân hiểu rõ hơn về mục đích của hoạt động này.",
+    //         "",
+    //         "",
+    //         "2023-10-15",
+    //         "0",
+    //         ""
+    //     ],
+    //     [
+    //         "nnlien21@clc.fitus.edu.vn",
+    //         "2",
+    //         "11",
+    //         "1",
+    //         "Đỗ Thị Quỳnh",
+    //         "dtquynh@gmail.com",
+    //         "0921765432",
+    //         "Phát hiện quảng cáo xã hội hóa với thông tin không chính xác về việc hỗ trợ cộng đồng. Đề xuất kiểm tra và xác nhận các dự án xã hội để đảm bảo sự minh bạch và trung thực.",
+    //         "",
+    //         "",
+    //         "2023-10-21",
+    //         "0",
+    //         ""
+    //     ],
+    //     [
+    //         "nthphuc21@clc.fitus.edu.vn",
+    //         "1",
+    //         "7",
+    //         "2",
+    //         "Nguyễn Minh Quân",
+    //         "nmquan@gmail.com",
+    //         "0712987654",
+    //         "Nhìn thấy quảng cáo về chương trình xã hội hóa giúp trẻ em. Đề xuất cung cấp thông tin chi tiết về dự án, cách đóng góp và cách giúp đỡ để người dân có thể tham gia tích cực.",
+    //         "",
+    //         "",
+    //         "2023-08-14",
+    //         "0",
+    //         ""
+    //     ],
+    //     [
+    //         "nnlien21@clc.fitus.edu.vn",
+    //         "1",
+    //         "21",
+    //         "3",
+    //         "Lê Văn Sơn",
+    //         "lson@gmail.com",
+    //         "0123567890",
+    //         "Thấy quảng cáo liên quan đến chính sách giáo dục. Gợi ý thêm thông tin về cách áp dụng chính sách và cách hỗ trợ học sinh và giáo viên để tăng cường chất lượng giáo dục.",
+    //         "",
+    //         "",
+    //         "2023-09-03",
+    //         "1",
+    //         "Ghi chép ý kiến liên quan đến chính sách giáo dục. Chuyển ý kiến đến cấp quản lý để xem xét và áp dụng các đề xuất tích cực vào chính sách hiện tại."
+    //     ],
+    //     [
+    //         "pmlinh21@clc.fitus.edu.vn",
+    //         "1",
+    //         "23",
+    //         "4",
+    //         "Hồ Thị Thảo",
+    //         "htthao@gmail.com",
+    //         "0798987654",
+    //         "Quảng cáo về sản phẩm công nghệ mới. Đề xuất cung cấp thông tin về tính năng, hiệu suất và hỗ trợ kỹ thuật để người tiêu dùng có thể đưa ra quyết định mua hàng.",
+    //         "",
+    //         "",
+    //         "2023-09-18",
+    //         "1",
+    //         "Cung cấp thông tin chi tiết về sản phẩm công nghệ mới. Hỗ trợ khách hàng giải quyết thắc mắc về tính năng và giá cả để họ có thể đưa ra quyết định mua hàng."
+    //     ],
+    //     [
+    //         "ncluan21@clc.fitus.edu.vn",
+    //         "1",
+    //         "1",
+    //         "1",
+    //         "Mai Văn Tiến",
+    //         "mvtien@gmail.com",
+    //         "0912765432",
+    //         "Tôi nhận thấy một biển quảng cáo chính trị trên đường với nội dung không chính xác. Biển này chứa thông tin sai lệch về ứng cử viên và chính sách, cần được kiểm tra và sửa chữa.",
+    //         "",
+    //         "",
+    //         "2023-10-08",
+    //         "1",
+    //         "Kiểm tra thông tin và yêu cầu chỉnh sửa ngay lập tức."
+    //     ],
+    //     [
+    //         "pmlinh21@clc.fitus.edu.vn",
+    //         "1",
+    //         "20",
+    //         "2",
+    //         "Vũ Thị Uyên",
+    //         "vtuyen@gmail.com",
+    //         "0776543890",
+    //         "Biển quảng cáo chính trị này cần phải đăng ký nội dung để đảm bảo tính chính xác và minh bạch của thông điệp được truyền đạt.",
+    //         "",
+    //         "",
+    //         "2023-08-31",
+    //         "1",
+    //         "Liên hệ với chủ quảng cáo, yêu cầu đăng ký ngay."
+    //     ],
+    //     [
+    //         "nnlien21@clc.fitus.edu.vn",
+    //         "2",
+    //         "6",
+    //         "3",
+    //         "Nguyễn Minh Vương",
+    //         "nmvuong@gmail.com",
+    //         "0932123456",
+    //         "Tôi muốn đóng góp ý kiến về nội dung của biển quảng cáo chính trị này. Đề xuất cung cấp thông tin chi tiết hơn về chính sách và kế hoạch cụ thể của ứng cử viên để người dân hiểu rõ hơn.",
+    //         "",
+    //         "",
+    //         "2023-10-03",
+    //         "1",
+    //         "Ghi nhận ý kiến, đề xuất yêu cầu thêm thông tin chi tiết."
+    //     ],
+    //     [
+    //         "nnlien21@clc.fitus.edu.vn",
+    //         "1",
+    //         "4",
+    //         "1",
+    //         "Trần Thị Xuân",
+    //         "ttxuan@gmail.com",
+    //         "0712654321",
+    //         "Biển quảng cáo thương mại này có vẻ chứa thông tin không chính xác về sản phẩm. Đề nghị kiểm tra và chỉnh sửa thông tin để tránh gây hiểu lầm cho người tiêu dùng.",
+    //         "",
+    //         "",
+    //         "2023-09-01",
+    //         "0",
+    //         ""
+    //     ],
+    //     [
+    //         "pmlinh21@clc.fitus.edu.vn",
+    //         "1",
+    //         "14",
+    //         "2",
+    //         "Phan Thanh Yến",
+    //         "ptyen@gmail.com",
+    //         "0923456701",
+    //         "Biển quảng cáo này cần được đăng ký nội dung để đảm bảo tính minh bạch và tuân thủ các quy định về quảng cáo thương mại.",
+    //         "",
+    //         "",
+    //         "2023-09-07",
+    //         "0",
+    //         ""
+    //     ],
+    //     [
+    //         "ncluan21@clc.fitus.edu.vn",
+    //         "2",
+    //         "17",
+    //         "4",
+    //         "Lưu Thị Ánh",
+    //         "lanh@gmail.com",
+    //         "0123123456",
+    //         "Tôi có một số thắc mắc về sản phẩm được quảng cáo. Đề xuất cung cấp thông tin liên hệ hoặc website để tôi có thể tìm hiểu thêm về sản phẩm này.",
+    //         "",
+    //         "",
+    //         "2023-09-14",
+    //         "1",
+    //         "Cung cấp thông tin liên hệ chính thức để giải quyết thắc mắc."
+    //     ],
+    //     [
+    //         "pmlinh21@clc.fitus.edu.vn",
+    //         "1",
+    //         "1",
+    //         "1",
+    //         "Đinh Văn Đức",
+    //         "dvduc@gmail.com",
+    //         "0798765432",
+    //         "Biển quảng cáo xã hội hóa này chứa thông tin không chính xác về tổ chức hoặc sự kiện. Đề nghị kiểm tra và sửa chữa để tránh gây hiểu lầm cho cộng đồng.",
+    //         "",
+    //         "",
+    //         "2023-09-22",
+    //         "0",
+    //         "Thực hiện kiểm tra thông tin và yêu cầu chỉnh sửa ngay."
+    //     ],
+    //     [
+    //         "nnlien21@clc.fitus.edu.vn",
+    //         "2",
+    //         "17",
+    //         "2",
+    //         "Nguyễn Thị Hoài",
+    //         "nthoai@gmail.com",
+    //         "0712765432",
+    //         "Biển quảng cáo này cần được đăng ký nội dung để đảm bảo tính minh bạch và tránh vi phạm các quy định về quảng cáo xã hội hóa.",
+    //         "",
+    //         "",
+    //         "2023-10-02",
+    //         "1",
+    //         "Liên hệ với tổ chức, yêu cầu đăng ký nội dung ngay lập tức."
+    //     ]
+    // ]
+
+
+    $.ajax({
+        url: `http://localhost:8080/api/nguoidan/getAdsReport`,
+        type: "GET",
+        success: function (data) {
+            console.log(data)
+
+            // let adsloc = localStorage.getItem('adsloc_report');
+            // adsloc = (adsloc) ? JSON.parse(adsloc) : []
+            // adsloc = adsloc.filter(item => item[5] == email)
+            // adsloc = adsloc.map(item => {
+            //     const id = parseInt(item[2])
+            //     const info = NguoiDanAdsLoc.content.filter(item => item.id_ads_location == id)[0]
+            //     return [`${info.address}, phường ${info.ward}, quận ${info.id_district}`,
+            //     item[7], parseInt(item[3]), item[11], item[8], item[9], item[12]]
+            // })
+            //  address, content, report_type, status, image1, image2, resolve, 
+            ads_report = data.content
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    })
+
+
 
     const loc_report = [
         [
@@ -1458,7 +1464,9 @@ $(document).ready(function () {
         ]
     ]
 
-    localStorage.setItem("email", JSON.stringify("lvduc@gmail.com"))
+
+
+
     localStorage.setItem("ads_report", JSON.stringify(ads_report))
     localStorage.setItem("loc_report", JSON.stringify(loc_report))
     localStorage.setItem("adsloc_report", JSON.stringify(adsloc_report))
@@ -1523,7 +1531,7 @@ $(document).ready(function () {
             photo, longitude, latitude, is_zoning, list_ads, list_report]
     })
 
-    console.log(info)
+    // console.log(info)
 
     // tạo điểm trên map
     createMarker(info, map);
@@ -1679,6 +1687,7 @@ $(document).ready(function () {
     $(".my-report").on("click", () => {
         let email = localStorage.getItem('email');
         email = (email) ? JSON.parse(email) : ''
+        console.log(email)
 
         $.ajax({
             url: `http://localhost:8080/api/nguoidan/getReport/${email}`,
@@ -1794,54 +1803,10 @@ $(document).ready(function () {
     })
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    // Function to handle form submission
-    function handleFormSubmit() {
-        // Retrieve form elements
-        var form = document.querySelector('.needs-validation');
-        var reportType = form.querySelector('#reportType').value;
-        var name = form.querySelector('#name').value;
-        var email = form.querySelector('#email').value;
-        var phone = form.querySelector('#phone').value;
-        var reportContent = form.querySelector('#reportContent').value;
-        var image1 = form.querySelector('#image1').value;
-        var image2 = form.querySelector('#image2').value;
+document.getElementById('send').addEventListener('click', function () {
+    // Get the email value
+    var email = document.getElementById('email').value;
 
-        // Create an object with form data
-        var formData = {
-            reportType: reportType,
-            name: name,
-            email: email,
-            phone: phone,
-            reportContent: reportContent,
-            image1: image1,
-            image2: image2
-        };
-
-        // Retrieve existing form data from local storage
-        var existingFormData = JSON.parse(localStorage.getItem('formData')) || [];
-
-        // Ensure existingFormData is an array
-        if (!Array.isArray(existingFormData)) {
-            existingFormData = [];
-        }
-
-        // Add the new form data to the array
-        existingFormData.push(formData);
-
-        // Convert the array to a JSON string
-        var formDataJson = JSON.stringify(existingFormData);
-
-        // Save the JSON string to local storage
-        localStorage.setItem('formData', formDataJson);
-
-        // Optional: You can display a success message or perform additional actions here
-        // e.g., displaySuccessMessage();
-    }
-
-    // Attach event listener to the "Gửi báo cáo" (Send Report) button
-    var sendButton = document.getElementById('send');
-    if (sendButton) {
-        sendButton.addEventListener('click', handleFormSubmit);
-    }
+    // Save the email to local storage
+    localStorage.setItem('email', JSON.stringify(email));
 });
