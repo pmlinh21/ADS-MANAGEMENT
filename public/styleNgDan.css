@@ -487,3 +487,34 @@ label.required::after {
     margin-bottom: 1rem;
     box-shadow: none;
 }
+
+#myPosButton{
+    position: absolute;
+    z-index: 99;
+}
+
+.markerCurentPos {
+    width: 14px; /* Marker width */
+    height: 14px; /* Marker height */
+    border-radius: 50%; /* Make it a circle */
+    background-color: #4285f4; /* Google Maps blue dot color */
+    border: 2px solid #fff; /* Marker border */
+    box-shadow: 0 0 5px rgba(66, 133, 244, 0.5); /* Add a subtle shadow */
+}
+
+#myPosButton {
+    position: fixed;
+    bottom: 20px; /* Adjust the distance from the bottom */
+    right: 20px; /* Adjust the distance from the right */
+}
+
+#myPosButton button {
+    /* Add any additional styles for your button */
+    padding: 5px 10px;
+    background-color: white;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(66, 133, 244, 0.5); /* Add a subtle shadow */
+}

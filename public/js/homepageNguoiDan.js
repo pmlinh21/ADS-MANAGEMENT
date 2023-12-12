@@ -547,15 +547,28 @@ function createMarker(info, map) {
     }
 }
 
-// tạo bản đồ
-mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
-var map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v11',
-    center: [106.6974, 10.7743],
-    zoom: 15,
-    language: 'vi'
-});
+// // tạo bản đồ
+// mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
+// var map = new mapboxgl.Map({
+//     container: 'map',
+//     style: 'mapbox://styles/mapbox/streets-v11',
+//     center: [106.6974, 10.7743],
+//     zoom: 15,
+//     language: 'vi'
+// });
+
+navigator.geolocation.getCurrentPosition(
+    function (position) {
+        var lng = position.coords.longitude;
+        var lat = position.coords.latitude;
+
+        // Update map center with user's current position
+        map.setCenter([lng, lat]);
+    },
+    function (error) {
+        console.error('Error getting user location:', error);
+    }
+);
 
 let marker = new mapboxgl.Marker();
 
@@ -1463,6 +1476,8 @@ $(document).ready(function () {
         $('#sidebar').height(mapHeight);
     });
 
+
+
     // tạo bản đồ
     mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
     var map = new mapboxgl.Map({
@@ -1472,6 +1487,25 @@ $(document).ready(function () {
         zoom: 15,
         language: 'vi'
     });
+    map.addControl(new mapboxgl.NavigationControl());
+
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            var lng = position.coords.longitude;
+            var lat = position.coords.latitude;
+
+            // Update map center with user's current position
+            map.setCenter([lng, lat]);
+            const el = document.createElement('div');
+            el.className = 'markerCurentPos';
+
+            // make a marker for each feature and add to the map
+            new mapboxgl.Marker(el).setLngLat([lng, lat]).addTo(map);
+        },
+        function (error) {
+            console.error('Error getting user location:', error);
+        }
+    );
 
     // cài đặt tiếng việt
     var language = new MapboxLanguage({
@@ -1574,6 +1608,27 @@ $(document).ready(function () {
     // map.on('scroll', function () {
     //   $('#sidebar').hide()
     // });
+
+    document.getElementById('myPosButton').addEventListener('click', function () {
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                var lng = position.coords.longitude;
+                var lat = position.coords.latitude;
+
+                // Fly to the current position
+                map.flyTo({
+                    center: [lng, lat],
+                    zoom: 17, // You can adjust the zoom level as needed
+                    speed: 1.5, // Speed of the fly animation
+                    curve: 1 // Animation curve (1 is a linear curve)
+                });
+            },
+            function (error) {
+                console.error('Error getting user location:', error);
+            }
+        );
+    });
+
 
     document.getElementById('geocodeForm').addEventListener('submit', function (event) {
         event.preventDefault();
@@ -1729,12 +1784,64 @@ $(document).ready(function () {
             </div>
         <% } %>
         `;
-        var rendered = ejs.render(template, { list_report, note });
-        $('#my-report .modal-body').html(rendered);
+                var rendered = ejs.render(template, { list_report, note });
+                $('#my-report .modal-body').html(rendered);
             },
-            error: function (jqXHR, textStatus, errorThrown){
+            error: function (jqXHR, textStatus, errorThrown) {
                 console.log(errorThrown);
             }
         })
     })
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Function to handle form submission
+    function handleFormSubmit() {
+        // Retrieve form elements
+        var form = document.querySelector('.needs-validation');
+        var reportType = form.querySelector('#reportType').value;
+        var name = form.querySelector('#name').value;
+        var email = form.querySelector('#email').value;
+        var phone = form.querySelector('#phone').value;
+        var reportContent = form.querySelector('#reportContent').value;
+        var image1 = form.querySelector('#image1').value;
+        var image2 = form.querySelector('#image2').value;
+
+        // Create an object with form data
+        var formData = {
+            reportType: reportType,
+            name: name,
+            email: email,
+            phone: phone,
+            reportContent: reportContent,
+            image1: image1,
+            image2: image2
+        };
+
+        // Retrieve existing form data from local storage
+        var existingFormData = JSON.parse(localStorage.getItem('formData')) || [];
+
+        // Ensure existingFormData is an array
+        if (!Array.isArray(existingFormData)) {
+            existingFormData = [];
+        }
+
+        // Add the new form data to the array
+        existingFormData.push(formData);
+
+        // Convert the array to a JSON string
+        var formDataJson = JSON.stringify(existingFormData);
+
+        // Save the JSON string to local storage
+        localStorage.setItem('formData', formDataJson);
+
+        // Optional: You can display a success message or perform additional actions here
+        // e.g., displaySuccessMessage();
+    }
+
+    // Attach event listener to the "Gửi báo cáo" (Send Report) button
+    var sendButton = document.getElementById('send');
+    if (sendButton) {
+        sendButton.addEventListener('click', handleFormSubmit);
+    }
 });
