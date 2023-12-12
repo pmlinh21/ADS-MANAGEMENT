@@ -9,7 +9,7 @@ const { parseToken } = require('../middlewares/baseToken');
 const nodeMailer = require('nodemailer');
 require('dotenv').config();
 
-const bcrypt = require('bcrypt'); 
+const bcrypt = require('bcryptjs'); 
 
 const getReportType = async(req, res) =>{
     try{
