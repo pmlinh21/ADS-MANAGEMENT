@@ -22,10 +22,14 @@ if (role === "3"){
 }
 
 if (role == "2"){
-    $('.manage-menu li:nth-child(1) a').attr('href', "/adsLocationPhuong")  
-    $('.manage-menu li:nth-child(2) a').attr('href', "/adsPhuong")  
-    $('.manage-menu li:nth-child(3) a').attr('href',  "/reportPhuong") 
-    $('.manage-menu li:nth-child(4) a').attr('href', "/createAdsPhuong")  
+    // $('.manage-menu li:nth-child(1) a').attr('href', "/adsLocationPhuong")  
+    // $('.manage-menu li:nth-child(2) a').attr('href', "/adsPhuong")  
+    // $('.manage-menu li:nth-child(3) a').attr('href',  "/reportPhuong") 
+    // $('.manage-menu li:nth-child(4) a').attr('href', "/createAdsPhuong")  
+    $('.manage-menu li:nth-child(1) a').attr('href', "/adsLocation")  
+    $('.manage-menu li:nth-child(2) a').attr('href', "/ads")  
+    $('.manage-menu li:nth-child(3) a').attr('href',  "/report") 
+    $('.manage-menu li:nth-child(4) a').attr('href', "/createAds") 
 } else if (role == "1"){
     $('.manage-menu li:nth-child(1) a').attr('href', "/adsLocation")  
     $('.manage-menu li:nth-child(2) a').attr('href', "/ads")  

@@ -2,7 +2,7 @@ $(document).ready(function(){
     $("quan").addClass("snb-li-active");
 
     var allQuan;
-    $.get('/api/so/getAllQuan', function(data){
+    $.get('/api/so/getAllQuanData', function(data){
         allQuan = data.content.map(item => [item.id_district, item.district, item.SLPhuong, item.SLDDQC, item.SLBQC, item.SLCB]);
         buildDistrictTable(allQuan);
     }).fail(function(err){

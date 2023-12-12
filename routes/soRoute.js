@@ -24,11 +24,12 @@ const {
     addLoaiBangQuangCao,
 
     getAllQuan,
+    getAllQuanData,
     updateQuan,
     deleteQuan,
     addQuan,
 
-    getAllPhuong,
+    getAllPhuongData,
     updatePhuong,
     deletePhuong,
     addPhuong,
@@ -68,12 +69,13 @@ soRoute.post("/addLoaiBangQuangCao", addLoaiBangQuangCao);
 
 // QUANLIQUAN
 soRoute.get("/getAllQuan", getAllQuan);
+soRoute.get("/getAllQuanData", getAllQuanData);
 soRoute.put("/updateQuan", updateQuan);
 soRoute.delete("/deleteQuan", deleteQuan);
 soRoute.post("/addQuan", addQuan);
 
 // QUANLIPHUONG
-soRoute.get("/getAllPhuong", getAllPhuong);
+soRoute.get("/getAllPhuongData", getAllPhuongData);
 soRoute.put("/updatePhuong", updatePhuong);
 soRoute.delete("/deletePhuong", deletePhuong);
 soRoute.post("/addPhuong", addPhuong);

@@ -25,31 +25,41 @@
             </table>
         </div>
          <!-- POPUP EDIT FORM -->
-         <form class="popup form" id="edit-popup">
-            <legend></legend>
+        <form class="popup form" id="edit-popup">
+            <legend>Chỉnh sửa Phường</legend>
             <div class="input-field">
-                <label for="id"></label>
+                <label for="id">ID Phường</label>
                 <input type="text" id="id" name="id" class="disabled" readonly>
                 <span class="tooltiptext">Không thể chỉnh sửa ID</span>
             </div>
             <div class="input-field">
-                <label for="name"></label>
+                <label for="name">Tên Phường</label>
                 <input type="text" id="name" name="name" required>
             </div>
+            <div class="input-field">
+                <label for="id-district">Quận trực thuộc</label>
+                <select name="id_district" id="id-district" required>
+                </select>
+            </div>
             
-            <button type="submit" value="update" class="button">Lưu thay đổi</button>
-            <button type="button" value="delete" class="button button-delete">Xóa bỏ</button>
+            <button type="button" value="update" onclick=handleButtonClick(this) class="button">Lưu thay đổi</button>
+            <button type="button" value="delete" onclick=handleButtonClick(this) class="button button-delete">Xóa bỏ</button>
         </form>
 
         <!-- POPUP ADD FORM -->
         <form class="popup form" id="add-popup">
-            <legend></legend>
+            <legend>Thêm Phường</legend>
             <div class="input-field">
-                <label for="name"></label>
+                <label for="name">Tên Phường</label>
                 <input type="text" id="name" name="name" required>
             </div>
+            <div class="input-field">
+                <label for="id-district">Quận trực thuộc</label>
+                <select name="id_district" id="id-district" required>
+                </select>
+            </div>
             
-            <button type="submit" value="add" class="button">Thêm</button>
+            <button type="submit" value="add" onclick=handleButtonClick(this) class="button">Thêm</button>
         </form>
     </div>
 </div>

@@ -114,6 +114,25 @@ const isCanboSo = (req, res, next) => {
     }
 }
 
+const isCanboPhuongOrQuan = (req, res, next) => {
+    const token = req.cookies?.token;
+    if (!token) {
+        return res.redirect("/")
+    }
 
+    try {
+        const content = decodeToken(token).data
 
-module.exports = { parseToken, checkToken, verifyToken, decodeToken, isCanboQuan }
+        if (content.role == "1" || content.role == "2"){
+            next();
+        } else {
+            return res.redirect("/")
+        }
+
+    } catch (error) {
+        // Handle token verification error
+        throw new Error('Invalid token');
+    }
+}
+
+module.exports = { parseToken, checkToken, verifyToken, decodeToken, isCanboQuan, isCanboPhuong, isCanboPhuongOrQuan }

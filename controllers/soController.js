@@ -265,6 +265,15 @@ const addLoaiBangQuangCao = async (req, res) => {
 // QUANLIQUAN
 const getAllQuan = async (req, res) => {
     try {
+        const [data, metadata] = await sequelize.query("SELECT * FROM District ORDER BY id_district");
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const getAllQuanData = async (req, res) => {
+    try {
         const [data, metadata] = await sequelize.query( "SELECT D.*, COUNT(DISTINCT W.id_ward) AS \"SLPhuong\", COUNT(DISTINCT AL.id_ads_location) AS \"SLDDQC\", COUNT( DISTINCT A.id_ads) AS \"SLBQC\", COUNT(DISTINCT CB.email) AS \"SLCB\" " + 
                                                         "FROM District D " + 
                                                         "LEFT JOIN Ward W ON D.id_district = W.id_district " + 
@@ -289,7 +298,7 @@ const updateQuan = async (req, res) => {
                 id_district: id
             }
         });
-        sucessCode(res, data, req.body.name);
+        sucessCode(res, data, "Put thành công");
     } catch(err) {
         errorCode(res, "Lỗi BE");
     }
@@ -322,7 +331,7 @@ const addQuan = async (req, res) => {
 }
 
 // QUANLIPHUONG
-const getAllPhuong = async (req, res) => {
+const getAllPhuongData = async (req, res) => {
     try {
         const [data, metadata] = await sequelize.query( "SELECT W.id_ward, W.ward, D.district, COUNT(DISTINCT AL.id_ads_location) AS \"SLDDQC\", COUNT(DISTINCT A.id_ads) AS \"SLBQC\", COUNT(DISTINCT CB.email) AS \"SLCB\" " + 
                                                         "FROM Ward W LEFT JOIN District D ON D.id_district = W.id_district " + 
@@ -339,15 +348,16 @@ const getAllPhuong = async (req, res) => {
 
 const updatePhuong = async (req, res) => {
     try {
-        const { id, name } = req.body;
+        const { id, name, id_district } = req.body;
         const data = await model.Ward.update({
-            ward: name
+            ward: name,
+            id_district: id_district
         }, {
             where: {
                 id_ward: id
             }
         });
-        sucessCode(res, data, req.body.name);
+        sucessCode(res, data, "Put thành công");
     } catch(err) {
         errorCode(res, "Lỗi BE");
     }
@@ -369,9 +379,10 @@ const deletePhuong = async (req, res) => {
 
 const addPhuong = async (req, res) => {
     try {
-        const name = req.body.name;
+        const { name, id_district } = req.body;
         const data = await model.Ward.create({
-            ward: name
+            ward: name, 
+            id_district: id_district
         });
         sucessCode(res, data, "Post thành công");
     } catch(err) {
@@ -379,6 +390,7 @@ const addPhuong = async (req, res) => {
     }
 }
 
+// QUANLICANBO
 const getAllCanboQuan = async (req, res) => {
     try {
         const [data, meta] = await sequelize.query( "SELECT CB.email, CB.fullname, CB.phone, CB.birthdate, D.district " +
@@ -433,11 +445,12 @@ module.exports = {
     addLoaiBangQuangCao,
 
     getAllQuan,
+    getAllQuanData,
     updateQuan,
     deleteQuan,
     addQuan,
 
-    getAllPhuong,
+    getAllPhuongData,
     updatePhuong,
     deletePhuong,
     addPhuong,
