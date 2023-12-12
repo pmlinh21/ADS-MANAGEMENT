@@ -27,6 +27,7 @@ $(document).ready(function () {
           return;
       }
       else{
+          $("#loading-bg").show()
           const loginInfo = new FormData();
           loginInfo.append('email', email);
           loginInfo.append('pwd', password);
@@ -39,24 +40,17 @@ $(document).ready(function () {
             contentType: false,
             success: function(response) {
               console.log(response);
-
+              $("#loading-bg").hide()
               var date = new Date();
               date.setTime(date.getTime() + (10 * 24 * 60 * 60 * 1000));
               expires = "; expires=" + date.toUTCString();
 
               document.cookie = "token" + "=" + response.content + expires + "; path=/";
-
-              // const role = response.content.role
-              // localStorage.setItem('email', response.content.info.email)
-              // localStorage.setItem('role', role)
-              // if (role == "1")
-              //   localStorage.setItem('id_district', response.content.info.id_district)
-              // if (role == "2")
-              //   localStorage.setItem('id_ward', response.content.info.id_ward)
               window.location.href = "/"
             },
             error: function(xhr, status, error) {
               if (xhr.status === 400 || xhr.status === 500) {
+                $("#loading-bg").hide()
                 // Handle specific 400 error
                 const errorMessage = xhr.responseJSON?.message;
                 $('#email').val("");
@@ -78,27 +72,10 @@ $(document).ready(function () {
     if (email != ""){
       
       $('#email').val("");
-      $.ajax({
-        url: `/api/basic/sendEmail/${email}`,
-        type: "POST",
-        beforeSend: function (data) {
-        },
-        success: function(data){
-          $(".login-form").hide()
-          $(".user-icon").hide()
-          $('#enter-email').val("");
-          window.location.href = '/forget-pass?email=' + email;
-        },
-        error: function(xhr, status, error) {
-          
-          if (xhr.status == 400){
-            let errorMessage = JSON.parse(xhr.responseText).message; // Get the error message from the response
-            alert(errorMessage);
-          }else{
-            alert("Gửi mail thất bại");
-          }
-        }
-      })
+      $(".user-icon").hide()
+      $('#enter-email').val("");
+      window.location.href = '/forget-pass?email=' + email;
+
     } else if (email == ""){
       $(".login-form").hide()
       $(".user-icon").hide()
@@ -121,25 +98,9 @@ $(document).ready(function () {
     if (email == "")
       alert ("Nhập email để thay đổi mật khẩu")
     else{
-      $.ajax({
-        url: `/api/basic/sendEmail/${email}`,
-        type: "POST",
-        beforeSend: function (data) {
-        },
-        success: function(data){
-          $('#enter-email').val("");
+      $("#loading-bg").show()
+      $('#enter-email').val("");
           window.location.href = '/forget-pass?email=' + email;
-        },
-        error: function(xhr, status, error) {
-          if (xhr.status == 400){
-            let errorMessage = JSON.parse(xhr.responseText).message; // Get the error message from the response
-            alert(errorMessage);
-          }else{
-            // console.log(status, error, xhr.responseText)
-            alert("Gửi mail thất bại");
-          }
-        }
-      })
     } 
   })
 });

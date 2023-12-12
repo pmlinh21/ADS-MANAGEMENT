@@ -59,7 +59,7 @@ const isCanboQuan = (req, res, next) => {
 
     try {
         const content = decodeToken(token).data
-        console.log(content.role)
+        // console.log(content.role)
         if (content.role == "1"){
             next();
         } else {

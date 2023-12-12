@@ -296,6 +296,8 @@ $(document).ready(function () {
             },
             error: function(xhr, status, error) {
               // Handle the error here
+              $("#loading-bg").hide()
+              alert("Tạo cấp phép thất bại")
               console.error(error);
             }
           });

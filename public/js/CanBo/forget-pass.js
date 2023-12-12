@@ -4,6 +4,23 @@ $(document).ready(function () {
   const email = urlParams.get('email');
   $("span.email").val(email);
   
+  $.ajax({
+    url: `/api/basic/sendEmail/${email}`,
+    type: "POST",
+    success: function(data){
+      
+    },
+    error: function(xhr, status, error) {
+      if (xhr.status == 400){
+        let errorMessage = JSON.parse(xhr.responseText).message; // Get the error message from the response
+        alert(errorMessage);
+      }else{
+        // console.log(status, error, xhr.responseText)
+        alert("Gửi mail thất bại");
+      }
+    }
+  })
+  
   $(".resend").on("click",function(){
     $.ajax({
       url: `/api/basic/sendEmail/${email}`,

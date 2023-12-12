@@ -228,7 +228,7 @@ const checkOTP = async(req, res) =>{
             console.log (currentTime, "<", givenTime)
 
             const result = bcrypt.compareSync(OTP, record.OTP);
-            if (result && givenTime >= currentTime){
+            if (result && givenTime <= currentTime){
                 sucessCode(res, "","Thành công")
             }
             else if (!result)

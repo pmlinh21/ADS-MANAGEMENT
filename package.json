@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
+    "deploy": "node app.js",
     "sequelize-auto": "sequelize-auto -h localhost -d db_adsmap -u root -x 1234 -p 3306 --dialect mysql -o ./models -l es6"
   },
   "author": "",
