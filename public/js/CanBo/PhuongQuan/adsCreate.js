@@ -8,10 +8,11 @@ $(document).ready(function () {
   if (role == "2"){
     $("#loading-bg").show();
     $.ajax({
-      url: `/api/quan/getAdsCreate/${id_ward}`,
+      url: `/api/quan/getAdsCreateWard/${id_ward}`,
       type: "GET",
       success: function(data) {
-        $("#loading-bg").hide()
+        $("#loading-bg").hide();
+        console.log(data)
         info = data.content.map(function(item){
           let {id_create, board_type, address, content, company,
             start_date, end_date, status, address_adsloc,district,
