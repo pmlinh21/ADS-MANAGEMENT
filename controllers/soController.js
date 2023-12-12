@@ -8,7 +8,7 @@ const { Op } = require("sequelize");
 // QUANLICHUNG --- Statistic
 const getSoLuongQuan = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query("SELECT COUNT(id_district) AS soLuongQuan FROM District");
+        const [data, metadata] = await sequelize.query("SELECT COUNT(id_district) AS \"soLuongQuan\" FROM District");
         sucessCode(res, data, "Get thành công");
     } catch (err) {
         errorCode(res, "Lỗi BE");
@@ -17,7 +17,7 @@ const getSoLuongQuan = async (req, res) => {
 
 const getSoLuongPhuong = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query("SELECT COUNT(id_ward) AS soLuongPhuong FROM Ward");
+        const [data, metadata] = await sequelize.query("SELECT COUNT(id_ward) AS \"soLuongPhuong\" FROM Ward");
         sucessCode(res, data, "Get thành công");
     } catch (err) {
         errorCode(res, "Lỗi BE");
@@ -26,7 +26,7 @@ const getSoLuongPhuong = async (req, res) => {
 
 const getSoLuongCanBo = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query("SELECT COUNT(T.email) AS soLuongCanBo FROM ( (SELECT email FROM CanboSo) UNION (SELECT email FROM CanboQuan ) UNION (SELECT email FROM CanboPhuong)) T");
+        const [data, metadata] = await sequelize.query("SELECT COUNT(T.email) AS \"soLuongCanBo\" FROM ( (SELECT email FROM CanboSo) UNION (SELECT email FROM CanboQuan ) UNION (SELECT email FROM CanboPhuong)) T");
         sucessCode(res, data, "Get thành công");
     } catch (err) {
         errorCode(res, "Lỗi BE");
@@ -35,7 +35,7 @@ const getSoLuongCanBo = async (req, res) => {
 
 const getSoLuongDDQC = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query("SELECT COUNT(id_ads_location) AS soLuongDDQC FROM Ads_location");
+        const [data, metadata] = await sequelize.query("SELECT COUNT(id_ads_location) AS \"soLuongDDQC\" FROM Ads_location");
         sucessCode(res, data, "Get thành công");
     } catch (err) {
         errorCode(res, "Lỗi BE");
@@ -44,7 +44,7 @@ const getSoLuongDDQC = async (req, res) => {
 
 const getSoLuongBQC = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query("SELECT COUNT(id_ads) AS soLuongBQC FROM Ads");
+        const [data, metadata] = await sequelize.query("SELECT COUNT(id_ads) AS \"soLuongBQC\" FROM Ads");
         sucessCode(res, data, "Get thành công");
     } catch (err) {
         errorCode(res, "Lỗi BE");
@@ -54,7 +54,7 @@ const getSoLuongBQC = async (req, res) => {
 // QUANLICHUNG --- Loai Vi Tri
 const getLoaiViTri = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query("SELECT * FROM Location_type");
+        const [data, metadata] = await sequelize.query("SELECT * FROM Location_type ORDER BY id_loc_type");
         sucessCode(res, data, "Get thành công");
     } catch(err) {
         errorCode(res, "Lỗi BE");
@@ -107,7 +107,7 @@ const addLoaiViTri = async (req, res) => {
 // QUANLICHUNG --- Hinh Thuc Quang Cao
 const getHinhThucQuangCao = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query("SELECT * FROM Ads_type");
+        const [data, metadata] = await sequelize.query("SELECT * FROM Ads_type ORDER BY id_ads_type");
         sucessCode(res, data, "Get thành công");
     } catch(err) {
         errorCode(res, "Lỗi BE");
@@ -160,7 +160,7 @@ const addHinhThucQuangCao = async (req, res) => {
 // QUANLICHUNG --- Loai Hinh Bao Cao
 const getLoaiHinhBaoCao = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query("SELECT * FROM Report_type");
+        const [data, metadata] = await sequelize.query("SELECT * FROM Report_type ORDER BY id_report_type");
         sucessCode(res, data, "Get thành công");
     } catch(err) {
         errorCode(res, "Lỗi BE");
@@ -212,7 +212,7 @@ const addLoaiHinhBaoCao = async (req, res) => {
 // QUANLICHUNG --- Loai Bang Quang Cao
 const getLoaiBangQuangCao = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query("SELECT * FROM Board_type");
+        const [data, metadata] = await sequelize.query("SELECT * FROM Board_type ORDER BY id_board_type");
         sucessCode(res, data, "Get thành công");
     } catch(err) {
         errorCode(res, "Lỗi BE");
@@ -228,6 +228,7 @@ const updateLoaiBangQuangCao = async (req, res) => {
             where: {
                 id_board_type: id
             }
+
         });
         sucessCode(res, data, "Put thành công");
     } catch(err) {
@@ -264,13 +265,14 @@ const addLoaiBangQuangCao = async (req, res) => {
 // QUANLIQUAN
 const getAllQuan = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query( "SELECT D.*, COUNT(DISTINCT W.id_ward) AS SLPhuong, COUNT(DISTINCT AL.id_ads_location) AS SLDDQC, COUNT( DISTINCT A.id_ads) AS SLBQC, COUNT(DISTINCT CB.email) AS SLCB " + 
+        const [data, metadata] = await sequelize.query( "SELECT D.*, COUNT(DISTINCT W.id_ward) AS \"SLPhuong\", COUNT(DISTINCT AL.id_ads_location) AS \"SLDDQC\", COUNT( DISTINCT A.id_ads) AS \"SLBQC\", COUNT(DISTINCT CB.email) AS \"SLCB\" " + 
                                                         "FROM District D " + 
                                                         "LEFT JOIN Ward W ON D.id_district = W.id_district " + 
                                                         "LEFT JOIN Ads_location AL ON AL.id_district = D.id_district " + 
                                                         "LEFT JOIN Ads A ON A.id_ads_location = AL.id_ads_location " + 
                                                         "LEFT JOIN CanboQuan CB ON CB.id_district = D.id_district " + 
-                                                        "GROUP BY D.id_district");
+                                                        "GROUP BY D.id_district " + 
+                                                        "ORDER BY D.id_district");
         sucessCode(res, data, "Get thành công");
     } catch(err) {
         errorCode(res, "Lỗi BE");
@@ -322,11 +324,13 @@ const addQuan = async (req, res) => {
 // QUANLIPHUONG
 const getAllPhuong = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query( "SELECT W.id_ward, W.ward, D.district, COUNT(DISTINCT AL.id_ads_location) AS SLDDQC, COUNT(DISTINCT A.id_ads) AS SLBQC " + 
+        const [data, metadata] = await sequelize.query( "SELECT W.id_ward, W.ward, D.district, COUNT(DISTINCT AL.id_ads_location) AS \"SLDDQC\", COUNT(DISTINCT A.id_ads) AS \"SLBQC\", COUNT(DISTINCT CB.email) AS \"SLCB\" " + 
                                                         "FROM Ward W LEFT JOIN District D ON D.id_district = W.id_district " + 
                                                         "LEFT JOIN Ads_location AL ON AL.id_ward = W.id_ward " + 
-                                                        "LEFT JOIN Ads A ON A.id_ads_location = AL.id_ads_location " + 
-                                                        "GROUP BY W.id_ward");
+                                                        "LEFT JOIN Ads A ON A.id_ads_location = AL.id_ads_location " +
+                                                        "LEFT JOIN CanboPhuong CB ON CB.id_ward = W.id_ward " +
+                                                        "GROUP BY W.id_ward, D.id_district " + 
+                                                        "ORDER BY W.id_district, W.id_ward");
         sucessCode(res, data, "Get thành công");
     } catch(err) {
         errorCode(res, "Lỗi BE");
@@ -375,6 +379,32 @@ const addPhuong = async (req, res) => {
     }
 }
 
+const getAllCanboQuan = async (req, res) => {
+    try {
+        const [data, meta] = await sequelize.query( "SELECT CB.email, CB.fullname, CB.phone, CB.birthdate, D.district " +
+                                                    "FROM CanboQuan CB " +
+                                                    "INNER JOIN District D ON D.id_district = CB.id_district " + 
+                                                    "ORDER BY D.id_district");
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const getAllCanboPhuong = async (req, res) => {
+    try {
+        const [data, metadata] = await sequelize.query( "SELECT CB.fullname, CB.birthdate, CB.email, CB.phone, W.ward, D.district " + 
+                                                        "FROM CanboPhuong CB " + 
+                                                        "INNER JOIN Ward W ON CB.id_ward = W.id_ward " +
+                                                        "INNER JOIN District D ON D.id_district = W.id_district " + 
+                                                        "ORDER BY D.id_district, W.id_ward ");
+        sucessCode(res, data, "Get thành công");                                                        
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+
 module.exports = { 
     getSoLuongQuan,
     getSoLuongPhuong,
@@ -410,5 +440,8 @@ module.exports = {
     getAllPhuong,
     updatePhuong,
     deletePhuong,
-    addPhuong
+    addPhuong,
+
+    getAllCanboQuan,
+    getAllCanboPhuong
 };
