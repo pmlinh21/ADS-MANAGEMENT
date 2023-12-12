@@ -31,7 +31,10 @@ const {
     getAllPhuong,
     updatePhuong,
     deletePhuong,
-    addPhuong
+    addPhuong,
+
+    getAllCanboQuan,
+    getAllCanboPhuong
 } = require('../controllers/soController')
 
 // const { upload } = require('../middlewares/upload');
@@ -74,5 +77,9 @@ soRoute.get("/getAllPhuong", getAllPhuong);
 soRoute.put("/updatePhuong", updatePhuong);
 soRoute.delete("/deletePhuong", deletePhuong);
 soRoute.post("/addPhuong", addPhuong);
+
+// QUANLICANBO
+soRoute.get("/getAllCanboQuan", getAllCanboQuan);
+soRoute.get("/getAllCanboPhuong", getAllCanboPhuong);
 
 module.exports = soRoute;
