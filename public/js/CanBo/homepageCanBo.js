@@ -117,7 +117,7 @@ function createLayer(map, features){
   coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
   }
 
-  console.log(e.features[0])
+  // console.log(e.features[0])
    
   const popup = new mapboxgl.Popup({
     closeButton: false,
@@ -387,9 +387,9 @@ function showSidebar(adsloc) {
       return 
     } else{
       const id_district = parseInt(localStorage.getItem('id_district'));
-      const id_ward = parseInt(localStorage.getItem('id_district'));
-      const param = isNaN(id_district) ? id_ward : id_district
-      console.log(param)
+      const id_ward = parseInt(localStorage.getItem('id_ward'));
+      const param = isNaN(id_district) ? id_ward : id_district;
+      console.log("param: ", param);
 
       $.get(`/api/quan/getLocReport/${param}`, function(data) {
       console.log("~");
@@ -430,7 +430,6 @@ function changeMapSize(){
 
 // hard code
 $(document).ready(function () {
-  
   var wards, info, filter_info
 
   $(window).on('resize', function(){
@@ -600,47 +599,34 @@ $(document).ready(function () {
 
   if (role === "2") {
     $("#select-ward").hide();
-    // email = localStorage.getItem('email');
-    // const storedCBPhuong = localStorage.getItem('cbphuong');
-    // cbphuong = storedCBPhuong ? JSON.parse(storedCBPhuong) : [];
-    // cb = cbphuong.find(item => item[0] === email);
-    // const id_ward = cb[5];
-
-    // let phuong = [
-    //   [1, 'Bến Nghé', '1'], [2, 'Bến Thành', '1'], [3, 'Cầu Kho', '1'], [4, 'Cầu Ông Lãnh', '1'], [5, 'Cô Giang', '1'], 
-    //   [6, 'Đa Kao', '1'], [7, 'Nguyễn Cư Trinh', '1'], [8, 'Nguyễn Thái Bình', '1'], [9, 'Phạm Ngũ Lão', '1'], [10, 'Tân Định', '1'], 
-    //   [11, 'An Khánh', '2'], [12, 'An Lợi Đông', '2'], [13, 'An Phú', '2'], [14, 'Bình An', '2'], [15, 'Bình Khánh', '2'], 
-    //   [16, 'Cát Lái', '2'], [17, 'Thạnh Mỹ Lợi', '2'], [18, 'Thảo Điền', '2'], [19, 'Thủ Thiêm', '2'], [20, 'Bình Trưng Đông', '2'], 
-    //   [21, '1', '3'], [22, '2', '3'], [23, '3', '3'], [24, '4', '3'], [25, '5', '3'], [26, '9', '3'], [27, '10', '3'],
-    //   [28, '11', '3'], [29, '12', '3'], [30, '13', '3'], [31, '14', '3'], [32, 'Võ Thị Sáu', '3'],
-    //   [33, '1', '4'], [34, '2', '4'], [35, '3', '4'], [36, '4', '4'], [37, '6', '4'], [38, '8', '4'], [39, '9', '4'], [40, '10', '4'],
-    //   [41, '13', '4'], [42, '14', '4'], [43, '15', '4'], [44, '16', '4'], [45, '18', '4']
-    // ];
-
-    // var info = NguoiDanAdsLoc.content.map(function (item) {
-    //   let { id_ads_location, address, ward, district, loc_type, ads_type,
-    //     photo, is_zoning, longitude, latitude, list_ads, list_report } = item;
-    //   let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch";
     
-    //   return [id_ads_location, address, ward, district, loc_type, ads_type, zoning_text,
-    //       photo, longitude, latitude, is_zoning, list_ads, list_report];
-    // })
+    $.ajax({
+      url: `/api/quan/getMapAdsLoc/${id_ward}`,
+      type: "GET",
+      beforeSend: function(){
+        $("#loading-bg").show()
+      },
+      success: function(data){
+        console.log("~");
+        info = data.content.map(function(item){
+          let { id_ads_location, address, ward, district, loc_type, ads_type,
+            photo, is_zoning, longitude, latitude, list_ads, list_report } = item;
+          let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch";
+          return [id_ads_location, address, ward, district, loc_type, ads_type, zoning_text,
+            photo, longitude, latitude, is_zoning, list_ads, list_report];
+        })
+  
+        console.log(info)
+        filter_info = [...info]
+        
+        createMarker(info, map);
+        $("#loading-bg").hide()
+      },
+    })
 
-    // let filteredInfo = info.filter(function(item) {
-    //   if (item[2] === phuong[id_ward-1][1]) {
-    //     return true;
-    //   }
-    //   return false;
-    // });
-    // info = filteredInfo;
-    // console.log(info);
-
-    // createMarker(info, map);
-    // filter_info = [...info];
-
-    // $(".flex-container input").on('click', function(e){
-    //   createMarker(filter_info, map)
-    // })
+    $(".flex-container input").on('click', function(e){
+      createMarker(filter_info, map)
+    })
   }
   else if (role === "1") {
 

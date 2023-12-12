@@ -4,7 +4,7 @@ const {
     getAllAdsLoc, getMapInfo, getWard, 
     getAdsLocation, getAds, updateAdsLoc, updateAds,
     getAdsLocReport, getAdsReport, getLocReport,
-    getAdsCreate, adsCreate } = require('../controllers/quanController')
+    getAdsCreate, adsCreate, getCanBoPhuong, getMapAdsLoc } = require('../controllers/quanController')
 const { upload } = require('../middlewares/upload');
 
 const cookieParser = require("cookie-parser");
@@ -36,5 +36,9 @@ quanRoute.get("/getLocReport/:id_district", isCanboQuan, getLocReport);
 quanRoute.get("/getAdsCreate/:id_district", isCanboQuan, getAdsCreate);
 
 quanRoute.post("/adsCreate/:id_district", isCanboQuan, upload('adsCreate').single("file"), adsCreate)
+
+quanRoute.get("/getCanBoPhuong", getCanBoPhuong);
+
+quanRoute.get("/getMapAdsLoc/:id_ward", getMapAdsLoc);
 
 module.exports = quanRoute;
