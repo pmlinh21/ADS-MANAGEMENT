@@ -136,4 +136,4 @@ const isCanboPhuongOrQuan = (req, res, next) => {
     }
 }
 
-module.exports = { parseToken, checkToken, verifyToken, decodeToken, isCanboQuan, isCanboPhuong, isCanboPhuongOrQuan, idCanboSo }
+module.exports = { parseToken, checkToken, verifyToken, decodeToken, isCanboQuan, isCanboPhuong, isCanboPhuongOrQuan, isCanboSo }
