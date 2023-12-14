@@ -504,6 +504,26 @@ const createAdsWard = async(req, res) =>{
     }
 } 
 
+const getWardAndDistrict = async (req, res) => {
+    try {
+        let {id_ward} = req.params;
+        const [data, metadata] = await sequelize.query
+        (`SELECT w.ward, d.district
+        FROM Ward w
+        INNER JOIN District d ON w.id_district = d.id_district
+        WHERE w.id_ward = ${id_ward}`);
+        
+        if (data.length > 0) {
+            const result = data[0];
+            sucessCode(res, result, "Lấy thành công");
+        } else {
+            failCode(res, "", "Không tìm thấy dữ liệu");
+        }
+    } catch (error) {
+        errorCode(res,"Lỗi BE");
+    }
+}
+
 module.exports = {
     getAllAdsLoc, getMapInfo, getWard,
     getAdsLocation, getAds, updateAdsLoc, updateAds,
@@ -511,4 +531,4 @@ module.exports = {
     getAdsCreate, adsCreate, 
     getCanBoPhuong, getMapAdsLoc, getAdsWard, getAdsLocationWard,
     getAdsReportWard, getAdsLocReportWard, getLocReportWard,
-    getAdsCreateWard, createAdsWard }
+    getAdsCreateWard, createAdsWard, getWardAndDistrict }
