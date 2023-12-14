@@ -338,18 +338,45 @@ const createNewPwd = async(req,res) => {
 }
 
 const updatePassword = async(req,res) => {
-    let {email} = req.params
-
-    try{
-        const data = await model.CanboSo.findOne({where: {email}})
-
-        let passWordHash = bcrypt.hashSync(data.password, HASH_SALT);
+    let { email, role } = req.params
+    let { cur_password, new_password } = req.body;
     
-        const newdata = await model.CanboSo.update({ password: passWordHash }, {
-            where: {email}
-        });
-        sucessCode(res,data,"Get thành công")
-
+    try{
+        if (role == 2){
+            let cbphuong = await model.CanboPhuong.findOne({
+                where: {
+                    email
+                }
+            });
+            if(cbphuong){
+                let checkPass = bcrypt.compareSync(cur_password, cbphuong.password);
+                if(checkPass){
+                    let passWordHash = bcrypt.hashSync(new_password, 10);
+                    await model.CanboPhuong.update({
+                        password:passWordHash
+                    }, {
+                        where: {
+                            email: email
+                        }
+                    })
+                    let data = await model.CanboPhuong.findOne({
+                        where: {
+                            email
+                        }
+                    });
+                    sucessCode(res, data, "Update thành công");
+                    return;
+                }
+                else{
+                    sucessCode(res, "", "Mật khẩu hiện tại không chính xác");
+                    return;
+                }
+            }
+            else{
+                failCode(res, "", "Không tìm thấy cán bộ phường");
+                return;
+            }
+        } 
     }catch(err){
         errorCode(res,"Lỗi BE")
     }
@@ -556,10 +583,139 @@ const deleteAdsCreateByID = async(req, res) =>{
     }
 }
 
+const getAccountInfo = async(req, res) =>{
+    let { email, role } = req.params;
 
+    try{
+        if (role == 1){
+            let cbquan = await model.CanboQuan.findOne({
+                where: {
+                    email
+                }
+            });
+            if(cbquan){
+                sucessCode(res, cbquan, "Lấy thành công");
+                return;
+            }
+            else{
+                failCode(res, "", "Không tìm thấy cán bộ quận");
+                return;
+            }
+        } 
+
+        if (role == 2){
+            let cbphuong = await model.CanboPhuong.findOne({
+                attributes: ['fullname', 'phone', 'birthdate', 'id_ward'],
+                where: {
+                    email
+                }
+            });
+            if(cbphuong){
+                sucessCode(res, cbphuong, "Lấy thành công");
+                return;
+            }
+            else{
+                failCode(res, "", "Không tìm thấy cán bộ phường");
+                return;
+            }
+        } 
+
+        if (role == 3){
+            let cbso = await model.CanboSo.findOne({
+                where: {
+                    email
+                }
+            });
+            if(cbso){
+                sucessCode(res, cbso, "Lấy thành công");
+                return;
+            }
+            else{
+                failCode(res, "", "Không tìm thấy cán bộ sở");
+                return;
+            }
+        }
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
+const updateInfo = async(req, res) =>{
+    try{
+        let { email, role } = req.params;
+        let { fullname, birthdate, phone } = req.body;
+        try{
+            if (role == 1){
+                let cbquan = await model.CanboQuan.findOne({
+                    where: {
+                        email
+                    }
+                });
+                if(cbquan){
+                    sucessCode(res, cbquan, "Lấy thành công");
+                    return;
+                }
+                else{
+                    failCode(res, "", "Không tìm thấy cán bộ quận");
+                    return;
+                }
+            } 
+    
+            if (role == 2){
+                let cbphuong = await model.CanboPhuong.findOne({
+                    where: {
+                        email
+                    }
+                });
+                if(cbphuong){
+                    await model.CanboPhuong.update({ 
+                        fullname, birthdate, phone
+                    }, {
+                        where:{
+                            email
+                        }
+                    }); 
+                    let data = await model.CanboPhuong.findOne({
+                        where:{
+                            email
+                        }
+                    });
+                    sucessCode(res,data,"Update thành công");
+                    return;
+                }
+                else{
+                    failCode(res, "", "Không tìm thấy cán bộ phường");
+                    return;
+                }
+            } 
+    
+            if (role == 3){
+                let cbso = await model.CanboSo.findOne({
+                    where: {
+                        email
+                    }
+                });
+                if(cbso){
+                    sucessCode(res, cbso, "Lấy thành công");
+                    return;
+                }
+                else{
+                    failCode(res, "", "Không tìm thấy cán bộ sở");
+                    return;
+                }
+            }
+        }catch(err){
+            errorCode(res,"Lỗi BE")
+        }
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
 
 module.exports = { getAdsType, getBoardType, getReportType, getLocType,
     getAdsReportByID, getAdsLocReportByID, getLocReportByID, 
     updateAdsReportByID, updateAdsLocReportByID, updateLocReportByID,
     getAdsCreateByID, deleteAdsCreateByID,
-    login, findEmail, sendEmail, checkOTP, createNewPwd, updatePassword}
+    login, findEmail, sendEmail, checkOTP, createNewPwd, updatePassword,
+    getAccountInfo, updateInfo}
