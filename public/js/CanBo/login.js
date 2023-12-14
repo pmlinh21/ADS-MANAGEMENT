@@ -135,6 +135,7 @@ $(document).ready(function () {
 
       $.ajax({
         url: `/api/basic/findEmail`,
+        type: "POST",
         data: JSON.stringify(data),
         contentType: 'application/json',
         success: function(res){

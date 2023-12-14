@@ -7,6 +7,7 @@ const { Op } = require("sequelize");
 const { parseToken } = require('../middlewares/baseToken');
 require('dotenv').config()
 const nodeMailer = require('nodemailer');
+const moment = require('moment');
 
 const bcrypt = require('bcryptjs'); 
 
@@ -55,20 +56,23 @@ const findEmail = async(req, res) =>{
         let {email} = req.body
         console.log(email)
 
-        let Phuong = await model.CanboPhuong.findOne({
-            where: { email }
-        })
-        let Quan = await model.CanboQuan.findOne({
-            where: { email }
-        })
-        let So = await model.CanboSo.findOne({
-            where: { email }
-        })
+        const [canbo, metadata] = await sequelize.query(`
+            SELECT CanboPhuong.email
+            FROM CanboPhuong
+            UNION
+            SELECT CanboSo.email
+            FROM CanboSo
+            UNION
+            SELECT CanboQuan.email
+            FROM CanboQuan
+        `);
 
-        if (Quan || Phuong || So){
+        const emailExists = canbo.some(item => item.email === email);
+
+        if (emailExists){
             // console.log(process.env.HASH_SALT)
             const hashEmail = bcrypt.hashSync(email, parseInt(process.env.HASH_SALT))
-            // console.log(hashEmail)
+            console.log(hashEmail)
             sucessCode(res,hashEmail,"Email tồn tại")
         }
             
@@ -190,8 +194,8 @@ const formatDate = (now)=>{
 
 const sendEmail = async(req, res) =>{
     try{
-        let {email} = req.params
-
+        let {email} = req.body
+        console.log(email)
         const [canbo, metadata] = await sequelize.query(`
             SELECT CanboPhuong.email
             FROM CanboPhuong
@@ -202,19 +206,17 @@ const sendEmail = async(req, res) =>{
             SELECT CanboQuan.email
             FROM CanboQuan
             `);
-
-        console.log(canbo)
-        for (let i = 0; i < canbo.length; i++){
+        // console.log(canbo)
+        for (let i = 0; i < canbo?.length; i++){
+            // console.log(canbo[i].email)
             const match = bcrypt.compareSync(canbo[i].email, email);
             if (match){
-                console.log(canbo[i].email)
-
                 const otp = `${Math.floor(100000 + Math.random() * 900000)}`
 
                 const htmlContent = `
                     <html>
                     <body>
-                        <p>Để xác minh địa chỉ email của bạn và tạo mật khẩu mới, vui lòng nhập mã OTP sau đây trong vòng 3 phút:</p>
+                        <p>Để xác minh địa chỉ email của bạn và tạo mật khẩu mới, vui lòng nhập mã OTP sau đây trong vòng 5 phút:</p>
                         <p style = "font-size: 2.5rem"><strong>${otp}</strong></p>
                     </body>
                     </html>
@@ -224,12 +226,11 @@ const sendEmail = async(req, res) =>{
     
                 const hashOTP = bcrypt.hashSync(otp, parseInt(process.env.HASH_SALT));
     
-                const now = new Date(Date.now() + 300000);
-                const formattedDateTime = formatDate(now);
-                
+                const formattedDateTime = moment().add(5, 'minutes').format('YYYY-MM-DD HH:mm:ssZ');
+                // console.log(formattedDateTime)
     
                 const record = await model.OTP.findOne({where:{email: canbo[i].email}})
-                console.log(hashOTP)
+                // console.log(hashOTP)
                 if(record)
                     await model.OTP.update(
                         {OTP: hashOTP, expired_time: formattedDateTime},
@@ -252,23 +253,21 @@ const sendEmail = async(req, res) =>{
 
 const checkOTP = async(req, res) =>{
     try{
-        let {email, OTP} = req.params
-          
-        const [record, metadata] = await sequelize.query(`
-            SELECT *
-            FROM Otp
-            `);
+        let {email, OTP} = req.body
 
-        console.log(record)
+        const record = await model.OTP.findAll();
+
         for (let i = 0; i < record.length; i++){
             const match = bcrypt.compareSync(record[i].email, email);
             if (match){
-                const currentTime = new Date()
-                const givenTime = new Date(record[i].expired_time);
-                console.log (currentTime, ">=", givenTime)
+                const currentTime = moment();
+                const givenTime = moment.utc(record[i].expired_time);
+                // console.log (record[i].OTP)
+                // console.log (givenTime ," > ", currentTime)
     
-                const result = bcrypt.compareSync(OTP, record[i].otp);
-                if (result && givenTime <= currentTime){
+                const result = bcrypt.compareSync(OTP, record[i].OTP);
+                // console.log (result)
+                if (result && givenTime.isAfter(currentTime)){
                     sucessCode(res, "","Thành công")
                 }
                 else if (!result)
@@ -286,21 +285,50 @@ const checkOTP = async(req, res) =>{
 
 const createNewPwd = async(req,res) => {
     try{
-        let {email,password} = req.body
+        let {emailHash ,password} = req.body
 
-        let passWordHash = bcrypt.hashSync(password, HASH_SALT);
+        console.log(emailHash, password)
+        let passWordHash = bcrypt.hashSync(password, parseInt(process.env.HASH_SALT));
 
-        const phuong = await model.CanboPhuong.findOne({where: {email}})
+        const [canbo, metadata] = await sequelize.query(`
+            SELECT CanboPhuong.email
+            FROM CanboPhuong
+            UNION
+            SELECT CanboSo.email
+            FROM CanboSo
+            UNION
+            SELECT CanboQuan.email
+            FROM CanboQuan
+        `);
+
+        var email = ""
+        for (let i = 0; i < canbo?.length; i++){
+            const match = bcrypt.compareSync(canbo[i].email, emailHash);
+            if (match){
+                email = canbo[i].email
+                break
+            }
+        }
+
+        const phuong = await model.CanboPhuong.findOne({
+            where:{email: email}
+        })
         if (phuong)
-            await model.CanboPhuong.update({password: passWordHash},{where: {email}})
+            phuong.update({password: passWordHash})
 
-        const quan = await model.CanboQuan.findOne({where: {email}})
-        if (quan)
-            await model.CanboQuan.update({password: passWordHash},{where: {email}})
+        const quan = await model.CanboQuan.findOne({
+            where:{email: email}
+        })
+        if (quan){
+            console.log(quan)
+            quan.update({password: passWordHash})
+        }
 
-        const so = await model.CanboSo.findOne({where: {email}})
+        const so = await model.CanboSo.findOne({
+            where:{email: email}
+        })
         if (so)
-            await model.CanboSo.update({password: passWordHash},{where: {email}})
+            so.update({password: passWordHash})
 
         sucessCode(res,"","Get thành công")
 

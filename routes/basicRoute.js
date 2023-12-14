@@ -39,9 +39,9 @@ basicRoute.delete("/deleteAdsCreateByID/:id_create", verifyToken, deleteAdsCreat
 
 basicRoute.post("/login", uploadNone.none(), login);
 
-basicRoute.post("/sendEmail/:email", sendEmail);
+basicRoute.post("/sendEmail", sendEmail);
 
-basicRoute.post("/checkOTP/:email/:OTP", checkOTP);
+basicRoute.post("/checkOTP", checkOTP);
 
 basicRoute.post("/createNewPwd", createNewPwd);
 

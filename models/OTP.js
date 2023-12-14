@@ -24,6 +24,7 @@ class OTP extends Sequelize.Model {
   }, {
     sequelize,
     tableName: 'otp',
+    modelName: 'OTP',
     timestamps: false,
     indexes: [
       {

@@ -4,9 +4,13 @@ $(document).ready(function () {
   const email = urlParams.get('email');
   $("span.email").val(email);
   
+  const emailData = {email: email}
+
   $.ajax({
-    url: `/api/basic/sendEmail/${email}`,
+    url: `/api/basic/sendEmail`,
     type: "POST",
+    data: JSON.stringify(emailData),
+    contentType: 'application/json',
     success: function(data){
       
     },
@@ -20,21 +24,22 @@ $(document).ready(function () {
       }
     }
   })
-  
+
   $(".resend").on("click",function(){
     $.ajax({
-      url: `/api/basic/sendEmail/${email}`,
+      url: `/api/basic/sendEmail`,
       type: "POST",
-      beforeSend: function (data) {
-      },
+      data: JSON.stringify(emailData),
+      contentType: 'application/json',
       success: function(data){
+        
       },
       error: function(xhr, status, error) {
-        
         if (xhr.status == 400){
           let errorMessage = JSON.parse(xhr.responseText).message; // Get the error message from the response
           alert(errorMessage);
         }else{
+          // console.log(status, error, xhr.responseText)
           alert("Gửi mail thất bại");
         }
       }
@@ -49,15 +54,24 @@ $(document).ready(function () {
       alert("OTP không hợp lệ")
     else{
       $("#OTP").val("")
-
+      $("#loading-bg").show()
+      const otpData = {
+        email: email,
+        OTP: OTP
+      }
+      // console.log(JSON.stringify(otpData))
       $.ajax({
-        url: `/api/basic/checkOTP/${email}/${OTP}`,
+        url: `/api/basic/checkOTP`,
         type: "POST",
+        data: JSON.stringify(otpData),
+        contentType: 'application/json',
         success: function(data){
+          $("#loading-bg").hide()
           $(".new-pass-form ").show()
           $(".forget-pass-form").hide()
           $("#new-pass").val("")
           $("#confirm-pass").val("")
+
         },
         error: function(xhr, status, error) {
           if (xhr.status == 400){
@@ -85,7 +99,7 @@ $(document).ready(function () {
       console.log(email, newPass)
 
       var passData = {
-        email: email,
+        emailHash: email,
         password: confirmPass
       };
 
@@ -107,4 +121,5 @@ $(document).ready(function () {
       
     }
   })
+  
 })
