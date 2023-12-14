@@ -4,6 +4,7 @@ const init_models = require('../models/init-models');
 const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
 const { Op } = require("sequelize");
+const bcrypt = require('bcryptjs'); 
 
 // QUANLICHUNG --- Statistic
 const getSoLuongQuan = async (req, res) => {
@@ -263,15 +264,6 @@ const addLoaiBangQuangCao = async (req, res) => {
 }
 
 // QUANLIQUAN
-const getAllQuan = async (req, res) => {
-    try {
-        const [data, metadata] = await sequelize.query("SELECT * FROM District ORDER BY id_district");
-        sucessCode(res, data, "Get thành công");
-    } catch(err) {
-        errorCode(res, "Lỗi BE");
-    }
-}
-
 const getAllQuanData = async (req, res) => {
     try {
         const [data, metadata] = await sequelize.query( "SELECT D.*, COUNT(DISTINCT W.id_ward) AS \"SLPhuong\", COUNT(DISTINCT AL.id_ads_location) AS \"SLDDQC\", COUNT( DISTINCT A.id_ads) AS \"SLBQC\", COUNT(DISTINCT CB.email) AS \"SLCB\" " + 
@@ -391,6 +383,26 @@ const addPhuong = async (req, res) => {
 }
 
 // QUANLICANBO
+const getAllQuan = async (req, res) => {
+    try {
+        const [data, metadata] = await sequelize.query("SELECT * FROM District ORDER BY id_district");
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const getAllPhuongByIdQuan = async (req, res) => {
+    try {
+        const id_district = req.params.id_district;
+        const [data, metadata] = await sequelize.query(`SELECT id_ward, ward FROM Ward WHERE id_district = '${id_district}' ORDER BY id_ward`);
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+
+}
+
 const getAllCanboQuan = async (req, res) => {
     try {
         const [data, meta] = await sequelize.query( "SELECT CB.email, CB.fullname, CB.phone, CB.birthdate, D.district " +
@@ -413,6 +425,128 @@ const getAllCanboPhuong = async (req, res) => {
         sucessCode(res, data, "Get thành công");                                                        
     } catch(err) {
         errorCode(res, "Lỗi BE");
+    }
+}
+
+const getAllCanboEmail = async (req, res) => {
+    try {
+        const [data, metadata] = await sequelize.query( "SELECT email FROM CanboQuan " + 
+                                                        "UNION " + 
+                                                        "SELECT email FROM CanboPhuong " + 
+                                                        "UNION " + 
+                                                        "SELECT email FROM CanboSo");
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+// QUANLICANBO - QUAN
+const getCanboQuanByEmail = async (req, res) => {
+    try {
+        const email = req.params.email;
+        const [data, metadata] = await sequelize.query(`SELECT email, fullname, phone, birthdate, id_district FROM CanboQuan WHERE email = '${email}'`);
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const updateCanboQuan = async (req, res) => {
+    try {
+        const { email, fullname, birthdate, phone, id_district } = req.body;
+        const data = await model.CanboQuan.update({
+            fullname: fullname,
+            phone: phone,
+            birthdate: birthdate,
+            id_district: id_district
+        }, {
+            where: {
+                email: email
+            }
+        });
+        sucessCode(res, data, "Put thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const deleteCanboQuan = async (req, res) => {
+    try {
+        const email = req.body.email;
+        await model.CanboQuan.destroy({
+            where: {
+                email: email
+            }
+        });
+        sucessCode(res, "", "Delete thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi khóa ngoại");
+    }
+}
+
+const addCanboQuan = async (req, res) => {
+    try {
+        const { email, fullname, birthdate, phone, id_district } = req.body;
+        const data = await model.CanboQuan.create({
+            email: email,
+            fullname: fullname,
+            phone: phone,
+            birthdate: birthdate,
+            id_district: id_district,
+            password: bcrypt.hashSync("123@nhomsau", 10)
+        });
+        sucessCode(res, data, "Post thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+// QUANLICANBO - PHUONG
+const getCanboPhuongByEmail = async (req, res) => {
+    try {
+        const email = req.params.email;
+        const [data, metadata] = await sequelize.query(`SELECT P.email, P.fullname, P.phone, P.birthdate, P.id_ward, W.id_district
+                                                        FROM CanboPhuong P 
+                                                        INNER JOIN Ward W ON W.id_ward = P.id_ward
+                                                        WHERE email = '${email}'`);
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const updateCanboPhuong = async (req, res) => {
+    try {
+        const { email, fullname, birthdate, phone, id_district, id_ward } = req.body;
+        const data = await model.CanboPhuong.update({
+            fullname: fullname,
+            phone: phone,
+            birthdate: birthdate,
+            id_district: id_district,
+            id_ward: id_ward
+        }, {
+            where: {
+                email: email
+            }
+        });
+        sucessCode(res, data, "Put thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const deleteCanboPhuong = async (req, res) => {
+    try {
+        const email = req.body.email;
+        await model.CanboPhuong.destroy({
+            where: {
+                email: email
+            }
+        });
+        sucessCode(res, "", "Delete thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi khóa ngoại");
     }
 }
 
@@ -444,7 +578,6 @@ module.exports = {
     addLoaiHinhBaoCao,
     addLoaiBangQuangCao,
 
-    getAllQuan,
     getAllQuanData,
     updateQuan,
     deleteQuan,
@@ -454,7 +587,21 @@ module.exports = {
     updatePhuong,
     deletePhuong,
     addPhuong,
+    
+    getAllQuan,
+    getAllPhuongByIdQuan,
 
     getAllCanboQuan,
-    getAllCanboPhuong
+    getAllCanboPhuong,
+    getAllCanboEmail,
+
+    getCanboQuanByEmail,
+    updateCanboQuan,
+    deleteCanboQuan,
+    addCanboQuan,
+
+    getCanboPhuongByEmail,
+    updateCanboPhuong,
+    deleteCanboPhuong,
+    // addCAnboPhuongByEmail,
 };

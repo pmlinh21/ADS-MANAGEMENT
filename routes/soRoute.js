@@ -23,7 +23,6 @@ const {
     addLoaiHinhBaoCao,
     addLoaiBangQuangCao,
 
-    getAllQuan,
     getAllQuanData,
     updateQuan,
     deleteQuan,
@@ -34,11 +33,26 @@ const {
     deletePhuong,
     addPhuong,
 
+    getAllQuan,
+    getAllPhuongByIdQuan,
+
     getAllCanboQuan,
-    getAllCanboPhuong
+    getAllCanboPhuong,
+    getAllCanboEmail,
+
+    getCanboQuanByEmail,
+    updateCanboQuan,
+    deleteCanboQuan,
+    addCanboQuan,
+
+    getCanboPhuongByEmail,
+    updateCanboPhuong,
+    deleteCanboPhuong
+
 } = require('../controllers/soController')
 
 // const { upload } = require('../middlewares/upload');
+// const { isCanboSo } = require('../middlewares/baseToken');
 
 // QUANLICHUNG
 soRoute.get("/getSoLuongQuan", getSoLuongQuan);
@@ -75,6 +89,7 @@ soRoute.delete("/deleteQuan", deleteQuan);
 soRoute.post("/addQuan", addQuan);
 
 // QUANLIPHUONG
+soRoute.get("/getAllPhuongByIdQuan/:id_district", getAllPhuongByIdQuan);
 soRoute.get("/getAllPhuongData", getAllPhuongData);
 soRoute.put("/updatePhuong", updatePhuong);
 soRoute.delete("/deletePhuong", deletePhuong);
@@ -83,5 +98,17 @@ soRoute.post("/addPhuong", addPhuong);
 // QUANLICANBO
 soRoute.get("/getAllCanboQuan", getAllCanboQuan);
 soRoute.get("/getAllCanboPhuong", getAllCanboPhuong);
+soRoute.get("/getAllCanboEmail", getAllCanboEmail);
+
+soRoute.get("/getCanboQuanByEmail/:email", getCanboQuanByEmail);
+soRoute.get("/getCanboPhuongByEmail/:email", getCanboPhuongByEmail);
+
+soRoute.put("/updateCanboQuan", updateCanboQuan);
+soRoute.put("/updateCanboPhuong", updateCanboPhuong);
+
+soRoute.delete("/deleteCanboQuan", deleteCanboQuan);
+soRoute.delete("/deleteCanboPhuong", deleteCanboPhuong);
+
+soRoute.post("/addCanboQuan", addCanboQuan);
 
 module.exports = soRoute;

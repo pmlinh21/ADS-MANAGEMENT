@@ -17,7 +17,7 @@ function buildDistrictTable(districts) {
 
         let td1 = $("<td></td>").text(districts[i][0]);
         td1.addClass("id");
-        let td2 = $("<td></td>").text(districts[i][1]);
+        let td2 = $("<td></td>").text("Quận " + districts[i][1]);
         td2.addClass("name");
         let td3 = $("<td></td>").text(districts[i][2]);
         td3.addClass("number-of-wards");
@@ -59,7 +59,7 @@ function editPopup() {
     $("#edit-popup .input-field:first-of-type input").val($(this).find(".id").text());
 
     $("#edit-popup .input-field:last-of-type label").text("Tên " + title);
-    $("#edit-popup .input-field:last-of-type input").val($(this).find(".name").text());
+    $("#edit-popup .input-field:last-of-type input").val($(this).find(".name").text().slice(5));
 
     let div = $("<div></div>");
     div.addClass("popup-background");

@@ -512,6 +512,15 @@ body {
 
 /* END OF TABLE */
 
+::placeholder {
+    color: #d7dee6;
+    opacity: 1; 
+}
+
+::-ms-input-placeholder { 
+    color: #d7dee6;
+}
+
 /* START OF FORM */
 .popup {
     position: fixed;

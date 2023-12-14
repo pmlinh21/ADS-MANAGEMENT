@@ -116,4 +116,4 @@ const isCanboSo = (req, res, next) => {
 
 
 
-module.exports = { parseToken, checkToken, verifyToken, decodeToken, isCanboQuan }
+module.exports = { parseToken, checkToken, verifyToken, decodeToken, isCanboQuan, isCanboSo }
