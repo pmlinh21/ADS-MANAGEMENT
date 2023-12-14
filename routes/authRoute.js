@@ -31,8 +31,11 @@ authRouter.get('/google/callback', (req, res, next) => {
     next();
   })(req,res,next)
 }, (req, res) => {
-  const infoCanbo =  req.info['Quan']['dataValues']
   const infoRole = req.info.role
+  const infoCanbo = (infoRole == "1") ? req.info['Quan']['dataValues']
+                  : ((infoRole == "2") ? req.info['Phuong']['dataValues']
+                  : req.info['So']['dataValues'])
+  
   let content = {email: infoCanbo.email, role: infoRole}
   if (infoRole == "1"){
     content = {...content, id_district: infoCanbo.id_district}
