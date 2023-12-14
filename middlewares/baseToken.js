@@ -31,6 +31,7 @@ const verifyToken = (req, res, next) => {
         next();
     } 
     else {
+        res.clearCookie('token');
         res.redirect("/login")
     }
 

@@ -49,14 +49,16 @@ $(document).ready(function () {
               window.location.href = "/"
             },
             error: function(xhr, status, error) {
-              if (xhr.status === 400 || xhr.status === 500) {
+              $('#email').val("");
+                $('#password').val("");
+              if (xhr.status === 400) {
                 $("#loading-bg").hide()
                 // Handle specific 400 error
                 const errorMessage = xhr.responseJSON?.message;
-                $('#email').val("");
-                $('#password').val("");
                 alert(errorMessage);
-              } 
+              } else{
+                alert("Hệ thống bị lỗi");
+              }
             }
           });
 
@@ -74,7 +76,33 @@ $(document).ready(function () {
       $('#email').val("");
       $(".user-icon").hide()
       $('#enter-email').val("");
-      window.location.href = '/forget-pass?email=' + email;
+      $("#loading-bg").show()
+      const data = {
+        email: email
+      };
+
+      $.ajax({
+        url: `/api/basic/findEmail`,
+        type: "POST",
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function(res){
+          $("#loading-bg").hide()
+          // console.log(res)
+          window.location.href = '/forget-pass?email=' + res.content;
+        },
+        error: function(xhr, status, error) {
+          $("#loading-bg").hide()
+          if (xhr.status == 400){
+            const errorMessage = xhr.responseJSON?.message;
+            alert(errorMessage);
+          } 
+          else{
+            alert("Hệ thống bị lỗi");
+          }
+        }
+      })
+      
 
     } else if (email == ""){
       $(".login-form").hide()
@@ -100,7 +128,31 @@ $(document).ready(function () {
     else{
       $("#loading-bg").show()
       $('#enter-email').val("");
-          window.location.href = '/forget-pass?email=' + email;
+      $("#loading-bg").show()
+      const data = {
+        email: email
+      };
+
+      $.ajax({
+        url: `/api/basic/findEmail`,
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function(res){
+          $("#loading-bg").hide()
+          // console.log(res)
+          window.location.href = '/forget-pass?email=' + res.content;
+        },
+        error: function(xhr, status, error) {
+          $("#loading-bg").hide()
+          if (xhr.status == 400){
+            const errorMessage = xhr.responseJSON?.message;
+            alert(errorMessage);
+          } 
+          else{
+            alert("Hệ thống bị lỗi");
+          }
+        }
+      })
     } 
   })
 });

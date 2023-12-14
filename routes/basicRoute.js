@@ -4,7 +4,7 @@ const { getLocType, getAdsType, getBoardType, getReportType,
     getAdsReportByID, getAdsLocReportByID, getLocReportByID,
     updateAdsReportByID, updateAdsLocReportByID, updateLocReportByID,
     getAdsCreateByID, deleteAdsCreateByID,
-    login, updatePassword, sendEmail, checkOTP, createNewPwd } = require('../controllers/basicController')
+    login, findEmail, updatePassword, sendEmail, checkOTP, createNewPwd } = require('../controllers/basicController')
 const { uploadNone } = require('../middlewares/upload');
 
 const cookieParser = require("cookie-parser");
@@ -44,6 +44,8 @@ basicRoute.post("/sendEmail/:email", sendEmail);
 basicRoute.post("/checkOTP/:email/:OTP", checkOTP);
 
 basicRoute.post("/createNewPwd", createNewPwd);
+
+basicRoute.post("/findEmail", findEmail);
 
 // basicRoute.get("/login-success/:email/:role/:id", basic.loginSuccess)
 

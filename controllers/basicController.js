@@ -5,9 +5,8 @@ const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
 const { Op } = require("sequelize");
 const { parseToken } = require('../middlewares/baseToken');
-
+require('dotenv').config()
 const nodeMailer = require('nodemailer');
-require('dotenv').config();
 
 const bcrypt = require('bcryptjs'); 
 
@@ -45,6 +44,37 @@ const getBoardType = async(req, res) =>{
     try{
         let data = await model.Board_type.findAll();
         sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
+const findEmail = async(req, res) =>{
+    try{
+        let {email} = req.body
+        console.log(email)
+
+        let Phuong = await model.CanboPhuong.findOne({
+            where: { email }
+        })
+        let Quan = await model.CanboQuan.findOne({
+            where: { email }
+        })
+        let So = await model.CanboSo.findOne({
+            where: { email }
+        })
+
+        if (Quan || Phuong || So){
+            // console.log(process.env.HASH_SALT)
+            const hashEmail = bcrypt.hashSync(email, parseInt(process.env.HASH_SALT))
+            // console.log(hashEmail)
+            sucessCode(res,hashEmail,"Email tồn tại")
+        }
+            
+        else   
+            failCode(res,"","Email không được liên kết với bất cứ tài khoản nào")
+      
 
     }catch(err){
         errorCode(res,"Lỗi BE")
@@ -162,51 +192,57 @@ const sendEmail = async(req, res) =>{
     try{
         let {email} = req.params
 
-        let Phuong = await model.CanboPhuong.findOne({
-            where: { email }
-        })
-        let Quan = await model.CanboQuan.findOne({
-            where: { email }
-        })
-        let So = await model.CanboSo.findOne({
-            where: { email }
-        })
+        const [canbo, metadata] = await sequelize.query(`
+            SELECT CanboPhuong.email
+            FROM CanboPhuong
+            UNION
+            SELECT CanboSo.email
+            FROM CanboSo
+            UNION
+            SELECT CanboQuan.email
+            FROM CanboQuan
+            `);
 
-        if (Quan || Phuong || So){
-            const otp = `${Math.floor(100000 + Math.random() * 900000)}`
+        console.log(canbo)
+        for (let i = 0; i < canbo.length; i++){
+            const match = bcrypt.compareSync(canbo[i].email, email);
+            if (match){
+                console.log(canbo[i].email)
 
-            const htmlContent = `
-                <html>
-                <body>
-                    <p>Để xác minh địa chỉ email của bạn và tạo mật khẩu mới, vui lòng nhập mã OTP sau đây trong vòng 3 phút:</p>
-                    <p style = "font-size: 2.5rem"><strong>${otp}</strong></p>
-                </body>
-                </html>
-                `;
+                const otp = `${Math.floor(100000 + Math.random() * 900000)}`
 
-            await sendMail(email, "Xác thực email", htmlContent)
+                const htmlContent = `
+                    <html>
+                    <body>
+                        <p>Để xác minh địa chỉ email của bạn và tạo mật khẩu mới, vui lòng nhập mã OTP sau đây trong vòng 3 phút:</p>
+                        <p style = "font-size: 2.5rem"><strong>${otp}</strong></p>
+                    </body>
+                    </html>
+                    `;
+    
+                await sendMail(canbo[i].email, "Xác thực email", htmlContent)
+    
+                const hashOTP = bcrypt.hashSync(otp, parseInt(process.env.HASH_SALT));
+    
+                const now = new Date(Date.now() + 300000);
+                const formattedDateTime = formatDate(now);
+                
+    
+                const record = await model.OTP.findOne({where:{email: canbo[i].email}})
+                console.log(hashOTP)
+                if(record)
+                    await model.OTP.update(
+                        {OTP: hashOTP, expired_time: formattedDateTime},
+                        {where: {email: canbo[i].email}})
+                else
+                    await model.OTP.create(
+                        {email: canbo[i].email, expired_time: formattedDateTime, OTP: hashOTP})
 
-            const hashOTP = bcrypt.hashSync(otp, 10)
-
-            const now = new Date(Date.now() + 180000);
-            const formattedDateTime = formatDate(now);
-            
-
-            const record = await model.OTP.findOne({where:{email}})
-            console.log(hashOTP)
-            if(record)
-                await model.OTP.update(
-                    {OTP: hashOTP, expired_time: formattedDateTime},
-                    {where: {email}})
-            else
-                await model.OTP.create(
-                    {email, expired_time: formattedDateTime, OTP: hashOTP})
-
-            sucessCode(res,"","Email tồn tại")
+                break;
+            }
         }
-            
-        else   
-            failCode(res,"","Email không được liên kết với bất cứ tài khoản nào")
+
+        sucessCode(res,"","Đã gửi email")
       
 
     }catch(err){
@@ -218,26 +254,30 @@ const checkOTP = async(req, res) =>{
     try{
         let {email, OTP} = req.params
           
-        const record = await model.OTP.findOne({
-            where: { email }
-          });
+        const [record, metadata] = await sequelize.query(`
+            SELECT *
+            FROM Otp
+            `);
 
-        if (record) {
-            const currentTime = new Date()
-            const givenTime = new Date(record.expired_time);
-            console.log (currentTime, "<", givenTime)
-
-            const result = bcrypt.compareSync(OTP, record.OTP);
-            if (result && givenTime <= currentTime){
-                sucessCode(res, "","Thành công")
+        console.log(record)
+        for (let i = 0; i < record.length; i++){
+            const match = bcrypt.compareSync(record[i].email, email);
+            if (match){
+                const currentTime = new Date()
+                const givenTime = new Date(record[i].expired_time);
+                console.log (currentTime, ">=", givenTime)
+    
+                const result = bcrypt.compareSync(OTP, record[i].otp);
+                if (result && givenTime <= currentTime){
+                    sucessCode(res, "","Thành công")
+                }
+                else if (!result)
+                    failCode(res,"","OTP không chính xác")
+                else 
+                    failCode(res,"","OTP đã hết hạn")
+                break;
             }
-            else if (!result)
-                failCode(res,"","OTP không chính xác")
-            else 
-                failCode(res,"","OTP đã hết hạn")
         }
-        else
-            failCode(res,"","OTP không chính xác")
 
     }catch(err){
         errorCode(res,"Lỗi BE")
@@ -248,7 +288,7 @@ const createNewPwd = async(req,res) => {
     try{
         let {email,password} = req.body
 
-        let passWordHash = bcrypt.hashSync(password, 10);
+        let passWordHash = bcrypt.hashSync(password, HASH_SALT);
 
         const phuong = await model.CanboPhuong.findOne({where: {email}})
         if (phuong)
@@ -275,7 +315,7 @@ const updatePassword = async(req,res) => {
     try{
         const data = await model.CanboSo.findOne({where: {email}})
 
-        let passWordHash = bcrypt.hashSync(data.password, 10);
+        let passWordHash = bcrypt.hashSync(data.password, HASH_SALT);
     
         const newdata = await model.CanboSo.update({ password: passWordHash }, {
             where: {email}
@@ -494,4 +534,4 @@ module.exports = { getAdsType, getBoardType, getReportType, getLocType,
     getAdsReportByID, getAdsLocReportByID, getLocReportByID, 
     updateAdsReportByID, updateAdsLocReportByID, updateLocReportByID,
     getAdsCreateByID, deleteAdsCreateByID,
-    login, sendEmail, checkOTP, createNewPwd, updatePassword}
+    login, findEmail, sendEmail, checkOTP, createNewPwd, updatePassword}
