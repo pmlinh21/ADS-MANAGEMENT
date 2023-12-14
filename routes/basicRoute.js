@@ -4,7 +4,8 @@ const { getLocType, getAdsType, getBoardType, getReportType,
     getAdsReportByID, getAdsLocReportByID, getLocReportByID,
     updateAdsReportByID, updateAdsLocReportByID, updateLocReportByID,
     getAdsCreateByID, deleteAdsCreateByID,
-    login, updatePassword, sendEmail, checkOTP, createNewPwd } = require('../controllers/basicController')
+    login, findEmail, updatePassword, sendEmail, checkOTP, createNewPwd,
+    getAccountInfo, updateInfo } = require('../controllers/basicController')
 const { uploadNone } = require('../middlewares/upload');
 
 const cookieParser = require("cookie-parser");
@@ -19,7 +20,7 @@ basicRoute.get("/getBoardType", verifyToken, getBoardType);
 
 basicRoute.get("/getReportType", verifyToken, getReportType);
 
-basicRoute.get("/updatePwd/:email", verifyToken, updatePassword);
+basicRoute.post("/updatePwd/:email/:role", verifyToken, updatePassword);
 
 basicRoute.get("/getAdsReportByID/:id_report", verifyToken, getAdsReportByID);
 
@@ -39,11 +40,17 @@ basicRoute.delete("/deleteAdsCreateByID/:id_create", verifyToken, deleteAdsCreat
 
 basicRoute.post("/login", uploadNone.none(), login);
 
-basicRoute.post("/sendEmail/:email", sendEmail);
+basicRoute.post("/sendEmail", sendEmail);
 
-basicRoute.post("/checkOTP/:email/:OTP", checkOTP);
+basicRoute.post("/checkOTP", checkOTP);
 
 basicRoute.post("/createNewPwd", createNewPwd);
+
+basicRoute.post("/findEmail", findEmail);
+
+basicRoute.get("/getAccountInfo/:email/:role", verifyToken, getAccountInfo);
+
+basicRoute.post("/updateInfo/:email/:role", verifyToken, updateInfo);
 
 // basicRoute.get("/login-success/:email/:role/:id", basic.loginSuccess)
 

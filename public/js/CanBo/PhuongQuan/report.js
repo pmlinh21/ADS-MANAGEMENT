@@ -1,13 +1,120 @@
 $(document).ready(function () {
 
   if (role == 2){
+    $("#loading-bg").show()
+    var ads_report, ads_loc_report, loc_report
+    var info1, info2, info3, wards, idArray = []
 
+    $.ajax({
+      url: `/api/quan/getAdsReportWard/${id_ward}`,
+      type: 'GET',
+      cache: false, 
+      dataType: 'json',
+      success: function(data) {
+        console.log(data)
+        info1 = data.content.map(function(data){
+          let {id_report, id_ads, report_type, fullname, email, phone, content,
+            photo1, photo2, report_time, status, resolve, ward } = data
+          let statusText = status ? "Đã xử lí" : "Chưa xử lí"
+          return [id_report, id_ads, report_type, fullname, email, phone, 
+            formatSQLDate_dmy(report_time), statusText, 
+          '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>', 
+          content,  photo1, photo2, resolve, status, ward]
+        })
 
+        ads_report = [...info1].sort((a, b) => a[0] - b[0]);
 
+        $(".ads-report-table").DataTable({
+          pageLength: 6,
+          data: ads_report
+          });
 
+        $("#example1_wrapper").on('click', '.ads-report-table .view-btn', function(){
+          let row = $(this).closest('tr').index();
+          let page = $("#example1_wrapper .page-item.active a").text();
+          let id_report = ads_report[row + 6 * parseInt(page) - 6][0], table = "ads"
+          window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
+        })
 
+        console.log(ads_report);
+      }
+    })
 
-    
+    $.ajax({
+      url: `/api/quan/getAdsLocReportWard/${id_ward}`,
+      type: "GET",
+      cache: false,
+      dataType: "json",
+      success: function (data){
+        $("#loading-bg").hide()
+        info2 = data.content.map(function(data){
+          let {id_report, id_ads_location, report_type, fullname, email, phone, content,
+            photo1, photo2, report_time, status, resolve, ward } = data
+          let statusText = status ? "Đã xử lí" : "Chưa xử lí"
+          id_report = parseInt(id_report);
+          return [id_report, id_ads_location, report_type, fullname, email, phone, 
+            formatSQLDate_dmy(report_time), statusText, 
+          '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>', 
+          content,  photo1, photo2, resolve, status, ward]
+        })
+
+        ads_loc_report = [...info2].sort((a, b) => a[0] - b[0]);
+
+        $(".adsloc-report-table").DataTable({
+          pageLength: 6,
+          data: ads_loc_report
+          });
+
+        $('#example2_wrapper').on('click', '.adsloc-report-table .view-btn', function(){
+          let row = $(this).closest('tr').index();
+          let page = $("#example2_wrapper .page-item.active a").text();
+          console.log(page);
+          let id_report = ads_loc_report[row + 6 * parseInt(page) - 6][0], table = "adsloc"
+          window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
+          console.log(row);
+        })
+
+        console.log(ads_loc_report);
+
+      }
+    })
+
+    $.ajax({
+      url: `/api/quan/getLocReportWard/${id_ward}`, 
+      type: "GET",
+      cache: false,
+      dataType: "json",
+      success: function(data) {
+        info3 = data.content.map(function(data){
+          let {id_report, address, report_type, fullname, email, phone, content,
+            photo1, photo2, report_time, status, resolve, ward, longitude, latitue } = data
+          let statusText = status ? "Đã xử lí" : "Chưa xử lí"
+          id_report = parseInt(id_report);
+          // console.log(id_report);
+          return [id_report, address, report_type, fullname, email, phone, 
+            formatSQLDate_dmy(report_time), statusText, 
+          '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>',
+          content,  photo1, photo2, resolve, status, ward, longitude, latitue]
+        })
+
+        loc_report = [...info3].sort((a, b) => a[0] - b[0]);
+
+        $("#example3.loc-report-table").DataTable({
+          pageLength: 6,
+          data: loc_report
+          });
+
+        $("#example3_wrapper").on('click', '.loc-report-table .view-btn', function(){
+          let row = $(this).closest('tr').index();
+          let page = $("#example3_wrapper .page-item.active a").text();
+          console.log(page);
+          let id_report = loc_report[row + 6 * parseInt(page) - 6][0], table = "loc"
+          window.location.href = '/detailReport?id_report=' + id_report + '&table=' + table;
+          console.log(id_report);
+        })
+      }
+    })
+
   } else if (role == 1){
     $("#loading-bg").show()
     var ads_report, ads_loc_report, loc_report
