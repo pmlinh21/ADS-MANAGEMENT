@@ -65,6 +65,7 @@ function buildWardTable(wards) {
     table.append(tr);
 }
 
+
 function editPopup() {
     $("#edit-popup").css("display", "block");
     $("#edit-popup .input-field:nth-of-type(1) input").val($(this).find(".id").text());

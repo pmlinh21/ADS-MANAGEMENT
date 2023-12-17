@@ -43,8 +43,9 @@ async function handleButtonClick(e) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(editData),
+        }).then(function(res){
+            window.location.href = "/quanlicanbo";
         });
-        window.location.href = "/quanlicanbo";
     } else if (e.value == "delete") {
         if (confirm("Bạn có chắc chắn muốn xóa không?")) {
             const formData = new FormData($("#edit-district-officer")[0]);
@@ -63,16 +64,5 @@ async function handleButtonClick(e) {
                 }
             });
         }
-    } else if (e.value == "add") {
-        // const formData = new FormData($("#add-popup")[0]);
-        // const addData = Object.fromEntries(formData.entries());
-        // let res = await fetch('/api/so/addCanboQuan', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(addData),
-        // });
-        // location.reload();
     }
 }

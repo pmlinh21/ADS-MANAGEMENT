@@ -23,18 +23,17 @@ const {
     addLoaiHinhBaoCao,
     addLoaiBangQuangCao,
 
+    getAllQuan,
     getAllQuanData,
     updateQuan,
     deleteQuan,
     addQuan,
 
+    getAllPhuongByIdQuan,
     getAllPhuongData,
     updatePhuong,
     deletePhuong,
     addPhuong,
-
-    getAllQuan,
-    getAllPhuongByIdQuan,
 
     getAllCanboQuan,
     getAllCanboPhuong,
@@ -47,7 +46,13 @@ const {
 
     getCanboPhuongByEmail,
     updateCanboPhuong,
-    deleteCanboPhuong
+    deleteCanboPhuong,
+
+    getAllYeuCauChinhSuaDDQC,
+
+    getAllBaoCaoDDQC,
+    getAllBaoCaoBQC,
+    getAllBaoCaoDD
 
 } = require('../controllers/soController')
 
@@ -109,6 +114,15 @@ soRoute.put("/updateCanboPhuong", updateCanboPhuong);
 soRoute.delete("/deleteCanboQuan", deleteCanboQuan);
 soRoute.delete("/deleteCanboPhuong", deleteCanboPhuong);
 
-soRoute.post("/addCanboQuan", addCanboQuan);
+soRoute.put("/addCanboQuan", addCanboQuan);
+
+// YEUCAUCHINHSUA
+soRoute.get("/getAllYeuCauChinhSuaDDQC", getAllYeuCauChinhSuaDDQC);
+
+
+// THONGKEBAOCAO
+soRoute.get("/getAllBaoCaoDDQC", getAllBaoCaoDDQC);
+soRoute.get("/getAllBaoCaoBQC", getAllBaoCaoBQC);
+soRoute.get("/getAllBaoCaoDD", getAllBaoCaoDD);
 
 module.exports = soRoute;

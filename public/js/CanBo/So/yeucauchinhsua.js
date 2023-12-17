@@ -1,4 +1,8 @@
-document.querySelector("#chinhsua").classList.add("snb-li-active");
+$(document).ready(function(){
+    $("#chinhsua").addClass("snb-li-active");
+
+    let allYeuCauChinhSuaDDQC;
+})
 
 let adslocations = [
     [1, 10.773695, 106.689636, "59 Nguyễn Thị Minh Khai", 2, 1, "Đất tư nhân/Nhà ở riêng lẻ", "Cổ đông chính trị", 1],
