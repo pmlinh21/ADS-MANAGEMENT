@@ -550,6 +550,36 @@ const deleteCanboPhuong = async (req, res) => {
     }
 }
 
+// DIEMDATQUANGCAO
+const getAllDiemDatQuangCao = async (req, res) => {
+    try {
+        const [data, metadata] = await sequelize.query(`SELECT L.id_ads_location, L.address, W.ward, D.district, T.loc_type, A.ads_type, L.is_zoning
+                                                        FROM Ads_location L
+                                                        LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                        LEFT JOIN District D ON D.id_district = W.id_district
+                                                        LEFT JOIN Location_type T ON T.id_loc_type = L.id_loc_type
+                                                        LEFT JOIN Ads_type A ON A.id_ads_type = L.id_ads_type`);
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+// BANGQUANGCAO
+const getAllBangQuangCao = async (req, res) => {
+    try {
+        const [data, metadata] = await sequelize.query(`SELECT A.id_ads, A.id_ads_location, L.address, W.ward, D.district, B.board_type, A.expired_date
+                                                        FROM Ads A 
+                                                        LEFT JOIN Ads_location L ON L.id_ads_location = A.id_ads_location
+                                                        LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                        LEFT JOIN District D ON D.id_district = W.id_district
+                                                        LEFT JOIN Board_type B ON B.id_board_type = A.id_board_type
+                                                        ORDER BY id_ads DESC`);
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
 
 // YEUCAUCHINHSUA
 const getAllYeuCauChinhSuaDDQC = async (req, res) => {
@@ -809,6 +839,10 @@ module.exports = {
     updateCanboPhuong,
     deleteCanboPhuong,
     // addCAnboPhuongByEmail,
+
+    getAllDiemDatQuangCao,
+
+    getAllBangQuangCao,
 
     getAllYeuCauChinhSuaDDQC,
     getAllYeuCauChinhSuaBQC,
