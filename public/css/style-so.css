@@ -1223,7 +1223,7 @@ body {
     width: 100%;
 }
 
-.chart, #piechart {
+.chart, #piechart, #barchart {
     height: 100%;
 }
 

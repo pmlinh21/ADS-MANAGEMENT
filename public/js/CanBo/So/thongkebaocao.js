@@ -83,31 +83,41 @@ $(document).ready(function () {
                       }).length);
                     }
 
-                    let pieColors = generatePieColors(allLoaiHinhBaoCaoQuantity.length);
-
-                    new Chart("piechart", {
-                      type: "pie",
-                      data: {
-                        labels: allLoaiHinhBaoCaoName,
-                        datasets: [{
-                          backgroundColor: pieColors,
-                          data: allLoaiHinhBaoCaoQuantity
-                        }]
-                      },
-                      options: {
-                        title: {
-                          display: false,
-                          text: "Thống kê tỉ lệ báo cáo theo loại hình báo cáo",
-                        },
-                        legend: {
-                          display: false
-                        }
-                      }
-                    });
-
-                    buildChartLabels(allLoaiHinhBaoCaoName, pieColors);
+                    buildPieChart(allLoaiHinhBaoCaoName, allLoaiHinhBaoCaoQuantity, pieColors);
                   }
                 })
+
+                let allQuan;
+                $.ajax({
+                  url: "/api/so/getAllQuan",
+                  type: "GET",
+                  catch: false,
+                  dataType: "json",
+                  success: function (data) {
+                    allQuan = data.content;
+
+                    let allQuanName = allQuan.map(function (item) {
+                      return 'Quận ' + item.district;
+                    });
+
+                    let allQuanId = allQuan.map(function (item) {
+                      return item.id_district;
+                    });
+
+                    let allQuanQuantity = [];
+                    for (let i = 0; i < allQuanId.length; i++) {
+                      allQuanQuantity.push(allBaoCaoDDQC.filter(function (item) {
+                        return item.id_district == allQuanId[i];
+                      }).length + allBaoCaoBQC.filter(function (item) {
+                        return item.id_district == allQuanId[i];
+                      }).length + allBaoCaoDD.filter(function (item) {
+                        return item.id_district == allQuanId[i];
+                      }).length);
+                    }
+
+                    buildBarChart(allQuanName, allQuanQuantity);
+                  }
+                });
 
                 buildReportAdsTable(allBaoCaoBQC);
                 buildReportAdsLocationTable(allBaoCaoDDQC);
@@ -230,8 +240,10 @@ var pieColors = [
 ];
 
 function generatePieColors(quantity) {
-  let colors = ["#b91d47", "#D9B26F", "#1e7145", "#2b5797"];
-  if (quantity <= 4) {
+  // red yellow green blue purple pink indigo gray
+  let colors = ["#b91d47", "#D9B26F", "#1e7145", "#2b5797", "#3E2F5B", "#264653", "#B05E49", "#5CA4A9"];
+  if (quantity <= colors.length) {
+    colors = colors.sort(() => Math.random() - 0.5);
     return colors.slice(0, quantity);
   }
 
@@ -239,6 +251,11 @@ function generatePieColors(quantity) {
     colors.push('#' + Math.floor(Math.random() * 16777215).toString(16));
   }
   return colors;
+}
+
+function generateBarColor() {
+  let colors = ["#b91d47", "#D9B26F", "#1e7145", "#2b5797", "#3E2F5B", "#264653", "#B05E49", "#5CA4A9"];
+  return colors[Math.floor(Math.random() * colors.length)];
 }
 
 function buildChartLabels(labels, colors) {
@@ -259,4 +276,57 @@ function buildChartLabels(labels, colors) {
     div.append(span2);
     chartLabels.append(div);
   }
+}
+
+function buildPieChart(labels, quantity) {
+  let pieColors = generatePieColors(quantity.length);
+
+  new Chart("piechart", {
+    type: "pie",
+    data: {
+      labels: labels,
+      datasets: [{
+        backgroundColor: pieColors,
+        data: quantity
+      }]
+    },
+    options: {
+      title: {
+        display: false,
+        text: "Thống kê tỉ lệ báo cáo theo loại hình báo cáo",
+      },
+      legend: {
+        display: false
+      }
+    }
+  });
+
+  buildChartLabels(labels, pieColors);
+}
+
+function buildBarChart(labels, quantity) {
+  // '#2b5797'
+  let barColor = generateBarColor();
+
+  new Chart("barchart", {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [{
+        backgroundColor: barColor,
+        data: quantity
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      title: {
+        display: false,
+        text: "Thống kê số lượng báo cáo theo từng quận",
+      },
+      legend: {
+        display: false
+      }
+    }
+  });
 }

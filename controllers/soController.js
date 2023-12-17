@@ -577,24 +577,30 @@ const getAllYeuCauChinhSuaDDQC = async (req, res) => {
 
 const getAllBaoCaoDDQC = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query(`(SELECT R.id_report, R.id_ads_location, R.id_report_type, T.report_type, R.report_time, R.status, D.district, NULL AS ward
+        const [data, metadata] = await sequelize.query(`(SELECT R.id_report, R.id_ads_location, D1.id_district, R.id_report_type, T.report_type, R.report_time, R.status, D.district, NULL AS ward
                                                         FROM Ads_loc_report R 
                                                         LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
                                                         LEFT JOIN CanboQuan C ON C.email = R.officer
                                                         LEFT JOIN District D ON D.id_district = C.id_district
+                                                        LEFT JOIN Ads_location L ON L.id_ads_location = R.id_ads_location
+                                                        LEFT JOIN District D1 ON D1.id_district = L.id_district
                                                         WHERE office = 1
                                                         UNION
-                                                        SELECT R.id_report, R.id_ads_location, R.id_report_type, T.report_type, R.report_time, R.status, D.district, W.ward
+                                                        SELECT R.id_report, R.id_ads_location, D1.id_district, R.id_report_type, T.report_type, R.report_time, R.status, D.district, W.ward
                                                         FROM Ads_loc_report R 
                                                         LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
                                                         LEFT JOIN CanboPhuong C ON C.email = R.officer
                                                         LEFT JOIN Ward W ON W.id_ward = C.id_ward
                                                         LEFT JOIN District D ON D.id_district = W.id_district
+                                                        LEFT JOIN Ads_location L ON L.id_ads_location = R.id_ads_location
+                                                        LEFT JOIN District D1 ON D1.id_district = L.id_district
                                                         WHERE office = 2
                                                         UNION 
-                                                        SELECT R.id_report, R.id_ads_location, R.id_report_type, T.report_type, R.report_time, R.status, NULL AS district, NULL AS ward
+                                                        SELECT R.id_report, R.id_ads_location, D1.id_district, R.id_report_type, T.report_type, R.report_time, R.status, NULL AS district, NULL AS ward
                                                         FROM Ads_loc_report R 
                                                         LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
+                                                        LEFT JOIN Ads_location L ON L.id_ads_location = R.id_ads_location
+                                                        LEFT JOIN District D1 ON D1.id_district = L.id_district
                                                         WHERE office IS NULL)
                                                         ORDER BY id_report`);
         sucessCode(res, data, "Get thành công");
@@ -605,28 +611,33 @@ const getAllBaoCaoDDQC = async (req, res) => {
 
 const getAllBaoCaoBQC = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query(`(SELECT R.id_report, R.id_ads, R.id_report_type, T.report_type, R.report_time, R.status, D.district, NULL AS ward
+        const [data, metadata] = await sequelize.query(`(SELECT R.id_report, R.id_ads, D1.id_district, R.id_report_type, T.report_type, R.report_time, R.status, D.district, NULL AS ward
                                                         FROM Ads_report R 
                                                         LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
                                                         LEFT JOIN CanboQuan C ON C.email = R.officer
                                                         LEFT JOIN District D ON D.id_district = C.id_district
+                                                        LEFT JOIN Ads A ON A.id_ads = R.id_ads
+                                                        LEFT JOIN Ads_location L ON L.id_ads_location = A.id_ads_location
+                                                        LEFT JOIN District D1 ON D1.id_district = L.id_district
                                                         WHERE office = 1
-                                                        
                                                         UNION
-                                                        
-                                                        SELECT R.id_report, R.id_ads, R.id_report_type, T.report_type, R.report_time, R.status, D.district, W.ward
+                                                        SELECT R.id_report, R.id_ads, D1.id_district, R.id_report_type, T.report_type, R.report_time, R.status, D.district, W.ward
                                                         FROM Ads_report R 
                                                         LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
                                                         LEFT JOIN CanboPhuong C ON C.email = R.officer
                                                         LEFT JOIN Ward W ON W.id_ward = C.id_ward
                                                         LEFT JOIN District D ON D.id_district = W.id_district
+                                                        LEFT JOIN Ads A ON A.id_ads = R.id_ads
+                                                        LEFT JOIN Ads_location L ON L.id_ads_location = A.id_ads_location
+                                                        LEFT JOIN District D1 ON D1.id_district = L.id_district
                                                         WHERE office = 2
-                                                        
                                                         UNION 
-                                                        
-                                                        SELECT R.id_report, R.id_ads, R.id_report_type, T.report_type, R.report_time, R.status, NULL AS district, NULL AS ward
+                                                        SELECT R.id_report, R.id_ads, D1.id_district, R.id_report_type, T.report_type, R.report_time, R.status, NULL AS district, NULL AS ward
                                                         FROM Ads_report R 
                                                         LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
+                                                        LEFT JOIN Ads A ON A.id_ads = R.id_ads
+                                                        LEFT JOIN Ads_location L ON L.id_ads_location = A.id_ads_location
+                                                        LEFT JOIN District D1 ON D1.id_district = L.id_district
                                                         WHERE office IS NULL)
                                                         ORDER BY id_report`);
         sucessCode(res, data, "Get thành công");
@@ -637,7 +648,7 @@ const getAllBaoCaoBQC = async (req, res) => {
 
 const getAllBaoCaoDD = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query(`(SELECT R.id_report, R.address, D1.district AS address_district, W1.ward AS address_ward, R.id_report_type, T.report_type, R.report_time, R.status, D.district, NULL AS ward
+        const [data, metadata] = await sequelize.query(`(SELECT R.id_report, R.address, D1.id_district, D1.district AS address_district, W1.ward AS address_ward, R.id_report_type, T.report_type, R.report_time, R.status, D.district, NULL AS ward
                                                         FROM Location_report R 
                                                         LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
                                                         LEFT JOIN CanboQuan C ON C.email = R.officer
@@ -646,7 +657,7 @@ const getAllBaoCaoDD = async (req, res) => {
                                                         LEFT JOIN District D1 ON D1.id_district = W1.id_district
                                                         WHERE office = 1
                                                         UNION
-                                                        SELECT R.id_report, R.address, D1.district AS address_district, W1.ward AS address_ward, R.id_report_type, T.report_type, R.report_time, R.status, D.district, W.ward
+                                                        SELECT R.id_report, R.address, D1.id_district, D1.district AS address_district, W1.ward AS address_ward, R.id_report_type, T.report_type, R.report_time, R.status, D.district, W.ward
                                                         FROM Location_report R 
                                                         LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
                                                         LEFT JOIN CanboPhuong C ON C.email = R.officer
@@ -656,7 +667,7 @@ const getAllBaoCaoDD = async (req, res) => {
                                                         LEFT JOIN District D1 ON D1.id_district = W1.id_district
                                                         WHERE office = 2
                                                         UNION
-                                                        SELECT R.id_report, R.address, D1.district AS address_district, W1.ward AS address_ward, R.id_report_type, T.report_type, R.report_time, R.status, NULL AS district, NULL AS ward
+                                                        SELECT R.id_report, R.address, D1.id_district, D1.district AS address_district, W1.ward AS address_ward, R.id_report_type, T.report_type, R.report_time, R.status, NULL AS district, NULL AS ward
                                                         FROM Location_report R 
                                                         LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
                                                         LEFT JOIN Ward W1 ON W1.id_ward = R.id_ward
