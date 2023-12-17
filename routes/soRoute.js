@@ -49,6 +49,9 @@ const {
     deleteCanboPhuong,
 
     getAllYeuCauChinhSuaDDQC,
+    getAllYeuCauChinhSuaBQC,
+
+    getAllYeuCauCapPhep,
 
     getAllBaoCaoDDQC,
     getAllBaoCaoBQC,
@@ -118,7 +121,10 @@ soRoute.put("/addCanboQuan", addCanboQuan);
 
 // YEUCAUCHINHSUA
 soRoute.get("/getAllYeuCauChinhSuaDDQC", getAllYeuCauChinhSuaDDQC);
+soRoute.get("/getAllYeuCauChinhSuaBQC", getAllYeuCauChinhSuaBQC);
 
+// YEUCAUCAPPHEP
+soRoute.get("/getAllYeuCauCapPhep", getAllYeuCauCapPhep);
 
 // THONGKEBAOCAO
 soRoute.get("/getAllBaoCaoDDQC", getAllBaoCaoDDQC);

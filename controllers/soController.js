@@ -554,27 +554,103 @@ const deleteCanboPhuong = async (req, res) => {
 // YEUCAUCHINHSUA
 const getAllYeuCauChinhSuaDDQC = async (req, res) => {
     try {
-        const [data, metadata] = await sequelize.query( "SELECT R.id_request, R.id_ads_location, R.id_ads, R.id_report_type, R.id_board_type, R.id_loc_type, R.id_ads_type, R.status, R.note, R.date, " +
-                                                        "AL.id_district, AL.id_ward, AL.ads_location, AL.ads_location_status, AL.ads_location_note, " +
-                                                        "A.ads_name, A.ads_status, A.ads_note, " +
-                                                        "RT.report_type, " +
-                                                        "BT.board_type, " +
-                                                        "LT.loc_type, " +
-                                                        "AT.ads_type " +
-                                                        "FROM Request R " +
-                                                        "INNER JOIN Ads_location AL ON AL.id_ads_location = R.id_ads_location " +
-                                                        "INNER JOIN Ads A ON A.id_ads = R.id_ads " +
-                                                        "INNER JOIN Report_type RT ON RT.id_report_type = R.id_report_type " +
-                                                        "INNER JOIN Board_type BT ON BT.id_board_type = R.id_board_type " +
-                                                        "INNER JOIN Location_type LT ON LT.id_loc_type = R.id_loc_type " +
-                                                        "INNER JOIN Ads_type AT ON AT.id_ads_type = R.id_ads_type " +
-                                                        "ORDER BY R.id_request");
+        const [data, metadata] = await sequelize.query(`(SELECT U.id_req, U.id_ads_location, L.address, W.ward AS address_ward, D.district AS address_district, U.req_time, NULL AS ward, D1.district AS district, U.status
+                                                        FROM Ads_loc_update U
+                                                        LEFT JOIN Ads_location L ON L.id_ads_location = U.id_ads_location
+                                                        LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                        LEFT JOIN District D ON D.id_district = W.id_district
+                                                        LEFT JOIN CanboQuan C ON C.email = U.officer
+                                                        LEFT JOIN District D1 ON D1.id_district = C.id_district
+                                                        WHERE U.office = 1
+                                                        UNION 
+                                                        SELECT U.id_req, U.id_ads_location, L.address, W.ward AS address_ward, D.district AS address_district, U.req_time, W1.ward AS ward, D1.district AS district, U.status
+                                                        FROM Ads_loc_update U
+                                                        LEFT JOIN Ads_location L ON L.id_ads_location = U.id_ads_location
+                                                        LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                        LEFT JOIN District D ON D.id_district = W.id_district
+                                                        LEFT JOIN CanboPhuong C ON C.email = U.officer
+                                                        LEFT JOIN Ward W1 ON W1.id_ward = C.id_ward
+                                                        LEFT JOIN District D1 ON D1.id_district = W1.id_district
+                                                        WHERE U.office = 2
+                                                        UNION
+                                                        SELECT U.id_req, U.id_ads_location, L.address, W.ward AS address_ward, D.district AS address_district, U.req_time, NULL AS ward, NULL AS district, U.status
+                                                        FROM Ads_loc_update U
+                                                        LEFT JOIN Ads_location L ON L.id_ads_location = U.id_ads_location
+                                                        LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                        LEFT JOIN District D ON D.id_district = W.id_district
+                                                        WHERE U.office IS NULL)
+                                                        ORDER BY id_req DESC`);
         sucessCode(res, data, "Get thành công");
     } catch(err) {
         errorCode(res, "Lỗi BE");
     }
 }
 
+const getAllYeuCauChinhSuaBQC = async (req, res) => {
+    try {
+        const [data, metadata] = await sequelize.query(`(SELECT U.id_req, U.id_ads, L.address, W.ward AS address_ward, D.district AS address_district, U.req_time, NULL AS ward, D1.district AS district, U.status
+                                                        FROM Ads_update U
+                                                        LEFT JOIN Ads A ON A.id_ads = U.id_ads
+                                                        LEFT JOIN Ads_location L ON L.id_ads_location = A.id_ads_location
+                                                        LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                        LEFT JOIN District D ON D.id_district = W.id_district
+                                                        LEFT JOIN CanboQuan C ON C.email = U.officer
+                                                        LEFT JOIN District D1 ON D1.id_district = C.id_district
+                                                        WHERE U.office = 1
+                                                        UNION 
+                                                        SELECT U.id_req, U.id_ads, L.address, W.ward AS address_ward, D.district AS address_district, U.req_time, W1.ward AS ward, D1.district AS district, U.status
+                                                        FROM Ads_update U
+                                                        LEFT JOIN Ads A ON A.id_ads = U.id_ads
+                                                        LEFT JOIN Ads_location L ON L.id_ads_location = A.id_ads_location
+                                                        LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                        LEFT JOIN District D ON D.id_district = W.id_district
+                                                        LEFT JOIN CanboPhuong C ON C.email = U.officer
+                                                        LEFT JOIN Ward W1 ON W1.id_ward = C.id_ward
+                                                        LEFT JOIN District D1 ON D1.id_district = W1.id_district
+                                                        WHERE U.office = 2)
+                                                        ORDER BY id_req DESC`);
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+// YEUCAUCAPPHEP
+const getAllYeuCauCapPhep= async (req, res) => {
+    try {
+        [data, metadata] = await sequelize.query( `(SELECT C.id_create, C.company, C.start_date, C.end_date, D1.district, NULL AS ward, C.status, L.address, W.ward AS address_ward, D.district AS address_district
+                                                    FROM Ads_create C
+                                                    LEFT JOIN Ads_location L ON L.id_ads_location = C.id_ads_location
+                                                    LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                    LEFT JOIN District D ON D.id_district = W.id_district
+                                                    LEFT JOIN CanboQuan CB ON CB.email = C.officer
+                                                    LEFT JOIN District D1 ON D1.id_district = CB.id_district
+                                                    WHERE C.office = 1
+                                                    UNION
+                                                    SELECT C.id_create, C.company, C.start_date, C.end_date, D1.district, W1.ward, C.status, L.address, W.ward AS address_ward, D.district AS address_district
+                                                    FROM Ads_create C
+                                                    LEFT JOIN Ads_location L ON L.id_ads_location = C.id_ads_location
+                                                    LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                    LEFT JOIN District D ON D.id_district = W.id_district
+                                                    LEFT JOIN CanboPhuong CB ON CB.email = C.officer
+                                                    LEFT JOIN Ward W1 ON W1.id_ward = CB.id_ward
+                                                    LEFT JOIN District D1 ON D1.id_district = W1.id_district
+                                                    WHERE C.office = 2
+                                                    UNION
+                                                    SELECT C.id_create, C.company, C.start_date, C.end_date, NULL AS district, NULL AS ward, C.status, L.address, W.ward AS address_ward, D.district AS address_district
+                                                    FROM Ads_create C
+                                                    LEFT JOIN Ads_location L ON L.id_ads_location = C.id_ads_location
+                                                    LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                    LEFT JOIN District D ON D.id_district = W.id_district
+                                                    WHERE C.office IS NULL)
+                                                    ORDER BY id_create DESC`);
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+// THONGKEBAOCAO
 const getAllBaoCaoDDQC = async (req, res) => {
     try {
         const [data, metadata] = await sequelize.query(`(SELECT R.id_report, R.id_ads_location, D1.id_district, R.id_report_type, T.report_type, R.report_time, R.status, D.district, NULL AS ward
@@ -735,9 +811,11 @@ module.exports = {
     // addCAnboPhuongByEmail,
 
     getAllYeuCauChinhSuaDDQC,
+    getAllYeuCauChinhSuaBQC,
+
+    getAllYeuCauCapPhep,
 
     getAllBaoCaoDDQC,
     getAllBaoCaoBQC,
     getAllBaoCaoDD,
-
 };
