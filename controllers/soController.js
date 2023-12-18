@@ -502,23 +502,6 @@ const addCanboQuan = async (req, res) => {
     }
 }
 
-const addCanboPhuong = async (req, res) => {
-    try {
-        const { email, fullname, birthdate, phone, id_district, id_ward } = req.body;
-        const data = await model.CanboPhuong.create({
-            email: email,
-            fullname: fullname,
-            phone: phone,
-            birthdate: birthdate,
-            id_ward: id_ward,
-            password: bcrypt.hashSync("123@nhomsau", 10)
-        });
-        sucessCode(res, data, "Put thành công");
-    } catch(err) {
-        errorCode(res, "Lỗi BE");
-    }
-}
-
 // QUANLICANBO - PHUONG
 const getCanboPhuongByEmail = async (req, res) => {
     try {
@@ -565,6 +548,23 @@ const deleteCanboPhuong = async (req, res) => {
     } catch(err) {
         errorCode(res, "Lỗi khóa ngoại");
     }
+}
+
+const addCanboPhuong = async (req, res) => {
+  try {
+      const { email, fullname, birthdate, phone, id_district, id_ward } = req.body;
+      const data = await model.CanboPhuong.create({
+          email: email,
+          fullname: fullname,
+          phone: phone,
+          birthdate: birthdate,
+          id_ward: id_ward,
+          password: bcrypt.hashSync("123@nhomsau", 10)
+      });
+      sucessCode(res, data, "Put thành công");
+  } catch(err) {
+      errorCode(res, "Lỗi BE");
+  }
 }
 
 // DIEMDATQUANGCAO

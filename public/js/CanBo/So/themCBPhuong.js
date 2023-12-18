@@ -1,65 +1,102 @@
-$(document).ready(function(){
-    $("#canbo").addClass("snb-li-active");
+$(document).ready(function () {
+  $("#canbo").addClass("snb-li-active");
+  $.ajax({
+    url: '/api/so/getAllQuan',
+    type: 'GET',
+    catch: false,
+    dataType: 'json',
+    success: function (data) {
+      console.log(data);
+      buildSelectDistrict(data.content);
 
-    let selectDistrict = $("#add-ward-officer #id-district");
-    selectDistrict.append("<option value=''>Chọn quận</option>")
-    let districts;
-    $.get("/api/so/getAllQuan", function(data){
-        districts = data.content.map(item => [item.id_district, item.district]);
-        
-        for (let i = 0; i < districts.length; i++) {
-            let option = $("<option></option>");
-            option.val(districts[i][0]);
-            option.text("Quận " + districts[i][1]);
-            selectDistrict.append(option);
-        }
-    });
-    buildSelectWard("");
-    selectDistrict.change(function() {
-        let id_district = $(this).val();
-        buildSelectWard(id_district);
-    });
+      $.ajax({
+        url: '/api/so/getAllCanboEmail',
+        type: 'GET',
+        catch: false,
+        dataType: 'json',
+        success: function (data) {
+          allEmail = data.content.map(item => item.email);
+
+          $("#add-ward-officer button").on("click", function (e) {
+            // e.preventDefault();
+            const formData = new FormData($("#add-ward-officer")[0]);
+            const addData = Object.fromEntries(formData.entries());
+
+            if (addData["fullname"] == "" || addData["birthdate"] == "" || addData["phone"] == "" || addData["email"] == "" || addData["id_district"] == "" || addData["id_ward"] == "") { 
+              return;
+            }
+            
+            e.preventDefault();
+            if (allEmail.includes(formData.get("email").trim())) {
+              alert("Không thể thêm vì email cán bộ đã tồn tại");
+            } else {
+              $.ajax({
+                url: '/api/so/addCanboPhuong',
+                type: 'POST',
+                catch: false,
+                dataType: 'json',
+                data: addData,
+
+                success: function (res) {
+                  window.location.href = "/quanlicanbo";
+                  console.log("Thêm thành công");
+                },
+                error: function (xhr, status, err) {
+                  alert("Thêm cán bộ thất bại");
+                  console.log(err);
+                }
+              });
+            }
+          });
+        },
+      });
+    },
+    error: function (xhr, status, err) {
+      console.log(err);
+    }
+  });
 });
 
-function buildSelectWard(id_district) {
-    if (id_district == "") {
-        let selectWard = $("#add-ward-officer #id-ward");
-        // remove all options of selectWard
-        selectWard.find("option").remove();
-        selectWard.append("<option value=''>Chọn phường</option>");
-        return;
-    }
+function buildSelectDistrict(data) {
+  let select = $("#add-ward-officer #id-district");
+  select.append("<option value=''>Chọn quận</option>")
+  data.forEach(function (item) {
+    select.append("<option value='" + item.id_district + "'>" + item.district + "</option>");
+  });
+  
+  let selectPhuong = $("#add-ward-officer #id-ward");
+  selectPhuong.empty();
+  selectPhuong.append("<option value=''>Chọn phường</option>")
 
-    let wards;
-    $.get("/api/so/getAllPhuongByIdQuan/" + id_district , function(data){
-        wards = data.content.map(item => [item.id_ward, item.ward]);
-        let selectWard = $("#add-ward-officer #id-ward");
-        // remove all options of selectWard
-        selectWard.find("option").remove();
-        selectWard.append("<option value=''>Chọn phường</option>");
-        
-        for (let i = 0; i < wards.length; i++) {
-            let option = $("<option></option>");
-            option.val(wards[i][0]);
-            option.text("Phường " + wards[i][1]);
-            selectWard.append(option);
-        }   
-    }).fail(function(err){
-        console.log(err);
-    });
+  select.on("change", function () {
+    if ($(this).val() == "") {
+      selectPhuong.empty();
+      selectPhuong.append("<option value=''>Chọn phường</option>")
+    } else {
+      let id_district = $(this).val();
+      $.ajax({
+        url: '/api/so/getAllPhuongByIdQuan/' + id_district,
+        type: 'GET',
+        catch: false,
+        dataType: 'json',
+        success: function (data) {
+          console.log(data);
+          buildSelectWard(data.content);
+        },
+        error: function (xhr, status, err) {
+          console.log(err);
+        }
+      });
+    }
+    
+  });
 }
 
-async function handleButtonClick(e) {
-    if (e.value == "add") {
-        // const formData = new FormData($("#add-popup")[0]);
-        // const addData = Object.fromEntries(formData.entries());
-        // let res = await fetch('/api/so/addCanboQuan', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(addData),
-        // });
-        // location.reload();
-    }
+function buildSelectWard(data) {
+  let select = $("#add-ward-officer #id-ward");
+  select.empty();
+  select.append("<option value=''>Chọn phường</option>")
+  data.forEach(function (item) {
+    select.append("<option value='" + item.id_ward + "'>" + item.ward + "</option>");
+  });
 }
