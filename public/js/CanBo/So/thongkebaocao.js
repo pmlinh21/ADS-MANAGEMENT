@@ -154,11 +154,11 @@ function buildReportAdsTable(data) {
     if (item.status == true) {
       tr.append('<td class="status">Đã xử lý</td>');
     } else {
-      tr.append('<td class="status">Chưa xử lý</td>');
+      tr.append('<td class="status" style="color: indianred">Chưa xử lý</td>');
     }
-    // tr.click(function () {
-    //   window.location = "/thongkebaocao/bqc?id=" + item.id_report;
-    // })
+    tr.click(function () {
+      window.location = "/thongkebaocao/bqc?id=" + item.id_report;
+    })
     table.append(tr);
   })
 }
@@ -186,7 +186,7 @@ function buildReportAdsLocationTable(data) {
     if (item.status == true) {
       tr.append('<td class="status">Đã xử lý</td>');
     } else {
-      tr.append('<td class="status">Chưa xử lý</td>');
+      tr.append('<td class="status" style="color: indianred">Chưa xử lý</td>');
     }
     // tr.click(function () {
     //   window.location = "/thongkebaocao/ddqc?id=" + item.id_report;
@@ -220,7 +220,7 @@ function buildReportLocationTable(data) {
     if (item.status == true) {
       tr.append('<td class="status">Đã xử lý</td>');
     } else {
-      tr.append('<td class="status">Chưa xử lý</td>');
+      tr.append('<td class="status" style="color: indianred">Chưa xử lý</td>');
     }
     // tr.click(function () {
     //   window.location = "/thongkebaocao/dd?id=" + item.id_report;
@@ -327,6 +327,6 @@ function buildBarChart(labels, quantity) {
       legend: {
         display: false
       }
-    }
+    },
   });
 }

@@ -39,9 +39,11 @@ function buildCreateAdsTable(data) {
             tr.append('<td class="office">Phường ' + item.ward + ', Quận ' + item.district + '</td>');
         }
         if (item.status == false) {
-            tr.append('<td class="status">Chưa xử lí</td>');
+            tr.append('<td class="status">Từ chối</td>');
+        } else if (item.status == true) {
+            tr.append('<td class="status" style="color: seagreen">Duyệt</td>');
         } else {
-            tr.append('<td class="status">Đã duyệt</td>');
+            tr.append('<td class="status" style="color: cornflowerblue">Chờ</td>');
         }
 
         tr.click(function() {

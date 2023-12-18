@@ -59,7 +59,9 @@ const {
 
     getAllBaoCaoDDQC,
     getAllBaoCaoBQC,
-    getAllBaoCaoDD
+    getAllBaoCaoDD,
+
+    getBaoCaoBQCById,
 
 } = require('../controllers/soController')
 
@@ -140,5 +142,7 @@ soRoute.get("/getAllYeuCauCapPhep", getAllYeuCauCapPhep);
 soRoute.get("/getAllBaoCaoDDQC", getAllBaoCaoDDQC);
 soRoute.get("/getAllBaoCaoBQC", getAllBaoCaoBQC);
 soRoute.get("/getAllBaoCaoDD", getAllBaoCaoDD);
+
+soRoute.get("/getBaoCaoBQCById/:id_report", getBaoCaoBQCById);
 
 module.exports = soRoute;
