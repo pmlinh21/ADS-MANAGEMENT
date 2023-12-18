@@ -9,18 +9,13 @@
         <form class="form" id="add-district-officer">
             <legend><i class='fas fa-plus-square'></i> Thêm cán bộ Quận</legend>
             <div class="input-container">
-                <!-- <div class="input-field">
-                    <label for="id-officer">ID Cán bộ</label>
-                    <input type="text" id="id-officer" name="id-officer" disabled>
-                    <span class="tooltiptext">Không thể chỉnh sửa ID</span>
-                </div> -->
                 <div class="input-field">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" placeholder="e.g. canbo@example.com" required>
                 </div>
                 <div class="input-field">
                     <label for="fullname">Họ tên</label>
-                    <input type="text" id="fullname" name="fullname" placeholder="e.g. Nguyễn Cán Bộ" required>
+                    <input type="text" id="fullname" name="fullname" placeholder="e.g. Nguyễn Văn A" required>
                 </div>
                 <div class="input-field">
                     <label for="birthdate">Ngày sinh</label>
@@ -37,7 +32,7 @@
                 </div> 
             </div>
             <div class="button-container">
-                <button type="submit" value="add" onclick=handleButtonClick(this) class="button">Thêm</button>
+                <button type="submit" value="add" class="button">Thêm</button>
             </div>
         </form>
 

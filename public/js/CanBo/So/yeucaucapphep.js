@@ -47,7 +47,7 @@ function buildCreateAdsTable(data) {
         }
 
         tr.click(function() {
-            // window.location = "/yeucaucapphep/chitiet?id=" + item.id_create;
+            window.location = "/yeucaucapphep/chitiet?id=" + item.id_create;
         });
 
         table.append(tr);

@@ -6,18 +6,22 @@ const {
     getSoLuongCanBo,
     getSoLuongDDQC,
     getSoLuongBQC,
+
     getLoaiViTri, 
     getHinhThucQuangCao, 
     getLoaiHinhBaoCao, 
     getLoaiBangQuangCao,
+
     updateLoaiViTri,
     updateHinhThucQuangCao,
     updateLoaiHinhBaoCao,
     updateLoaiBangQuangCao,
+
     deleteLoaiViTri,
     deleteHinhThucQuangCao,
     deleteLoaiHinhBaoCao,
     deleteLoaiBangQuangCao,
+
     addLoaiViTri,
     addHinhThucQuangCao,
     addLoaiHinhBaoCao,
@@ -47,6 +51,7 @@ const {
     getCanboPhuongByEmail,
     updateCanboPhuong,
     deleteCanboPhuong,
+    addCanboPhuong,
 
     getAllDiemDatQuangCao,
 
@@ -56,6 +61,7 @@ const {
     getAllYeuCauChinhSuaBQC,
 
     getAllYeuCauCapPhep,
+    getYeuCauCapPhepById,
 
     getAllBaoCaoDDQC,
     getAllBaoCaoBQC,
@@ -125,7 +131,8 @@ soRoute.put("/updateCanboPhuong", updateCanboPhuong);
 soRoute.delete("/deleteCanboQuan", deleteCanboQuan);
 soRoute.delete("/deleteCanboPhuong", deleteCanboPhuong);
 
-soRoute.put("/addCanboQuan", addCanboQuan);
+soRoute.post("/addCanboQuan", addCanboQuan);
+soRoute.post("/addCanboPhuong", addCanboPhuong);
 
 // DIEMDATQUANGCAO
 soRoute.get("/getAllDiemDatQuangCao", getAllDiemDatQuangCao);
@@ -139,6 +146,7 @@ soRoute.get("/getAllYeuCauChinhSuaBQC", getAllYeuCauChinhSuaBQC);
 
 // YEUCAUCAPPHEP
 soRoute.get("/getAllYeuCauCapPhep", getAllYeuCauCapPhep);
+soRoute.get("/getYeuCauCapPhepById/:id", getYeuCauCapPhepById);
 
 // THONGKEBAOCAO
 soRoute.get("/getAllBaoCaoDDQC", getAllBaoCaoDDQC);
