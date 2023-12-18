@@ -1,5 +1,3 @@
-// document.querySelector("#baocao").classList.add("snb-li-active");
-
 $(document).ready(function(){
   $("#baocao").addClass("snb-li-active");
 
@@ -49,11 +47,11 @@ function buildForm(data) {
     form.find("input[name='officer']").val("-");
   }
 
-  if (data.photo1 != null) {
+  if (data.photo1 != null && data.photo2 != "") {
     form.find("img[id='image1']").attr("src", "/public/images/" + data.photo1);
   }
 
-  if (data.photo2 != null) {
+  if (data.photo2 != null && data.photo2 != "") {
     form.find("img[id='image2']").attr("src", "/public/images/" + data.photo2);
   }
 }

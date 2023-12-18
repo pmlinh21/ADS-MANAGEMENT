@@ -788,13 +788,13 @@ const getAllBaoCaoDD = async (req, res) => {
 
 const getBaoCaoBQCById = async (req, res) => {
     try {
-        const id_report = req.params.id_report;
+        const id = req.params.id;
         const [data, metadata] = await sequelize.query(`SELECT R.id_report, R.id_ads, T.report_type, R.fullname, R.email, R.phone, R.content, R.report_time, R.status, R.resolve, R.photo1, R.photo2, R.officer, R.office, D.district, NULL AS ward
                                                         FROM Ads_report R
                                                         LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
                                                         LEFT JOIN CanboQuan C ON C.email = R.officer
                                                         LEFT JOIN District D ON  D.id_district = C.id_district
-                                                        WHERE R.office = 1 AND R.id_report = ${id_report}
+                                                        WHERE R.office = 1 AND R.id_report = ${id}
                                                         UNION
                                                         SELECT R.id_report, R.id_ads, T.report_type, R.fullname, R.email, R.phone, R.content, R.report_time, R.status, R.resolve, R.photo1, R.photo2, R.officer, R.office, D.district, W.ward
                                                         FROM Ads_report R
@@ -802,12 +802,40 @@ const getBaoCaoBQCById = async (req, res) => {
                                                         LEFT JOIN CanboPhuong C ON C.email = R.officer
                                                         LEFT JOIN Ward W ON W.id_ward = C.id_ward
                                                         LEFT JOIN District D ON  D.id_district = W.id_district
-                                                        WHERE R.office = 2 AND R.id_report = ${id_report}
+                                                        WHERE R.office = 2 AND R.id_report = ${id}
                                                         UNION
                                                         SELECT R.id_report, R.id_ads, T.report_type, R.fullname, R.email, R.phone, R.content, R.report_time, R.status, R.resolve, R.photo1, R.photo2, R.officer, R.office, NULL AS district, NULL AS ward
                                                         FROM Ads_report R
                                                         LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
-                                                        WHERE R.office IS NULL AND R.id_report = ${id_report}`);
+                                                        WHERE R.office IS NULL AND R.id_report = ${id}`);
+        sucessCode(res, data, "Get thành công");
+    } catch(err) {
+        errorCode(res, "Lỗi BE");
+    }
+}
+
+const getBaoCaoDDQCById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        [data, metadata] = await sequelize.query(   `SELECT R.id_report, R.id_ads_location, T.report_type, R.fullname, R.email, R.phone, R.content, R.report_time, R.status, R.resolve, R.photo1, R.photo2, R.officer, R.office, D.district, NULL AS ward
+                                                    FROM Ads_loc_report R
+                                                    LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
+                                                    LEFT JOIN CanboQuan C ON C.email = R.officer
+                                                    LEFT JOIN District D ON  D.id_district = C.id_district
+                                                    WHERE R.office = 1 AND R.id_report = ${id}
+                                                    UNION
+                                                    SELECT R.id_report, R.id_ads_location, T.report_type, R.fullname, R.email, R.phone, R.content, R.report_time, R.status, R.resolve, R.photo1, R.photo2, R.officer, R.office, D.district, W.ward
+                                                    FROM Ads_loc_report R
+                                                    LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
+                                                    LEFT JOIN CanboPhuong C ON C.email = R.officer
+                                                    LEFT JOIN Ward W ON W.id_ward = C.id_ward
+                                                    LEFT JOIN District D ON  D.id_district = W.id_district
+                                                    WHERE R.office = 2 AND R.id_report = ${id}
+                                                    UNION
+                                                    SELECT R.id_report, R.id_ads_location, T.report_type, R.fullname, R.email, R.phone, R.content, R.report_time, R.status, R.resolve, R.photo1, R.photo2, R.officer, R.office, NULL AS district, NULL AS ward
+                                                    FROM Ads_loc_report R
+                                                    LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
+                                                    WHERE R.office IS NULL AND R.id_report =  ${id}`);
         sucessCode(res, data, "Get thành công");
     } catch(err) {
         errorCode(res, "Lỗi BE");
@@ -882,4 +910,5 @@ module.exports = {
     getAllBaoCaoDD,
 
     getBaoCaoBQCById,
+    getBaoCaoDDQCById,
 };

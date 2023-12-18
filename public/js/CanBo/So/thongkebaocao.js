@@ -188,9 +188,9 @@ function buildReportAdsLocationTable(data) {
     } else {
       tr.append('<td class="status" style="color: indianred">Chưa xử lý</td>');
     }
-    // tr.click(function () {
-    //   window.location = "/thongkebaocao/ddqc?id=" + item.id_report;
-    // })
+    tr.click(function () {
+      window.location = "/thongkebaocao/ddqc?id=" + item.id_report;
+    })
     table.append(tr);
   })
 }
