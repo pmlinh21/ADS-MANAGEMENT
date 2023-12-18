@@ -63,6 +63,7 @@ const {
 
     getBaoCaoBQCById,
     getBaoCaoDDQCById,
+    getBaoCaoDDById,
 
 } = require('../controllers/soController')
 
@@ -146,5 +147,6 @@ soRoute.get("/getAllBaoCaoDD", getAllBaoCaoDD);
 
 soRoute.get("/getBaoCaoBQCById/:id", getBaoCaoBQCById);
 soRoute.get("/getBaoCaoDDQCById/:id", getBaoCaoDDQCById);
+soRoute.get("/getBaoCaoDDById/:id", getBaoCaoDDById);
 
 module.exports = soRoute;
