@@ -74,7 +74,22 @@ $(document).ready(function () {
 
           $("#edit-ads button[value='delete']").on("click", function (e) {
             if (confirm("Bạn có chắc chắn muốn xóa không?")) {
-              
+              const deleteData = { id: parseInt(id) }
+              $.ajax({
+                url: '/api/so/deleteBangQuangCao',
+                type: 'DELETE',
+                catch: false,
+                dataType: 'json',
+                data: deleteData,
+                success: function (res) {
+                  window.location.href = "/bangquangcao";
+                  alert("Xóa thành công");
+                },
+                error: function (xhr, status, err) {
+                  alert("Xóa thất bại");
+                  console.log(err);
+                }
+              })
             }
           })
         }
