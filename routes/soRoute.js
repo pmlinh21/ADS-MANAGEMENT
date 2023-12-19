@@ -149,7 +149,7 @@ soRoute.delete("/deleteDiemDatQuangCao", deleteDiemDatQuangCao);
 // BANGQUANGCAO
 soRoute.get("/getAllBangQuangCao", getAllBangQuangCao);
 soRoute.get("/getBangQuangCaoById/:id", getBangQuangCaoById);
-soRoute.put("/updateBangQuangCao", updateBangQuangCao);
+soRoute.put("/updateBangQuangCao", upload("").single("photo"), updateBangQuangCao);
 soRoute.delete("/deleteBangQuangCao", deleteBangQuangCao);
 
 // YEUCAUCHINHSUA

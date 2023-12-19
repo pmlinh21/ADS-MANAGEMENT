@@ -571,11 +571,12 @@ const addCanboPhuong = async (req, res) => {
 const getAllDiemDatQuangCao = async (req, res) => {
   try {
     const [data, metadata] = await sequelize.query(`SELECT L.id_ads_location, L.address, W.ward, D.district, T.loc_type, A.ads_type, L.is_zoning
-                                                        FROM Ads_location L
-                                                        LEFT JOIN Ward W ON W.id_ward = L.id_ward
-                                                        LEFT JOIN District D ON D.id_district = W.id_district
-                                                        LEFT JOIN Location_type T ON T.id_loc_type = L.id_loc_type
-                                                        LEFT JOIN Ads_type A ON A.id_ads_type = L.id_ads_type`);
+                                                    FROM Ads_location L
+                                                    LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                    LEFT JOIN District D ON D.id_district = W.id_district
+                                                    LEFT JOIN Location_type T ON T.id_loc_type = L.id_loc_type
+                                                    LEFT JOIN Ads_type A ON A.id_ads_type = L.id_ads_type
+                                                    ORDER BY L.id_ads_location`);
     sucessCode(res, data, "Get thành công");
   } catch (err) {
     errorCode(res, "Lỗi BE");
@@ -642,12 +643,12 @@ const deleteDiemDatQuangCao = async (req, res) => {
 const getAllBangQuangCao = async (req, res) => {
   try {
     const [data, metadata] = await sequelize.query(`SELECT A.id_ads, A.id_ads_location, L.address, W.ward, D.district, B.board_type, A.expired_date
-                                                        FROM Ads A 
-                                                        LEFT JOIN Ads_location L ON L.id_ads_location = A.id_ads_location
-                                                        LEFT JOIN Ward W ON W.id_ward = L.id_ward
-                                                        LEFT JOIN District D ON D.id_district = W.id_district
-                                                        LEFT JOIN Board_type B ON B.id_board_type = A.id_board_type
-                                                        ORDER BY id_ads DESC`);
+                                                    FROM Ads A 
+                                                    LEFT JOIN Ads_location L ON L.id_ads_location = A.id_ads_location
+                                                    LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                    LEFT JOIN District D ON D.id_district = W.id_district
+                                                    LEFT JOIN Board_type B ON B.id_board_type = A.id_board_type
+                                                    ORDER BY id_ads`);
     sucessCode(res, data, "Get thành công");
   } catch (err) {
     errorCode(res, "Lỗi BE");
@@ -669,7 +670,23 @@ const getBangQuangCaoById = async (req, res) => {
 
 const updateBangQuangCao = async (req, res) => {
   try {
-    const [data, meta] = await sequelize.query(``);
+    const photo = req.file;
+    let { id_ads, id_ads_location, id_board_type, width, height, quantity, expired_date } = req.body;
+
+    const data = await model.Ads.update({
+      id_ads_location: id_ads_location,
+      id_board_type: id_board_type,
+      width: width,
+      height: height,
+      quantity: quantity,
+      expired_date: expired_date,
+      photo: photo?.filename
+    }, {
+      where: {
+        id_ads: id_ads
+      }
+    })
+
     sucessCode(res, data, "Put thành công");
   } catch (err) {
     errorCode(res, "Lỗi BE");

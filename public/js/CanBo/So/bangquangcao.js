@@ -35,7 +35,7 @@ function buildAdsTable(data) {
         tr.append('<td class="expired-date">' + new Date(item.expired_date).toLocaleDateString('en-GB').replace(/\//g, '-') + '</td>');
 
         tr.click(function() {
-            // window.location = "/bangquangcao/chinhsua?id=" + item.id_ads;
+            window.location = "/bangquangcao/chinhsua?id=" + item.id_ads;
         });
 
         table.append(tr);

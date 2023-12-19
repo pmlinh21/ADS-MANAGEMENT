@@ -1,5 +1,3 @@
-document.querySelector("#diemdat").classList.add("snb-li-active");
-
 $(document).ready(function () {
   $("#diemdat").addClass("snb-li-active");
 
