@@ -54,8 +54,12 @@ const {
     addCanboPhuong,
 
     getAllDiemDatQuangCao,
+    getDiemDatQuangCaoById,
+    updateDiemDatQuangCao,
 
     getAllBangQuangCao,
+    getBangQuangCaoById,
+    updateBangQuangCao,
 
     getAllYeuCauChinhSuaDDQC,
     getAllYeuCauChinhSuaBQC,
@@ -73,7 +77,7 @@ const {
 
 } = require('../controllers/soController')
 
-// const { upload } = require('../middlewares/upload');
+const { upload, uploadNone } = require('../middlewares/upload');
 // const { isCanboSo } = require('../middlewares/baseToken');
 
 // QUANLICHUNG
@@ -136,9 +140,13 @@ soRoute.post("/addCanboPhuong", addCanboPhuong);
 
 // DIEMDATQUANGCAO
 soRoute.get("/getAllDiemDatQuangCao", getAllDiemDatQuangCao);
+soRoute.get("/getDiemDatQuangCaoById/:id", getDiemDatQuangCaoById);
+soRoute.put("/updateDiemDatQuangCao", upload("test").single("photo"), updateDiemDatQuangCao); 
 
 // BANGQUANGCAO
 soRoute.get("/getAllBangQuangCao", getAllBangQuangCao);
+soRoute.get("/getBangQuangCaoById/:id", getBangQuangCaoById);
+soRoute.put("/updateBangQuangCao", updateBangQuangCao);
 
 // YEUCAUCHINHSUA
 soRoute.get("/getAllYeuCauChinhSuaDDQC", getAllYeuCauChinhSuaDDQC);

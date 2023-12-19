@@ -37,9 +37,14 @@ function buildAdsLocationsTable(data) {
         }
 
         tr.click(function() {
-            // window.location = "/diemdatquangcao/chinhsua?id=" + item.id_ads_location;
+            window.location = "/diemdatquangcao/chinhsua?id=" + item.id_ads_location;
         });
 
         table.append(tr);
     });
+    // <tr><td colspan="7" class="add-item"><a href="/diemdatquangcao/them"><i class="fas fa-plus"></i></a></td>
+
+    let tr = $("<tr></tr>");
+    tr.append('<td colspan="7" class="add-item"><a href="/diemdatquangcao/them"><i class="fas fa-plus"></i></a></td>');
+    table.append(tr);
 }
