@@ -80,7 +80,7 @@ $(document).ready(function () {
                 type: 'DELETE',
                 catch: false,
                 dataType: 'json',
-                data: deleteData,
+                data: deleteData, 
                 success: function (res) {
                   window.location.href = "/bangquangcao";
                   alert("Xóa thành công");
