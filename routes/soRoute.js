@@ -56,10 +56,12 @@ const {
     getAllDiemDatQuangCao,
     getDiemDatQuangCaoById,
     updateDiemDatQuangCao,
+    deleteDiemDatQuangCao,
 
     getAllBangQuangCao,
     getBangQuangCaoById,
     updateBangQuangCao,
+    deleteBangQuangCao,
 
     getAllYeuCauChinhSuaDDQC,
     getAllYeuCauChinhSuaBQC,
@@ -141,12 +143,14 @@ soRoute.post("/addCanboPhuong", addCanboPhuong);
 // DIEMDATQUANGCAO
 soRoute.get("/getAllDiemDatQuangCao", getAllDiemDatQuangCao);
 soRoute.get("/getDiemDatQuangCaoById/:id", getDiemDatQuangCaoById);
-soRoute.put("/updateDiemDatQuangCao", upload("test").single("photo"), updateDiemDatQuangCao); 
+soRoute.put("/updateDiemDatQuangCao", upload("").single("photo"), updateDiemDatQuangCao); 
+soRoute.delete("/deleteDiemDatQuangCao", deleteDiemDatQuangCao);
 
 // BANGQUANGCAO
 soRoute.get("/getAllBangQuangCao", getAllBangQuangCao);
 soRoute.get("/getBangQuangCaoById/:id", getBangQuangCaoById);
 soRoute.put("/updateBangQuangCao", updateBangQuangCao);
+soRoute.delete("/deleteBangQuangCao", deleteBangQuangCao);
 
 // YEUCAUCHINHSUA
 soRoute.get("/getAllYeuCauChinhSuaDDQC", getAllYeuCauChinhSuaDDQC);

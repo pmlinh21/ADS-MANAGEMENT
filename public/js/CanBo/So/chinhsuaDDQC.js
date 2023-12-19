@@ -95,7 +95,24 @@ $(document).ready(function () {
               })
 
               $("#edit-ads-location button[value='delete']").on("click", function (e) {
-                console.log("delete");
+                if (confirm("Bạn có chắc chắn muốn xóa không?")) {
+                  const deleteData = { id: parseInt(id) }
+                  $.ajax({
+                    url: '/api/so/deleteDiemDatQuangCao',
+                    type: 'DELETE',
+                    catch: false,
+                    dataType: 'json',
+                    data: deleteData,
+                    success: function (res) {
+                      window.location.href = "/diemdatquangcao";
+                      alert("Xóa thành công");
+                    },
+                    error: function (xhr, status, err) {
+                      alert("Xóa thất bại");
+                      console.log(err);
+                    }
+                  })
+                }
               })
             }
           })
@@ -149,43 +166,10 @@ function buildForm(data) {
     form.find("#is-zoning").val("");
   }
   if (data.photo != null && data.photo != "") {
-    try {
-      form.find("#image-preview").attr("src", "../../../public/image/" + data.photo); 
-    } catch (err) {
-      form.find("#image-preview").attr("src", "../../../public/image/image-placeholder.jpg");
-    }
+    form.find("#image-preview").attr("src", "../../../public/image/" + data.photo); 
     // form.find("#image").val(data.photo);
   } else {
     form.find("#image-preview").attr("src", "../../../public/image/image-placeholder.jpg"); 
-  }
-}
-
-async function handleButtonClick(e) {
-  console.log(e);
-  e.preventDefault();
-  if (e.value == "update") {
-    
-  } else if (e.value == "delete") {
-    console.log("delete");
-    if (confirm("Bạn có chắc chắn muốn xóa không?")) {
-      // const formData = new FormData();
-      // formData.append("id_ads_location", $("#edit-ads-location #id-ads-location").val());
-      // $.ajax({
-      //   url: '/api/so/deleteDiemDatQuangCao',
-      //   type: 'DELETE',
-      //   catch: false,
-      //   dataType: 'json',
-      //   data: deleteData,
-      //   success: function (res) {
-      //     window.location.href = "/diemdatquangcao";
-      //     alert("Thêm thành công");
-      //   },
-      //   error: function (xhr, status, err) {
-      //     alert("Thêm cán bộ thất bại");
-      //     console.log(err);
-      //   }
-      // })
-    }
   }
 }
 

@@ -624,6 +624,20 @@ const updateDiemDatQuangCao = async (req, res) => {
   }
 }
 
+const deleteDiemDatQuangCao = async (req, res) => {
+  try {
+    const id = req.body.id;
+    await model.Ads_location.destroy({
+      where: {
+        id_ads_location: id
+      }
+    });
+    sucessCode(res, "", "Delete thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi khóa ngoại");
+  }
+}
+
 // BANGQUANGCAO
 const getAllBangQuangCao = async (req, res) => {
   try {
@@ -659,6 +673,20 @@ const updateBangQuangCao = async (req, res) => {
     sucessCode(res, data, "Put thành công");
   } catch (err) {
     errorCode(res, "Lỗi BE");
+  }
+}
+
+const deleteBangQuangCao = async (req, res) => {
+  try {
+    const id = req.body.id;
+    await model.Ads.destroy({
+      where: {
+        id_ads: id
+      }
+    });
+    sucessCode(res, "", "Delete thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi khóa ngoại");
   }
 }
 
@@ -1024,10 +1052,12 @@ module.exports = {
   getAllDiemDatQuangCao,
   getDiemDatQuangCaoById,
   updateDiemDatQuangCao,
+  deleteDiemDatQuangCao,
 
   getAllBangQuangCao,
   getBangQuangCaoById,
   updateBangQuangCao,
+  deleteBangQuangCao,
 
   getAllYeuCauChinhSuaDDQC,
   getAllYeuCauChinhSuaBQC,
