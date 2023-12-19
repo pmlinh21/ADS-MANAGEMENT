@@ -6,33 +6,28 @@
             <span class="title-text"><h1><a href="/quanlicanbo">Quản lí cán bộ Quận</a> / Thêm cán bộ</h1></span>
         </div>
        
-        <form action="" method="post" class="form" id="add-district-officer">
+        <form class="form" id="add-district-officer">
             <legend><i class='fas fa-plus-square'></i> Thêm cán bộ Quận</legend>
             <div class="input-container">
-                <!-- <div class="input-field">
-                    <label for="id-officer">ID Cán bộ</label>
-                    <input type="text" id="id-officer" name="id-officer" disabled>
-                    <span class="tooltiptext">Không thể chỉnh sửa ID</span>
-                </div> -->
                 <div class="input-field">
-                    <label for="name-officer">Họ tên</label>
-                    <input type="text" id="name-officer" name="name-officer" required>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="e.g. canbo@example.com" required>
                 </div>
                 <div class="input-field">
-                    <label for="dob-officer">Ngày sinh</label>
-                    <input type="date" id="dob-officer" name="position-officer" required>
+                    <label for="fullname">Họ tên</label>
+                    <input type="text" id="fullname" name="fullname" placeholder="e.g. Nguyễn Văn A" required>
                 </div>
                 <div class="input-field">
-                    <label for="email-officer">Email</label>
-                    <input type="email" id="email-officer" name="email-officer" required>
+                    <label for="birthdate">Ngày sinh</label>
+                    <input type="date" id="birthdate" name="birthdate" required>
                 </div>
                 <div class="input-field">
-                    <label for="phone-officer">Số điện thoại</label>
-                    <input type="tel" id="phone-officer" name="phone-officer" required>
+                    <label for="phone">Số điện thoại</label>
+                    <input type="tel" id="phone" name="phone" placeholder="e.g. 0123456789" required>
                 </div> 
                 <div class="input-field">
-                    <label for="work-for-district">Quận quản lí</label>
-                    <select name="work-for-district" id="work-for-district" required>
+                    <label for="id-district">Quận quản lí</label>
+                    <select name="id_district" id="id-district" required>
                     </select>
                 </div> 
             </div>

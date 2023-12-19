@@ -10,16 +10,16 @@
             <legend><i class="fas fa-info-circle"></i> Chi tiết báo cáo điểm đặt quảng cáo</legend>
             <div class="input-container">
                 <div class="input-field">
-                    <label for="id">ID Báo cáo</label>
-                    <input type="text" id="id" name="id" disabled>
+                    <label for="id-report">ID Báo cáo</label>
+                    <input type="text" id="id-report" name="id_report" value="<%= id %>" disabled>
                 </div>
                 <div class="input-field">
                     <label for="id-ads-location">ID Điểm đặt</label>
-                    <input type="text" id="id-ads-location" name="id-ads-location" disabled>
+                    <input type="text" id="id-ads-location" name="id_ads_location" disabled>
                 </div>
                 <div class="input-field">
-                    <label for="reporter">Họ tên người báo cáo</label>
-                    <input type="text" id="reporter" name="reporter" disabled>
+                    <label for="fullname">Họ tên người báo cáo</label>
+                    <input type="text" id="fullname" name="fullname" disabled>
                 </div>
                 <div class="input-field">
                     <label for="email">Email</label>
@@ -31,15 +31,15 @@
                 </div>
                 <div class="input-field">
                     <label for="report-time">Thời gian báo cáo</label>
-                    <input type="date" name="report-time" id="report-time" disabled>
+                    <input type="date" name="report_time" id="report-time" disabled>
                 </div>
                 <div class="input-field">
                     <label for="report-type">Loại hình báo cáo</label>
-                    <input type="text" name="report-type" id="report-type" disabled>
+                    <input type="text" name="report_type" id="report-type" disabled>
                 </div>
                 <div class="input-field textarea span-3 report-content">
-                    <label for="report-content">Nội dung báo cáo</label>
-                    <textarea name="report-content" id="report-content" disabled></textarea>
+                    <label for="content">Nội dung báo cáo</label>
+                    <textarea name="content" id="content" disabled></textarea>
                 </div>
                 <div class="input-field">
                     <label for="status">Trạng thái</label>
@@ -59,15 +59,15 @@
                 </div>
 
                 <div class="input-field image span-4">
-                    <label for="ads-location-image">Hình ảnh minh họa</label>
+                    <label for="image1">Hình ảnh minh họa</label>
                     <div class="img-container">
-                        <img src="../../../public/image/image4.png" alt="" id="ads-location-image-preview">
+                        <img src="../../../public/image/image-placeholder.jpg" alt="" id="image1">
                     </div>
                 </div>
                 <div class="input-field image span-4">
-                    <label for="ads-location-image">Hình ảnh minh họa</label>
+                    <label for="image2">Hình ảnh minh họa</label>
                     <div class="img-container">
-                        <img src="../../../public/image/image4.png" alt="" id="ads-location-image-preview">
+                        <img src="../../../public/image/image-placeholder.jpg" alt="" id="image2">
                     </div>
                 </div>
                 

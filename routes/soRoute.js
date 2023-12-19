@@ -6,18 +6,22 @@ const {
     getSoLuongCanBo,
     getSoLuongDDQC,
     getSoLuongBQC,
+
     getLoaiViTri, 
     getHinhThucQuangCao, 
     getLoaiHinhBaoCao, 
     getLoaiBangQuangCao,
+
     updateLoaiViTri,
     updateHinhThucQuangCao,
     updateLoaiHinhBaoCao,
     updateLoaiBangQuangCao,
+
     deleteLoaiViTri,
     deleteHinhThucQuangCao,
     deleteLoaiHinhBaoCao,
     deleteLoaiBangQuangCao,
+
     addLoaiViTri,
     addHinhThucQuangCao,
     addLoaiHinhBaoCao,
@@ -29,16 +33,48 @@ const {
     deleteQuan,
     addQuan,
 
+    getAllPhuongByIdQuan,
     getAllPhuongData,
     updatePhuong,
     deletePhuong,
     addPhuong,
 
     getAllCanboQuan,
-    getAllCanboPhuong
+    getAllCanboPhuong,
+    getAllCanboEmail,
+
+    getCanboQuanByEmail,
+    updateCanboQuan,
+    deleteCanboQuan,
+    addCanboQuan,
+
+    getCanboPhuongByEmail,
+    updateCanboPhuong,
+    deleteCanboPhuong,
+    addCanboPhuong,
+
+    getAllDiemDatQuangCao,
+
+    getAllBangQuangCao,
+
+    getAllYeuCauChinhSuaDDQC,
+    getAllYeuCauChinhSuaBQC,
+
+    getAllYeuCauCapPhep,
+    getYeuCauCapPhepById,
+
+    getAllBaoCaoDDQC,
+    getAllBaoCaoBQC,
+    getAllBaoCaoDD,
+
+    getBaoCaoBQCById,
+    getBaoCaoDDQCById,
+    getBaoCaoDDById,
+
 } = require('../controllers/soController')
 
 // const { upload } = require('../middlewares/upload');
+// const { isCanboSo } = require('../middlewares/baseToken');
 
 // QUANLICHUNG
 soRoute.get("/getSoLuongQuan", getSoLuongQuan);
@@ -75,6 +111,7 @@ soRoute.delete("/deleteQuan", deleteQuan);
 soRoute.post("/addQuan", addQuan);
 
 // QUANLIPHUONG
+soRoute.get("/getAllPhuongByIdQuan/:id_district", getAllPhuongByIdQuan);
 soRoute.get("/getAllPhuongData", getAllPhuongData);
 soRoute.put("/updatePhuong", updatePhuong);
 soRoute.delete("/deletePhuong", deletePhuong);
@@ -83,5 +120,41 @@ soRoute.post("/addPhuong", addPhuong);
 // QUANLICANBO
 soRoute.get("/getAllCanboQuan", getAllCanboQuan);
 soRoute.get("/getAllCanboPhuong", getAllCanboPhuong);
+soRoute.get("/getAllCanboEmail", getAllCanboEmail);
+
+soRoute.get("/getCanboQuanByEmail/:email", getCanboQuanByEmail);
+soRoute.get("/getCanboPhuongByEmail/:email", getCanboPhuongByEmail);
+
+soRoute.put("/updateCanboQuan", updateCanboQuan);
+soRoute.put("/updateCanboPhuong", updateCanboPhuong);
+
+soRoute.delete("/deleteCanboQuan", deleteCanboQuan);
+soRoute.delete("/deleteCanboPhuong", deleteCanboPhuong);
+
+soRoute.post("/addCanboQuan", addCanboQuan);
+soRoute.post("/addCanboPhuong", addCanboPhuong);
+
+// DIEMDATQUANGCAO
+soRoute.get("/getAllDiemDatQuangCao", getAllDiemDatQuangCao);
+
+// BANGQUANGCAO
+soRoute.get("/getAllBangQuangCao", getAllBangQuangCao);
+
+// YEUCAUCHINHSUA
+soRoute.get("/getAllYeuCauChinhSuaDDQC", getAllYeuCauChinhSuaDDQC);
+soRoute.get("/getAllYeuCauChinhSuaBQC", getAllYeuCauChinhSuaBQC);
+
+// YEUCAUCAPPHEP
+soRoute.get("/getAllYeuCauCapPhep", getAllYeuCauCapPhep);
+soRoute.get("/getYeuCauCapPhepById/:id", getYeuCauCapPhepById);
+
+// THONGKEBAOCAO
+soRoute.get("/getAllBaoCaoDDQC", getAllBaoCaoDDQC);
+soRoute.get("/getAllBaoCaoBQC", getAllBaoCaoBQC);
+soRoute.get("/getAllBaoCaoDD", getAllBaoCaoDD);
+
+soRoute.get("/getBaoCaoBQCById/:id", getBaoCaoBQCById);
+soRoute.get("/getBaoCaoDDQCById/:id", getBaoCaoDDQCById);
+soRoute.get("/getBaoCaoDDById/:id", getBaoCaoDDById);
 
 module.exports = soRoute;

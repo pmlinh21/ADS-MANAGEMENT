@@ -56,7 +56,7 @@ function buildDistrictOfficerTable(officers) {
     td.html("<a href='/quanlicanbo/themcbquan'><i class='fas fa-plus'></i></a>");
     tr.append(td);
     table.append(tr);
-}
+} 
 
 function buildWardOfficerTable(officers) {
     let table = $("#ward-officer-table table tbody");

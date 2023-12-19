@@ -19,7 +19,7 @@ $(document).ready(function(){
         for (let i = 0; i < districts.length; i++) {
             let option = $("<option></option>");
             option.val(districts[i][0]);
-            option.text(districts[i][1]);
+            option.text("Quận " + districts[i][1]);
             selectEdit.append(option);
             selectAdd.append(option.clone());
         }
@@ -33,9 +33,9 @@ function buildWardTable(wards) {
 
         let td1 = $("<td></td>").text(wards[i][0]);
         td1.addClass("id");
-        let td2 = $("<td></td>").text(wards[i][1]);
+        let td2 = $("<td></td>").text("Phường " + wards[i][1]);
         td2.addClass("name");
-        let td3 = $("<td></td>").text(wards[i][2]);
+        let td3 = $("<td></td>").text("Quận " + wards[i][2]);
         td3.addClass("in-district");
         let td4 = $("<td></td>").text(wards[i][3]);
         td4.addClass("number-of-ads-locations");
@@ -65,10 +65,11 @@ function buildWardTable(wards) {
     table.append(tr);
 }
 
+
 function editPopup() {
     $("#edit-popup").css("display", "block");
     $("#edit-popup .input-field:nth-of-type(1) input").val($(this).find(".id").text());
-    $("#edit-popup .input-field:nth-of-type(2) input").val($(this).find(".name").text());
+    $("#edit-popup .input-field:nth-of-type(2) input").val($(this).find(".name").text().slice(7));
     $("#edit-popup .input-field:nth-of-type(3) select").val($(this).find(".in-district").text().slice(5));
 
     let div = $("<div></div>");
@@ -98,7 +99,6 @@ async function handleButtonClick(e) {
     if (e.value == "update") {
         const formData = new FormData($("#edit-popup")[0]);
         const editData = Object.fromEntries(formData.entries());
-        alert(JSON.stringify(editData));
         let res = await fetch('/api/so/updatePhuong', {
             method: 'PUT',
             headers: {

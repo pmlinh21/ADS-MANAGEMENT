@@ -6,7 +6,7 @@ const { sucessCode, failCode, errorCode } = require('../config/response');
 const { Op } = require("sequelize");
 
 const getAllAdsLoc = async(req, res) =>{
-    try{
+    try{ 
         const [data, metadata] = await sequelize.query
         (`SELECT al.id_ads_location, al.address, al.longitude, al.latitude, 
         w.ward, d.district
