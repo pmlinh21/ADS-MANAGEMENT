@@ -146,12 +146,12 @@ $(document).ready(function () {
                 .addTo(map);
 
                 ward = features?.address?.district.substring(7)
-                district = features?.address?.city
+                district = features?.address?.city.substring(5)
                 address = (features?.address?.houseNumber && features?.address?.street)
                 ? features?.address?.houseNumber + " " +  features?.address?.street
                 : features?.address?.label.substring(0, features?.address?.label.indexOf(", Phường") )                 
               
-                $("#address").val(`${address}, phường ${ward}, ${district} [${longitude}, ${latitude}]` )
+                $("#address").val(`${address}, phường ${ward}, quận ${district} [${longitude}, ${latitude}]` )
               },
               error: function() {
                 alert('Error occurred during geocoding');
@@ -179,12 +179,12 @@ $(document).ready(function () {
                 // console.log(response)
                 const feature = response.items[0].address
                 ward = feature?.district.substring(7)
-                district = feature?.city
+                district = feature?.city.substring(5)
                 address = (feature?.houseNumber && feature?.street)
                 ? feature?.houseNumber + " " +  feature?.street
                 : feature?.label.substring(0, feature?.label.indexOf(", Phường") )
                 
-                $("#address").val(`${address}, phường ${ward}, ${district} [${longitude}, ${latitude}]`);
+                $("#address").val(`${address}, phường ${ward}, quận ${district} [${longitude}, ${latitude}]`);
               },
               error: function(error) {
                 console.log(error);
@@ -366,7 +366,7 @@ $(document).ready(function () {
 
           // console.log(filter_info[click_row])
 
-          $("#address").val(`${address}, phường ${ward}, ${district} [${longitude},${latitude}]`)
+          $("#address").val(`${address}, phường ${ward}, quận ${district} [${longitude},${latitude}]`)
 
           if (filter_info[click_row][11])
             $("#yes").prop('selected', true);
@@ -447,12 +447,13 @@ $(document).ready(function () {
                 .addTo(map);
 
                 ward = features?.address?.district.substring(7)
-                district = features?.address?.city
+                district = features?.address?.city.substring(5)
+                console.log(district)
                 address = (features?.address?.houseNumber && features?.address?.street)
                 ? features?.address?.houseNumber + " " +  features?.address?.street
                 : features?.address?.label.substring(0, features?.address?.label.indexOf(", Phường") )                 
               
-                $("#address").val(`${address}, phường ${ward}, ${district} [${longitude}, ${latitude}]` )
+                $("#address").val(`${address}, phường ${ward}, quận ${district} [${longitude}, ${latitude}]` )
               },
               error: function() {
                 alert('Error occurred during geocoding');
@@ -477,15 +478,14 @@ $(document).ready(function () {
               url: `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${latitude}%2C${longitude}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc&lang=vi`,
               method: 'GET',
               success: function(response) {
-                // console.log(response)
                 const feature = response.items[0].address
                 ward = feature?.district.substring(7)
-                district = feature?.city
+                district = feature?.city.substring(5)
                 address = (feature?.houseNumber && feature?.street)
                 ? feature?.houseNumber + " " +  feature?.street
                 : feature?.label.substring(0, feature?.label.indexOf(", Phường") )
                 
-                $("#address").val(`${address}, phường ${ward}, ${district} [${longitude}, ${latitude}]`);
+                $("#address").val(`${address}, phường ${ward}, quận ${district} [${longitude}, ${latitude}]`);
               },
               error: function(error) {
                 console.log(error);

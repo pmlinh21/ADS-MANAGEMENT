@@ -973,8 +973,8 @@ label.required::after {
   text-align: center
 }
 
-.form-ads-create{
-  margin: 1rem 4rem;
+.form-ads-create, .form-extend-ads{
+  margin: 2rem 4rem;
   background-color: white;
   padding: 0.5rem 2rem 1.2rem 2rem;
   color: #0B7B31;
@@ -982,11 +982,13 @@ label.required::after {
   border-radius: 1rem;
 }
 
-.form-ads-create div:nth-child(1){
+.form-ads-create div:nth-child(1),
+.form-extend-ads div:nth-child(1){
   font-weight: 900;
   margin-bottom: -0.5rem;
 }
 
+.form-extend-ads .button-group,
 .form-ads-create .button-group,
 .forget-pass-form .button-group,
 .enter-email-form .button-group,

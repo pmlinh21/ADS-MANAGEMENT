@@ -551,7 +551,7 @@ const getAdsCreateByID = async(req, res) =>{
         let { id_create } = req.params;
 
         const [data, metadata] = await sequelize.query
-        (`SELECT ac.*, bt.board_type, w.ward, d.district, al.address as address_adsloc
+        (`SELECT ac.*, bt.board_type, w.*, d.*, al.address as address_adsloc
         FROM Ads_create ac
         INNER JOIN Board_type bt ON bt.id_board_type = ac.id_board_type
         INNER JOIN Ads_location al ON al.id_ads_location = ac.id_ads_location
@@ -566,10 +566,46 @@ const getAdsCreateByID = async(req, res) =>{
     }
 }
 
-// delete hinh anh
+const getAdsCreateByAds = async(req, res) =>{
+    try{
+        let { id_ads } = req.params;
+
+        const [data, metadata] = await sequelize.query
+        (`SELECT ac.*, bt.board_type, w.*, d.*, al.address as address_adsloc
+        FROM Ads_create ac
+        INNER JOIN Board_type bt ON bt.id_board_type = ac.id_board_type
+        INNER JOIN Ads_location al ON al.id_ads_location = ac.id_ads_location
+        INNER JOIN Ward w ON w.id_ward = al.id_ward
+        INNER JOIN District d ON d.id_district = w.id_district
+        WHERE ac.id_ads = ${id_ads}
+        ORDER BY id_create 
+        LIMIT 1`);
+        
+        sucessCode(res,data,"Get thành công")
+
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
 const deleteAdsCreateByID = async(req, res) =>{
     try{
         let { id_create } = req.params;
+
+        const record = await model.Ads_create.findOne(
+            { where:{
+            id_create
+        }})
+
+        if(record.photo){
+            try{
+                const fs = require('fs');
+                console.log("xóa ảnh")
+                fs.unlinkSync(process.cwd() + "/public/image/adsCreate/" + record.photo);
+            } catch(err){
+                console.log("Lỗi khi xóa ảnh", err);
+            }
+        }
 
         await model.Ads_create.destroy(
             { where:{
@@ -716,6 +752,6 @@ const updateInfo = async(req, res) =>{
 module.exports = { getAdsType, getBoardType, getReportType, getLocType,
     getAdsReportByID, getAdsLocReportByID, getLocReportByID, 
     updateAdsReportByID, updateAdsLocReportByID, updateLocReportByID,
-    getAdsCreateByID, deleteAdsCreateByID,
+    getAdsCreateByID, deleteAdsCreateByID, getAdsCreateByAds,
     login, findEmail, sendEmail, checkOTP, createNewPwd, updatePassword,
     getAccountInfo, updateInfo}

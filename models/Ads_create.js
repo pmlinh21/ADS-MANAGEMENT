@@ -84,6 +84,10 @@ class Ads_create extends Sequelize.Model {
     status: {
       type: DataTypes.BOOLEAN,
       allowNull: true
+    },
+    id_ads: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     }
   },{
     sequelize,
