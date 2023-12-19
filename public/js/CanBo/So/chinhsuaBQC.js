@@ -1,6 +1,8 @@
 $(document).ready(function () {
   $("#bang").addClass("snb-li-active");
 
+  mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
+
   $.ajax({
     url: "/api/so/getLoaiBangQuangCao",
     method: "GET",
@@ -100,6 +102,84 @@ $(document).ready(function () {
       console.log(err);
     },
   })
+
+  var adslocations;
+  $.ajax({
+    url: "/api/so/getAllAdsLocations",
+    method: "GET",
+    catch: false,
+    dataType: "json",
+    success: function (data) {
+      adslocations = data.content;
+
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [adslocations[0].longitude, adslocations[0].latitude],
+        zoom: 17,
+        language: 'vi'
+      })
+
+      var language = new MapboxLanguage({
+        defaultLanguage: 'vi'
+      });
+      map.addControl(language);
+
+      let canvas = $('.mapboxgl-canvas')
+      canvas.width('100%');
+      canvas.height('100%');
+
+      adslocations.forEach(function (item, index) {
+        var marker = new mapboxgl.Marker({
+          color: '#0B7B31'
+        })
+          .setLngLat([item.longitude, item.latitude])
+          .addTo(map)
+          .getElement();
+
+          marker.id = `marker-${index}`;
+      })
+
+      $('#edit-ads #id-ads-location').on('click', function () {
+        let id_adsLocation = parseInt($('#edit-ads #id-ads-location').val());
+        let current = null;
+        adslocations.forEach(function (item, index) {
+          if (item.id_ads_location == id_adsLocation) {
+            current = index;
+            return;
+          }
+        })
+
+        $('#select-location-map').css('display', 'block');
+        $('#select-location-map .chosen-address').text(adslocations[current].address + ', Phường ' + adslocations[current].ward + ', Quận ' + adslocations[current].district + ' [' + adslocations[current].latitude + ', ' + adslocations[current].longitude + ']');
+
+        let div = $('<div></div>');
+        div.addClass('popup-background');
+        div.on('click', function () {
+          div.remove();
+          $('#select-location-map').css('display', 'none');
+        })
+        $('body').append(div);
+
+        // marker click event
+        $(document).on('click', '.mapboxgl-marker', function () {
+          let markerId = $(this).attr('id');
+          current = parseInt(markerId.split('-')[1]);
+          $('#select-location-map .chosen-address').text(adslocations[current].address + ', Phường ' + adslocations[current].ward + ', Quận ' + adslocations[current].district + ' [' + adslocations[current].latitude + ', ' + adslocations[current].longitude + ']');
+        })
+
+        // button click event
+        $('#select-location-map button').on('click', function () {
+          $('#edit-ads #id-ads-location').val(adslocations[current].id_ads_location);
+          $('#select-location-map').css('display', 'none');
+          $('.popup-background').remove();
+        })
+      })
+    }, 
+    error: function (err) {
+      console.log(err);
+    }
+  })
 });
 
 function buildSelectLoaiBang(data) {
@@ -129,37 +209,3 @@ function buildForm(data) {
     form.find("#image-preview").attr("src", "../../../public/image/image-placeholder.jpg");
   }
 }
-
-// open map popup
-// function mapPopup(e) {
-//   let id_adsLocation = e.value;
-
-//   document.querySelector("#select-location-map").style.display = "block";
-//   for (let i = 0; i < adslocations.length; i++) {
-//     if (id_adsLocation == adslocations[i][0]) {
-//       let w, d, lat, lng;
-//       lat = adslocations[i][1];
-//       lng = adslocations[i][2];
-//       for (let j = 0; j < wards.length; j++) {
-//         if (wards[j][0] == adslocations[i][4]) {
-//           w = wards[j][1];
-//           d = wards[j][2];
-//           break;
-//         }
-//       }
-//       document.querySelector("#select-location-map .chosen-address").textContent = "[" + lat + ", " + lng + "] " + adslocations[i][3] + ", Phường " + w + ", Quận " + d;
-//       break;
-//     }
-//   }
-//   // if (document.querySelector("#select-location-map .chosen-address").textContent == "") {
-//   //     document.querySelector("#select-location-map .chosen-address").style.display = "none";
-//   // }
-
-//   let div = document.createElement("div");
-//   div.className = "popup-background";
-//   div.addEventListener("click", () => {
-//     div.remove();
-//     document.querySelector("#select-location-map").style.display = "none";
-//   });
-//   document.querySelector("body").appendChild(div);
-// }

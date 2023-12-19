@@ -55,6 +55,7 @@ const {
 
     getAllDiemDatQuangCao,
     getDiemDatQuangCaoById,
+    getAllAdsLocations,
     updateDiemDatQuangCao,
     deleteDiemDatQuangCao,
 
@@ -143,6 +144,7 @@ soRoute.post("/addCanboPhuong", addCanboPhuong);
 // DIEMDATQUANGCAO
 soRoute.get("/getAllDiemDatQuangCao", getAllDiemDatQuangCao);
 soRoute.get("/getDiemDatQuangCaoById/:id", getDiemDatQuangCaoById);
+soRoute.get("/getAllAdsLocations", getAllAdsLocations);
 soRoute.put("/updateDiemDatQuangCao", upload("").single("photo"), updateDiemDatQuangCao); 
 soRoute.delete("/deleteDiemDatQuangCao", deleteDiemDatQuangCao);
 

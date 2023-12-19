@@ -668,6 +668,19 @@ const getBangQuangCaoById = async (req, res) => {
   }
 }
 
+const getAllAdsLocations = async (req, res) => {
+  try {
+    const [data, metadata] = await sequelize.query(`SELECT L.id_ads_location, L.latitude, L.longitude, L.address, L.id_ward, W.ward, W.id_district, D.district
+                                                    FROM Ads_location L
+                                                    LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                    LEFT JOIN District D ON D.id_district = W.id_district
+                                                    WHERE L.is_zoning = true`);
+    sucessCode(res, data, "Get thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi BE");
+  }
+}
+
 const updateBangQuangCao = async (req, res) => {
   try {
     const photo = req.file;
@@ -1068,6 +1081,7 @@ module.exports = {
 
   getAllDiemDatQuangCao,
   getDiemDatQuangCaoById,
+  getAllAdsLocations,
   updateDiemDatQuangCao,
   deleteDiemDatQuangCao,
 
