@@ -236,13 +236,13 @@ function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
   <% for (var i = 0; i < list_ads?.length; i++) { %>
       <div id="data-<%= list_ads[i].id_ads %>">
           <p style="width: 90%;font-size: 1rem; margin-bottom: 0.3rem"><strong><%= list_ads[i].board_type %></strong></p>
-          <p style="font-size: 0.7rem; color: gray; margin-bottom: 0.3rem"><%= address %>, phường <%= ward %>, <%= district %></p>
+          <p style="font-size: 0.7rem; color: gray; margin-bottom: 0.3rem"><%= address %>, phường <%= ward %>, quận <%= district %></p>
           <p>Kích thước:  <strong><%= list_ads[i].width %>m x <%= list_ads[i].height %>m</strong></p>
           <p>Số lượng:  <strong><%= list_ads[i].quantity %> trụ / bảng</strong></p>
           <p>Hình thức:  <strong><%= ads_type %></strong></p>
           <p>Phân loại:  <strong><%= loc_type %></strong></p>
 
-          <div class="detail-button data-<%= list_ads[i].id_ads %>" data-target="#detail-popup" data-toggle="modal">
+          <div class="detail-button data-<%= list_ads[i].id_ads %>" data-target="#detail-popup">
             <i class="fa-solid fa-circle-info"></i>
           </div>
 
@@ -315,16 +315,12 @@ function showSidebar(adsloc) {
   renderAds(adsloc)
   flag = true;
 
-  if (adsloc.id_ads_location)
-    $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, ${adsloc.district}`)
-  else{
-    $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, ${adsloc.district}`)
-  }
+  $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, quận ${adsloc.district}`)
     
   $("#sidebar .detail-button").on("click", function () {
     let str_id_ads = $(this).attr("class").split(" ")[1];
     let id_ads = parseInt(str_id_ads.split("-")[1])
-    console.log(id_ads)
+    // console.log(id_ads)
 
     const list_ads = JSON.parse(adsloc.list_ads)
     ads = list_ads?.filter(item => item.id_ads == id_ads)[0]
@@ -333,38 +329,42 @@ function showSidebar(adsloc) {
       ? `../../../public/image/image-placeholder.jpg`
       : `../../../public/image/${ads.photo}`)
     $("#detail-popup .image img").attr("src", imagePath)
-
-    $.ajax({
-      url: `/api/basic/getAdsCreateByID/${ads.id_ads_create}`,
-      type: "GET",
-      dataType: "json",
-      success: function (data) {
-        console.log(data)
-        $("#detail-popup").show()
-        info = data.content[0]
-        $('#id').val(info.id_create);
-        $('#board_type').val(info.board_type);
-        $('#size').val(info.width + 'm x ' + info.height + "m");
-        $('#quantity').val(info.quantity);
-        $('#content').val(info.content);
-        $('#adsloc').val(`${info.address_adsloc}, phường ${info.ward}, ${info.district}`);
-        $('#company').val(info.company);
-        $('#email').val(info.email);
-        $('#phone').val(info.phone);
-        $('#address').val(info.address);
-        $('#start_date').val(formatSQLDate_ymd(info.start_date));
-        $('#end_date').val(formatSQLDate_ymd(info.end_date));
-        $('#status').val(info.status === 1 ? "Đã xét duyệt" : "Chưa xét duyệt");
-        $('#officer').val(info.officer);
-        $('#office').val(info.office === 1 ? "Quận" : (info.office === 2 ? "Phường" : ""));
-        if (info.photo !== "")
-          $('.image-details').attr('src', `../../../../public/image/${info.photo}`);
-        else
-          $('.image-details').attr('src', `../../../../public/image/image-placeholder.jpg`);
-        if (info.status === 1)
-          $('.style3-button').hide()
-      }
-    })
+    
+      $.ajax({
+        url: `/api/basic/getAdsCreateByAds/${ads.id_ads}`,
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+          console.log(data)
+          console.log(ads.id_ads)
+          if (data.content.length > 0) {
+            $("#detail-popup").modal('show');
+            info = data.content[0]
+            $('#id').val(info.id_create);
+            $('#board_type').val(info.board_type);
+            $('#size').val(info.width + 'm x ' + info.height + "m");
+            $('#quantity').val(info.quantity);
+            $('#content').val(info.content);
+            $('#adsloc').val(`${info.address_adsloc}, phường ${info.ward}, ${info.district}`);
+            $('#company').val(info.company);
+            $('#email').val(info.email);
+            $('#phone').val(info.phone);
+            $('#address').val(info.address);
+            $('#start_date').val(formatSQLDate_ymd(info.start_date));
+            $('#end_date').val(formatSQLDate_ymd(info.end_date));
+            $('#status').val(info.status === true ? "Đã duyệt" : (
+              info.status === false ? "Đã từ chối" : "Chưa xét duyệt"));
+            $('#officer').val(info.officer);
+            $('#office').val(info.office === 1 ? "Quận" : (info.office === 2 ? "Phường" : ""));
+            
+          }
+          else{
+            $("#detail-popup").hide()
+            alert("Chưa có thông tin giấy cấp phép")
+          }
+          
+        }
+      })
   })
 
   $("#sidebar .adInfo .other-report-button").on("click", function () {

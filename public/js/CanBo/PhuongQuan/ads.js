@@ -104,9 +104,9 @@ $(document).ready(function () {
             $(document).on('click', '.mapboxgl-marker', function() {
               let markerId = $(this).attr('id');
               index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
-              // console.log('Marker clicked:', index);
+              console.log(adsloc[index].district);
               id_adsloc = adsloc[index].id_ads_location
-              result = adsloc[index].address + ', phường ' + adsloc[index].ward + ', ' + adsloc[index].district;
+              result = adsloc[index].address + ', phường ' + adsloc[index].ward + ', quận' + adsloc[index].district;
               $("#address").val(`${result} [${adsloc[index].longitude}, ${adsloc[index].latitude}]` )
             });
 
@@ -324,7 +324,7 @@ $(document).ready(function () {
               index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
               // console.log('Marker clicked:', index);
               id_adsloc = adsloc[index].id_ads_location
-              result = adsloc[index].address + ', phường ' + adsloc[index].ward + ', ' + adsloc[index].district;
+              result = adsloc[index].address + ', phường ' + adsloc[index].ward + ', quận' + adsloc[index].district;
               $("#address").val(`${result} [${adsloc[index].longitude}, ${adsloc[index].latitude}]` )
             });
 

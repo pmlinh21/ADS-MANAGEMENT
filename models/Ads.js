@@ -47,14 +47,6 @@ class Ads extends Sequelize.Model {
     expired_date: {
       type: DataTypes.DATE,
       allowNull: true
-    },
-    id_ads_create: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'Ads_create',
-        key: 'id_create'
-      }
     }
   }, {
     sequelize,

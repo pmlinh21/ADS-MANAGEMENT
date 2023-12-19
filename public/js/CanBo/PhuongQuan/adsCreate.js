@@ -3,7 +3,7 @@ $(document).ready(function () {
 
   mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
   
-  var wards, filter_info
+  var wards, filter_info, info
 
   if (role == "2"){
     $("#loading-bg").show();
@@ -17,7 +17,9 @@ $(document).ready(function () {
           let {id_create, board_type, address, content, company,
             start_date, end_date, status, address_adsloc,district,
             width, height, quantity, photo, email, phone, ward } = item
-          let statusText = status ? "Đã xét duyệt" : "Chưa xét duyệt"
+            let statusText = status ? "Đã duyệt" : (
+              status === false ? "Đã từ chối" : "Chưa xét duyệt"
+            )
 
           return [id_create, board_type, `${address_adsloc}`, content, company,
           formatSQLDate_dmy(start_date), formatSQLDate_dmy(end_date), statusText, 
@@ -25,8 +27,8 @@ $(document).ready(function () {
           width, height, quantity, photo, email, phone, ward]
         })
 
-        filter_info = [...info].sort((a, b) => a[0] - b[0]);
-
+        info = info.sort((a, b) => a[0] - b[0]);
+        filter_info = [...info]
         console.log(filter_info);
     
         $(".ads-create-table").DataTable({
@@ -40,6 +42,18 @@ $(document).ready(function () {
           let id_create = filter_info[row + 6 * (parseInt(page) - 1)][0]
           window.location.href = '/detailAdsCreate?id_create=' + id_create;
           console.log(row);
+        })
+
+        
+        let select_ads = info?.filter(function(item){
+          return item[7] === "Đã duyệt"
+        })
+
+        select_ads = select_ads.map(item => item[16])
+        select_ads = [...new Set(select_ads)];
+        
+        select_ads?.forEach(function(item){
+          $('#id_ads').append(`<option value=${item}>${item}</option>`);
         })
       }
     })
@@ -69,9 +83,9 @@ $(document).ready(function () {
       }
     });
   
-    $('.form-ads-create.style3-button').off('click').on('click', function(e) {
+    $('.form-ads-create .style3-button').off('click').on('click', function(e) {
       $("#id_ads_location").val("")
-      $('#id_board_type').val("")
+      $('#id_board_type .default').prop('selected', true)
       $('#content').val("")
       $('#width').val("")
       $('#height').val("")
@@ -228,6 +242,55 @@ $(document).ready(function () {
   
       }
     })
+
+    // click hủy
+    $('.form-extend-ads .style3-button').off('click').on('click', function(e) {
+      $("form.form-extend-ads").get(0).reset();
+    })  
+
+    // click "gia hạn"
+    $('.form-extend-ads .button-group .style1-button').off('click').on('click', function(e) {
+      e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
+      if ($('#id_ads').val() === "(Trống)") {
+        alert('Vui lòng chọn ID bảng quảng cáo.');
+      } else if ($('#start_date_extend').val() === "") {
+        alert('Vui lòng nhập ngày bắt đầu.');
+      } else if ($('#end_date_extend').val() === "") {
+        alert('Vui lòng nhập ngày kết thúc.');
+      } else if ($('#start_date_extend').val() > $('#end_date_extend').val()) {
+        alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
+      }else{
+        const formData = {
+          id_ads: $('#id_ads').val(),
+          start_date: $('#start_date_extend').val(),
+          end_date: $('#end_date_extend').val(),
+          office: role,
+          officer: email
+        }
+        
+        $.ajax({
+          url: `/api/quan/extendAds`,
+          type: 'POST',
+          data: JSON.stringify(formData),
+          contentType: 'application/json',
+          beforeSend: function(){
+            $("#loading-bg").show()
+          },
+          success: function(response) {
+            // Handle the successful response here
+            window.location.reload();
+            console.log(response);
+          },
+          error: function(xhr, status, error) {
+            // Handle the error here
+            $("#loading-bg").hide()
+            alert("Tạo cấp phép thất bại")
+            console.error(error);
+          }
+        });
+
+      }
+    })
   } 
   else if (role == "1"){
     $("#loading-bg").show()
@@ -255,18 +318,21 @@ $(document).ready(function () {
         success: function(data) {
           $("#loading-bg").hide()
           info = data.content.map(function(item){
-            let {id_create, board_type, address, content, company,
+            let {id_create, board_type, id_ads, content, company,
               start_date, end_date, status, address_adsloc,district,
               width, height, quantity, photo, email, phone, ward } = item
-            let statusText = status ? "Đã xét duyệt" : "Chưa xét duyệt"
+            let statusText = status === true ? "Đã duyệt" : (
+              status === false ? "Đã từ chối" : "Chưa xét duyệt"
+            )
 
-            return [id_create, board_type, `${address_adsloc}, phường ${ward}, ${district}`, content, company,
+            return [id_create, board_type, `${address_adsloc}, phường ${ward}, quận ${district}`, content, company,
             formatSQLDate_dmy(start_date), formatSQLDate_dmy(end_date), statusText, 
             '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>', 
-            width, height, quantity, photo, email, phone, ward]
+            width, height, quantity, photo, email, phone, ward, id_ads]
           })
 
-          filter_info = [...info].sort((a, b) => a[0] - b[0]);
+          info = info.sort((a, b) => a[0] - b[0]);
+          filter_info = [...info]
 
           console.log(filter_info);
           if (wardArray?.length > 0){
@@ -338,6 +404,16 @@ $(document).ready(function () {
 
           })
 
+          let select_ads = info?.filter(function(item){
+            return item[7] === "Đã duyệt"
+          })
+
+          select_ads = select_ads.map(item => item[16])
+          select_ads = [...new Set(select_ads)];
+          
+          select_ads?.forEach(function(item){
+            $('#id_ads').append(`<option value=${item}>${item}</option>`);
+          })
         }
       })
 
@@ -366,9 +442,10 @@ $(document).ready(function () {
         }
       });
     
-      $('.form-ads-create.style3-button').off('click').on('click', function(e) {
+      // click hủy
+      $('.form-ads-create .style3-button').off('click').on('click', function(e) {
         $("#id_ads_location").val("")
-        $('#id_board_type').val("")
+        $('#id_board_type .default').prop('selected', true)
         $('#content').val("")
         $('#width').val("")
         $('#height').val("")
@@ -392,9 +469,9 @@ $(document).ready(function () {
           var select_adsloc = [], index = null
           // console.log(data.content)
           for (let i = 0; i < data.content.length; i++) {
-            let {id_ads_location, address, ward, is_zoning, longitude, latitude} =  data.content[i]
+            let {id_ads_location, address, ward, is_zoning, longitude, latitude, district} =  data.content[i]
             if (is_zoning == 1) 
-              select_adsloc.push( {id_ads_location, address, ward, photo, longitude, latitude})
+              select_adsloc.push( {id_ads_location, address, ward, district, photo, longitude, latitude})
           }
     
           var map = new mapboxgl.Map({
@@ -429,7 +506,7 @@ $(document).ready(function () {
             index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
             // console.log('Marker clicked:', index);
             id_adsloc = select_adsloc[index].id_ads_location
-            result = select_adsloc[index].address + ', phường ' + select_adsloc[index].ward + ', quận ' + id_district;
+            result = select_adsloc[index].address + ', phường ' + select_adsloc[index].ward + ', quận ' + select_adsloc[index].district;
             $(".id_ads_location").val(`${result} [${select_adsloc[index].longitude}, ${select_adsloc[index].latitude}]` )
           });
     
@@ -499,10 +576,10 @@ $(document).ready(function () {
           formData.append("end_date", $('#end_date').val())
           formData.append("file", imageData)
     
-          $("form").get(0).reset();
+          $("form.form-ads-create").get(0).reset();
           
           $.ajax({
-            url: `/api/quan/adsCreate/${id_district}`,
+            url: `/api/quan/createAds`,
             type: 'POST',
             data: formData,
             processData: false,
@@ -523,6 +600,55 @@ $(document).ready(function () {
             }
           });
     
+        }
+      })
+
+      // click hủy
+      $('.form-extend-ads .style3-button').off('click').on('click', function(e) {
+        $("form.form-extend-ads").get(0).reset();
+      })  
+
+      // click "gia hạn"
+      $('.form-extend-ads .button-group .style1-button').off('click').on('click', function(e) {
+        e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
+        if ($('#id_ads').val() === "(Trống)") {
+          alert('Vui lòng chọn ID bảng quảng cáo.');
+        } else if ($('#start_date_extend').val() === "") {
+          alert('Vui lòng nhập ngày bắt đầu.');
+        } else if ($('#end_date_extend').val() === "") {
+          alert('Vui lòng nhập ngày kết thúc.');
+        } else if ($('#start_date_extend').val() > $('#end_date_extend').val()) {
+          alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
+        }else{
+          const formData = {
+            id_ads: $('#id_ads').val(),
+            start_date: $('#start_date_extend').val(),
+            end_date: $('#end_date_extend').val(),
+            office: role,
+            officer: email
+          }
+          
+          $.ajax({
+            url: `/api/quan/extendAds`,
+            type: 'POST',
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            beforeSend: function(){
+              $("#loading-bg").show()
+            },
+            success: function(response) {
+              // Handle the successful response here
+              window.location.reload();
+              console.log(response);
+            },
+            error: function(xhr, status, error) {
+              // Handle the error here
+              $("#loading-bg").hide()
+              alert("Tạo cấp phép thất bại")
+              console.error(error);
+            }
+          });
+
         }
       })
 

@@ -370,7 +370,7 @@ $(document).ready(function() {
         info = data.content[0]
         console.log(info)
         $('#id_loc_report').val(info.id_report);
-        $('#address').val(info.address + ', phường ' + info.ward + ', ' + info.district);
+        $('#address').val(info.address + ', phường ' + info.ward + ', quận' + info.district);
         $('#report_type').val(info.report_type);
         $('#name').val(info.fullname);
         $('#email').val(info.email);

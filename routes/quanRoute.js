@@ -4,7 +4,7 @@ const {
     getAllAdsLoc, getMapInfo, getWard, 
     getAdsLocation, getAds, updateAdsLoc, updateAds,
     getAdsLocReport, getAdsReport, getLocReport,
-    getAdsCreate, adsCreate, 
+    getAdsCreate, createAds, extendAds,
     getCanBoPhuong, getMapAdsLoc, getAdsWard, getAdsLocationWard,
     getAdsReportWard, getAdsLocReportWard, getLocReportWard,
     getAdsCreateWard, createAdsWard, getWardAndDistrict } = require('../controllers/quanController')
@@ -38,7 +38,11 @@ quanRoute.get("/getLocReport/:id_district", isCanboQuan, getLocReport);
 
 quanRoute.get("/getAdsCreate/:id_district", isCanboQuan, getAdsCreate);
 
-quanRoute.post("/adsCreate/:id_district", isCanboQuan, upload('adsCreate').single("file"), adsCreate)
+quanRoute.post("/createAds", isCanboQuan, upload('createAds').single("file"), createAds)
+
+quanRoute.post("/extendAds", isCanboPhuongOrQuan, extendAds)
+
+
 
 quanRoute.get("/getCanBoPhuong", isCanboPhuong, getCanBoPhuong);
 

@@ -277,19 +277,53 @@ const updateAds = async(req, res) =>{
     }
 } 
 
-const adsCreate = async(req, res) =>{
+const createAds = async(req, res) =>{
     try{
         const file = req.file
         let {officer, office, id_ads_location, id_board_type, width, height, quantity,
             content, company, email, phone, address, start_date, end_date} = req.body
 
-        await model.Ads_create.create({
-            officer, office, id_ads_location, id_board_type, width, height, quantity,
-            content, company, email, phone, address, start_date, end_date,
+        const record = await model.Ads.create({
+            id_ads_location: id_ads_location, 
+            id_board_type: id_board_type, width: width, height: height, quantity: quantity,
+            expired_date: end_date,
             photo: file?.filename,
-            status: false
         })
+
+        await model.Ads_create.create({
+            officer: officer, office: office, id_ads_location: id_ads_location, 
+            id_board_type: id_board_type, width: width, height: height, quantity: quantity,
+            content: content, company: company, email: email, phone: phone, 
+            address: address, start_date: start_date, end_date: end_date,
+            photo: file?.filename,
+            status: null,
+            id_ads: record.id_ads
+        })
+
         sucessCode(res,"","Get thành công")
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+} 
+
+const extendAds = async(req, res) =>{
+    try{
+        let {officer, office, id_ads, start_date, end_date} = req.body
+
+        const ads = await model.Ads_create.findOne({where: {id_ads: id_ads}})
+        await model.Ads_create.create({
+            officer: officer, office: office, id_ads: id_ads,
+            id_ads_location: ads.id_ads_location, 
+            id_board_type: ads.id_board_type, width: ads.width, height: ads.height, quantity: ads.quantity,
+            content: ads.content, company: ads.company, email: ads.email, phone: ads.phone, 
+            address: ads.address, photo: ads.photo,
+            start_date: start_date, end_date: end_date,
+            status: null
+        })
+
+        sucessCode(res,"","Get thành công")
+    
+        
     }catch(err){
         errorCode(res,"Lỗi BE")
     }
@@ -528,7 +562,7 @@ module.exports = {
     getAllAdsLoc, getMapInfo, getWard,
     getAdsLocation, getAds, updateAdsLoc, updateAds,
     getAdsLocReport, getAdsReport, getLocReport,
-    getAdsCreate, adsCreate, 
+    getAdsCreate, createAds, extendAds,
     getCanBoPhuong, getMapAdsLoc, getAdsWard, getAdsLocationWard,
     getAdsReportWard, getAdsLocReportWard, getLocReportWard,
     getAdsCreateWard, createAdsWard, getWardAndDistrict }
