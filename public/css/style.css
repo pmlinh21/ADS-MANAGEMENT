@@ -568,6 +568,9 @@ input:checked+.slider:before {
   transform: translateX(165%);
 }
 
+.other-report-button{
+  font-size: 0.8rem;
+}
 /* Rounded sliders */
 .slider.round {
   border-radius: 34px;
@@ -609,7 +612,7 @@ input:checked+.slider:before {
 }
 
 .btn {
-  font-size: 0.8rem;
+  /* font-size: 0.8rem; */
   padding: 0.2rem 0.3rem;
 }
 
@@ -982,11 +985,11 @@ label.required::after {
   border-radius: 1rem;
 }
 
-.form-ads-create div:nth-child(1),
+/* .form-ads-create div:nth-child(1),
 .form-extend-ads div:nth-child(1){
   font-weight: 900;
   margin-bottom: -0.5rem;
-}
+} */
 
 .form-extend-ads .button-group,
 .form-ads-create .button-group,
@@ -1092,6 +1095,14 @@ label.required::after {
   .image-container img {
     width: 100%; 
   }
+}
+
+/* Ads create */
+.ads-create-title{
+  font-weight: 900;
+  text-align: center;
+  color: #0B7B31;
+  font-size: 1rem;
 }
 
 /* ACCOUNT */
