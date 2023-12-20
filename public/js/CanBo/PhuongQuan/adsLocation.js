@@ -528,7 +528,7 @@ $(document).ready(function () {
             $("#no").prop('selected', false);
           })
       
-          $('#edit-info .style1-button').off('click').on('click', function(e) {
+          $('#edit-info .style1-button').off('click').on('click', async function(e) {
             e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
             
             // console.log(longitude, latitude, filter_info[click_row][0]);
@@ -538,41 +538,67 @@ $(document).ready(function () {
             }
             else{
               $("#loading-bg").show();
-              var formData = new FormData();
-              formData.append('id_ads_location',filter_info[click_row][0]);
-              formData.append('latitude', latitude);
-              formData.append('longitude', longitude);
-              formData.append('address', address);
-              formData.append('ward', ward);
-              formData.append('district', district);
-              formData.append('id_loc_type', $('#id_loc_type').val());
-              formData.append('file', imageData);
-              formData.append('id_ads_type', $('#id_ads_type').val());
-              formData.append('is_zoning', $('#is_zoning').val());
-              formData.append('req_time', validateDate(new Date()));
-              formData.append('reason', $('#reason').val());
-              formData.append('office', role);
+
+              var formData = {
+                id_ads_location: filter_info[click_row][0],
+                latitude: latitude,
+                longitude: longitude,
+                address: address,
+                ward: ward,
+                district: district,
+                id_loc_type: $('#id_loc_type').val(),
+                id_ads_type: $('#id_ads_type').val(),
+                is_zoning:  $('#is_zoning').val(),
+                req_time: validateDate(new Date()),
+                reason:  $('#reason').val(),
+                office: role,
+                photo: ""
+              }
               
               $("form").get(0).reset();
               $("#edit-info").modal("hide")
 
-              $.ajax({
-                url: `/api/quan/updateAdsLoc/${email}`,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                  $("#loading-bg").hide();
-                  alert("Yêu cầu chỉnh sửa thành công")
-                  console.log(response);
-                },
-                error: function(xhr, status, error) {
-                  $("#loading-bg").hide();
-                  alert("Yêu cầu chỉnh sửa thất bại")
-                  console.error(error);
-                }
-              });
+              const signResponse = await fetch('/api/basic/uploadImage');
+              const signData = await signResponse.json();
+
+              const url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
+
+              const cloudinaryData = new FormData();
+              cloudinaryData.append("file", imageData);
+              cloudinaryData.append("api_key", signData.apikey);
+              cloudinaryData.append("timestamp", signData.timestamp);
+              cloudinaryData.append("signature", signData.signature);
+              cloudinaryData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+              cloudinaryData.append("folder", "image");
+
+              fetch(url, {
+                method: "POST",
+                body: cloudinaryData
+              })
+              .then((response) => {
+                  return response.text();
+              })
+              .then((data) => {
+                  const photo = JSON.parse(data).secure_url
+                  formData.photo = photo;
+                
+                  $.ajax({
+                    url: `/api/quan/updateAdsLoc/${email}`,
+                    type: 'POST',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
+                    success: function(response) {
+                      $("#loading-bg").hide();
+                      alert("Yêu cầu chỉnh sửa thành công")
+                      console.log(response);
+                    },
+                    error: function(xhr, status, error) {
+                      $("#loading-bg").hide();
+                      alert("Yêu cầu chỉnh sửa thất bại")
+                      console.error(error);
+                    }
+                  });
+              })
       
             }
           })

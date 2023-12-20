@@ -1,15 +1,46 @@
+// postgresql
 const db = require('../models/index');
 const sequelize = db.sequelize;
 const init_models = require('../models/init-models');
 const model = init_models(sequelize);
+
+// response config
 const { sucessCode, failCode, errorCode } = require('../config/response');
-const { Op } = require("sequelize");
-const { parseToken } = require('../middlewares/baseToken');
+
+// env config
 require('dotenv').config()
+
+// email
 const nodeMailer = require('nodemailer');
+
+// time config
 const moment = require('moment');
 
+// encode password and email
 const bcrypt = require('bcryptjs'); 
+
+// jwt
+const { parseToken } = require('../middlewares/baseToken');
+
+// image with cloudinary
+const { deleteImage } = require('../middlewares/deleteImage');
+const cloudinary = require('cloudinary').v2;
+
+const uploadImage = function (req, res) {
+    const timestamp = Math.round((new Date).getTime()/1000);
+
+    const signature = cloudinary.utils.api_sign_request({
+        timestamp: timestamp,
+        eager: 'c_pad,h_300,w_400|c_crop,h_200,w_260',
+        folder: 'image'}, process.env.SECRET_KEY);
+
+    res.json({
+        signature: signature,
+        timestamp: timestamp,
+        cloudname: process.env.CLOUD_NAME,
+        apikey: process.env.API_KEY
+    })
+}
 
 const getReportType = async(req, res) =>{
     try{
@@ -599,9 +630,8 @@ const deleteAdsCreateByID = async(req, res) =>{
 
         if(record.photo){
             try{
-                const fs = require('fs');
                 console.log("xóa ảnh")
-                fs.unlinkSync(process.cwd() + "/public/image/adsCreate/" + record.photo);
+                deleteImage(record.photo)
             } catch(err){
                 console.log("Lỗi khi xóa ảnh", err);
             }
@@ -754,4 +784,4 @@ module.exports = { getAdsType, getBoardType, getReportType, getLocType,
     updateAdsReportByID, updateAdsLocReportByID, updateLocReportByID,
     getAdsCreateByID, deleteAdsCreateByID, getAdsCreateByAds,
     login, findEmail, sendEmail, checkOTP, createNewPwd, updatePassword,
-    getAccountInfo, updateInfo}
+    getAccountInfo, updateInfo, uploadImage}

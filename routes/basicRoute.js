@@ -5,7 +5,8 @@ const { getLocType, getAdsType, getBoardType, getReportType,
     updateAdsReportByID, updateAdsLocReportByID, updateLocReportByID,
     getAdsCreateByID, deleteAdsCreateByID, getAdsCreateByAds,
     login, findEmail, updatePassword, sendEmail, checkOTP, createNewPwd,
-    getAccountInfo, updateInfo } = require('../controllers/basicController')
+    getAccountInfo, updateInfo,
+    uploadImage} = require('../controllers/basicController')
 const { uploadNone } = require('../middlewares/upload');
 
 const cookieParser = require("cookie-parser");
@@ -54,6 +55,6 @@ basicRoute.get("/getAccountInfo/:email/:role", verifyToken, getAccountInfo);
 
 basicRoute.post("/updateInfo/:email/:role", verifyToken, updateInfo);
 
-// basicRoute.get("/login-success/:email/:role/:id", basic.loginSuccess)
+basicRoute.get("/uploadImage", verifyToken, uploadImage);
 
 module.exports = basicRoute;

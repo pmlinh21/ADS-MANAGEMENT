@@ -32,7 +32,7 @@ $(document).ready(function() {
       $('#officer').val(info.officer);
       $('#office').val(info.office === 1 ? "Quận" : (info.office === 2 ? "Phường" : ""));
       if (info.photo !== "" && info.photo !== null)
-        $('.image-details').attr('src', `../../../../public/image/adsCreate/${info.photo}`);
+        $('.image-details').attr('src', info.photo);
       else
         $('.image-details').attr('src', `../../../../public/image/image-placeholder.jpg`);
       if (info.status === true || info.status === false)
