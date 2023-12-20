@@ -133,7 +133,7 @@ $(document).ready(function() {
                 phone: newPhone
             },
             beforeSend: function () {
-                //$("#loading-bg").show()
+                $("#loading-bg").show()
             },
             success: function (data) {
                 //$("#loading-bg").hide();
@@ -168,12 +168,16 @@ $(document).ready(function() {
         $.ajax({
             url: `/api/basic/updatePwd/${email}/${role}`,
             type: 'POST',
+            beforeSend: function(){
+                $("#loading-bg").show();
+            },
             data: {
                 cur_password: curPass,
                 new_password: newPass
             },
             success: function (data) {
-                console.log(data.message);
+                $("#loading-bg").hide();
+                
                 if(data.message == "Update thành công"){
                     $('#curpass-error').hide();
                     alert('Mật khẩu đã được cập nhật thành công!');
@@ -290,9 +294,13 @@ $(document).ready(function() {
             $.ajax({
                 url: `/api/basic/checkOTP`,
                 type: "POST",
+                beforeSend: function(){
+                    $("#loading-bg").show();
+                },
                 data: JSON.stringify(otpData),
                 contentType: 'application/json',
                 success: function(data){
+                    $("#loading-bg").hide();
                     $('.form-forget').removeClass('visible');
                     const formHtml = `
                     <div class="col-md-12">
@@ -323,11 +331,15 @@ $(document).ready(function() {
                         $.ajax({
                             url: `/api/basic/updatePasswordByOTP/${email}/${role}`,
                             type: 'POST',
+                            beforeSend: function(){
+                                $("#loading-bg").show();
+                            },
                             data: {
                                 new_password: forget_new_pass
                             },
                             success: function (data) {
-                                console.log(data.message);
+                                $("#loading-bg").hide();
+                                
                                 alert('Mật khẩu đã được cập nhật thành công!');
                                 setTimeout(function() {
                                     location.reload();
