@@ -10,22 +10,65 @@ $(document).on('click', '.toggle-password', function() {
 
 $(document).ready(function() {
     var info;
+    const data = {
+        email: email
+    };
 
-    if (role == 1){
-        
-    }
-    else if (role == 2){
-        $.ajax({
-            url:`/api/basic/getAccountInfo/${email}/${role}`,
-            type: 'GET',
-            beforeSend: function(){
-              $("#loading-bg").show()
-            },
-            success: function(data) {
-                $("#loading-bg").hide();
-                info = data.content;
-                console.log("info: ", info );
-                var area;
+    $.ajax({
+        url: `/api/basic/findEmail`,
+        type: "POST",
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function(res){
+            $("#loading-bg").hide()
+            // Thay đổi chuỗi query string
+            const newQueryString = `?email=${res.content}`;
+            const currentPath = window.location.pathname;
+
+            // Tạo URL mới
+            const newUrl = currentPath + newQueryString;
+
+            // Thay đổi chuỗi query string mà không điều hướng
+            history.replaceState(null, null, newUrl);
+        },
+        error: function(xhr, status, error) {
+          $("#loading-bg").hide()
+          if (xhr.status == 400){
+            const errorMessage = xhr.responseJSON?.message;
+            alert(errorMessage);
+          } 
+          else{
+            alert("Hệ thống bị lỗi");
+          }
+        }
+    });
+
+    // Get account info
+    $.ajax({
+        url:`/api/basic/getAccountInfo/${email}/${role}`,
+        type: 'GET',
+        beforeSend: function(){
+            $("#loading-bg").show()
+        },
+        success: function(data) {
+            $("#loading-bg").hide();
+            info = data.content;
+            console.log("info: ", info );
+            var area;
+            if(role == 1){
+                $.get(`/api/quan/getDistrictByID/${info.id_district}`, function(data) {
+                    area = data.content;
+                    console.log("area: ", area);
+                    $('#email').val(email);
+                    $('#fullname').val(info.fullname);
+                    $('#phone').val(info.phone);
+                    $('#birthdate').val(info.birthdate);
+                    $('#address').val('Quận ' + area.district);
+                }).fail(function(error) {
+                    console.log(error);
+                });
+            }
+            if(role == 2){
                 $.get(`/api/quan/getWardAndDistrict/${info.id_ward}`, function(data) {
                     area = data.content;
                     console.log("area: ", area);
@@ -37,14 +80,20 @@ $(document).ready(function() {
                 }).fail(function(error) {
                     console.log(error);
                 });
-
-                
-            },
-            error: function(error) {
-              console.log(error);
             }
-        })
-    }
+            if(role == 3){
+                $('#email').val(email);
+                $('#fullname').val(info.fullname);
+                $('#phone').val(info.phone);
+                $('#birthdate').val(info.birthdate);
+                $('.manage_area').hide();
+            }
+        },
+        error: function(error) {
+          console.log(error);
+        }
+    });
+    
   
     // Update info
     $('.btn-info').on('click', function() {
@@ -75,32 +124,25 @@ $(document).ready(function() {
             $('#phone-error').hide();
         }
 
-        if (role == 2){
-            $.ajax({
-                url: `/api/basic/updateInfo/${email}/${role}`,
-                type: 'POST',
-                data: {
-                    fullname: newFullname,
-                    birthdate: newBirthdate,
-                    phone: newPhone
-                },
-                beforeSend: function () {
-                    $("#loading-bg").show()
-                },
-                success: function (data) {
-                    $("#loading-bg").hide();
-                    location.reload();
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        }
-        else if (role == 1){
-                     
-        }
-        
-        
+        $.ajax({
+            url: `/api/basic/updateInfo/${email}/${role}`,
+            type: 'POST',
+            data: {
+                fullname: newFullname,
+                birthdate: newBirthdate,
+                phone: newPhone
+            },
+            beforeSend: function () {
+                //$("#loading-bg").show()
+            },
+            success: function (data) {
+                //$("#loading-bg").hide();
+                location.reload();
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
     });
 
     // Change password
@@ -149,23 +191,31 @@ $(document).ready(function() {
             }
         });
     });
-  
+
+    // Forget password
     $('.btn-forget').on('click', function() {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const otp_email = urlParams.get('email');
+        const emailData = {email: otp_email};
+
         $.ajax({
-            url: `/api/basic/sendEmail/${email}`,
+            url: `/api/basic/sendEmail`,
             type: "POST",
+            data: JSON.stringify(emailData),
+            contentType: 'application/json',
             success: function(data){
               
             },
             error: function(xhr, status, error) {
               if (xhr.status == 400){
-                let errorMessage = JSON.parse(xhr.responseText).message;
+                let errorMessage = JSON.parse(xhr.responseText).message; 
                 alert(errorMessage);
               }else{
                 alert("Gửi mail thất bại");
               }
             }
-        });
+          })
         
         const formHtml = `
             <div class="col-md-12">
@@ -178,31 +228,10 @@ $(document).ready(function() {
             </div>
 
             <p class="pass-text" >Chúng tôi đã gửi một mã xác minh gồm 6 chữ số đến địa chỉ email của bạn.</p>
-            <a class="pass-text resendmail" style="text-decoration: underline; color: #0B7B31; margin-top: -1rem; cursor: pointer;">Bạn không nhận được mã? Gửi lại mã OTP</a>
+            <a class="pass-text resendmail" style="text-decoration: underline; color: #0B7B31; margin-top: -1rem; margin-bottom: 1rem; cursor: pointer;">Bạn không nhận được mã? Gửi lại mã OTP</a>
             <button type="button" class="btn style1-button btn-confirm">Xác nhận</button>
-            <div style="margin-top: 9rem"></div>
+            <div style="margin-top: 6rem"></div>
         `;
-        
-        $(".resendmail").on("click",function(){
-            console.log("resend")
-            $.ajax({
-              url: `/api/basic/sendEmail/${email}`,
-              type: "POST",
-              beforeSend: function (data) {
-              },
-              success: function(data){
-              },
-              error: function(xhr, status, error) {
-                
-                if (xhr.status == 400){
-                  let errorMessage = JSON.parse(xhr.responseText).message; // Get the error message from the response
-                  alert(errorMessage);
-                }else{
-                  alert("Gửi mail thất bại");
-                }
-              }
-            })
-        });
 
         const btnBack = `
             <button type="button" class="btn style2-button btn-back" style="margin-left: 27.9rem;">Quay lại</button>
@@ -210,6 +239,27 @@ $(document).ready(function() {
         $('.form-forget').html(formHtml).addClass('visible');
         const pos = document.querySelector('.btn-pass');
         pos.insertAdjacentHTML('afterend', btnBack);
+
+        $(".resendmail").on("click",function(){
+            console.log("resend")
+            $.ajax({
+                url: `/api/basic/sendEmail`,
+                type: "POST",
+                data: JSON.stringify(emailData),
+                contentType: 'application/json',
+                success: function(data){
+                  
+                },
+                error: function(xhr, status, error) {
+                  if (xhr.status == 400){
+                    let errorMessage = JSON.parse(xhr.responseText).message;
+                    alert(errorMessage);
+                  }else{
+                    alert("Gửi mail thất bại");
+                  }
+                }
+            })
+        });
 
         $('.btn-back').on('click', function() {
             $('.form-forget').removeClass('visible');
@@ -231,53 +281,72 @@ $(document).ready(function() {
                 $('#otp-error').text('Mã OTP phải gồm 6 chữ số.').show();
                 return;
             }
-            $('.form-forget').removeClass('visible');
-            const formHtml = `
-            <div class="col-md-12">
-                <label class="form-label" style="font-weight: 600; font-size: 1rem;">Quên mật khẩu</label>
-            </div>
-            <div class="col-md-12" style="margin-top: -5px;">
-                <label for="pass" class="form-label">Mật khẩu mới</label>
-                <input type="password" class="form-control pass-details" id="pass">
-                <span toggle="#pass" class="fa fa-fw fa-eye field-icon toggle-password"></span>
-                <div class="error-message" id="pass-error"></div>
-            </div>
-    
-            <p class="pass-text" style="margin-top: -0.5rem; margin-bottom: -0.5rem;">Mật khẩu phải có ít nhất 8 kí tự</p>
-            <button type="button" class="btn style1-button btn-confirm-new">Xác nhận</button>
-            <div style="margin-top: 10rem"></div>
-            `;
-            $('.form-forget').html(formHtml).addClass('visible');
 
-            $('.btn-confirm-new').on('click', function() {
-                const forget_new_pass = $('#pass').val();
-        
-                if (forget_new_pass.length < 8) {
-                    $('#pass-error').text('Mật khẩu mới phải có ít nhất 8 kí tự.').show();
-                    return;
-                } else {
-                    $('#pass-error').hide();
-                }
-                if (role == 2){
-                    const indexToUpdate = cbphuong.findIndex(item => item[0] === email);
-        
-                    cbphuong[indexToUpdate][2] = forget_new_pass;
-                    localStorage.setItem('cbphuong', JSON.stringify(cbphuong));
-                    alert('Mật khẩu đã được cập nhật thành công!');
-                    setTimeout(function() {
-                        location.reload();
-                    }, 10);           
-                }
-                else if (role == 1){
-                    const indexToUpdate = cbquan.findIndex(item => item[0] === email);
-        
-                    cbquan[indexToUpdate][2] = forget_new_pass;
-                    localStorage.setItem('cbquan', JSON.stringify(cbquan));
-                    alert('Mật khẩu đã được cập nhật thành công!');
-                    setTimeout(function() {
-                        location.reload();
-                    }, 10);
-                }
+            const otpData = {
+                email: otp_email,
+                OTP: otp
+            }
+              
+            $.ajax({
+                url: `/api/basic/checkOTP`,
+                type: "POST",
+                data: JSON.stringify(otpData),
+                contentType: 'application/json',
+                success: function(data){
+                    $('.form-forget').removeClass('visible');
+                    const formHtml = `
+                    <div class="col-md-12">
+                        <label class="form-label" style="font-weight: 600; font-size: 1rem;">Quên mật khẩu</label>
+                    </div>
+                    <div class="col-md-12" style="margin-top: -5px;">
+                        <label for="pass" class="form-label">Mật khẩu mới</label>
+                        <input type="password" class="form-control pass-details" id="pass">
+                        <span toggle="#pass" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                        <div class="error-message" id="pass-error"></div>
+                    </div>
+            
+                    <p class="pass-text" style="margin-top: -0.5rem; margin-bottom: -0.5rem;">Mật khẩu phải có ít nhất 8 kí tự</p>
+                    <button type="button" class="btn style1-button btn-confirm-new">Xác nhận</button>
+                    <div style="margin-top: 10rem"></div>
+                    `;
+                    $('.form-forget').html(formHtml).addClass('visible');
+
+                    $('.btn-confirm-new').on('click', function() {
+                        const forget_new_pass = $('#pass').val();
+                
+                        if (forget_new_pass.length < 8) {
+                            $('#pass-error').text('Mật khẩu mới phải có ít nhất 8 kí tự.').show();
+                            return;
+                        } else {
+                            $('#pass-error').hide();
+                        }
+                        $.ajax({
+                            url: `/api/basic/updatePasswordByOTP/${email}/${role}`,
+                            type: 'POST',
+                            data: {
+                                new_password: forget_new_pass
+                            },
+                            success: function (data) {
+                                console.log(data.message);
+                                alert('Mật khẩu đã được cập nhật thành công!');
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1);
+                            },
+                            error: function (error) {
+                                console.log(error);
+                            }
+                        });
+                    });
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status == 400){
+                        let errorMessage = JSON.parse(xhr.responseText).message; 
+                        alert(errorMessage);
+                    }else{
+                        alert("Hệ thống bảo trì");
+                    }
+                }    
             });
         });
     });
@@ -298,4 +367,4 @@ $(document).ready(function() {
         $('.black-bg').hide()
       }    
     );
-  })
+})
