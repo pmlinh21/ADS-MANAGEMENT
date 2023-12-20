@@ -16,19 +16,17 @@ const { isCanboQuan, isCanboPhuong, isCanboPhuongOrQuan } = require('../middlewa
 
 quanRoute.get("/getAllAdsLoc", isCanboPhuongOrQuan, getAllAdsLoc)
 
-// quanRoute.put("/updateInfo/:id_district", isCanboQuan, updateInfo);
-
 quanRoute.get("/getWard/:id_district", isCanboQuan, getWard);
 
 quanRoute.get("/getMapInfo/:id_district", isCanboQuan, getMapInfo);
 
 quanRoute.get("/getAdsLocation/:id_district", isCanboQuan, getAdsLocation);
 
-quanRoute.post("/updateAdsLoc/:email", isCanboPhuongOrQuan, upload('updateAdsLoc').single("file"), updateAdsLoc);
+quanRoute.post("/updateAdsLoc/:email", isCanboPhuongOrQuan, updateAdsLoc);
 
 quanRoute.get("/getAds/:id_district", isCanboQuan, getAds);
 
-quanRoute.post("/updateAds/:email", isCanboPhuongOrQuan, upload('updateAds').single("file"), updateAds);
+quanRoute.post("/updateAds/:email", isCanboPhuongOrQuan, updateAds);
 
 quanRoute.get("/getAdsLocReport/:id_district", isCanboQuan, getAdsLocReport);
 

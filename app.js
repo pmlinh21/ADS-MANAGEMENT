@@ -140,23 +140,6 @@ app.get('/account', verifyToken, function(req, res) {
   res.render('CanBo/account', {id_ward: 0, id_district: 0, ...content});
 });
 
-// PHUONG
-app.get('/adsLocationPhuong', function(req, res) {
-  res.render('CanBo/PhuongQuan/adsLocationPhuong');
-});
-
-app.get('/adsPhuong', function(req, res) {
-  res.render('CanBo/PhuongQuan/adsPhuong');
-});
-
-app.get('/reportPhuong', function(req, res) {
-  res.render('CanBo/PhuongQuan/reportPhuong');
-});
-
-app.get('/createAdsPhuong', function(req, res) {
-  res.render('CanBo/PhuongQuan/adsCreatePhuong');
-});
-
 // SO
 app.get('/quanlichung', function(req, res) {
   res.render('CanBo/So/quanlichung');

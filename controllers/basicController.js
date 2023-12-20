@@ -488,7 +488,7 @@ const getAdsReportByID = async(req, res) =>{
         let { id_report } = req.params;
 
         const [data, metadata] = await sequelize.query
-            (`SELECT ar.*, rt.report_type, w.ward
+            (`SELECT ar.*, rt.report_type, w.ward, w.id_ward, w.id_district
             FROM Ads_report ar
             INNER JOIN Report_type rt ON rt.id_report_type = ar.id_report_type
             INNER JOIN Ads a ON a.id_ads = ar.id_ads
@@ -507,7 +507,7 @@ const getAdsLocReportByID = async(req, res) =>{
         let { id_report } = req.params;
 
         const [data, metadata] = await sequelize.query
-            (`SELECT ar.*, rt.report_type, w.ward
+            (`SELECT ar.*, rt.report_type, w.ward, w.id_ward, w.id_district
             FROM Ads_loc_report ar
             INNER JOIN Report_type rt ON rt.id_report_type = ar.id_report_type
             INNER JOIN Ads_location al ON al.id_ads_location = ar.id_ads_location
@@ -525,7 +525,7 @@ const getLocReportByID = async(req, res) =>{
         let { id_report } = req.params;
 
         const [data, metadata] = await sequelize.query
-            (`SELECT ar.*, rt.report_type, w.ward, d.district
+            (`SELECT ar.*, rt.report_type, w.ward, d.district, w.id_ward, w.id_district
             FROM Location_report ar
             INNER JOIN Report_type rt ON rt.id_report_type = ar.id_report_type
             INNER JOIN Ward w ON w.id_ward = ar.id_ward
@@ -697,15 +697,8 @@ const deleteAdsCreateByID = async(req, res) =>{
             { where:{
             id_create
         }})
-
-        if(record.photo){
-            try{
-                console.log("xóa ảnh")
-                deleteImage(record.photo)
-            } catch(err){
-                console.log("Lỗi khi xóa ảnh", err);
-            }
-        }
+        
+        // không xóa ảnh vì ảnh đó dùng cho bảng ads
 
         await model.Ads_create.destroy(
             { where:{

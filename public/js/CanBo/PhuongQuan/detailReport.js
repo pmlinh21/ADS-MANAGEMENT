@@ -94,6 +94,10 @@ $(document).ready(function() {
       info = data.content[0]
       console.log(info)
 
+      if ((id_ward && id_ward != info.id_ward) || (id_district && id_district != info.id_district)){
+        alert("Bạn không có quyền truy cập trang này")
+        window.location.href = "/report"
+      }
       
       $('#id_ads_report').val(info?.id_report);
       $('#id_ads').val(info?.id_ads);
@@ -112,8 +116,8 @@ $(document).ready(function() {
         $('#statusPending').prop('checked', true);
       }
       $('#method').val(info?.resolve);
-      $('.image-report-1').attr('src', info?.photo1 ? `../../../../public/image/${info?.photo1}` : '`../../../../public/image/image-placeholder.jpg');
-      $('.image-report-2').attr('src', info?.photo2 ? `../../../../public/image/${info?.photo2}` : '`../../../../public/image/image-placeholder.jpg');
+      $('.image-report-1').attr('src', info?.photo1 ? info?.photo1 : '`../../../../public/image/image-placeholder.jpg');
+      $('.image-report-2').attr('src', info?.photo2 ? info?.photo2 : '`../../../../public/image/image-placeholder.jpg');
   
       $("#loading-bg").hide()
       
@@ -230,6 +234,10 @@ $(document).ready(function() {
     $.get(`/api/basic/getAdsLocReportByID/${id_report}`, function(data) {
       info = data.content[0]
       console.log(info)
+      if ((id_ward && id_ward != info.id_ward) || (id_district && id_district != info.id_district)){
+        alert("Bạn không có quyền truy cập trang này")
+        window.location.href = "/report"
+      }
 
       $("#loading-bg").hide()
 
@@ -250,8 +258,8 @@ $(document).ready(function() {
         $('#statusPending').prop('checked', true);
       }
       $('#method').val(info?.resolve);
-      $('.image-report-1').attr('src', info?.photo1 ? `../../../../public/image/${info?.photo1}` : '`../../../../public/image/image-placeholder.jpg');
-      $('.image-report-2').attr('src', info?.photo2 ? `../../../../public/image/${info?.photo2}` : '`../../../../public/image/image-placeholder.jpg');
+      $('.image-report-1').attr('src', info?.photo1 ? info?.photo1 : '`../../../../public/image/image-placeholder.jpg');
+      $('.image-report-2').attr('src', info?.photo2 ? info?.photo2 : '`../../../../public/image/image-placeholder.jpg');
 
 
       $('.style1-button').on('click', function() {
@@ -366,9 +374,16 @@ $(document).ready(function() {
       type: 'GET',
       dataType: 'json',
       success: function(data){
-        $("#loading-bg").hide()
+        
         info = data.content[0]
         console.log(info)
+
+        if ((id_ward && id_ward != info.id_ward) || (id_district && id_district != info.id_district)){
+          alert("Bạn không có quyền truy cập trang này")
+          window.location.href = "/report"
+        }
+        
+        $("#loading-bg").hide()
         $('#id_loc_report').val(info.id_report);
         $('#address').val(info.address + ', phường ' + info.ward + ', quận' + info.district);
         $('#report_type').val(info.report_type);
@@ -384,8 +399,8 @@ $(document).ready(function() {
           $('#statusPending').prop('checked', true);
         }
         $('#method').val(info.resolve);
-        $('.image-report-1').attr('src', info.photo1 ? `../../../../public/image/${info.photo1}` : `../../../../public/image/image-placeholder.jpg`);
-        $('.image-report-2').attr('src', info.photo2 ? `../../../../public/image/${info.photo2}` : `../../../../public/image/image-placeholder.jpg`);
+        $('.image-report-1').attr('src', info.photo1 ? info.photo1 : `../../../../public/image/image-placeholder.jpg`);
+        $('.image-report-2').attr('src', info.photo2 ? info.photo2 : `../../../../public/image/image-placeholder.jpg`);
       
         $('#officer').val(info.officer);
         $('#office').val(info.office === 1 ? "Quận" : (info.office === 2 ? "Phường" : ""));

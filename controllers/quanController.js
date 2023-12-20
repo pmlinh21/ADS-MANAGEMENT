@@ -3,7 +3,7 @@ const sequelize = db.sequelize;
 const init_models = require('../models/init-models');
 const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
-const { Op } = require("sequelize");
+const { deleteImage } = require('../middlewares/deleteImage');
 
 const getAllAdsLoc = async(req, res) =>{
     try{ 
@@ -236,19 +236,26 @@ const updateAdsLoc = async(req, res) =>{
             id_district: findDistrict.id_district
         }})
 
-        console.log(photo)
+        if (findDistrict && findWard){
+            const data = await model.Ads_loc_update.create({
+                id_ads_location: id_ads_location, officer: email, office: office, latitude: latitude, 
+                longitude: longitude, address: address, is_zoning: is_zoning,
+                id_loc_type: id_loc_type, id_ads_type: id_ads_type, req_time: req_time, reason: reason, 
+                id_ward: findWard.id_ward, 
+                id_district: findWard.id_district, 
+                photo: photo,
+                status: false
+            });
 
-        const data = await model.Ads_loc_update.create({
-            id_ads_location: id_ads_location, officer: email, office: office, latitude: latitude, 
-            longitude: longitude, address: address, is_zoning: is_zoning,
-            id_loc_type: id_loc_type, id_ads_type: id_ads_type, req_time: req_time, reason: reason, 
-            id_ward: findWard.id_ward, 
-            id_district: findWard.id_district, 
-            photo: photo,
-            status: false
-        });
+            sucessCode(res,{ findWard}, "Create thành công")
+        }
+        else{
+            deleteImage(photo)
+            failCode(res, "Phường hoặc quận bạn vừa chọn không tồn tại trong hệ thống")
+        }
+            
 
-        sucessCode(res,{ findWard}, "Create thành công")
+        
 
     }catch(err){
         errorCode(res,"Lỗi BE")
@@ -258,17 +265,16 @@ const updateAdsLoc = async(req, res) =>{
 const updateAds = async(req, res) =>{
     try{
         let { email } = req.params;
-        const file = req.file;
 
         let { id_ads, id_ads_location, id_board_type, quantity, width, height, 
-            expired_date, req_time, reason, office} = req.body
+            expired_date, req_time, reason, office, photo} = req.body
    
         const data = await model.Ads_update.create({
             id_ads: id_ads, id_ads_location: id_ads_location, quantity: quantity, 
             width: width, height: height, reason: reason, office: office,
             id_board_type: id_board_type, expired_date: expired_date, req_time: req_time, 
             officer: email,
-            photo: file?.filename,
+            photo: photo,
             status: false
         });
         sucessCode(res,data, "Create thành công")

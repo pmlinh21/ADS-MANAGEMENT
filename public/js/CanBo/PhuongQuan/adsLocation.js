@@ -329,7 +329,7 @@ $(document).ready(function () {
           console.log(filter_info[row][8]);
           let path  = "../../../public/image/image-placeholder.jpg"
           if (filter_info[row][8] != "")
-            path  = `../../../../public/image/${filter_info[row][8]}`
+            path  = filter_info[row][8]
           $('#view-image .photo').attr('src', path );
           return
         })
@@ -594,8 +594,13 @@ $(document).ready(function () {
                     },
                     error: function(xhr, status, error) {
                       $("#loading-bg").hide();
-                      alert("Yêu cầu chỉnh sửa thất bại")
-                      console.error(error);
+                      if (xhr.status == 400){
+                        const errorMessage = xhr.responseJSON?.message;
+                        alert(errorMessage);
+                      } 
+                      else{
+                        alert("Yêu cầu chỉnh sửa thất bại")
+                      }
                     }
                   });
               })

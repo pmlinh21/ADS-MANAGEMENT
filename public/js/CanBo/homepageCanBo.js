@@ -174,7 +174,7 @@ function createMarker(info, map) {
       colorMarker = '#0B7B31';
     let imagePath
     if (item[7] != "")
-      imagePath = "../../../public/image/" + item[7]
+      imagePath = item[7]
     else
       imagePath = "../../../public/image/image-placeholder.jpg"
     // console.log(imagePath)
@@ -266,8 +266,8 @@ function renderReport(list_report, container) {
     return {
       statusClass: statusClass,
       statusText: statusText,
-      imagePath1: item.photo1 ? `../../../public/image/${item.photo1}` : '',
-      imagePath2: item.photo2 ? `../../../public/image/${item.photo2}` : ''
+      imagePath1: item.photo1 ? item.photo1 : '',
+      imagePath2: item.photo2 ? item.photo2 : ''
     }
   })
   console.log(list_report)
@@ -327,7 +327,7 @@ function showSidebar(adsloc) {
 
     let imagePath = (!ads.photo
       ? `../../../public/image/image-placeholder.jpg`
-      : `../../../public/image/${ads.photo}`)
+      : ads.photo)
     $("#detail-popup .image img").attr("src", imagePath)
     
       $.ajax({

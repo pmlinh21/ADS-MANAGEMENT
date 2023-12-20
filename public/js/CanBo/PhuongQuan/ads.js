@@ -264,7 +264,7 @@ $(document).ready(function () {
           console.log(row);
           let path  = "../../../public/image/image-placeholder.jpg"
           if (filter_info[row][9] != "")
-            path  = `../../../../public/image/${filter_info[row][9]}`
+            path  = filter_info[row][9]
           $('#view-image .photo').attr('src', path );
           return
         })
@@ -324,7 +324,7 @@ $(document).ready(function () {
               index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
               // console.log('Marker clicked:', index);
               id_adsloc = adsloc[index].id_ads_location
-              result = adsloc[index].address + ', phường ' + adsloc[index].ward + ', quận' + adsloc[index].district;
+              result = adsloc[index].address + ', phường ' + adsloc[index].ward + ', quận ' + adsloc[index].district;
               $("#address").val(`${result} [${adsloc[index].longitude}, ${adsloc[index].latitude}]` )
             });
 
@@ -356,49 +356,75 @@ $(document).ready(function () {
             $('#reason').val("")
           })  
       
-          $('#edit-info .style1-button').off('click').on('click', function(e) {
+          $('#edit-info .style1-button').off('click').on('click', async function(e) {
             e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
             
-      //       // console.log(click_row);
             let reason = $('#reason').val();
             if (!reason){
               alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
             }
             else{
-              var formData = new FormData();
-              formData.append('id_ads', filter_info[click_row][0]);
-              formData.append('id_ads_location', id_adsloc);
-              formData.append('id_board_type', $('#id_board_type').val());
-              formData.append('quantity', $('#quantity').val());
-              formData.append('width', $('#width').val());
-              formData.append('height', $('#height').val());
-              formData.append('expired_date', $('#expired_date').val() );
-              formData.append('req_time', validateDate(new Date()));
-              formData.append('reason', $('#reason').val());
-              formData.append('office', role);
-              formData.append('file', imageData);
-      
-              // console.log(formData);
+              $("#loading-bg").show();
+
+              const formData = {
+                id_ads: filter_info[click_row][0],
+                id_ads_location: id_adsloc,
+                id_board_type: $('#id_board_type').val(),
+                quantity: $('#quantity').val(),
+                width: $('#width').val(),
+                height: $('#height').val(),
+                expired_date: $('#expired_date').val() ,
+                req_time: validateDate(new Date()),
+                reason: $('#reason').val(),
+                office: role,
+                photo: ""
+              }
+
               $("form").get(0).reset();
               $("#edit-info").modal("hide")
       
-              $.ajax({
-                url: `/api/quan/updateAds/${email}`,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                  $("#loading-bg").hide();
-                  alert("Yêu cầu chỉnh sửa thành công")
-                  console.log(response);
-                },
-                error: function(xhr, status, error) {
-                  $("#loading-bg").hide();
-                  alert("Yêu cầu chỉnh sửa thất bại")
-                  console.error(error);
-                }
-              });
+              const signResponse = await fetch('/api/basic/uploadImage');
+              const signData = await signResponse.json();
+
+              const url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
+
+              const cloudinaryData = new FormData();
+              cloudinaryData.append("file", imageData);
+              cloudinaryData.append("api_key", signData.apikey);
+              cloudinaryData.append("timestamp", signData.timestamp);
+              cloudinaryData.append("signature", signData.signature);
+              cloudinaryData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+              cloudinaryData.append("folder", "image");
+
+              fetch(url, {
+                method: "POST",
+                body: cloudinaryData
+              })
+              .then((response) => {
+                  return response.text();
+              })
+              .then((data) => {
+                  const photo = JSON.parse(data).secure_url
+                  formData.photo = photo;
+
+                  $.ajax({
+                    url: `/api/quan/updateAds/${email}`,
+                    type: 'POST',
+                    data: JSON.stringify(formData),
+                    contentType: "application/json",
+                    success: function(response) {
+                      $("#loading-bg").hide();
+                      alert("Yêu cầu chỉnh sửa thành công")
+                      console.log(response);
+                    },
+                    error: function(xhr, status, error) {
+                      $("#loading-bg").hide();
+                      alert("Yêu cầu chỉnh sửa thất bại")
+                      console.error(error);
+                    }
+                  });
+                })
+                
             }
           })
         })

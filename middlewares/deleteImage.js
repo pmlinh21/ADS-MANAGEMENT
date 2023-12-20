@@ -7,6 +7,8 @@ cloudinary.config({
     api_secret: process.env.SECRET_KEY
 });
 
+// delete in cloudinary, not db
+
 const deleteImage = function (link) {
     const indexSplash = link.lastIndexOf("/");
     const indexDot = link.lastIndexOf(".");
