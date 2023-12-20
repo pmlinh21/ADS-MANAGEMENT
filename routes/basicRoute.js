@@ -57,8 +57,6 @@ basicRoute.post("/updateInfo/:email/:role", verifyToken, updateInfo);
 
 basicRoute.post("/updatePasswordByOTP/:email/:role", verifyToken, updatePasswordByOTP);
 
-basicRoute.post("/updatePasswordByOTP/:email/:role", verifyToken, updatePasswordByOTP);
-
 basicRoute.get("/uploadImage", verifyToken, uploadImage);
 
 module.exports = basicRoute;
