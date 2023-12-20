@@ -52,7 +52,7 @@ function buildUpdateAdsLocationTable(data) {
             tr.append('<td class="office">Phường ' + item.ward + ', Quận ' + item.district + '</td>');
         }
         if (item.status == false) {
-            tr.append('<td class="status">Chưa xử lí</td>');
+            tr.append('<td class="status" style="color: indianred;">Chưa xử lí</td>');
         } else {
             tr.append('<td class="status">Đã xử lí</td>');
         }
@@ -85,7 +85,7 @@ function buildUpdateAdsTable(data) {
             tr.append('<td class="office">Phường ' + item.ward + ', Quận ' + item.district + '</td>');
         }
         if (item.status == false) {
-            tr.append('<td class="status">Chưa xử lí</td>');
+            tr.append('<td class="status" style="color: indianred;">Chưa xử lí</td>');
         } else {
             tr.append('<td class="status">Đã xử lí</td>');
         }

@@ -558,6 +558,24 @@ const getWardAndDistrict = async (req, res) => {
     }
 }
 
+const getDistrictByID = async (req, res) => {
+    try {
+        let { id_district } = req.params;
+        let data = await model.District.findOne({
+            where: {
+                id_district: id_district
+            }
+        })
+        if (data) {
+            sucessCode(res, data, "Lấy thành công");
+        } else {
+            failCode(res, "", "Không tìm thấy dữ liệu");
+        }
+    } catch (error) {
+        errorCode(res,"Lỗi BE");
+    }
+}
+
 module.exports = {
     getAllAdsLoc, getMapInfo, getWard,
     getAdsLocation, getAds, updateAdsLoc, updateAds,
@@ -565,4 +583,4 @@ module.exports = {
     getAdsCreate, createAds, extendAds,
     getCanBoPhuong, getMapAdsLoc, getAdsWard, getAdsLocationWard,
     getAdsReportWard, getAdsLocReportWard, getLocReportWard,
-    getAdsCreateWard, createAdsWard, getWardAndDistrict }
+    getAdsCreateWard, createAdsWard, getWardAndDistrict, getDistrictByID }

@@ -2,7 +2,6 @@ $(document).ready(function () {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const status = urlParams.get('status');
-
   if (status === "unsuccessful") {
     alert("Login unsuccessfully");
   }
@@ -80,7 +79,6 @@ $(document).ready(function () {
       const data = {
         email: email
       };
-
       $.ajax({
         url: `/api/basic/findEmail`,
         type: "POST",

@@ -5,7 +5,7 @@ const { getLocType, getAdsType, getBoardType, getReportType,
     updateAdsReportByID, updateAdsLocReportByID, updateLocReportByID,
     getAdsCreateByID, deleteAdsCreateByID, getAdsCreateByAds,
     login, findEmail, updatePassword, sendEmail, checkOTP, createNewPwd,
-    getAccountInfo, updateInfo,
+    getAccountInfo, updateInfo, updatePasswordByOTP,
     uploadImage} = require('../controllers/basicController')
 const { uploadNone } = require('../middlewares/upload');
 
@@ -54,6 +54,10 @@ basicRoute.post("/findEmail", findEmail);
 basicRoute.get("/getAccountInfo/:email/:role", verifyToken, getAccountInfo);
 
 basicRoute.post("/updateInfo/:email/:role", verifyToken, updateInfo);
+
+basicRoute.post("/updatePasswordByOTP/:email/:role", verifyToken, updatePasswordByOTP);
+
+basicRoute.post("/updatePasswordByOTP/:email/:role", verifyToken, updatePasswordByOTP);
 
 basicRoute.get("/uploadImage", verifyToken, uploadImage);
 
