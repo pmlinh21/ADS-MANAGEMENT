@@ -141,17 +141,20 @@ $(document).ready(function () {
       })
 
       $('#edit-ads #id-ads-location').on('click', function () {
-        let id_adsLocation = parseInt($('#edit-ads #id-ads-location').val());
-        let current = null;
+        let currentId = parseInt($('#edit-ads #id-ads-location').val());
+        let currentIndex = null;
+
+        $('#select-location-map').css('display', 'block');
+
         adslocations.forEach(function (item, index) {
-          if (item.id_ads_location == id_adsLocation) {
-            current = index;
+          if (item.id_ads_location == currentId) {
+            currentIndex = index;
+            $('#select-location-map .chosen-address').text('(' + adslocations[currentIndex].id_ads_location + ') - ' + adslocations[currentIndex].address + ', Phường ' + adslocations[currentIndex].ward + ', Quận ' + adslocations[currentIndex].district + ' [' + adslocations[currentIndex].latitude + ', ' + adslocations[currentIndex].longitude + ']');
             return;
           }
         })
 
-        $('#select-location-map').css('display', 'block');
-        $('#select-location-map .chosen-address').text(adslocations[current].address + ', Phường ' + adslocations[current].ward + ', Quận ' + adslocations[current].district + ' [' + adslocations[current].latitude + ', ' + adslocations[current].longitude + ']');
+        // $('#select-location-map .chosen-address').text(adslocations[currentIndex].address + ', Phường ' + adslocations[currentIndex].ward + ', Quận ' + adslocations[currentIndex].district + ' [' + adslocations[currentIndex].latitude + ', ' + adslocations[currentIndex].longitude + ']');
 
         let div = $('<div></div>');
         div.addClass('popup-background');
@@ -164,13 +167,13 @@ $(document).ready(function () {
         // marker click event
         $(document).on('click', '.mapboxgl-marker', function () {
           let markerId = $(this).attr('id');
-          current = parseInt(markerId.split('-')[1]);
-          $('#select-location-map .chosen-address').text(adslocations[current].address + ', Phường ' + adslocations[current].ward + ', Quận ' + adslocations[current].district + ' [' + adslocations[current].latitude + ', ' + adslocations[current].longitude + ']');
+          currentIndex = parseInt(markerId.split('-')[1]);
+          $('#select-location-map .chosen-address').text('(' + adslocations[currentIndex].id_ads_location + ') - ' + adslocations[currentIndex].address + ', Phường ' + adslocations[currentIndex].ward + ', Quận ' + adslocations[currentIndex].district + ' [' + adslocations[currentIndex].latitude + ', ' + adslocations[currentIndex].longitude + ']');
         })
 
         // button click event
         $('#select-location-map button').on('click', function () {
-          $('#edit-ads #id-ads-location').val(adslocations[current].id_ads_location);
+          $('#edit-ads #id-ads-location').val(adslocations[currentIndex].id_ads_location);
           $('#select-location-map').css('display', 'none');
           $('.popup-background').remove();
         })
