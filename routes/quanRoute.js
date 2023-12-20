@@ -38,7 +38,7 @@ quanRoute.get("/getLocReport/:id_district", isCanboQuan, getLocReport);
 
 quanRoute.get("/getAdsCreate/:id_district", isCanboQuan, getAdsCreate);
 
-quanRoute.post("/createAds", isCanboQuan, upload('createAds').single("file"), createAds)
+quanRoute.post("/createAds", isCanboQuan, createAds)
 
 quanRoute.post("/extendAds", isCanboPhuongOrQuan, extendAds)
 

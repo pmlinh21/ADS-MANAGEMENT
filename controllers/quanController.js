@@ -225,10 +225,9 @@ const getAdsCreate = async(req, res) =>{
 const updateAdsLoc = async(req, res) =>{
     try{
         let { email } = req.params;
-        const file = req.file;
 
         let { id_ads_location, latitude, longitude, address, ward, district, 
-            id_loc_type, id_ads_type, is_zoning, req_time, reason, office} = req.body
+            id_loc_type, id_ads_type, is_zoning, req_time, reason, office, photo} = req.body
 
        
         let findDistrict = await model.District.findOne({where:{district: district}})
@@ -237,13 +236,15 @@ const updateAdsLoc = async(req, res) =>{
             id_district: findDistrict.id_district
         }})
 
+        console.log(photo)
+
         const data = await model.Ads_loc_update.create({
             id_ads_location: id_ads_location, officer: email, office: office, latitude: latitude, 
             longitude: longitude, address: address, is_zoning: is_zoning,
             id_loc_type: id_loc_type, id_ads_type: id_ads_type, req_time: req_time, reason: reason, 
             id_ward: findWard.id_ward, 
             id_district: findWard.id_district, 
-            photo: file?.filename,
+            photo: photo,
             status: false
         });
 
@@ -279,15 +280,14 @@ const updateAds = async(req, res) =>{
 
 const createAds = async(req, res) =>{
     try{
-        const file = req.file
         let {officer, office, id_ads_location, id_board_type, width, height, quantity,
-            content, company, email, phone, address, start_date, end_date} = req.body
+            content, company, email, phone, address, start_date, end_date, photo} = req.body
 
         const record = await model.Ads.create({
             id_ads_location: id_ads_location, 
             id_board_type: id_board_type, width: width, height: height, quantity: quantity,
             expired_date: end_date,
-            photo: file?.filename,
+            photo: photo,
         })
 
         await model.Ads_create.create({
@@ -295,7 +295,7 @@ const createAds = async(req, res) =>{
             id_board_type: id_board_type, width: width, height: height, quantity: quantity,
             content: content, company: company, email: email, phone: phone, 
             address: address, start_date: start_date, end_date: end_date,
-            photo: file?.filename,
+            photo: photo,
             status: null,
             id_ads: record.id_ads
         })
