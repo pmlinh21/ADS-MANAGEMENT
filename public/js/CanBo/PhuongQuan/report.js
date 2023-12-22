@@ -121,8 +121,8 @@ $(document).ready(function () {
     var info1, info2, info3, wards, wardArray = [], idArray = []
 
     $.get(`/api/quan/getWard/${id_district}`, function(data) {
-      wards = data.content.map(ward => ward.ward);
-      display_wards = data.content.map(ward => (!isNaN(parseInt(ward.ward))) ? `phường ${ward.ward}` : ward.ward);
+      wards = data.content.map(ward => ward.ward).sort(sortWard);
+      display_wards = wards.map(ward => (!isNaN(parseInt(ward))) ? `phường ${ward}` : ward);
       console.log("!");
       renderWard(display_wards);
 

@@ -112,51 +112,57 @@ $(document).ready(function () {
 
           $('#search').append(geocoder.onAdd(map));
       
-          $(".header-map i").on('click', geocoding);
-          $('#search').on('keydown', function(event) {
+          $(".header-map i").on('click', async () =>  await geocoding());
+          $('#search').on('keydown', async function(event) {
             if (event.keyCode === 13) { 
-              geocoding();
+              await geocoding();
             }
           });
 
           function geocoding(){
-            var address = $('#search').val()
+            const searchText = $('#search').val()
       
-            $.ajax({
-              url: `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(address)}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc`,
-              type: 'GET',
-              data: {
-                access_token: mapboxgl.accessToken,
-                language: "vi"
-              },
-              success: function(response) {
-                
-                const features = response.items[0];
-                longitude = features.position.lng;
-                latitude = features.position.lat;
-
-                map.flyTo({
-                  center: [longitude, latitude],
-                  zoom: 17
-                });
+            if (searchText.length > 0) 
+              return new Promise ((resolve, reject) => {
+                $.ajax({
+                  url: `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(searchText)}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc`,
+                  type: 'GET',
+                  data: {
+                    access_token: mapboxgl.accessToken,
+                    language: "vi"
+                  },
+                  success: function(response) {
+                    
+                    const features = response.items[0];
+                    longitude = features.position.lng;
+                    latitude = features.position.lat;
     
-                marker.remove()
-                marker = new mapboxgl.Marker( {color: '#0B7B31' })
-                .setLngLat([longitude, latitude]) 
-                .addTo(map);
-
-                ward = features?.address?.district.substring(7)
-                district = features?.address?.city.substring(5)
-                address = (features?.address?.houseNumber && features?.address?.street)
-                ? features?.address?.houseNumber + " " +  features?.address?.street
-                : features?.address?.label.substring(0, features?.address?.label.indexOf(", Phường") )                 
-              
-                $("#address").val(`${address}, phường ${ward}, quận ${district} [${longitude}, ${latitude}]` )
-              },
-              error: function() {
-                alert('Error occurred during geocoding');
-              }
-            });
+                    map.flyTo({
+                      center: [longitude, latitude],
+                      zoom: 17
+                    });
+        
+                    marker.remove()
+                    marker = new mapboxgl.Marker( {color: '#0B7B31' })
+                    .setLngLat([longitude, latitude]) 
+                    .addTo(map);
+    
+                    ward = features?.address?.district.substring(7)
+                    district = features?.address?.city.substring(5)
+                    address = (features?.address?.houseNumber && features?.address?.street)
+                    ? features?.address?.houseNumber + " " +  features?.address?.street
+                    : features?.address?.label.substring(0, features?.address?.label.indexOf(", Phường") )                 
+                  
+                    $("#address").val(`${address}, phường ${ward}, quận ${district} [${longitude}, ${latitude}]` )
+                    resolve()
+                  },
+                  error: function() {
+                    alert('Error occurred during geocoding');
+                    reject()
+                  }
+                });
+              })
+            
           }
       
           map.on('click', function(e) {
@@ -219,6 +225,7 @@ $(document).ready(function () {
       
           $('#edit-info .style3-button').off('click').on('click', function(e) {
             $("#address").val("")
+            $("#search").val("")
             $('#id_loc_type').val("")
             $('#id_ads_type').val("")
             $('#reason').val("")
@@ -227,9 +234,9 @@ $(document).ready(function () {
             $("#no").prop('selected', false);
           })
       
-          $('#edit-info .style1-button').off('click').on('click', function(e) {
+          $('#edit-info .style1-button').off('click').on('click', async function(e) {
             e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
-            
+            console.log(address);
             // console.log(longitude, latitude, filter_info[click_row][0]);
             let reason = $('#reason').val();
             if (!reason){
@@ -237,60 +244,65 @@ $(document).ready(function () {
             }
             else{
               $("#loading-bg").show();
-              var formData = new FormData();
-              formData.append('id_ads_location',filter_info[click_row][0]);
-              formData.append('latitude', latitude);
-              formData.append('longitude', longitude);
-              formData.append('address', address);
-              formData.append('ward', ward);
-              formData.append('district', district);
-              formData.append('id_loc_type', $('#id_loc_type').val());
-              formData.append('file', imageData);
-              formData.append('id_ads_type', $('#id_ads_type').val());
-              formData.append('is_zoning', $('#is_zoning').val());
-              formData.append('req_time', validateDate(new Date()));
-              formData.append('reason', $('#reason').val());
-              formData.append('office', role);
+
+              var formData = {
+                id_ads_location: filter_info[click_row][0],
+                latitude: latitude,
+                longitude: longitude,
+                address: address,
+                ward: ward,
+                district: district,
+                id_loc_type: $('#id_loc_type').val(),
+                id_ads_type: $('#id_ads_type').val(),
+                is_zoning:  $('#is_zoning').val(),
+                req_time: validateDate(new Date()),
+                reason:  $('#reason').val(),
+                office: role,
+                photo: ""
+              }
               
               $("form").get(0).reset();
               $("#edit-info").modal("hide")
 
-              $.ajax({
-                url: `/api/quan/updateAdsLoc/${email}`,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                  $("#loading-bg").hide();
-                  alert("Yêu cầu chỉnh sửa thành công")
-                  console.log(response);
-                },
-                error: function(xhr, status, error) {
-                  $("#loading-bg").hide();
-                  alert("Yêu cầu chỉnh sửa thất bại")
-                  console.error(error);
-                }
+              const signResponse = await fetch('/api/basic/uploadImage');
+              const signData = await signResponse.json();
+
+              const url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
+
+              const cloudinaryData = new FormData();
+              cloudinaryData.append("file", imageData);
+              cloudinaryData.append("api_key", signData.apikey);
+              cloudinaryData.append("timestamp", signData.timestamp);
+              cloudinaryData.append("signature", signData.signature);
+              cloudinaryData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+              cloudinaryData.append("folder", "image");
+
+              fetch(url, {
+                method: "POST",
+                body: cloudinaryData
+              })
+              .then((response) => {
+                  return response.text();
+              })
+              .then((data) => {
+                  const photo = JSON.parse(data).secure_url
+                  formData.photo = photo ? photo : "";
+              })
+              .finally(() => {
+                sendUpdateRequest(`/api/quan/updateAdsLoc/${email}`, formData)
               });
-      
             }
           })
         })
 
       }
     })
-
-
-
-
-
-    
   } else if (role == 1){
 
     $.get(`/api/quan/getWard/${id_district}`, function(data) {
-      wards = data.content.map(ward => ward.ward);
-      display_wards = data.content.map(ward => (!isNaN(parseInt(ward.ward))) ? `phường ${ward.ward}` : ward.ward);
-      console.log("!");
+      wards = data.content.map(ward => ward.ward).sort(sortWard);
+      display_wards = wards.map(ward => (!isNaN(parseInt(ward))) ? `phường ${ward}` : ward);
+      console.log(display_wards);
       renderWard(display_wards);
     }).fail(function(error) {
       console.log(error);
@@ -408,57 +420,63 @@ $(document).ready(function () {
       
           let canvas = $('.mapboxgl-canvas')
           canvas.width('100%');
-      
+          canvas.height('100%');
           let marker = new mapboxgl.Marker();
 
           $('#search').append(geocoder.onAdd(map));
       
-          $(".header-map i").on('click', geocoding);
-          $('#search').on('keydown', function(event) {
-            if (event.keyCode === 13) { // Kiểm tra phím Enter
-              geocoding();
+          $(".header-map i").on('click', async () => {
+            await geocoding()
+          });
+          $('#search').on('keydown', async function(event) {
+            if (event.keyCode === 13) {
+              await geocoding()
             }
           });
 
           function geocoding(){
-            var address = $('#search').val()
+            const searchText = $('#search').val()
       
-            $.ajax({
-              url: `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(address)}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc`,
-              type: 'GET',
-              data: {
-                access_token: mapboxgl.accessToken,
-                language: "vi"
-              },
-              success: function(response) {
+            if (searchText != '')
+            return new Promise(function(resolve, reject) {
+              $.ajax({
+                url: `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(searchText)}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc`,
+                type: 'GET',
+                data: {
+                  access_token: mapboxgl.accessToken,
+                  language: "vi"
+                },
+                success: function(response) {
+                  
+                  const features = response.items[0];
+                  longitude = features.position.lng;
+                  latitude = features.position.lat;
+
+                  map.flyTo({
+                    center: [longitude, latitude],
+                    zoom: 17
+                  });
+      
+                  marker.remove()
+                  marker = new mapboxgl.Marker( {color: '#0B7B31' })
+                  .setLngLat([longitude, latitude]) 
+                  .addTo(map);
+
+                  ward = features?.address?.district.substring(7)
+                  district = features?.address?.city.substring(5)
+                  address = (features?.address?.houseNumber && features?.address?.street)
+                  ? features?.address?.houseNumber + " " +  features?.address?.street
+                  : features?.address?.label.substring(0, features?.address?.label.indexOf(", Phường") )                 
                 
-                const features = response.items[0];
-                longitude = features.position.lng;
-                latitude = features.position.lat;
-
-                map.flyTo({
-                  center: [longitude, latitude],
-                  zoom: 17
-                });
-    
-                marker.remove()
-                marker = new mapboxgl.Marker( {color: '#0B7B31' })
-                .setLngLat([longitude, latitude]) 
-                .addTo(map);
-
-                ward = features?.address?.district.substring(7)
-                district = features?.address?.city.substring(5)
-                console.log(district)
-                address = (features?.address?.houseNumber && features?.address?.street)
-                ? features?.address?.houseNumber + " " +  features?.address?.street
-                : features?.address?.label.substring(0, features?.address?.label.indexOf(", Phường") )                 
-              
-                $("#address").val(`${address}, phường ${ward}, quận ${district} [${longitude}, ${latitude}]` )
-              },
-              error: function() {
-                alert('Error occurred during geocoding');
-              }
-            });
+                  $("#address").val(`${address}, phường ${ward}, quận ${district} [${longitude}, ${latitude}]` )
+                  resolve()
+                },
+                error: function() {
+                  alert('Error occurred during geocoding');
+                  reject()
+                }
+              });
+            })
           }
       
           map.on('click', function(e) {
@@ -520,6 +538,7 @@ $(document).ready(function () {
       
           $('#edit-info .style3-button').off('click').on('click', function(e) {
             $("#address").val("")
+            $("#search").val("")
             $('#id_loc_type').val("")
             $('#id_ads_type').val("")
             $('#reason').val("")
@@ -531,7 +550,7 @@ $(document).ready(function () {
           $('#edit-info .style1-button').off('click').on('click', async function(e) {
             e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
             
-            // console.log(longitude, latitude, filter_info[click_row][0]);
+            console.log(address);
             let reason = $('#reason').val();
             if (!reason){
               alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
@@ -580,37 +599,40 @@ $(document).ready(function () {
               })
               .then((data) => {
                   const photo = JSON.parse(data).secure_url
-                  formData.photo = photo;
-                
-                  $.ajax({
-                    url: `/api/quan/updateAdsLoc/${email}`,
-                    type: 'POST',
-                    data: JSON.stringify(formData),
-                    contentType: 'application/json',
-                    success: function(response) {
-                      $("#loading-bg").hide();
-                      alert("Yêu cầu chỉnh sửa thành công")
-                      console.log(response);
-                    },
-                    error: function(xhr, status, error) {
-                      $("#loading-bg").hide();
-                      if (xhr.status == 400){
-                        const errorMessage = xhr.responseJSON?.message;
-                        alert(errorMessage);
-                      } 
-                      else{
-                        alert("Yêu cầu chỉnh sửa thất bại")
-                      }
-                    }
-                  });
+                  formData.photo = photo ? photo : "";
               })
-      
+              .finally(() => {
+                sendUpdateRequest(`/api/quan/updateAdsLoc/${email}`, formData)
+              });
             }
           })
         })
 
       }
     })
-
   }
 });
+
+function sendUpdateRequest(url, formData){
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: JSON.stringify(formData),
+    contentType: 'application/json',
+    success: function(response) {
+      $("#loading-bg").hide();
+      alert("Yêu cầu chỉnh sửa thành công")
+      console.log(response);
+    },
+    error: function(xhr, status, error) {
+      $("#loading-bg").hide();
+      if (xhr.status == 400){
+        const errorMessage = xhr.responseJSON?.message;
+        alert(errorMessage);
+      } 
+      else{
+        alert("Yêu cầu chỉnh sửa thất bại")
+      }
+    }
+  });
+}

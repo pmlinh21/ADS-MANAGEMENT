@@ -229,33 +229,40 @@ const updateAdsLoc = async(req, res) =>{
         let { id_ads_location, latitude, longitude, address, ward, district, 
             id_loc_type, id_ads_type, is_zoning, req_time, reason, office, photo} = req.body
 
-       
+        console.log({ id_ads_location, latitude, longitude, address, ward, district, 
+            id_loc_type, id_ads_type, is_zoning, req_time, reason, office, photo})
+            
         let findDistrict = await model.District.findOne({where:{district: district}})
-        let findWard = await model.Ward.findOne({where:{
-            ward: ward,
-            id_district: findDistrict.id_district
-        }})
 
-        if (findDistrict && findWard){
-            const data = await model.Ads_loc_update.create({
-                id_ads_location: id_ads_location, officer: email, office: office, latitude: latitude, 
-                longitude: longitude, address: address, is_zoning: is_zoning,
-                id_loc_type: id_loc_type, id_ads_type: id_ads_type, req_time: req_time, reason: reason, 
-                id_ward: findWard.id_ward, 
-                id_district: findWard.id_district, 
-                photo: photo,
-                status: false
-            });
+        if (findDistrict){
+            let findWard = await model.Ward.findOne({where:{
+                ward: ward,
+                id_district: findDistrict.id_district
+            }})
 
-            sucessCode(res,{ findWard}, "Create thành công")
+            if (findWard){
+                const data = await model.Ads_loc_update.create({
+                    id_ads_location: id_ads_location, officer: email, office: office, latitude: latitude, 
+                    longitude: longitude, address: address, is_zoning: is_zoning,
+                    id_loc_type: id_loc_type, id_ads_type: id_ads_type, req_time: req_time, reason: reason, 
+                    id_ward: findWard.id_ward, 
+                    id_district: findWard.id_district, 
+                    photo: photo,
+                    status: false
+                });
+    
+                sucessCode(res,{ findWard}, "Create thành công")
+            }
+            else{
+                deleteImage(photo)
+                failCode(res, "","Phường bạn vừa chọn không tồn tại trong hệ thống")
+            }
+            
         }
         else{
             deleteImage(photo)
-            failCode(res, "Phường hoặc quận bạn vừa chọn không tồn tại trong hệ thống")
+            failCode(res, "", "Quận bạn vừa chọn không tồn tại trong hệ thống")
         }
-            
-
-        
 
     }catch(err){
         errorCode(res,"Lỗi BE")

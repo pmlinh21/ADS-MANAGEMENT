@@ -296,8 +296,8 @@ $(document).ready(function () {
     $("#loading-bg").show()
     $.get(`/api/quan/getWard/${id_district}`, function(data) {
       
-      wards = data.content.map(ward => ward.ward);
-      display_wards = data.content.map(ward => (!isNaN(parseInt(ward.ward))) ? `phường ${ward.ward}` : ward.ward);
+      wards = data.content.map(ward => ward.ward).sort(sortWard);
+      display_wards = wards.map(ward => (!isNaN(parseInt(ward))) ? `phường ${ward}` : ward);
       console.log("!");
       renderWard(display_wards);
     }).fail(function(error) {
@@ -571,47 +571,39 @@ $(document).ready(function () {
           }
     
           $("form.form-ads-create").get(0).reset();
-          const signResponse = await fetch('/api/basic/uploadImage');
-          const signData = await signResponse.json();
 
-          const url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
-
-          const cloudinaryData = new FormData();
-          cloudinaryData.append("file", imageData);
-          cloudinaryData.append("api_key", signData.apikey);
-          cloudinaryData.append("timestamp", signData.timestamp);
-          cloudinaryData.append("signature", signData.signature);
-          cloudinaryData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
-          cloudinaryData.append("folder", "image");
-
-          fetch(url, {
-            method: "POST",
-            body: cloudinaryData
-          })
-          .then((response) => {
-              return response.text();
-          })
-          .then((data) => {
-              const photo = JSON.parse(data).secure_url
-              formData.photo = photo;
-              $.ajax({
-                url: `/api/quan/createAds`,
-                type: 'POST',
-                data: JSON.stringify(formData),
-                contentType: "application/json",
-                success: function(response) {
-                  // Handle the successful response here
-                  window.location.reload();
-                  console.log(response);
-                },
-                error: function(xhr, status, error) {
-                  // Handle the error here
-                  $("#loading-bg").hide()
-                  alert("Tạo cấp phép thất bại")
-                  console.error(error);
-                }
-              });
+          if (imageData){
+            const signResponse = await fetch('/api/basic/uploadImage');
+            const signData = await signResponse.json();
+  
+            const url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
+  
+            const cloudinaryData = new FormData();
+            cloudinaryData.append("file", imageData);
+            cloudinaryData.append("api_key", signData.apikey);
+            cloudinaryData.append("timestamp", signData.timestamp);
+            cloudinaryData.append("signature", signData.signature);
+            cloudinaryData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+            cloudinaryData.append("folder", "image");
+  
+            fetch(url, {
+              method: "POST",
+              body: cloudinaryData
             })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                const photo = JSON.parse(data).secure_url
+                formData.photo = photo;
+               
+                sendCreateRequest(`/api/quan/createAds`, fromData)
+            })
+          }
+          else{
+            sendCreateRequest(`/api/quan/createAds`, fromData)
+          }
+
         }
       })
 
@@ -668,3 +660,23 @@ $(document).ready(function () {
   }
 
 });
+
+function sendCreateRequest(url, formData){
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: JSON.stringify(formData),
+    contentType: "application/json",
+    success: function(response) {
+      // Handle the successful response here
+      window.location.reload();
+      console.log(response);
+    },
+    error: function(xhr, status, error) {
+      // Handle the error here
+      $("#loading-bg").hide()
+      alert("Tạo cấp phép thất bại")
+      console.error(error);
+    }
+  });
+}

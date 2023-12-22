@@ -15,6 +15,13 @@ function renderWard(checkboxes){
     $(".ward-table").html(rendered);
 }
 
+function sortWard(a,b){
+    if (isNaN(a) || isNaN(b)) {
+      return a.localeCompare(b); // Sort non-numeric values alphabetically
+    }
+    return Number(a) - Number(b);
+  }
+
 function validateDate(date){
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
