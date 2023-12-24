@@ -2,20 +2,88 @@ var flag = false
 let ads_report
 let NguoiDanAdsLoc
 
+// let Ward
+let Ward = {
+  message: "Get thành công",
+  content: [
+    {
+      id_ward: 1,
+      ward: "Bến Nghé",
+      id_district: 1
+    },
+    {
+      id_ward: 2,
+      ward: "Bến Thành",
+      id_district: 1
+    },
+    {
+      id_ward: 3,
+      ward: "Cầu Kho",
+      id_district: 1
+    },
+    {
+      id_ward: 4,
+      ward: "Cầu Ông Lãnh",
+      id_district: 1
+    },
+    {
+      id_ward: 5,
+      ward: "Cô Giang",
+      id_district: 1
+    },
+    {
+      id_ward: 6,
+      ward: "Đa Kao",
+      id_district: 1
+    },
+    {
+      id_ward: 7,
+      ward: "Nguyễn Cư Trinh",
+      id_district: 1
+    },
+    {
+      id_ward: 8,
+      ward: "Nguyễn Thái Bình",
+      id_district: 1
+    },
+    {
+      id_ward: 9,
+      ward: "Phạm Ngũ Lão",
+      id_district: 1
+    },
+    {
+      id_ward: 10,
+      ward: "Tân Định",
+      id_district: 1
+    }
+  ]
+}
+
 $.ajax({
-  url: "http://localhost:8080/api/nguoidan/getAdsLoc",
-  type: "GET"
+    // url: `https://adsmap-officer.onrender.com/login/api/nguoidan/getWardNgDan`,
+    url: `http://localhost:8080/api/nguoidan/getWardNgDan`,
+    type: "GET",
+    success: function (data) {
+        console.log(data)
+        Ward = data
+        // localStorage.setItem("ads_report", JSON.stringify(ads_report))
+
+
+        // let adsloc = localStorage.getItem('adsloc_report');
+        // adsloc = (adsloc) ? JSON.parse(adsloc) : []
+        // adsloc = adsloc.filter(item => item[5] == email)
+        // adsloc = adsloc.map(item => {
+        //     const id = parseInt(item[2])
+        //     const info = NguoiDanAdsLoc.content.filter(item => item.id_ads_location == id)[0]
+        //     return [`${info.address}, phường ${info.ward}, quận ${info.id_district}`,
+        //     item[7], parseInt(item[3]), item[11], item[8], item[9], item[12]]
+        // })
+        //  address, content, report_type, status, image1, image2, resolve, 
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+    }
 })
-  .done(function (data) {
-    console.log("ngdanAdsLoc" + data);
-    NguoiDanAdsLoc = data.content;
-
-    // The rest of your code that depends on NguoiDanAdsLoc should be placed here
-
-  })
-  .fail(function (jqXHR, textStatus, errorThrown) {
-    console.log(errorThrown);
-  });
 
 // DATETIME (SQL) -> dd/mm/yyyy
 function validateSQLDate(dateString) {
@@ -361,7 +429,6 @@ function showSidebar(adsloc) {
         $('#sidebar').hide()
         $(".flex-container.toggle").show()
     })
-
 }
 
 // clustering và bắt sự kiện trên các điểm
@@ -472,7 +539,7 @@ function createLayer(map, features) {
       <p class = "loc-type">${loc_type}</p>
       <p class = "address">${address}, phường ${ward}, quận ${district} </p>
       <p class = "zoning-text" style = "font-weight: 900; font-style: italic">${zoning_text}</p>
-      <img src = ./public/${imagePath} class = "img-thumbnail" />
+      <img src = ${imagePath} class = "img-thumbnail" />
       </div>`
             )
         e.features[0].popup = popup;
@@ -517,7 +584,7 @@ function createMarker(info, map) {
             colorMarker = '#0B7B31';
         let imagePath
         if (item[7] != "")
-            imagePath = "../image/" + item[7]
+            imagePath =  item[7]
         else
             imagePath = "../image/image-placeholder.jpg"
         // console.log(imagePath)
@@ -952,7 +1019,8 @@ $(document).ready(function () {
 
     let ads_report
     $.ajax({
-        url: `https://adsmap-officer.onrender.com/api/nguoidan/getAdsReport`,
+        // url: `https://adsmap-officer.onrender.com/login/api/nguoidan/getAdsReport`,
+        url: `http://localhost:8080/api/nguoidan/getAdsReport`,
         type: "GET",
         success: function (data) {
             console.log(data)
@@ -977,7 +1045,8 @@ $(document).ready(function () {
     })
 
     $.ajax({
-        url: `https://adsmap-officer.onrender.com/api/nguoidan/getAdsLocReport`,
+        url: `http://localhost:8080/api/nguoidan/getAdsLocReport`,
+        // url: `https://adsmap-officer.onrender.com/api/nguoidan/getAdsLocReport`,
         type: "GET",
         success: function (data) {
             console.log(data)
@@ -1003,7 +1072,8 @@ $(document).ready(function () {
 
     let NguoiDanAdsLoc
     $.ajax({
-        url: `https://adsmap-officer.onrender.com/api/nguoidan/getAdsLoc`,
+        url: `http://localhost:8080/api/nguoidan/getAdsLoc`,
+        // url: `https://adsmap-officer.onrender.com/api/nguoidan/getAdsLoc`,
         type: "GET",
     }).done(function (data) {
         // console.log("ngdanAdsLoc" + data);
@@ -1138,7 +1208,7 @@ $(document).ready(function () {
                 "0"
             ]
         ]
-    
+
         const adsloc_report = [
             [
                 "nnlien21@clc.fitus.edu.vn",
@@ -1516,14 +1586,14 @@ $(document).ready(function () {
                 "Tổ chức cuộc họp với các cơ quan chức năng để đánh giá ý kiến đề xuất. Tiến hành thiết kế và lắp đặt bảng chỉ dẫn giao thông mới trên các tuyến đường chính, nhằm tăng cường an toàn và giảm ùn tắc giao thông. Cảm ơn người dân đã góp ý và thông báo về việc triển khai ý kiến đóng góp."
             ]
         ]
-    
-    
+
+
         console.log("ckeck" + ads_report)
         localStorage.setItem("ads_report", JSON.stringify(ads_report))
         localStorage.setItem("loc_report", JSON.stringify(loc_report))
         localStorage.setItem("adsloc_report", JSON.stringify(adsloc_report))
-    
-    
+
+
         // thay đổi kích thước bản đồ khi resize cửa sổ trình duyệt
         $(window).on('resize', function () {
             let windowHeight = $(window).height();
@@ -1535,8 +1605,8 @@ $(document).ready(function () {
             $('#map').height(mapHeight);
             $('#sidebar').height(mapHeight);
         });
-    
-    
+
+
         // tạo bản đồ
         mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
         var map = new mapboxgl.Map({
@@ -1547,7 +1617,7 @@ $(document).ready(function () {
             language: 'vi'
         });
         map.addControl(new mapboxgl.NavigationControl());
-    
+
         // Add geolocate control to the map.
         map.addControl(
             new mapboxgl.GeolocateControl({
@@ -1560,35 +1630,35 @@ $(document).ready(function () {
                 showUserHeading: true
             })
         );
-    
+
         // cài đặt tiếng việt
         var language = new MapboxLanguage({
             defaultLanguage: 'vi'
         });
         map.addControl(language);
-    
-    
-    
+
+
+
         // lấy dữ liệu lưu vào info
         var info = NguoiDanAdsLoc.content.map(function (item) {
             let { id_ads_location, address, ward, district, loc_type, ads_type,
                 photo, is_zoning, longitude, latitude, list_ads, list_report } = item
             let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
-    
+
             return [id_ads_location, address, ward, district, loc_type, ads_type, zoning_text,
                 photo, longitude, latitude, is_zoning, list_ads, list_report]
         })
-    
+
         // console.log(info)
-    
+
         // tạo điểm trên map
         createMarker(info, map);
-    
+
         // bắt sự kiện toggle
         $(".flex-container input").on('click', function (e) {
             createMarker(info, map)
         })
-    
+
         let marker = new mapboxgl.Marker();
         map.on('click', function (e) {
             let lngLat = e.lngLat;
@@ -1602,7 +1672,7 @@ $(document).ready(function () {
                 center: lngLat,
                 zoom: 17
             })
-    
+
             let locObject = {
                 "colorMarker": null,
                 "id_ads_location": null,
@@ -1620,7 +1690,7 @@ $(document).ready(function () {
                 "list_report": "null"
             }
             // $('#sidebar').hide()
-    
+
             fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(longitude)},${(latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
                 .then(response => response.json())
                 .then(data => {
@@ -1630,45 +1700,45 @@ $(document).ready(function () {
                     locObject.address = data.features[0].properties.address;
                     locObject.longitude = longitude
                     locObject.latitude = latitude
-    
+
                     if (!flag) {
                         console.log(flag)
                         showSidebar(locObject)
                     } else {
                         console.log(flag)
                     }
-    
+
                     flag = false
-    
+
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     // const resultDiv = document.getElementById('result');
                     // resultDiv.innerHTML = '<p>Error during geocoding.</p>';
                 });
-    
+
             // Lắng nghe sự kiện mousedown trên bản đồ
             map.on('mousedown', function () {
                 // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
                 map.getCanvas().style.cursor = 'grab';
             });
-    
+
             // Lắng nghe sự kiện mouseup trên bản đồ
             map.on('mouseup', function () {
                 // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
                 map.getCanvas().style.cursor = 'pointer';
             })
-    
+
         });
-    
+
         // map.on('scroll', function () {
         //   $('#sidebar').hide()
         // });
-    
+
         document.getElementById('geocodeForm').addEventListener('submit', function (event) {
             event.preventDefault();
             const address = document.getElementById('address').value;
-    
+
             fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(address)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
                 .then(response => response.json())
                 .then(data => {
@@ -1688,7 +1758,7 @@ $(document).ready(function () {
                         "list_ads": "null",
                         "list_report": "null"
                     }
-    
+
                     let center = data.features[0].center;
                     map.flyTo({
                         center: center,
@@ -1710,18 +1780,19 @@ $(document).ready(function () {
                     resultDiv.innerHTML = '<p>Error during geocoding.</p>';
                 });
         })
-    
+
         $(".my-report").on("click", () => {
             let email = localStorage.getItem('email');
             email = (email) ? JSON.parse(email) : ''
             console.log(email)
-    
+
             $.ajax({
                 url: `http://localhost:8080/api/nguoidan/getReport/${email}`,
+                // url: `https://adsmap-officer.onrender.com/api/nguoidan/getReport/${email}`,
                 type: "GET",
                 success: function (data) {
                     console.log(data);
-    
+
                     let adsloc = localStorage.getItem('adsloc_report');
                     adsloc = (adsloc) ? JSON.parse(adsloc) : []
                     adsloc = adsloc.filter(item => item[5] == email)
@@ -1732,7 +1803,7 @@ $(document).ready(function () {
                         item[7], parseInt(item[3]), item[11], item[8], item[9], item[12]]
                     })
                     //  address, content, report_type, status, image1, image2, resolve, 
-    
+
                     let ads = localStorage.getItem('ads_report');
                     ads = (ads) ? JSON.parse(ads) : []
                     ads = ads.filter(item => item[5] == email)
@@ -1746,7 +1817,7 @@ $(document).ready(function () {
                         return [`${info.address}, phường ${info.ward}, ${info.district}`,
                         item[7], parseInt(item[3]), item[11], item[8], item[9], item[12]]
                     })
-    
+
                     let loc = localStorage.getItem('loc_report');
                     loc = (loc) ? JSON.parse(loc) : []
                     loc = loc.filter(item => item[8] == email)
@@ -1761,10 +1832,10 @@ $(document).ready(function () {
                             item[10], parseInt(item[6]), item[14], item[11], item[12], item[15]]
                         }
                     })
-    
+
                     const list_report = [...adsloc, ...loc, ...ads]
                     console.log(list_report)
-    
+
                     const note = list_report?.map(item => {
                         const statusClass = parseInt((item[14])) ? "resolved" : "unresolved";
                         const statusText = parseInt((item[14])) ? "Đã xử lí" : "Chưa xử lí"
@@ -1777,7 +1848,7 @@ $(document).ready(function () {
                             report_type = "Đóng góp ý kiến"
                         else if (item[2] == 4)
                             report_type = "Giải đáp thắc mắc"
-    
+
                         return {
                             statusClass: statusClass,
                             statusText: statusText,
@@ -1786,7 +1857,7 @@ $(document).ready(function () {
                             imagePath2: item[5] ? `/public/image/${item[5]}` : ''
                         }
                     })
-    
+
                     console.log(note)
                     // list_report.forEach((item, index) => console.log(item, note[index]))
                     var template = `
@@ -1836,7 +1907,7 @@ $(document).ready(function () {
 
 
 
-    
+
 });
 
 document.getElementById('send').addEventListener('click', function () {
@@ -1845,4 +1916,18 @@ document.getElementById('send').addEventListener('click', function () {
 
     // Save the email to local storage
     localStorage.setItem('email', JSON.stringify(email));
+});
+
+
+tinymce.init({
+    selector: 'textarea',
+    plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
+    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+    tinycomments_mode: 'embedded',
+    tinycomments_author: 'Author name',
+    mergetags_list: [
+        { value: 'First.Name', title: 'First Name' },
+        { value: 'Email', title: 'Email' },
+    ],
+    ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
 });
