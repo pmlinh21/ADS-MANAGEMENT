@@ -1,6 +1,6 @@
 const express = require('express');
 const nguoidanRoute = express.Router();
-const { getAdsLoc, getReport,} = require('../controllers/nguoidanController')
+const { getAdsLoc, getReport, getLocReport,} = require('../controllers/nguoidanController')
 const { upload } = require('../middlewares/upload');
 
 nguoidanRoute.get("/getAdsLoc", getAdsLoc);
@@ -42,5 +42,7 @@ nguoidanRoute.post('/createAdsReport', (req, res) => {
 // });
 
 // nguoidanRoute.get("/getWardNgDan", getWardNgDan);
+
+nguoidanRoute.get("/getLocReport", getLocReport);
 
 module.exports = nguoidanRoute;
