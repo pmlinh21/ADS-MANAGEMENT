@@ -1,7 +1,7 @@
 var flag = false
 let ads_report
 let NguoiDanAdsLoc
-localStorage.setItem("email", JSON.stringify("quan@gmail.com"))
+localStorage.setItem("email", JSON.stringify("lvduc@gmail.com"))
 
 // DATETIME (SQL) -> dd/mm/yyyy
 function validateSQLDate(dateString) {
@@ -597,8 +597,8 @@ $.ajax({
 $(document).ready(function () {
     let NguoiDanAdsLoc
     $.ajax({
-        // url: `http://localhost:8080/api/nguoidan/getAdsLoc`,
-        url: `https://adsmap-officer.onrender.com/api/nguoidan/getAdsLoc`,
+        url: `http://localhost:8080/api/nguoidan/getAdsLoc`,
+        // url: `https://adsmap-officer.onrender.com/api/nguoidan/getAdsLoc`,
         type: "GET",
     }).done(function (data) {
         NguoiDanAdsLoc = data;
@@ -815,88 +815,74 @@ $(document).ready(function () {
 
         $(".my-report").on("click", () => {
             let email = JSON.parse(localStorage.getItem('email'));
-            $.ajax({
-                // url: `http://localhost:8080/api/nguoidan/getReport/${email}`,
-                url: `https://adsmap-officer.onrender.com/api/nguoidan/getReport/${email}`,
-                type: "GET",
-                success: function (data) {
-                    console.log(JSON.stringify(data) + "data");
-                    let adsloc = localStorage.getItem('adsloc_report');
-                    adsloc = (adsloc) ? JSON.parse(adsloc) : []
-                    adsloc = adsloc.filter(item => item.email == email)
-                    adsloc = adsloc.map(item => {
-                        const id = parseInt(item[2])
-                        const info = NguoiDanAdsLoc.content.filter(item => item.id_ads_location == id)[0]
-                        return [`${info.address}, phường ${info.ward}, quận ${info.id_district}`,
-                        item[7], parseInt(item[3]), item[11], item[8], item[9], item[12]]
-                    })
-                    //  address, content, report_type, status, image1, image2, resolve, 
 
-                    let ads = localStorage.getItem('ads_report');
-                    ads = (ads) ? JSON.parse(ads) : []
-                    ads = ads.filter(item => item[5] == email)
-                    ads = ads.map(item => {
-                        const id = parseInt(item[2])
-                        const info = NguoiDanAdsLoc.content.filter(item => {
-                            const result = item.list_ads?.filter(i => i.id_ads = id)
-                            if (result?.length > 0)
-                                return item
-                        })[0]
-                        return [`${info.address}, phường ${info.ward}, ${info.district}`,
-                        item[7], parseInt(item[3]), item[11], item[8], item[9], item[12]]
-                    })
+            let my_adsloc_report = []
+            let adsloc = localStorage.getItem('adsloc_report');
+            adsloc = (adsloc) ? JSON.parse(adsloc) : []
+            adsloc.forEach(item => {
+                if (item.email == email)
+                    my_adsloc_report.push(item)
+            })
 
-                    let loc = localStorage.getItem('loc_report');
-                    loc = (loc) ? JSON.parse(loc) : []
-                    loc = loc.filter(item => item[8] == email)
-                    loc = loc.map(item => {
-                        if (!item[5])
-                            return [item[4], item[10], parseInt(item[6]), item[14], item[11], item[12], item[15]]
-                        else {
-                            let ward = Ward.content.filter(i => i.id_ward == parseInt(item[5]))[0]
-                            let district = ", quận " + ward.id_district
-                            ward = ", phường " + ward.ward
-                            return [item[4] + ward + district,
-                            item[10], parseInt(item[6]), item[14], item[11], item[12], item[15]]
-                        }
-                    })
+            let my_ads_report = []
+            let ads_report = localStorage.getItem('ads_report');
+            ads_report = (ads_report) ? JSON.parse(ads_report) : []
+            ads_report.forEach(item => {
+                if (item.email == email)
+                    my_ads_report.push(item)
+            })
 
-                    const list_report = [...adsloc, ...loc, ...ads]
-                    console.log(list_report + "list_report")
+            let my_loc_report = []
+            let loc_report = localStorage.getItem('loc_report');
+            loc_report = (loc_report) ? JSON.parse(loc_report) : []
+            loc_report.forEach(item => {
+                if (item.email == email)
+                    my_loc_report.push(item)
+            })
 
-                    const note = list_report?.map(item => {
-                        const statusClass = parseInt((item[14])) ? "resolved" : "unresolved";
-                        const statusText = parseInt((item[14])) ? "Đã xử lí" : "Chưa xử lí"
-                        var report_type = null;
-                        if (item[2] == 1)
-                            report_type = "Tố cáo sai phạm"
-                        else if (item[2] == 2)
-                            report_type = "Đăng kí nội dung"
-                        else if (item[2] == 3)
-                            report_type = "Đóng góp ý kiến"
-                        else if (item[2] == 4)
-                            report_type = "Giải đáp thắc mắc"
+            const list_report = [...my_ads_report, ...my_loc_report, ...my_adsloc_report]
+            console.log(JSON.stringify(list_report) + "list_report")
 
-                        return {
-                            statusClass: statusClass,
-                            statusText: statusText,
-                            report_type: report_type,
-                            imagePath1: item[4] ? `/public/image/${item[4]}` : '',
-                            imagePath2: item[5] ? `/public/image/${item[5]}` : ''
-                        }
-                    })
+            const note = list_report?.map(item => {
+                if(item.id_ads_location)
+                    address = NguoiDanAdsLoc.content.filter(i => i.id_ads_location == item.id_ads_location)[0].address
 
-                    // console.log(note)
-                    // list_report.forEach((item, index) => console.log(item, note[index]))
-                    var template = `
+                const statusClass = item.status ? "resolved" : "unresolved";
+                const statusText = item.status ? "Đã xử lí" : "Chưa xử lí"
+                var report_type = null;
+                if (item.id_report_type == 1)
+                    report_type = "Tố cáo sai phạm"
+                else if (item.id_report_type == 2)
+                    report_type = "Đăng kí nội dung"
+                else if (item.id_report_type == 3)
+                    report_type = "Đóng góp ý kiến"
+                else if (item.id_report_type == 4)
+                    report_type = "Giải đáp thắc mắc"
+                return {
+                    address: address,
+                    statusClass: statusClass,
+                    statusText: statusText,
+                    report_type: report_type,
+                    imagePath1: item.photo1,
+                    imagePath2: item.photo2,
+                }
+            })
+            var template = `
             <% for (var i = 0; i < list_report?.length; i++) { %>
                 <div class="other-report row" >
                 <div class="col-md-12 location">
-                    <strong>Địa điểm:</strong> <%= list_report[i][0] %>
+                    <strong>Địa điểm:</strong> 
+                    <% if (list_report[i].address) { %>
+                        <%= list_report[i].address %>
+                    <% } else { %>
+                        <%= note[i].address %>
+                    <% } %>
+ 
                 </div>
                 <div class="col-md-12">
-                    "<%= list_report[i][1] %> "
+                    "<%= list_report[i].content %> "
                 </div>
+
                 <div class="col-md-12 view-image">
                 <% if (note[i].imagePath1) { %>
                     <img class="col-md-6 image1" src="<%= note[i].imagePath1 %>">
@@ -905,34 +891,25 @@ $(document).ready(function () {
                     <img class="col-md-6 image2" src="<%= note[i].imagePath2 %>">
                 <% } %>
                 </div>
-                <div class="col-md-12 ">
-                    <div class = <%= note[i].statusClass %> >
-                        <%= note[i].statusText %>
+                    <div class="col-md-12 ">
+                        <div class = <%= note[i].statusClass %> >
+                            <%= note[i].statusText %>
+                        </div>
+                        <div class = "report-type">
+                            <%= note[i].report_type %>
+                        </div>
                     </div>
-                    <div class = "report-type">
-                        <%= note[i].report_type %>
-                    </div>
-                    <div class = "report-type">
-                        <%= note[i].report_type %>
-                    </div>
-                </div>
                 </div>
             <% } %>
             `;
-                    var rendered = ejs.render(template, { list_report, note });
-                    $('#my-report .modal-body').html(rendered);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                }
-            })
+            var rendered = ejs.render(template, { list_report, note });
+            $('#my-report .modal-body').html(rendered)
         })
-
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown + "getAdsLoc")
     })
-        .fail(function (jqXHR, textStatus, errorThrown) {
-            console.log(errorThrown);
-        });
-});
+})
+
 
 tinymce.init({
     selector: 'textarea',
