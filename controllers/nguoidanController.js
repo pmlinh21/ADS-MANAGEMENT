@@ -63,47 +63,47 @@ const getAdsLoc = async (req, res) => {
     }
 }
 
-const getReport = async (req, res) => {
-    try {
-        let { email } = req.params;
+// const getReport = async (req, res) => {
+//     try {
+//         let { email } = req.params;
 
-        // console.log(email)
+//         // console.log(email)
 
-        const [adsloc, metadata1] = await sequelize.query
-            (`SELECT alr.*, rt.report_type, al.address, w.*, d.*, 'Điểm đặt' as category
-            FROM Ads_loc_report alr
-            INNER JOIN Report_type rt ON rt.id_report_type = alr.id_report_type
-            INNER JOIN Ads_location al ON al.id_ads_location = alr.id_ads_location
-            INNER JOIN Ward w ON w.id_ward = al.id_ward
-            INNER JOIN District d ON d.id_district = al.id_district
-            WHERE alr.email = '${email}'`);
+//         const [adsloc, metadata1] = await sequelize.query
+//             (`SELECT alr.*, rt.report_type, al.address, w.*, d.*, 'Điểm đặt' as category
+//             FROM Ads_loc_report alr
+//             INNER JOIN Report_type rt ON rt.id_report_type = alr.id_report_type
+//             INNER JOIN Ads_location al ON al.id_ads_location = alr.id_ads_location
+//             INNER JOIN Ward w ON w.id_ward = al.id_ward
+//             INNER JOIN District d ON d.id_district = al.id_district
+//             WHERE alr.email = '${email}'`);
 
-        // console.log(adsloc)
+//         // console.log(adsloc)
 
-        const [ads, metadata2] = await sequelize.query
-            (`SELECT ar.*, rt.report_type, al.address, w.*, d.*, 'Quảng cáo' as category
-            FROM Ads_report ar
-            INNER JOIN Report_type rt ON rt.id_report_type = ar.id_report_type
-            INNER JOIN Ads a ON a.id_ads = ar.id_ads
-            INNER JOIN Ads_location al ON al.id_ads_location = a.id_ads_location
-            INNER JOIN Ward w ON w.id_ward = al.id_ward
-            INNER JOIN District d ON d.id_district = al.id_district
-            WHERE ar.email = '${email}'`);
+//         const [ads, metadata2] = await sequelize.query
+//             (`SELECT ar.*, rt.report_type, al.address, w.*, d.*, 'Quảng cáo' as category
+//             FROM Ads_report ar
+//             INNER JOIN Report_type rt ON rt.id_report_type = ar.id_report_type
+//             INNER JOIN Ads a ON a.id_ads = ar.id_ads
+//             INNER JOIN Ads_location al ON al.id_ads_location = a.id_ads_location
+//             INNER JOIN Ward w ON w.id_ward = al.id_ward
+//             INNER JOIN District d ON d.id_district = al.id_district
+//             WHERE ar.email = '${email}'`);
 
-        const [loc, metadata3] = await sequelize.query
-            (`SELECT lr.*, rt.report_type, w.*, d.*, 'Địa điểm bất kì' as category
-            FROM Location_report lr
-            INNER JOIN Report_type rt ON rt.id_report_type = lr.id_report_type
-            INNER JOIN Ward w ON w.id_ward = lr.id_ward
-            INNER JOIN District d ON d.id_district = w.id_district
-            WHERE lr.email = '${email}'`);
+//         const [loc, metadata3] = await sequelize.query
+//             (`SELECT lr.*, rt.report_type, w.*, d.*, 'Địa điểm bất kì' as category
+//             FROM Location_report lr
+//             INNER JOIN Report_type rt ON rt.id_report_type = lr.id_report_type
+//             INNER JOIN Ward w ON w.id_ward = lr.id_ward
+//             INNER JOIN District d ON d.id_district = w.id_district
+//             WHERE lr.email = '${email}'`);
 
-        sucessCode(res, { adsloc, ads, loc }, "Get thành công")
+//         sucessCode(res, { adsloc, ads, loc }, "Get thành công")
 
-    } catch (err) {
-        errorCode(res, "Lỗi BE")
-    }
-}
+//     } catch (err) {
+//         errorCode(res, "Lỗi BE")
+//     }
+// }
 
 const getLocReport = async (req, res) => {
     try {
@@ -120,4 +120,4 @@ const getLocReport = async (req, res) => {
     }
 }
 
-module.exports = { getAdsLoc, getReport, getLocReport }
+module.exports = { getAdsLoc, getLocReport }
