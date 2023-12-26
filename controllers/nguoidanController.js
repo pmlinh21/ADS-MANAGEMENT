@@ -3,7 +3,6 @@ const sequelize = db.sequelize;
 const init_models = require('../models/init-models');
 const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
-const { Op } = require("sequelize");
 
 const getAdsLoc = async (req, res) => {
     try {
@@ -58,9 +57,7 @@ const getAdsLoc = async (req, res) => {
                 adsloc[i] = { ...adsloc[i], list_report: adsloc_report, list_ads: list_ads }
 
         }
-
         sucessCode(res, adsloc, "Get thành công")
-
     } catch (err) {
         errorCode(res, "Lỗi BE")
     }
@@ -108,23 +105,19 @@ const getReport = async (req, res) => {
     }
 }
 
-
-const getAdsReportNgDan = async (req, res) => {
+const getLocReport = async (req, res) => {
     try {
         const [data, metadata] = await sequelize.query
-            (`SELECT ar.*, rt.report_type, w.ward
-            FROM Ads_report ar
-            INNER JOIN Report_type rt ON rt.id_report_type = ar.id_report_type
-            INNER JOIN Ads a ON a.id_ads = ar.id_ads
-            INNER JOIN Ads_location al ON al.id_ads_location = a.id_ads_location
-            INNER JOIN Ward w ON w.id_ward = al.id_ward
-            ORDER BY ar.id_report`);
-        sucessCode(res, data, "Get thành công") 
+            (`SELECT lr.*, rt.report_type, w.ward, d.district
+            FROM Location_report lr
+            INNER JOIN Report_type rt ON lr.id_report_type = rt.id_report_type
+            INNER JOIN Ward w ON lr.id_ward = w.id_ward
+            INNER JOIN District d ON w.id_district = d.id_district
+            `);
+        sucessCode(res, data, "Get thành công")
     } catch (err) {
         errorCode(res, "Lỗi BE")
     }
 }
 
-
-
-module.exports = { getAdsLoc, getReport, getAdsReportNgDan }
+module.exports = { getAdsLoc, getReport, getLocReport }
