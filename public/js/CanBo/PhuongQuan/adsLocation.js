@@ -469,6 +469,9 @@ $(document).ready(function () {
                   : features?.address?.label.substring(0, features?.address?.label.indexOf(", Phường") )                 
                 
                   $("#address").val(`${address}, phường ${ward}, quận ${district} [${longitude}, ${latitude}]` )
+
+                  // $(".style1-button").prop("disabled",false)
+                  
                   resolve()
                 },
                 error: function() {

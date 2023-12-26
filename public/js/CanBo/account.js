@@ -136,8 +136,8 @@ $(document).ready(function() {
                 $("#loading-bg").show()
             },
             success: function (data) {
-                //$("#loading-bg").hide();
-                location.reload();
+                $("#loading-bg").hide();
+                // location.reload();
             },
             error: function (error) {
                 console.log(error);

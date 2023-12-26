@@ -697,8 +697,25 @@ const deleteAdsCreateByID = async(req, res) =>{
             { where:{
             id_create
         }})
+
+        const row = await model.Ads_create.findAll({
+            where: {
+                id_ads: record.id_ads
+            }
+        })
         
-        // không xóa ảnh vì ảnh đó dùng cho bảng ads
+        // cấp phép tạo ads, không phải cấp phép gia hạn
+        if (row.length == 1) {
+
+            await model.Ads.destroy({
+                where: {
+                    id_ads: record.id_ads
+                }
+            })
+
+            if (record.photo)
+                deleteImage(record.photo)
+        }
 
         await model.Ads_create.destroy(
             { where:{
