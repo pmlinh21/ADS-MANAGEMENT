@@ -120,7 +120,6 @@ function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
 
 // hiển thị sidebar và bắt sự kiện trên sidebar
 function showSidebar(adsloc) {
-    console.log(JSON.stringify(adsloc) + "adsloc")
     $(".flex-container.toggle").hide()
     $('#sidebar').show()
     renderAds(adsloc)
@@ -135,7 +134,6 @@ function showSidebar(adsloc) {
     $("#sidebar .detail-button").on("click", function () {
         let str_id_ads = $(this).attr("class").split(" ")[1];
         let id_ads = parseInt(str_id_ads.split("-")[1])
-        // console.log(id_ads)
 
         const list_ads = JSON.parse(adsloc.list_ads)
         ads = list_ads?.filter(item => item.id_ads == id_ads)[0]
@@ -143,7 +141,6 @@ function showSidebar(adsloc) {
         let imagePath = (!ads.photo ? `./image/image-placeholder.jpg` : `${ads.photo}`)
         $("#detail-popup .image img").attr("src", imagePath)
         $("#detail-popup .expired-date").text("Ngày hết hạn hợp đồng: " + validateSQLDate(ads.expired_date))
-        // console.log(imagePath)
     })
 
     $("#sidebar .adInfo .report-button").on("click", function () {
@@ -183,7 +180,6 @@ function showSidebar(adsloc) {
         })
 
         $('#report-popup .style1-button').off('click').on("click", function (e) {
-            console.log("report button clicked")
             e.preventDefault()
             if ($("#name").val() == "")
                 alert("Trường 'Họ tên người báo cáo' bắt buộc")
@@ -191,7 +187,7 @@ function showSidebar(adsloc) {
                 alert("Trường 'Email' bắt buộc")
             else if ($("#phone").val() == "")
                 alert("Trường 'Số điện thoại' bắt buộc")
-            else if ($("#reportContent").val() == "")
+            else if (tinymce.get("content").getContent() == "")
                 alert("Trường 'Nội dung báo cáo' bắt buộc")
             else {
                 imageData1 = imageData2 = null
@@ -218,45 +214,24 @@ function showSidebar(adsloc) {
                 existingReports.push(reportObject);
                 localStorage.setItem("ads_report", JSON.stringify(existingReports));
 
-                console.log(JSON.stringify(reportObject) + "reportObject")
+                console.log(JSON.stringify(reportObject) + "info")
 
                 // Send data to the server using AJAX
-                // $.ajax({
-                //     type: "POST",
-                //     url: "https://localhost:8080/api/nguoidan/createAdsReport",
-                //     data: JSON.stringify(reportObject),
-                //     success: function (response) {
-                //         // Handle success
-                //         console.log(response + "createSuccess");
-                //         // Optional: Show a success message to the user
-                //     },
-                //     error: function (error) {
-                //         // Handle error
-                //         console.error(JSON.stringify(error) + "createError");
-                //         // Optional: Show an error message to the user
-                //     },
-                // });
-
-                fetch('https://localhost:8080/api/nguoidan/createAdsReport', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/api/nguoidan/createAdsReport",
+                    data: JSON.stringify(reportObject),
+                    success: function (response) {
+                        // Handle success
+                        alert("Report Successful")
+                        // Optional: Show a success message to the user
                     },
-                    body: JSON.stringify(reportObject),
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Success:', data);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-
+                    error: function (error) {
+                        // Handle error
+                        alert(JSON.stringify(error) + "createError");
+                        // Optional: Show an error message to the user
+                    },
+                });
 
                 $('#report-popup form').get(0).reset()
                 $("#report-popup").modal("hide")
@@ -311,9 +286,6 @@ function showSidebar(adsloc) {
             else {
                 imageData3 = null
                 imageData4 = null
-
-                console.log(JSON.stringify(adsloc) + "adsloc")
-
                 if (adsloc.id_ads_location) {
                     reportObject = {
                         id_report: null, // You may need to generate a unique ID
@@ -375,7 +347,7 @@ function showSidebar(adsloc) {
                 //         $("#name").val(), $("#email").val(), $("#phone").val(), $("#reportContent").val(), imageData3, imageData4,
                 //         validateDate(new Date()), 0, null]]
 
-                console.log(reportObject + "info")
+                // console.log(reportObject + "info")
 
                 // const table = (adsloc.id_ads_location) ? "adsloc_report" : "loc_report"
                 // const old_report = localStorage.getItem(table)
@@ -406,12 +378,9 @@ function showSidebar(adsloc) {
     })
 
     $("#sidebar .locInfo .other-report-button").on("click", function () {
-        console.log("loc report")
         const user_email = localStorage.getItem('email')
             ? JSON.parse(localStorage.getItem('email'))
             : ""
-        console.log(email + "emailmail")
-
         if (adsloc.id_ads_location) {
             let tmp = localStorage.getItem('adsloc_report')
             let list_report = (tmp) ? JSON.parse(tmp) : []
@@ -573,7 +542,6 @@ function createMarker(info, map) {
     const chuaquyhoach = $('#quyhoach').prop("checked")
 
     const features = info.map(item => {
-        console.log(JSON.stringify(item) + "item")
         let colorMarker
         if (item[12] && baocao)
             colorMarker = 'red';
@@ -588,7 +556,6 @@ function createMarker(info, map) {
             imagePath = item[7]
         else
             imagePath = "../image/image-placeholder.jpg"
-        // console.log(imagePath)
 
         return {
             type: 'Feature',
@@ -626,7 +593,6 @@ function createMarker(info, map) {
         map.removeSource('adsloc');
 
         createLayer(map, features)
-
     } else {
         map.on('load', () => {
             createLayer(map, features)
