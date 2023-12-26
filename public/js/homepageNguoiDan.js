@@ -120,7 +120,7 @@ function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
 
 // hiển thị sidebar và bắt sự kiện trên sidebar
 function showSidebar(adsloc) {
-    // console.log(adsloc)
+    console.log(JSON.stringify(adsloc) + "adsloc")
     $(".flex-container.toggle").hide()
     $('#sidebar').show()
     renderAds(adsloc)
@@ -183,6 +183,7 @@ function showSidebar(adsloc) {
         })
 
         $('#report-popup .style1-button').off('click').on("click", function (e) {
+            console.log("report button clicked")
             e.preventDefault()
             if ($("#name").val() == "")
                 alert("Trường 'Họ tên người báo cáo' bắt buộc")
@@ -208,7 +209,7 @@ function showSidebar(adsloc) {
                     photo1: imageData1,
                     photo2: imageData2,
                     report_time: validateDate(new Date()),
-                    status: true, // You may need to handle this differently
+                    status: false, // You may need to handle this differently
                     resolve: null, // You may need to handle this differently
                     report_type: null, // You may need to handle this differently
                 };
@@ -313,23 +314,74 @@ function showSidebar(adsloc) {
 
                 console.log(JSON.stringify(adsloc) + "adsloc")
 
-                const info = (adsloc.id_ads_location)
-                    // adsloc report
-                    ?
-                    [[null, null, adsloc.id_ads_location, $("#reportType").val(), $("#name").val(),
-                        $("#email").val(), $("#phone").val(), $("#reportContent").val(), imageData3, imageData4,
-                        validateDate(new Date()), 0, null]]
-                    // loc report
-                    :
-                    [[null, null, adsloc.latitude, adsloc.longitude, adsloc.address, null, $("#reportType").val(),
-                        $("#name").val(), $("#email").val(), $("#phone").val(), $("#reportContent").val(), imageData3, imageData4,
-                        validateDate(new Date()), 0, null]]
+                if (adsloc.id_ads_location) {
+                    reportObject = {
+                        id_report: null, // You may need to generate a unique ID
+                        officer: null, // You may need to handle this differently
+                        office: null, // You may need to handle this differently
+                        id_ads_location: adsloc.id_ads_location, // You may need to handle this differently
+                        id_report_type: parseInt($("#reportType").val()),
+                        fullname: $("#name").val(),
+                        email: $("#email").val(),
+                        phone: $("#phone").val(),
+                        // content: tinymce.$("#reportContent").getContent(),
+                        content: tinymce.get("content").getContent(),
+                        photo1: imageData3,
+                        photo2: imageData4,
+                        report_time: validateDate(new Date()),
+                        status: false, // You may need to handle this differently
+                        resolve: null, // You may need to handle this differently
+                        report_type: null, // You may need to handle this differently
+                    };
+                    const existingReportsJSON = localStorage.getItem("ads_loc_report");
+                    const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
+                    existingReports.push(reportObject);
+                    localStorage.setItem("ads_loc_report", JSON.stringify(existingReports));
+                } else {
+                    reportObject = {
+                        id_report: null, // You may need to generate a unique ID
+                        officer: null, // You may need to handle this differently
+                        office: null, // You may need to handle this differently
+                        longitude: adsloc.longitude,
+                        latitude: adsloc.latitude,
+                        address: adsloc.address + adsloc.ward + adsloc.district,
+                        id_report_type: parseInt($("#reportType").val()),
+                        fullname: $("#name").val(),
+                        email: $("#email").val(),
+                        phone: $("#phone").val(),
+                        // content: tinymce.$("#reportContent").getContent(),
+                        content: tinymce.get("content").getContent(),
+                        photo1: imageData3,
+                        photo2: imageData4,
+                        report_time: validateDate(new Date()),
+                        status: false, // You may need to handle this differently
+                        resolve: null, // You may need to handle this differently
+                        report_type: null, // You may need to handle this differently
+                    };
+                    const existingReportsJSON = localStorage.getItem("loc_report");
+                    const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
+                    existingReports.push(reportObject);
+                    localStorage.setItem("loc_report", JSON.stringify(existingReports));
+                }
+                // const info = (adsloc.id_ads_location)
+                //     // adsloc report
+                //     ?
+                //     [[null, null, adsloc.id_ads_location, $("#reportType").val(), $("#name").val(),
+                //         $("#email").val(), $("#phone").val(), $("#reportContent").val(), imageData3, imageData4,
+                //         validateDate(new Date()), 0, null]]
+                //     // loc report
+                //     :
+                //     [[null, null, adsloc.latitude, adsloc.longitude, adsloc.address, null, $("#reportType").val(),
+                //         $("#name").val(), $("#email").val(), $("#phone").val(), $("#reportContent").val(), imageData3, imageData4,
+                //         validateDate(new Date()), 0, null]]
 
-                const table = (adsloc.id_ads_location) ? "adsloc_report" : "loc_report"
-                const old_report = localStorage.getItem(table)
-                    ? JSON.parse(localStorage.getItem(table)) : []
-                const new_report = [...old_report, ...info]
-                localStorage.setItem(table, JSON.stringify(new_report))
+                console.log(reportObject + "info")
+
+                // const table = (adsloc.id_ads_location) ? "adsloc_report" : "loc_report"
+                // const old_report = localStorage.getItem(table)
+                //     ? JSON.parse(localStorage.getItem(table)) : []
+                // const new_report = [...old_report, ...info]
+                // localStorage.setItem(table, JSON.stringify(new_report))
 
                 // console.log(old_report, info, new_report)
 
@@ -354,9 +406,11 @@ function showSidebar(adsloc) {
     })
 
     $("#sidebar .locInfo .other-report-button").on("click", function () {
+        console.log("loc report")
         const user_email = localStorage.getItem('email')
             ? JSON.parse(localStorage.getItem('email'))
             : ""
+        console.log(email + "emailmail")
 
         if (adsloc.id_ads_location) {
             let tmp = localStorage.getItem('adsloc_report')
@@ -519,6 +573,7 @@ function createMarker(info, map) {
     const chuaquyhoach = $('#quyhoach').prop("checked")
 
     const features = info.map(item => {
+        console.log(JSON.stringify(item) + "item")
         let colorMarker
         if (item[12] && baocao)
             colorMarker = 'red';
@@ -844,7 +899,7 @@ $(document).ready(function () {
             console.log(JSON.stringify(list_report) + "list_report")
 
             const note = list_report?.map(item => {
-                if(item.id_ads_location)
+                if (item.id_ads_location)
                     address = NguoiDanAdsLoc.content.filter(i => i.id_ads_location == item.id_ads_location)[0].address
 
                 const statusClass = item.status ? "resolved" : "unresolved";
