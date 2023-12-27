@@ -26,27 +26,118 @@ function validateDate(date) {
     return formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
+function address2wardid(wardString, districtString) {
+    if (districtString == "Quận 1") {
+        if (wardString == "Phường Bến Nghé") return 1;
+        else if (wardString == "Phường Bến Thành") return 2;
+        else if (wardString == "Phường Cầu Kho") return 3;
+        else if (wardString == "Phường Cầu Ông Lãnh") return 4;
+        else if (wardString == "Phường Cô Giang") return 5;
+        else if (wardString == "Phường Đa Kao") return 6;
+        else if (wardString == "Phường Nguyễn Cư Trinh") return 7;
+        else if (wardString == "Phường Nguyễn Thái Bình") return 8;
+        else if (wardString == "Phường Phạm Ngũ Lão") return 9;
+        else if (wardString == "Phường Tân Định") return 10;
+    } else if (districtString == "Quận 2") {
+        if (wardString == "Phường An Khánh") return 11;
+        else if (wardString == "Phường An Lợi Đông") return 12;
+        else if (wardString == "Phường An Phú") return 13;
+        else if (wardString == "Phường Bình An") return 14;
+        else if (wardString == "Phường Bình Khánh") return 15;
+        else if (wardString == "Phường Cát Lái") return 16;
+        else if (wardString == "Phường Thạnh Mỹ Lợi") return 17;
+        else if (wardString == "Phường Thảo Điền") return 18;
+        else if (wardString == "Phường Thủ Thiêm") return 19;
+        else if (wardString == "Phường Bình Trưng Đông") return 20;
+    } else if (districtString == "Quận 3") {
+        if (wardString == "1") return 21;
+        else if (wardString == "Phường 2") return 22;
+        else if (wardString == "Phường 3") return 23;
+        else if (wardString == "Phường 4") return 24;
+        else if (wardString == "Phường 5") return 25;
+        else if (wardString == "Phường 9") return 26;
+        else if (wardString == "Phường 10") return 27;
+        else if (wardString == "Phường 11") return 28;
+        else if (wardString == "Phường 12") return 29;
+        else if (wardString == "Phường 13") return 30;
+        else if (wardString == "Phường 14") return 31;
+        else if (wardString == "Phường Võ Thị Sáu") return 32;
+    } else if (districtString == "Quận 4") {
+        if (wardString == "Phường 1") return 33;
+        else if (wardString == "Phường 2") return 34;
+        else if (wardString == "Phường 3") return 35;
+        else if (wardString == "Phường 4") return 36;
+        else if (wardString == "Phường 6") return 37;
+        else if (wardString == "Phường 8") return 38;
+        else if (wardString == "Phường 9") return 39;
+        else if (wardString == "Phường 10") return 40;
+        else if (wardString == "Phường 13") return 41;
+        else if (wardString == "Phường 14") return 42;
+        else if (wardString == "Phường 15") return 43;
+        else if (wardString == "Phường 16") return 44;
+        else if (wardString == "Phường 18") return 45;
+    }
+}
+
+function idReportType2String(id_report_type) {
+    if (id_report_type == 1)
+        return "Tố cáo sai phạm"
+    else if (id_report_type == 2)
+        return "Đăng kí nội dung"
+    else if (id_report_type == 3)
+        return "Đóng góp ý kiến"
+    else if (id_report_type == 4)
+        return "Giải đáp thắc mắc"
+}
+
+async function imageValidate(e) {
+    if (e.target.files[0]) {
+        if (e.target.files[0].type.startsWith('image/') && e.target.files[0].size / 1024 <= 4 * 1024) {
+            return true
+        }
+        else if (!e.target.files[0].type.startsWith('image/')) {
+            alert('Hình ảnh minh họa phải có dạng .jpg, .png, .jpeg')
+            return false
+        }
+        else if (!(e.target.files[0].size / 1024 <= 4)) {
+            alert('Hình ảnh minh họa không được vượt quá 4MB')
+            return false
+        }
+    }
+}
+
+async function uploadImage(file) {
+    if (!file) return null
+    const signResponse = await fetch('http://localhost:8080/api/basic/uploadImage')
+    const signData = await signResponse.json()
+    const cloudinaryData = new FormData();
+    const url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
+    cloudinaryData.append("file", file);
+    cloudinaryData.append("api_key", signData.apikey);
+    cloudinaryData.append("timestamp", signData.timestamp);
+    cloudinaryData.append("signature", signData.signature);
+    cloudinaryData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+    cloudinaryData.append("folder", "image");
+    try {
+        const res = await fetch(url, {
+            method: "POST",
+            body: cloudinaryData
+        });
+        const data = await res.json();
+        return data.eager[0].secure_url
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 // hiển thị danh sách report
 function renderReport(list_report, container, user_email) {
     const note = list_report?.map(item => {
-        const is_user = (item[1] == user_email) ? "mine" : "other"
-        const statusClass = item.status ? "resolved" : "unresolved";
-        const statusText = item.status ? "Đã xử lí" : "Chưa xử lí"
-        const id_report_type = item.id_report_type
-        var report_type = null;
-        if (id_report_type == 1)
-            report_type = "Tố cáo sai phạm"
-        else if (id_report_type == 2)
-            report_type = "Đăng kí nội dung"
-        else if (id_report_type == 3)
-            report_type = "Đóng góp ý kiến"
-        else if (id_report_type == 4)
-            report_type = "Giải đáp thắc mắc"
         return {
-            is_user: is_user,
-            statusClass: statusClass,
-            statusText: statusText,
-            report_type: report_type,
+            is_user: (item[1] == user_email) ? "mine" : "other",
+            statusClass: item.status ? "resolved" : "unresolved",
+            statusText: item.status ? "Đã xử lí" : "Chưa xử lí",
+            report_type: idReportType2String(item.id_report_type),
             imagePath1: item.photo1,
             imagePath2: item.photo2,
         }
@@ -126,7 +217,7 @@ function showSidebar(adsloc) {
     flag = true;
 
     if (adsloc.id_ads_location)
-        $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, ${adsloc.district}`)
+        $(".locInfo .address").text(`${adsloc.address}, Phường ${adsloc.ward}, ${adsloc.district}`)
     else
         $(".locInfo .address").text(`${adsloc.address}, ${adsloc.ward}, ${adsloc.district}`)
 
@@ -146,32 +237,13 @@ function showSidebar(adsloc) {
     $("#sidebar .adInfo .report-button").on("click", function () {
         let str_id_ads = $(this).closest(".button-group").attr("class").split(" ")[1];
         let id_ads = parseInt(str_id_ads.split("-")[1])
-        var imageData1 = imageData2 = null
 
-        $('#image1').on('change', function (e) {
-            if (e.target.files[0])
-                if (e.target.files[0].type.startsWith('image/') && e.target.files[0].size / 1024 <= 4 * 1024) {
-                    imageData1 = e.target.files[0]
-                }
-                else if (!e.target.files[0].type.startsWith('image/')) {
-                    alert('Hình ảnh minh họa phải có dạng .jpg, .png, .jpeg')
-                }
-                else if (!(e.target.files[0].size / 1024 <= 4)) {
-                    alert('Hình ảnh minh họa không được vượt quá 4MB')
-                }
+        $('#image1').on('change', async function (e) {
+            validateImage(e)
         });
 
-        $('#image2').on('change', function (e) {
-            if (e.target.files[0])
-                if (e.target.files[0].type.startsWith('image/') && e.target.files[0].size / 1024 <= 4 * 1024) {
-                    imageData2 = e.target.files[0]
-                }
-                else if (!e.target.files[0].type.startsWith('image/')) {
-                    alert('Hình ảnh minh họa phải có dạng .jpg, .png, .jpeg')
-                }
-                else if (!(e.target.files[0].size / 1024 <= 4)) {
-                    alert('Hình ảnh minh họa không được vượt quá 4MB')
-                }
+        $('#image2').on('change', async function (e) {
+            validateDate(e)
         });
 
         $('#report-popup .style3-button').on("click", function () {
@@ -179,7 +251,7 @@ function showSidebar(adsloc) {
             $("#report-popup").modal("hide")
         })
 
-        $('#report-popup .style1-button').off('click').on("click", function (e) {
+        $('#report-popup .style1-button').off('click').on("click", async function (e) {
             e.preventDefault()
             if ($("#name").val() == "")
                 alert("Trường 'Họ tên người báo cáo' bắt buộc")
@@ -190,8 +262,7 @@ function showSidebar(adsloc) {
             else if (tinymce.get("content").getContent() == "")
                 alert("Trường 'Nội dung báo cáo' bắt buộc")
             else {
-                imageData1 = imageData2 = null
-                const reportObject = {
+                let reportObject = {
                     id_report: null, // You may need to generate a unique ID
                     officer: null, // You may need to handle this differently
                     office: null, // You may need to handle this differently
@@ -200,21 +271,18 @@ function showSidebar(adsloc) {
                     fullname: $("#name").val(),
                     email: $("#email").val(),
                     phone: $("#phone").val(),
-                    // content: tinymce.$("#reportContent").getContent(),
                     content: tinymce.get("content").getContent(),
-                    photo1: imageData1,
-                    photo2: imageData2,
+                    photo1: await uploadImage(imageData1),
+                    photo2: await uploadImage(imageData2),
                     report_time: validateDate(new Date()),
                     status: false, // You may need to handle this differently
                     resolve: null, // You may need to handle this differently
-                    report_type: null, // You may need to handle this differently
+                    report_type: idReportType2String(parseInt($("#reportType").val())), // You may need to handle this differently
                 };
                 const existingReportsJSON = localStorage.getItem("ads_report");
                 const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
                 existingReports.push(reportObject);
                 localStorage.setItem("ads_report", JSON.stringify(existingReports));
-
-                console.log(JSON.stringify(reportObject) + "info")
 
                 // Send data to the server using AJAX
                 $.ajax({
@@ -240,40 +308,23 @@ function showSidebar(adsloc) {
     })
 
     $("#sidebar .locInfo .report-button").on("click", function () {
-        var imageData3 = null, imageData4 = null
+        let imageData3 = null, imageData4 = null
 
-        $('#image1').on('change', function (e) {
-            if (e.target.files[0])
-                if (e.target.files[0].type.startsWith('image/') && e.target.files[0].size / 1024 <= 4 * 1024) {
-                    imageData3 = e.target.files[0]
-                }
-                else if (!e.target.files[0].type.startsWith('image/')) {
-                    alert('Hình ảnh minh họa phải có dạng .jpg, .png, .jpeg')
-                }
-                else if (!(e.target.files[0].size / 1024 <= 4)) {
-                    alert('Hình ảnh minh họa không được vượt quá 4MB')
-                }
+        $('#image1').on('change', async function (e) {
+            imageValidate(e)
+            imageData3 = e.target.files[0];
         });
 
-        $('#image2').on('change', function (e) {
-            if (e.target.files[0])
-                if (e.target.files[0].type.startsWith('image/') && e.target.files[0].size / 1024 <= 4 * 1024) {
-                    imageData4 = e.target.files[0]
-                }
-                else if (!e.target.files[0].type.startsWith('image/')) {
-                    alert('Hình ảnh minh họa phải có dạng .jpg, .png, .jpeg')
-                }
-                else if (!(e.target.files[0].size / 1024 <= 4)) {
-                    alert('Hình ảnh minh họa không được vượt quá 4MB')
-                }
+        $('#image2').on('change', async function (e) {
+            imageValidate(e)
+            imageData4 = e.target.files[0];
         });
-
         $('#report-popup .style3-button').on("click", function () {
             $("#report-popup").modal("hide")
             $('#report-popup form').get(0).reset()
         })
 
-        $('#report-popup .style1-button').off('click').on("click", function (e) {
+        $('#report-popup .style1-button').off('click').on("click", async function (e) {
             e.preventDefault()
             if ($("#name").val() == "")
                 alert("Trường 'Họ tên người báo cáo' bắt buộc")
@@ -284,8 +335,6 @@ function showSidebar(adsloc) {
             else if ($("#reportContent").val() == "")
                 alert("Trường 'Nội dung báo cáo' bắt buộc")
             else {
-                imageData3 = null
-                imageData4 = null
                 if (adsloc.id_ads_location) {
                     reportObject = {
                         id_report: null, // You may need to generate a unique ID
@@ -298,17 +347,36 @@ function showSidebar(adsloc) {
                         phone: $("#phone").val(),
                         // content: tinymce.$("#reportContent").getContent(),
                         content: tinymce.get("content").getContent(),
-                        photo1: imageData3,
-                        photo2: imageData4,
+                        photo1: await uploadImage(imageData3),
+                        photo2: await uploadImage(imageData4),
                         report_time: validateDate(new Date()),
                         status: false, // You may need to handle this differently
                         resolve: null, // You may need to handle this differently
-                        report_type: null, // You may need to handle this differently
+                        report_type: idReportType2String(parseInt($("#reportType").val())), // You may need to handle this differently
                     };
                     const existingReportsJSON = localStorage.getItem("ads_loc_report");
                     const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
                     existingReports.push(reportObject);
+                    // console.log(JSON.stringify(reportObject))
                     localStorage.setItem("ads_loc_report", JSON.stringify(existingReports));
+
+                    console.log(JSON.stringify(reportObject))
+                    // Send data to the server using AJAX
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:8080/api/nguoidan/createAdsLocReport",
+                        data: JSON.stringify(reportObject),
+                        success: function (response) {
+                            // Handle success
+                            alert("Report Successful")
+                            // Optional: Show a success message to the user
+                        },
+                        error: function (error) {
+                            // Handle error
+                            alert(JSON.stringify(error) + "createError");
+                            // Optional: Show an error message to the user
+                        },
+                    });
                 } else {
                     reportObject = {
                         id_report: null, // You may need to generate a unique ID
@@ -316,46 +384,44 @@ function showSidebar(adsloc) {
                         office: null, // You may need to handle this differently
                         longitude: adsloc.longitude,
                         latitude: adsloc.latitude,
-                        address: adsloc.address + adsloc.ward + adsloc.district,
+                        address: adsloc.address,
+                        ward: adsloc.ward,
+                        district: adsloc.district,
                         id_report_type: parseInt($("#reportType").val()),
                         fullname: $("#name").val(),
                         email: $("#email").val(),
                         phone: $("#phone").val(),
                         // content: tinymce.$("#reportContent").getContent(),
                         content: tinymce.get("content").getContent(),
-                        photo1: imageData3,
-                        photo2: imageData4,
+                        photo1: await uploadImage(imageData3),
+                        photo2: await uploadImage(imageData4),
                         report_time: validateDate(new Date()),
                         status: false, // You may need to handle this differently
                         resolve: null, // You may need to handle this differently
-                        report_type: null, // You may need to handle this differently
+                        id_ward: address2wardid(adsloc.ward, adsloc.district),
                     };
                     const existingReportsJSON = localStorage.getItem("loc_report");
                     const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
                     existingReports.push(reportObject);
                     localStorage.setItem("loc_report", JSON.stringify(existingReports));
+
+                    // Send data to the server using AJAX
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:8080/api/nguoidan/createLocReport",
+                        data: JSON.stringify(reportObject),
+                        success: function (response) {
+                            // Handle success
+                            alert("Report Successful")
+                            // Optional: Show a success message to the user
+                        },
+                        error: function (error) {
+                            // Handle error
+                            alert(JSON.stringify(error) + "createError");
+                            // Optional: Show an error message to the user
+                        },
+                    });
                 }
-                // const info = (adsloc.id_ads_location)
-                //     // adsloc report
-                //     ?
-                //     [[null, null, adsloc.id_ads_location, $("#reportType").val(), $("#name").val(),
-                //         $("#email").val(), $("#phone").val(), $("#reportContent").val(), imageData3, imageData4,
-                //         validateDate(new Date()), 0, null]]
-                //     // loc report
-                //     :
-                //     [[null, null, adsloc.latitude, adsloc.longitude, adsloc.address, null, $("#reportType").val(),
-                //         $("#name").val(), $("#email").val(), $("#phone").val(), $("#reportContent").val(), imageData3, imageData4,
-                //         validateDate(new Date()), 0, null]]
-
-                // console.log(reportObject + "info")
-
-                // const table = (adsloc.id_ads_location) ? "adsloc_report" : "loc_report"
-                // const old_report = localStorage.getItem(table)
-                //     ? JSON.parse(localStorage.getItem(table)) : []
-                // const new_report = [...old_report, ...info]
-                // localStorage.setItem(table, JSON.stringify(new_report))
-
-                // console.log(old_report, info, new_report)
 
                 $('#report-popup form').get(0).reset()
                 $("#report-popup").modal("hide")
@@ -744,13 +810,14 @@ $(document).ready(function () {
                 "list_report": "null"
             }
 
-            fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(longitude)},${(latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
+            // fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(longitude)},${(latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
+            fetch(`https://revgeocode.search.hereapi.com/v1/revgeocode?at=${latitude}%2C${longitude}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc&lang=vi`)
                 .then(response => response.json())
                 .then(data => {
-                    // console.log(data)
-                    locObject.ward = data.features[0].context[0].text;
-                    locObject.district = data.features[0].context[2].text;
-                    locObject.address = data.features[0].properties.address;
+                    console.log(data)
+                    locObject.ward = data.items[0].address.district;
+                    locObject.district = data.items[0].address.city;
+                    locObject.address = data.items[0].address.houseNumber + " " + data.items[0].address.street;
                     locObject.longitude = longitude
                     locObject.latitude = latitude
 
@@ -867,23 +934,15 @@ $(document).ready(function () {
             const note = list_report?.map(item => {
                 if (item.id_ads_location)
                     address = NguoiDanAdsLoc.content.filter(i => i.id_ads_location == item.id_ads_location)[0].address
-
-                const statusClass = item.status ? "resolved" : "unresolved";
-                const statusText = item.status ? "Đã xử lí" : "Chưa xử lí"
-                var report_type = null;
-                if (item.id_report_type == 1)
-                    report_type = "Tố cáo sai phạm"
-                else if (item.id_report_type == 2)
-                    report_type = "Đăng kí nội dung"
-                else if (item.id_report_type == 3)
-                    report_type = "Đóng góp ý kiến"
-                else if (item.id_report_type == 4)
-                    report_type = "Giải đáp thắc mắc"
+                // else if(item.id_ads)
+                //     address = NguoiDanAdsLoc.content.filter(i => i.list_ads.filter(j => j.id_ads == item.id_ads).length > 0)[0].address
+                else
+                    address = item.address
                 return {
                     address: address,
-                    statusClass: statusClass,
-                    statusText: statusText,
-                    report_type: report_type,
+                    statusClass: item.status ? "resolved" : "unresolved",
+                    statusText: item.status ? "Đã xử lí" : "Chưa xử lí",
+                    report_type: idReportType2String(item.id_report_type),
                     imagePath1: item.photo1,
                     imagePath2: item.photo2,
                 }
@@ -895,9 +954,11 @@ $(document).ready(function () {
                     <strong>Địa điểm:</strong> 
                     <% if (list_report[i].address) { %>
                         <%= list_report[i].address %>
-                    <% } else { %>
+                    <% } else if (note[i].address){ %>
                         <%= note[i].address %>
-                    <% } %>
+                    <% } else { %>
+                        Biển quảng cáo
+                        <% } %>
  
                 </div>
                 <div class="col-md-12">
