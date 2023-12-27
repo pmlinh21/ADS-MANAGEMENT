@@ -1,6 +1,24 @@
 var flag = false;
 
-function renderAddressResult(res){
+function red(item) {
+  var check = false
+  if (item[11]) {
+    for (let i = 0; i < item[11].length; i++)
+      if (item[11][i].list_report)
+        item[11][i].list_report.forEach(report => {
+          if (!report.status)
+            check = true
+        })
+  }
+  if (item[12])
+    for (let i = 0; i < item[12].length; i++)
+      if (!item[12][i].status)
+        return true
+
+  return check
+}
+
+function renderAddressResult(res) {
   var template = ` 
       <% for (var i = 0; i < res.length; i++) { %>
           <div class = "result-<%=i%>">
@@ -12,7 +30,7 @@ function renderAddressResult(res){
   $(".resultapi-address").html(rendered);
 }
 
-function renderMapWard(wards){
+function renderMapWard(wards) {
   console.log(wards)
   var template = ` 
       <% for (var i = 0; i < wards.length; i++) { %>
@@ -29,7 +47,7 @@ function renderMapWard(wards){
   $("#ward-container").html(rendered);
 }
 
-function createLayer(map, features){
+function createLayer(map, features) {
   map.addSource('adsloc', {
     type: 'geojson',
     data: {
@@ -41,24 +59,24 @@ function createLayer(map, features){
     clusterRadius: 50
   });
   console.log(features)
-   
+
   map.addLayer({
-  id: 'clusters',
-  type: 'circle',
-  source: 'adsloc',
-  filter: ['has', 'point_count'],
-  paint: {
-  'circle-color': '#51bbd6',
-  'circle-radius': [
-  'step',
-  ['get', 'point_count'],
-  20,
-  100,
-  30,
-  750,
-  40
-  ]
-  }
+    id: 'clusters',
+    type: 'circle',
+    source: 'adsloc',
+    filter: ['has', 'point_count'],
+    paint: {
+      'circle-color': '#51bbd6',
+      'circle-radius': [
+        'step',
+        ['get', 'point_count'],
+        20,
+        100,
+        30,
+        750,
+        40
+      ]
+    }
   });
 
   map.addLayer({
@@ -67,81 +85,81 @@ function createLayer(map, features){
     source: 'adsloc',
     filter: ['has', 'point_count'],
     layout: {
-    'text-field': ['get', 'point_count_abbreviated'],
-    'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-    'text-size': 20
+      'text-field': ['get', 'point_count_abbreviated'],
+      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+      'text-size': 20
     }
-    });
-  
-   
-  map.addLayer({
-  id: 'unclustered-point', 
-  type: 'circle',
-  source: 'adsloc',
-  filter: ['!', ['has', 'point_count']],
-  paint: {
-  'circle-color': ['get', 'colorMarker'],
-  'circle-radius': 10,
-  }
   });
-   
+
+
+  map.addLayer({
+    id: 'unclustered-point',
+    type: 'circle',
+    source: 'adsloc',
+    filter: ['!', ['has', 'point_count']],
+    paint: {
+      'circle-color': ['get', 'colorMarker'],
+      'circle-radius': 10,
+    }
+  });
+
   // inspect a cluster on click
   map.on('click', 'clusters', (e) => {
-  const features = map.queryRenderedFeatures(e.point, {
-  layers: ['clusters']
-  });
-  const clusterId = features[0].properties.cluster_id;
-  map.getSource('adsloc').getClusterExpansionZoom(
-  clusterId,
-  (err, zoom) => {
-  if (err) return;
-   
-  map.easeTo({
-  center: features[0].geometry.coordinates,
-  zoom: zoom
-  });
-  }
-  );
+    const features = map.queryRenderedFeatures(e.point, {
+      layers: ['clusters']
+    });
+    const clusterId = features[0].properties.cluster_id;
+    map.getSource('adsloc').getClusterExpansionZoom(
+      clusterId,
+      (err, zoom) => {
+        if (err) return;
+
+        map.easeTo({
+          center: features[0].geometry.coordinates,
+          zoom: zoom
+        });
+      }
+    );
   });
 
   map.on('mouseenter', 'unclustered-point', (e) => {
 
-  const coordinates = e.features[0].geometry.coordinates.slice();
-  const ads_type = e.features[0].properties.ads_type;
-  const loc_type = e.features[0].properties.loc_type;
-  const address = e.features[0].properties.address;
-  const zoning_text = e.features[0].properties.zoning_text;
-  const imagePath = e.features[0].properties.imagePath;
+    const coordinates = e.features[0].geometry.coordinates.slice();
+    const ads_type = e.features[0].properties.ads_type;
+    const loc_type = e.features[0].properties.loc_type;
+    const address = e.features[0].properties.address;
+    const zoning_text = e.features[0].properties.zoning_text;
+    const imagePath = e.features[0].properties.imagePath;
 
-  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-  coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-  }
+    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+      coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+    }
 
-  // console.log(e.features[0])
-   
-  const popup = new mapboxgl.Popup({
-    closeButton: false,
-    offset: 15
-  })
-  .setLngLat(coordinates)
-  .setHTML(
-    `<div class="popup-content"> 
+    // console.log(e.features[0])
+
+    const popup = new mapboxgl.Popup({
+      closeButton: false,
+      offset: 15
+    })
+      .setLngLat(coordinates)
+      .setHTML(
+        `<div class="popup-content"> 
     <p class = "ads-type"  style = "font-weight: 900">${ads_type}</p>
     <p class = "loc-type">${loc_type}</p>
     <p class = "address">${address}</p>
     <p class = "zoning-text" style = "font-weight: 900; font-style: italic">${zoning_text}</p>
     <img src = ${imagePath} class = "img-thumbnail" />
     </div>`
-  )
-  e.features[0].popup = popup; 
-  popup.addTo(map)
+      )
+    e.features[0].popup = popup;
+    popup.addTo(map)
 
-  map.getCanvas().style.cursor = 'pointer'
+    map.getCanvas().style.cursor = 'pointer'
 
-  map.on('mouseleave', 'unclustered-point', () => {
-    // Remove the popup from the map
-    popup.remove();
-  });
+    map.on('mouseleave', 'unclustered-point', () => {
+      // Remove the popup from the map
+      popup.remove();
+    });
 
   });
   // nhấn vào điểm đặt
@@ -164,7 +182,8 @@ function createMarker(info, map) {
 
   const features = info.map(item => {
     let colorMarker
-    if (item[12] && baocao)
+
+    if (red(item) && baocao)
       colorMarker = 'red';
     else if (item[10] == 0 && chuaquyhoach) // chưa quy hoạch
       colorMarker = 'purple';
@@ -204,7 +223,7 @@ function createMarker(info, map) {
     }
   });
 
-  
+
   const existingSource = map.getSource('adsloc');
   if (existingSource) {
     map.removeLayer('unclustered-point');
@@ -214,7 +233,7 @@ function createMarker(info, map) {
   }
 
   createLayer(map, features)
-}  
+}
 
 function validateSQLDate(dateString) {
   const date = new Date(dateString);
@@ -260,23 +279,20 @@ function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
 
 function renderReport(list_report, container) {
   const note = list_report?.map(item => {
-    const statusClass = parseInt((item.status)) ? "resolved" : "unresolved";
-    const statusText = parseInt((item.status)) ? "Đã xử lí" : "Chưa xử lí"
-
     return {
-      statusClass: statusClass,
-      statusText: statusText,
+      statusClass: item.status ? "resolved" : "unresolved",
+      statusText: item.status ? "Đã xử lí" : "Chưa xử lí",
       imagePath1: item.photo1 ? item.photo1 : '',
       imagePath2: item.photo2 ? item.photo2 : ''
     }
   })
   console.log(list_report)
 
-  if (!list_report || list_report.length == 0){
+  if (!list_report || list_report.length == 0) {
     var template = `
     <p class = "text-center"> (Chưa có báo cáo) </p>
     `;
-  } else{
+  } else {
     var template = `
     <% for (var i = 0; i < list_report?.length; i++) { %>
       <div class="other-report row" >
@@ -316,7 +332,7 @@ function showSidebar(adsloc) {
   flag = true;
 
   $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, quận ${adsloc.district}`)
-    
+
   $("#sidebar .detail-button").on("click", function () {
     let str_id_ads = $(this).attr("class").split(" ")[1];
     let id_ads = parseInt(str_id_ads.split("-")[1])
@@ -329,42 +345,42 @@ function showSidebar(adsloc) {
       ? `../../../public/image/image-placeholder.jpg`
       : ads.photo)
     $("#detail-popup .image img").attr("src", imagePath)
-    
-      $.ajax({
-        url: `/api/basic/getAdsCreateByAds/${ads.id_ads}`,
-        type: "GET",
-        dataType: "json",
-        success: function (data) {
-          console.log(data)
-          console.log(ads.id_ads)
-          if (data.content.length > 0) {
-            $("#detail-popup").modal('show');
-            info = data.content[0]
-            $('#id').val(info.id_create);
-            $('#board_type').val(info.board_type);
-            $('#size').val(info.width + 'm x ' + info.height + "m");
-            $('#quantity').val(info.quantity);
-            $('#content').val(info.content);
-            $('#adsloc').val(`${info.address_adsloc}, phường ${info.ward}, ${info.district}`);
-            $('#company').val(info.company);
-            $('#email').val(info.email);
-            $('#phone').val(info.phone);
-            $('#address').val(info.address);
-            $('#start_date').val(formatSQLDate_ymd(info.start_date));
-            $('#end_date').val(formatSQLDate_ymd(info.end_date));
-            $('#status').val(info.status === true ? "Đã duyệt" : (
-              info.status === false ? "Đã từ chối" : "Chưa xét duyệt"));
-            $('#officer').val(info.officer);
-            $('#office').val(info.office === 1 ? "Quận" : (info.office === 2 ? "Phường" : ""));
-            
-          }
-          else{
-            $("#detail-popup").hide()
-            alert("Chưa có thông tin giấy cấp phép")
-          }
-          
+
+    $.ajax({
+      url: `/api/basic/getAdsCreateByAds/${ads.id_ads}`,
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        console.log(data)
+        console.log(ads.id_ads)
+        if (data.content.length > 0) {
+          $("#detail-popup").modal('show');
+          info = data.content[0]
+          $('#id').val(info.id_create);
+          $('#board_type').val(info.board_type);
+          $('#size').val(info.width + 'm x ' + info.height + "m");
+          $('#quantity').val(info.quantity);
+          $('#content').val(info.content);
+          $('#adsloc').val(`${info.address_adsloc}, phường ${info.ward}, ${info.district}`);
+          $('#company').val(info.company);
+          $('#email').val(info.email);
+          $('#phone').val(info.phone);
+          $('#address').val(info.address);
+          $('#start_date').val(formatSQLDate_ymd(info.start_date));
+          $('#end_date').val(formatSQLDate_ymd(info.end_date));
+          $('#status').val(info.status === true ? "Đã duyệt" : (
+            info.status === false ? "Đã từ chối" : "Chưa xét duyệt"));
+          $('#officer').val(info.officer);
+          $('#office').val(info.office === 1 ? "Quận" : (info.office === 2 ? "Phường" : ""));
+
         }
-      })
+        else {
+          $("#detail-popup").hide()
+          alert("Chưa có thông tin giấy cấp phép")
+        }
+
+      }
+    })
   })
 
   $("#sidebar .adInfo .other-report-button").on("click", function () {
@@ -384,29 +400,29 @@ function showSidebar(adsloc) {
       let list_report = JSON.parse(adsloc.list_report);
       console.log(list_report)
       renderReport(list_report, "#other-report-popup .modal-body")
-      return 
-    } else{
+      return
+    } else {
       const id_district = parseInt(localStorage.getItem('id_district'));
       const id_ward = parseInt(localStorage.getItem('id_ward'));
       const param = isNaN(id_district) ? id_ward : id_district;
       console.log("param: ", param);
 
-      $.get(`/api/quan/getLocReport/${param}`, function(data) {
-      console.log("~");
-    
-      const loc_report = data.content.filter(function(item){
-        return (item.longitude == adsloc.longitude && item.latitude == adsloc.latitude) ||
-        (item.address == adsloc.address && item.ward == adsloc.ward)
-      })
+      $.get(`/api/quan/getLocReport/${param}`, function (data) {
+        console.log("~");
 
-      console.log(loc_report)
-      renderReport(loc_report, "#other-report-popup .modal-body")
-      return
-      }).fail(function(error) {
+        const loc_report = data.content.filter(function (item) {
+          return (item.longitude == adsloc.longitude && item.latitude == adsloc.latitude) ||
+            (item.address == adsloc.address && item.ward == adsloc.ward)
+        })
+
+        console.log(loc_report)
+        renderReport(loc_report, "#other-report-popup .modal-body")
+        return
+      }).fail(function (error) {
         console.log(error);
-    })
+      })
     }
-  
+
   })
 
   $("#sidebar").on("click", '.close-button', function () {
@@ -417,7 +433,7 @@ function showSidebar(adsloc) {
 
 }
 
-function changeMapSize(){
+function changeMapSize() {
   let windowHeight = $(window).height();
   let headerHeight = $('#header').height();
   let mapHeight = windowHeight - headerHeight;
@@ -432,7 +448,7 @@ function changeMapSize(){
 $(document).ready(function () {
   var wards, info, filter_info
 
-  $(window).on('resize', function(){
+  $(window).on('resize', function () {
     changeMapSize();
   });
 
@@ -442,12 +458,12 @@ $(document).ready(function () {
 
   mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
   var map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [106.6974, 10.7743],
-      zoom: 15,
-      language: 'vi',
-      interactive: true
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [106.6974, 10.7743],
+    zoom: 15,
+    language: 'vi',
+    interactive: true
   });
 
   var language = new MapboxLanguage({
@@ -463,9 +479,9 @@ $(document).ready(function () {
     let lngLat = e.lngLat;
     longitude = lngLat.lng;
     latitude = lngLat.lat;
-    
+
     $(".mapboxgl-marker").remove()
-    
+
     marker = new mapboxgl.Marker({
       color: '#0B7B31'
     }).setLngLat(lngLat).addTo(map);
@@ -493,27 +509,26 @@ $(document).ready(function () {
     // $('#sidebar').hide()
 
     fetch(`https://revgeocode.search.hereapi.com/v1/revgeocode?at=${latitude}%2C${longitude}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc&lang=vi`)
-    // fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(longitude)},${(latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
       .then(response => response.json())
       .then(data => {
         const feature = data.items[0].address
         locObject.ward = feature?.district.substring(7)
         locObject.district = feature?.city
         locObject.address = (feature?.houseNumber && feature?.street)
-        ? feature?.houseNumber + " " +  feature?.street
-        : feature?.label.substring(0, feature?.label.indexOf(", Phường") )
+          ? feature?.houseNumber + " " + feature?.street
+          : feature?.label.substring(0, feature?.label.indexOf(", Phường"))
         locObject.longitude = longitude
         locObject.latitude = latitude
 
-          if (!flag){
-            console.log(flag) 
-            showSidebar(locObject) 
-          } else{
-            console.log(flag) 
-          }
-          
-          flag = false
-          
+        if (!flag) {
+          console.log(flag)
+          showSidebar(locObject)
+        } else {
+          console.log(flag)
+        }
+
+        flag = false
+
       })
       .catch(error => {
         console.error('Error:', error);
@@ -533,7 +548,7 @@ $(document).ready(function () {
 
   });
 
-  function geocoding(marker, item){
+  function geocoding(marker, item) {
     $(".mapboxgl-marker").remove();
 
     let longitude = item.position.lng;
@@ -541,9 +556,9 @@ $(document).ready(function () {
 
     marker = new mapboxgl.Marker({
       color: '#0B7B31'
-    }).setLngLat([longitude,latitude]).addTo(map);
+    }).setLngLat([longitude, latitude]).addTo(map);
     map.flyTo({
-      center: [longitude,latitude],
+      center: [longitude, latitude],
       zoom: 17
     })
 
@@ -568,20 +583,20 @@ $(document).ready(function () {
     locObject.ward = feature?.district.substring(7)
     locObject.district = feature?.city
     locObject.address = (feature?.houseNumber && feature?.street)
-    ? feature?.houseNumber + " " +  feature?.street
-    : feature?.label.substring(0, feature?.label.indexOf(", Phường") )
+      ? feature?.houseNumber + " " + feature?.street
+      : feature?.label.substring(0, feature?.label.indexOf(", Phường"))
     locObject.longitude = longitude
     locObject.latitude = latitude
 
     $('.search-address-bar').val(`${item.title}`)
 
-    if (!flag){
-      console.log(flag) 
-      showSidebar(locObject) 
-    } else{
-      console.log(flag) 
+    if (!flag) {
+      console.log(flag)
+      showSidebar(locObject)
+    } else {
+      console.log(flag)
     }
-    
+
     flag = false
 
     // Lắng nghe sự kiện mousedown trên bản đồ
@@ -599,32 +614,32 @@ $(document).ready(function () {
 
   if (role === "2") {
     $("#select-ward").hide();
-    
+
     $.ajax({
       url: `/api/quan/getMapAdsLoc/${id_ward}`,
       type: "GET",
-      beforeSend: function(){
+      beforeSend: function () {
         $("#loading-bg").show()
       },
-      success: function(data){
+      success: function (data) {
         console.log("~");
-        info = data.content.map(function(item){
+        info = data.content.map(function (item) {
           let { id_ads_location, address, ward, district, loc_type, ads_type,
             photo, is_zoning, longitude, latitude, list_ads, list_report } = item;
           let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch";
           return [id_ads_location, address, ward, district, loc_type, ads_type, zoning_text,
             photo, longitude, latitude, is_zoning, list_ads, list_report];
         })
-  
+
         console.log(info)
         filter_info = [...info]
-        
+
         createMarker(info, map);
         $("#loading-bg").hide()
       },
     })
 
-    $(".flex-container input").on('click', function(e){
+    $(".flex-container input").on('click', function (e) {
       createMarker(filter_info, map)
     })
   }
@@ -633,32 +648,32 @@ $(document).ready(function () {
     $.ajax({
       url: `/api/quan/getMapInfo/${id_district}`,
       type: "GET",
-      beforeSend: function(){
+      beforeSend: function () {
         $("#loading-bg").show()
       },
-      success: function(data){
+      success: function (data) {
         console.log("~");
-        info = data.content.map(function(item){
+        info = data.content.map(function (item) {
           let { id_ads_location, address, ward, district, loc_type, ads_type,
             photo, is_zoning, longitude, latitude, list_ads, list_report, id_district } = item;
           let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch";
           return [id_ads_location, address, ward, district, loc_type, ads_type, zoning_text,
             photo, longitude, latitude, is_zoning, list_ads, list_report, id_district];
         })
-  
+
         console.log(info)
         filter_info = [...info]
-        
+
         createMarker(info, map);
         $("#loading-bg").hide()
       },
     })
 
-    $.get(`/api/quan/getWard/${id_district}`, function(data) {
+    $.get(`/api/quan/getWard/${id_district}`, function (data) {
       wards = data.content
       display_wards = data.content.map(ward => {
         const wardName = (!isNaN(parseInt(ward.ward))) ? `phường ${ward.ward}` : ward.ward
-        return{
+        return {
           wardName: wardName,
           ward: ward.ward
         }
@@ -666,14 +681,14 @@ $(document).ready(function () {
       // console.log(display_wards);
       renderMapWard(display_wards);
 
-      $(document).on('click', function(event){
+      $(document).on('click', function (event) {
         if (!$(event.target).closest('#select-ward').length && $('#ward-container').is(':visible')) {
           $("#select-ward hr").hide()
           $("#ward-container").hide();
         }
       });
 
-      $(".select-ward-bar").on('click', function(e){
+      $(".select-ward-bar").on('click', function (e) {
         $("#sidebar").hide()
         $("#select-ward hr").show()
         $("#ward-container").show();
@@ -682,66 +697,66 @@ $(document).ready(function () {
         $('#logout').css('pointer-events', 'none');
         $('.search-address-bar').prop('readonly', true);
         map.interactive = !map.interactive;
-        
+
         // nhấn chọn tất cả
-        $("#ward-container .style2-button").off("click").on("click", function(){
+        $("#ward-container .style2-button").off("click").on("click", function () {
           console.log("a")
           $('#ward-container .form-check input').prop('checked', true);
         })
-  
+
         // nhấn áp dụng
-        $("#ward-container .style1-button").off("click").on("click", function(e){
+        $("#ward-container .style1-button").off("click").on("click", function (e) {
           e.preventDefault();
           $("hr").hide()
           $("#ward-container").hide();
-  
-          var selected_ward = $(":checkbox").map(function() {
+
+          var selected_ward = $(":checkbox").map(function () {
             if (this.checked)
               return this.id
           }).get();
-  
-          let result  = []
-          info.forEach(function(item){
-            if (selected_ward.includes(item[2])){
+
+          let result = []
+          info.forEach(function (item) {
+            if (selected_ward.includes(item[2])) {
               result.push(item)
-            } 
+            }
           })
           filter_info = [...result]
           // console.log(filter_info)
           // clearMarker(map);
           createMarker(filter_info, map);
           // console.log(markers)
-  
+
           $('#manage').css('pointer-events', 'auto');
           $('#account').css('pointer-events', 'auto');
           $('#logout').css('pointer-events', 'auto');
           $('.search-address-bar').prop('readonly', false);
         })
       })
-    }).fail(function(error) {
+    }).fail(function (error) {
       console.log(error);
     })
 
 
-    $(".flex-container input").on('click', function(e){
+    $(".flex-container input").on('click', function (e) {
       createMarker(filter_info, map)
     })
   }
-  else{
+  else {
     $("#select-ward").hide();
-    info = AdsLocation.content.map(function(data){
-        let {id_ads_location, address, ward, loc_type, ads_type, 
-          photo, is_zoning, longitude, latitude, hasAds, hasReport} = data
-        let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
-        id_ads_location = parseInt(id_ads_location)
-        return [id_ads_location, address, ward, loc_type, ads_type,zoning_text, 
-          photo, longitude, latitude, is_zoning,  hasAds, hasReport]
+    info = AdsLocation.content.map(function (data) {
+      let { id_ads_location, address, ward, loc_type, ads_type,
+        photo, is_zoning, longitude, latitude, hasAds, hasReport } = data
+      let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
+      id_ads_location = parseInt(id_ads_location)
+      return [id_ads_location, address, ward, loc_type, ads_type, zoning_text,
+        photo, longitude, latitude, is_zoning, hasAds, hasReport]
     })
-      // console.log(info)
+    // console.log(info)
     createMarker(info, map);
   }
-  
-  $('.search-address-bar').on('keydown', function(event) {
+
+  $('.search-address-bar').on('keydown', function (event) {
     if (event.keyCode === 13) { // Kiểm tra phím Enter
       let address = $('.search-address-bar').val()
       console.log(address)
@@ -755,7 +770,7 @@ $(document).ready(function () {
       $('#map').css('pointer-events', 'none');
       $('#select-ward').css('pointer-events', 'none');
       $('.flex-container').css('pointer-events', 'none');
-    
+
       $.ajax({
         url: `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(address)}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc`,
         type: 'GET',
@@ -763,11 +778,11 @@ $(document).ready(function () {
           access_token: mapboxgl.accessToken,
           language: "vi"
         },
-        success: function(response) {
+        success: function (response) {
           console.log(response.items);
-          renderAddressResult(response.items.slice(0,3));
+          renderAddressResult(response.items.slice(0, 3));
 
-          $('.resultapi-address div').on('click', function(event){
+          $('.resultapi-address div').on('click', function (event) {
             let index = $(this).attr("class").split("-")[1];
 
             console.log(index);
@@ -775,16 +790,16 @@ $(document).ready(function () {
             geocoding(marker, response.items[index]);
           })
         },
-        error: function() {
+        error: function () {
           alert('Error occurred during geocoding');
         }
       });
     }
   });
 
-  $(document).mouseup(function(e) {
+  $(document).mouseup(function (e) {
     const container = $('.search-address-bar'); // Replace with the ID or selector of your div
-  
+
     // If the clicked element is not a descendant of the div
     if (!container.is(e.target) && container.has(e.target).length === 0) {
       $(".search-address hr").hide()
