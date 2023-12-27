@@ -88,8 +88,8 @@ function initModels(sequelize) {
   District.hasMany(Ads_loc_update, { as: "Ads_loc_updates", foreignKey: "id_district"});
   Ads_loc_update.belongsTo(Ward, { as: "id_ward_Ward", foreignKey: "id_ward"});
   Ward.hasMany(Ads_loc_update, { as: "Ads_loc_updates", foreignKey: "id_ward"});
-  Ads_loc_report.belongsTo(Ward, { as: "id_ward_Ward", foreignKey: "id_ward"});
-  Ward.hasMany(Ads_loc_report, { as: "Ads_loc_reports", foreignKey: "id_ward"});
+  Location_report.belongsTo(Ward, { as: "id_ward_Ward", foreignKey: "id_ward"});
+  Ward.hasMany(Location_report, { as: "Ads_loc_reports", foreignKey: "id_ward"});
   return {
     Ads,
     Ads_create,

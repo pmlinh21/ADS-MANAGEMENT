@@ -120,4 +120,108 @@ const getLocReport = async (req, res) => {
     }
 }
 
-module.exports = { getAdsLoc, getLocReport }
+const createAdsReport = async (req, res) => {
+    // Access the request body
+    const requestData = req.body;
+    const jsonString = Object.keys(requestData)[0];
+    const data = JSON.parse(jsonString);
+
+    console.log(data.content + "data")
+    try {
+        const ads_report = await model.Ads_report.create({
+            officer: data.officer,
+            office: data.office,
+            id_ads: data.id_ads,
+            id_report_type: data.id_report_type,
+            fullname: data.fullname,
+            email: data.email,
+            phone: data.phone,
+            content: data.content,
+            status: data.status,
+            photo1: data.photo1,
+            photo2: data.photo2,
+            resolve: "",
+            report_time: data.report_time,
+        })
+        res.status(200).json({
+            code: sucessCode,
+            message: "success",
+            data: ads_report,
+        });
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+const createAdsLocReport = async (req, res) => {
+    // Access the request body
+    const requestData = req.body;
+    const jsonString = Object.keys(requestData)[0];
+    const data = JSON.parse(jsonString);
+
+    console.log(JSON.stringify(data) + "data")
+    try {
+        const adsloc_report = await model.Ads_loc_report.create({
+            officer: data.officer,
+            office: data.office,
+            id_ads_location: data.id_ads_location,
+            id_report_type: data.id_report_type,
+            fullname: data.fullname,
+            email: data.email,
+            phone: data.phone,
+            content: data.content,
+            status: data.status,
+            photo1: data.photo1,
+            photo2: data.photo2,
+            resolve: "",
+            report_time: data.report_time,
+        })
+        res.status(200).json({
+            code: sucessCode,
+            message: "success",
+            data: adsloc_report,
+        });
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+const createLocReport = async (req, res) => {
+    // Access the request body
+    const requestData = req.body;
+    const jsonString = Object.keys(requestData)[0];
+    const data = JSON.parse(jsonString);
+
+    console.log(typeof data.longitude + "data")
+
+    console.log(data.content + "data")
+    try {
+        const loc_report = await model.Location_report.create({
+            longitude: data.longitude.toFixed(4),
+            latitude: data.latitude.toFixed(4),
+            officer: data.officer,
+            office: data.office,
+            id_ward: data.id_ward,
+            id_report_type: data.id_report_type,
+            fullname: data.fullname,
+            email: data.email,
+            phone: data.phone,
+            content: data.content,
+            status: data.status,
+            photo1: data.photo1,
+            photo2: data.photo2,
+            resolve: "",
+            report_time: data.report_time,
+            address: data.address,
+        })
+        res.status(200).json({
+            code: sucessCode,
+            message: "success",
+            data: loc_report,
+        });
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+module.exports = { getAdsLoc, getLocReport, createAdsReport, createAdsLocReport, createLocReport }
