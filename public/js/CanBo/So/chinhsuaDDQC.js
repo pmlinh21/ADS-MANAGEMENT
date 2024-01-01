@@ -1,6 +1,8 @@
 $(document).ready(function () {
   $("#diemdat").addClass("snb-li-active");
 
+  mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
+
   $.ajax({
     url: "/api/so/getLoaiViTri",
     method: "GET",
@@ -47,15 +49,17 @@ $(document).ready(function () {
                 }
               })
 
-              $("#edit-ads-location button[value='update']").on("click", function (e) {
+              $("#edit-ads-location button[value='update']").on("click", async function (e) {
                 if ($("#edit-ads-location #address").val() == "" || $("#edit-ads-location #ward").val() == "" || $("#edit-ads-location #district").val() == "" || $("#edit-ads-location #coordinates").val() == "" || $("#edit-ads-location #ads-location-type").val() == "" || $("#edit-ads-location #ads-type").val() == "") {
                   return;
                 }
                 
-              let id_ward = ddqc.id_ward;
-              let id_district = ddqc.id_district;
+                let id_ward = ddqc.id_ward;
+                let id_district = ddqc.id_district;
+
                 e.preventDefault();
-                const formData = new FormData();
+                $("#loading-bg").show()
+                let formData = new FormData();
                 formData.append("id_ads_location", parseInt(id));
                 formData.append("address", $("#address").val());
                 formData.append("ward", parseInt(id_ward));
@@ -65,6 +69,8 @@ $(document).ready(function () {
                 formData.append("longitude", parseFloat(coordinates[1]));
                 formData.append("id_loc_type", parseInt($("#ads-location-type").val()));
                 formData.append("id_ads_type", parseInt($("#ads-type").val()));
+                formData.append("old_photo", ddqc.photo);
+
                 if ($("#is-zoning").val() == "0") {
                   formData.append("is_zoning", false);
                 } else if ($("#is-zoning").val() == "1") {
@@ -72,25 +78,40 @@ $(document).ready(function () {
                 } else {
                   formData.append("is_zoning", null);
                 }
-                formData.append("photo", imageData);
+                let signResponse, signData, cloudinaryData, url;
+                if (imageData != null) {
+                  signResponse = await fetch('/api/basic/uploadImage');
+                  signData = await signResponse.json();
 
-                $.ajax({
-                  url: '/api/so/updateDiemDatQuangCao',
-                  type: 'PUT',
-                  data: formData,
-                  processData: false,
-                  contentType: false,
+                  url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
 
-                  success: function (res) {
-                    window.location.href = "/diemdatquangcao/chinhsua?id=" + id;
-                    alert("Chỉnh sửa thành công");
-                  },
-                  error: function (xhr, status, err) {
-                    alert("Chỉnh sửa thất bại");
-                    console.log(err);
-                  }
-                })
-              })
+                  cloudinaryData = new FormData();
+                  cloudinaryData.append("file", imageData);
+                  cloudinaryData.append("api_key", signData.apikey);
+                  cloudinaryData.append("timestamp", signData.timestamp);
+                  cloudinaryData.append("signature", signData.signature);
+                  cloudinaryData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+                  cloudinaryData.append("folder", "image");
+
+                  fetch(url, {
+                    method: "POST",
+                    body: cloudinaryData
+                  })
+                  .then((response) => { 
+                    return response.text();
+                  })
+                  .then((data) => {
+                    const photo = JSON.parse(data).secure_url
+                    formData.append("photo", photo);
+                  })
+                  .finally(() => {
+                    submitUpdate(formData);
+                  })
+                } else {
+                  formData.append("photo", ddqc.photo);
+                  submitUpdate(formData);
+                }
+              });
 
               $("#edit-ads-location button[value='delete']").on("click", function (e) {
                 if (confirm("Bạn có chắc chắn muốn xóa không?")) {
@@ -114,7 +135,6 @@ $(document).ready(function () {
               })
             }
           })
-
         },
         error: function (err) {
           console.log(err);
@@ -164,11 +184,32 @@ function buildForm(data) {
     form.find("#is-zoning").val("");
   }
   if (data.photo != null && data.photo != "") {
-    form.find("#image-preview").attr("src", "../../../public/image/" + data.photo); 
-    // form.find("#image").val(data.photo);
+    form.find("#image-preview").attr("src", data.photo); 
   } else {
     form.find("#image-preview").attr("src", "../../../public/image/image-placeholder.jpg"); 
   }
+}
+
+function submitUpdate(formData) {
+  let id = $("#edit-ads-location #id-ads-location").val();
+  updateData = Object.fromEntries(formData.entries());
+
+  $.ajax({
+    url: '/api/so/updateDiemDatQuangCao',
+    type: 'PUT',
+    contentType: 'application/json',
+    data: JSON.stringify(updateData),
+    success: function (res) {
+      $("#loading-bg").hide()
+      window.location.href = "/diemdatquangcao/chinhsua?id=" + id;
+      alert("Chỉnh sửa thành công");
+    },
+    error: function (xhr, status, err) {
+      $("#loading-bg").hide()
+      alert("Chỉnh sửa thất bại");
+      console.log(err);
+    }
+  })
 }
 
 // open map popup

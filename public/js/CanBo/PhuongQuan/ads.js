@@ -167,6 +167,7 @@ $(document).ready(function () {
               $("#edit-info").modal("hide")
 
                 const signResponse = await fetch('/api/basic/uploadImage');
+
                 const signData = await signResponse.json();
   
                 const url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";

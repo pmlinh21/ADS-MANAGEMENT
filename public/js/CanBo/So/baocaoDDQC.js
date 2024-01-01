@@ -26,7 +26,8 @@ function buildForm(data) {
   form.find("input[name='fullname']").val(data.fullname);
   form.find("input[name='email']").val(data.email);
   form.find("input[name='phone']").val(data.phone);
-  form.find("textarea[name='content']").val(data.content);
+  // form.find("textarea[name='content']").val(data.content);
+  $("#content").html(data.content);
   
   form.find("input[name='report_time']").val(data.report_time.split("T")[0]);
   if (data.status == true) {
@@ -47,11 +48,15 @@ function buildForm(data) {
     form.find("input[name='officer']").val("-");
   }
 
-  if (data.photo1 != null && data.photo2 != "") {
-    form.find("img[id='image1']").attr("src", "/public/images/" + data.photo1);
+  if (data.photo1 == null || data.photo1 == "") {
+    $("#image1").attr("src", "../../../public/image/image-placeholder.jpg");  
+  } else {
+    $("#image1").attr("src", data.photo1);
   }
 
-  if (data.photo2 != null && data.photo2 != "") {
-    form.find("img[id='image2']").attr("src", "/public/images/" + data.photo2);
+  if (data.photo2 == null || data.photo2 == "") {
+    $("#image2").attr("src", "../../../public/image/image-placeholder.jpg");  
+  } else {
+    $("#image2").attr("src", data.photo2);
   }
 }

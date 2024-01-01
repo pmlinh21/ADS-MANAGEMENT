@@ -4,6 +4,9 @@ const manageMenu = $('#manage .manage-menu');
 
 if (role === "3"){
   $('#manage .nav-link').attr('href','/quanlichung')
+  $("#logout").on('click', function(){
+    window.location.href  = "/logout"
+  })
 } else{
   manageButton.hover(
     function () {
@@ -36,5 +39,4 @@ if (role == "2"){
 $("#logout").on('click', function(){
   window.location.href  = "/logout"
 })
-
 })
