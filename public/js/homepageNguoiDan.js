@@ -130,6 +130,24 @@ async function uploadImage(file) {
     }
 }
 
+function red(item) {
+    var check = false
+    if (item[11]) {
+        for (let i = 0; i < item[11].length; i++)
+            if (item[11][i].list_report)
+                item[11][i].list_report.forEach(report => {
+                    if (!report.status)
+                        check = true
+                })
+    }
+    if (item[12])
+        for (let i = 0; i < item[12].length; i++)
+            if (!item[12][i].status)
+                return true
+
+    return check
+}
+
 // hiển thị danh sách report
 function renderReport(list_report, container, user_email) {
     const note = list_report?.map(item => {
@@ -149,7 +167,7 @@ function renderReport(list_report, container, user_email) {
   <% for (var i = 0; i < list_report?.length; i++) { %>
     <div class="<%=note[i].is_user%>-report row" >
       <div class="col-md-12">
-        <%= list_report[i].content %>
+        <%- list_report[i].content %>
       </div>
       <div class="col-md-12 view-image">
       <% if (note[i].imagePath1) { %>
@@ -237,13 +255,16 @@ function showSidebar(adsloc) {
     $("#sidebar .adInfo .report-button").on("click", function () {
         let str_id_ads = $(this).closest(".button-group").attr("class").split(" ")[1];
         let id_ads = parseInt(str_id_ads.split("-")[1])
+        let imageData1 = null, imageData2 = null
 
         $('#image1').on('change', async function (e) {
-            validateImage(e)
+            imageValidate(e)
+            imageData1 = e.target.files[0];
         });
 
         $('#image2').on('change', async function (e) {
-            validateDate(e)
+            imageValidate(e)
+            imageData2 = e.target.files[0];
         });
 
         $('#report-popup .style3-button').on("click", function () {
@@ -279,6 +300,7 @@ function showSidebar(adsloc) {
                     resolve: null, // You may need to handle this differently
                     report_type: idReportType2String(parseInt($("#reportType").val())), // You may need to handle this differently
                 };
+                console.log(reportObject.content)
                 const existingReportsJSON = localStorage.getItem("ads_report");
                 const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
                 existingReports.push(reportObject);
@@ -336,6 +358,7 @@ function showSidebar(adsloc) {
                 alert("Trường 'Nội dung báo cáo' bắt buộc")
             else {
                 if (adsloc.id_ads_location) {
+                    console.log("creating adsloc report")
                     reportObject = {
                         id_report: null, // You may need to generate a unique ID
                         officer: null, // You may need to handle this differently
@@ -516,7 +539,6 @@ function createLayer(map, features) {
         }
     });
 
-
     // style các điểm ban đầu khi chưa gom nhóm
     map.addLayer({
         id: 'unclustered-point',
@@ -608,8 +630,9 @@ function createMarker(info, map) {
     const chuaquyhoach = $('#quyhoach').prop("checked")
 
     const features = info.map(item => {
+        console.log(item)
         let colorMarker
-        if (item[12] && baocao)
+        if (red(item) && baocao)
             colorMarker = 'red';
         else if (item[10] == 0 && chuaquyhoach) // chưa quy hoạch
             colorMarker = 'purple';
@@ -622,7 +645,6 @@ function createMarker(info, map) {
             imagePath = item[7]
         else
             imagePath = "../image/image-placeholder.jpg"
-
         return {
             type: 'Feature',
             geometry: {
@@ -809,15 +831,15 @@ $(document).ready(function () {
                 "list_ads": "null",
                 "list_report": "null"
             }
-
-            // fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(longitude)},${(latitude)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
             fetch(`https://revgeocode.search.hereapi.com/v1/revgeocode?at=${latitude}%2C${longitude}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc&lang=vi`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
-                    locObject.ward = data.items[0].address.district;
-                    locObject.district = data.items[0].address.city;
-                    locObject.address = data.items[0].address.houseNumber + " " + data.items[0].address.street;
+                    const feature = data.items[0].address;
+                    locObject.ward = feature.district;
+                    locObject.district = feature.city;
+                    locObject.address = (feature?.houseNumber && feature?.street)
+                        ? feature?.houseNumber + " " + feature?.street
+                        : feature?.label.substring(0, feature?.label.indexOf(", Phường"));
                     locObject.longitude = longitude
                     locObject.latitude = latitude
 
@@ -938,6 +960,7 @@ $(document).ready(function () {
                 //     address = NguoiDanAdsLoc.content.filter(i => i.list_ads.filter(j => j.id_ads == item.id_ads).length > 0)[0].address
                 else
                     address = item.address
+                
                 return {
                     address: address,
                     statusClass: item.status ? "resolved" : "unresolved",
@@ -959,10 +982,9 @@ $(document).ready(function () {
                     <% } else { %>
                         Biển quảng cáo
                         <% } %>
- 
                 </div>
                 <div class="col-md-12">
-                    "<%= list_report[i].content %> "
+                    <%- list_report[i].content %>
                 </div>
 
                 <div class="col-md-12 view-image">
