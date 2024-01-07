@@ -468,10 +468,10 @@ $(document).ready(function () {
         // get ads location
         $.get(`/api/quan/getAdsLocation/${id_district}`, function (data) {
           var select_adsloc = [], index = null
-          // console.log(data.content)
+          console.log(data.content)
           for (let i = 0; i < data.content.length; i++) {
             let { id_ads_location, address, ward, is_zoning, longitude, latitude, district } = data.content[i]
-            if (is_zoning == 1)
+            if (is_zoning)
               select_adsloc.push({ id_ads_location, address, ward, district, photo, longitude, latitude })
           }
 
