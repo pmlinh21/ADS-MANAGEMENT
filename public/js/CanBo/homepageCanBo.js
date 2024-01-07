@@ -1,21 +1,16 @@
 var flag = false;
 
 function red(item) {
-  var check = false
+  if (item[12])
+    return true
+
   if (item[11]) {
     for (let i = 0; i < item[11].length; i++)
       if (item[11][i].list_report)
-        item[11][i].list_report.forEach(report => {
-          if (!report.status)
-            check = true
-        })
-  }
-  if (item[12])
-    for (let i = 0; i < item[12].length; i++)
-      if (!item[12][i].status)
         return true
-
-  return check
+  }
+  
+  return false
 }
 
 function renderAddressResult(res) {
@@ -185,7 +180,7 @@ function createMarker(info, map) {
 
     if (red(item) && baocao)
       colorMarker = 'red';
-    else if (item[10] == 0 && chuaquyhoach) // chưa quy hoạch
+    else if (!item[10] && chuaquyhoach) // chưa quy hoạch
       colorMarker = 'purple';
     else if (item[11] && quangcao)
       colorMarker = 'blue';
@@ -297,7 +292,7 @@ function renderReport(list_report, container) {
     <% for (var i = 0; i < list_report?.length; i++) { %>
       <div class="other-report row" >
         <div class="col-md-12">
-          <%= list_report[i].content %>
+          <%- list_report[i].content %>
         </div>
         <div class="col-md-12 view-image">
         <% if (note[i].imagePath1) { %>
@@ -634,6 +629,7 @@ $(document).ready(function () {
         console.log(info)
         filter_info = [...info]
 
+        changeMapSize()
         createMarker(info, map);
         $("#loading-bg").hide()
       },
@@ -664,6 +660,7 @@ $(document).ready(function () {
         console.log(info)
         filter_info = [...info]
 
+        changeMapSize()
         createMarker(info, map);
         $("#loading-bg").hide()
       },

@@ -18,7 +18,12 @@ const getAdsLoc = async (req, res) => {
         const [ads, metadata2] = await sequelize.query
             (`SELECT a.*, bt.board_type
             FROM Ads a
-            INNER JOIN Board_type bt ON bt.id_board_type = a.id_board_type`);
+            INNER JOIN Board_type bt ON bt.id_board_type = a.id_board_type
+            WHERE EXISTS(
+                SELECT 1
+                FROM Ads_create ac
+                WHERE ac.id_ads = a.id_ads AND ac.status = true 
+            )`);
 
         for (let i = 0; i < ads.length; i++) {
             const [ads_report, metadata3] = await sequelize.query
