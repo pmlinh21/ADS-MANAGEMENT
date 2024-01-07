@@ -466,7 +466,7 @@ function showSidebar(adsloc) {
         renderReport(list_report, "#other-report-popup .modal-body", user_email)
     })
 
-    $("#sidebar .locInfo .other-report-button").on("click", function () {
+    $("#sidebar .locInfo .other-report-button").off("click").on("click", function () {
         const user_email = localStorage.getItem('email')
             ? JSON.parse(localStorage.getItem('email'))
             : ""
@@ -478,9 +478,16 @@ function showSidebar(adsloc) {
         } else {
             let tmp = localStorage.getItem('loc_report')
             let list_report = (tmp) ? JSON.parse(tmp) : []
-            list_report = list_report.filter(item =>
-                (item[3] == adsloc.longitude && item[4] == adsloc.latitude) || (item[5]) == adsloc.address)
             // console.log(list_report)
+
+            list_report = list_report.filter(item =>
+                (item.longitude.toFixed(4) == adsloc.longitude.toFixed(4) && item.latitude.toFixed(4) == adsloc.latitude.toFixed(4)) 
+                || (item.address) == adsloc.address)
+            
+            // console.log("thông tin của điểm được click: ")
+            // console.log(adsloc.longitude.toFixed(4))
+            // console.log(adsloc.latitude.toFixed(4))
+            // console.log(adsloc.address)
             renderReport(list_report, "#other-report-popup .modal-body", user_email)
         }
     })
@@ -630,7 +637,7 @@ function createMarker(info, map) {
     const chuaquyhoach = $('#quyhoach').prop("checked")
 
     const features = info.map(item => {
-        console.log(item)
+        // console.log(item)
         let colorMarker
         if (red(item) && baocao)
             colorMarker = 'red';
