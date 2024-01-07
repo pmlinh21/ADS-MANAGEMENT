@@ -80,95 +80,98 @@ const {
 
 } = require('../controllers/soController')
 
+const cookieParser = require("cookie-parser");
+soRoute.use(cookieParser(process.env.JWT_SECRET_KEY))
 const { upload, uploadNone } = require('../middlewares/upload');
+const { isCanboSo } = require('../middlewares/baseToken');
 // const { isCanboSo } = require('../middlewares/baseToken');
 
 // QUANLICHUNG
-soRoute.get("/getSoLuongQuan", getSoLuongQuan);
-soRoute.get("/getSoLuongPhuong", getSoLuongPhuong);
-soRoute.get("/getSoLuongCanBo", getSoLuongCanBo);
-soRoute.get("/getSoLuongDDQC", getSoLuongDDQC);
-soRoute.get("/getSoLuongBQC", getSoLuongBQC);
+soRoute.get("/getSoLuongQuan", isCanboSo, getSoLuongQuan);
+soRoute.get("/getSoLuongPhuong", isCanboSo, getSoLuongPhuong);
+soRoute.get("/getSoLuongCanBo", isCanboSo, getSoLuongCanBo);
+soRoute.get("/getSoLuongDDQC", isCanboSo, getSoLuongDDQC);
+soRoute.get("/getSoLuongBQC", isCanboSo, getSoLuongBQC);
 
-soRoute.get("/getLoaiViTri", getLoaiViTri);
-soRoute.get("/getHinhThucQuangCao", getHinhThucQuangCao);
-soRoute.get("/getLoaiHinhBaoCao", getLoaiHinhBaoCao);
-soRoute.get("/getLoaiBangQuangCao", getLoaiBangQuangCao);
+soRoute.get("/getLoaiViTri", isCanboSo, getLoaiViTri);
+soRoute.get("/getHinhThucQuangCao", isCanboSo, getHinhThucQuangCao);
+soRoute.get("/getLoaiHinhBaoCao", isCanboSo, getLoaiHinhBaoCao);
+soRoute.get("/getLoaiBangQuangCao", isCanboSo, getLoaiBangQuangCao);
 
-soRoute.put("/updateLoaiViTri", updateLoaiViTri);
-soRoute.put("/updateHinhThucQuangCao", updateHinhThucQuangCao);
-soRoute.put("/updateLoaiHinhBaoCao", updateLoaiHinhBaoCao);
-soRoute.put("/updateLoaiBangQuangCao", updateLoaiBangQuangCao);
+soRoute.put("/updateLoaiViTri", isCanboSo, updateLoaiViTri);
+soRoute.put("/updateHinhThucQuangCao", isCanboSo, updateHinhThucQuangCao);
+soRoute.put("/updateLoaiHinhBaoCao", isCanboSo, updateLoaiHinhBaoCao);
+soRoute.put("/updateLoaiBangQuangCao", isCanboSo, updateLoaiBangQuangCao);
 
-soRoute.delete("/deleteLoaiViTri", deleteLoaiViTri);
-soRoute.delete("/deleteHinhThucQuangCao", deleteHinhThucQuangCao);
-soRoute.delete("/deleteLoaiHinhBaoCao", deleteLoaiHinhBaoCao);
-soRoute.delete("/deleteLoaiBangQuangCao", deleteLoaiBangQuangCao);
+soRoute.delete("/deleteLoaiViTri", isCanboSo, deleteLoaiViTri);
+soRoute.delete("/deleteHinhThucQuangCao", isCanboSo, deleteHinhThucQuangCao);
+soRoute.delete("/deleteLoaiHinhBaoCao", isCanboSo, deleteLoaiHinhBaoCao);
+soRoute.delete("/deleteLoaiBangQuangCao", isCanboSo, deleteLoaiBangQuangCao);
 
-soRoute.post("/addLoaiViTri", addLoaiViTri);
-soRoute.post("/addHinhThucQuangCao", addHinhThucQuangCao);
-soRoute.post("/addLoaiHinhBaoCao", addLoaiHinhBaoCao);
-soRoute.post("/addLoaiBangQuangCao", addLoaiBangQuangCao);
+soRoute.post("/addLoaiViTri", isCanboSo, addLoaiViTri);
+soRoute.post("/addHinhThucQuangCao", isCanboSo, addHinhThucQuangCao);
+soRoute.post("/addLoaiHinhBaoCao", isCanboSo, addLoaiHinhBaoCao);
+soRoute.post("/addLoaiBangQuangCao", isCanboSo, addLoaiBangQuangCao);
 
 // QUANLIQUAN
-soRoute.get("/getAllQuan", getAllQuan);
-soRoute.get("/getAllQuanData", getAllQuanData);
-soRoute.put("/updateQuan", updateQuan);
-soRoute.delete("/deleteQuan", deleteQuan);
-soRoute.post("/addQuan", addQuan);
+soRoute.get("/getAllQuan", isCanboSo, getAllQuan);
+soRoute.get("/getAllQuanData", isCanboSo, getAllQuanData);
+soRoute.put("/updateQuan", isCanboSo, updateQuan);
+soRoute.delete("/deleteQuan", isCanboSo, deleteQuan);
+soRoute.post("/addQuan", isCanboSo, addQuan);
 
 // QUANLIPHUONG
-soRoute.get("/getAllPhuongByIdQuan/:id_district", getAllPhuongByIdQuan);
-soRoute.get("/getAllPhuongData", getAllPhuongData);
-soRoute.put("/updatePhuong", updatePhuong);
-soRoute.delete("/deletePhuong", deletePhuong);
-soRoute.post("/addPhuong", addPhuong);
+soRoute.get("/getAllPhuongByIdQuan/:id_district", isCanboSo, getAllPhuongByIdQuan);
+soRoute.get("/getAllPhuongData", isCanboSo, getAllPhuongData);
+soRoute.put("/updatePhuong", isCanboSo, updatePhuong);
+soRoute.delete("/deletePhuong", isCanboSo, deletePhuong);
+soRoute.post("/addPhuong", isCanboSo, addPhuong);
 
 // QUANLICANBO
-soRoute.get("/getAllCanboQuan", getAllCanboQuan);
-soRoute.get("/getAllCanboPhuong", getAllCanboPhuong);
-soRoute.get("/getAllCanboEmail", getAllCanboEmail);
+soRoute.get("/getAllCanboQuan", isCanboSo, getAllCanboQuan);
+soRoute.get("/getAllCanboPhuong", isCanboSo, getAllCanboPhuong);
+soRoute.get("/getAllCanboEmail", isCanboSo, getAllCanboEmail);
 
-soRoute.get("/getCanboQuanByEmail/:email", getCanboQuanByEmail);
-soRoute.get("/getCanboPhuongByEmail/:email", getCanboPhuongByEmail);
+soRoute.get("/getCanboQuanByEmail/:email", isCanboSo, getCanboQuanByEmail);
+soRoute.get("/getCanboPhuongByEmail/:email", isCanboSo, getCanboPhuongByEmail);
 
-soRoute.put("/updateCanboQuan", updateCanboQuan);
-soRoute.put("/updateCanboPhuong", updateCanboPhuong);
+soRoute.put("/updateCanboQuan", isCanboSo, updateCanboQuan);
+soRoute.put("/updateCanboPhuong", isCanboSo, updateCanboPhuong);
 
-soRoute.delete("/deleteCanboQuan", deleteCanboQuan);
-soRoute.delete("/deleteCanboPhuong", deleteCanboPhuong);
+soRoute.delete("/deleteCanboQuan", isCanboSo, deleteCanboQuan);
+soRoute.delete("/deleteCanboPhuong", isCanboSo, deleteCanboPhuong);
 
-soRoute.post("/addCanboQuan", addCanboQuan);
-soRoute.post("/addCanboPhuong", addCanboPhuong);
+soRoute.post("/addCanboQuan", isCanboSo, addCanboQuan);
+soRoute.post("/addCanboPhuong", isCanboSo, addCanboPhuong);
 
 // DIEMDATQUANGCAO
-soRoute.get("/getAllDiemDatQuangCao", getAllDiemDatQuangCao);
-soRoute.get("/getDiemDatQuangCaoById/:id", getDiemDatQuangCaoById);
-soRoute.get("/getAllAdsLocations", getAllAdsLocations);
-soRoute.put("/updateDiemDatQuangCao", updateDiemDatQuangCao); 
-soRoute.delete("/deleteDiemDatQuangCao", deleteDiemDatQuangCao);
+soRoute.get("/getAllDiemDatQuangCao", isCanboSo, getAllDiemDatQuangCao);
+soRoute.get("/getDiemDatQuangCaoById/:id", isCanboSo, getDiemDatQuangCaoById);
+soRoute.get("/getAllAdsLocations", isCanboSo, getAllAdsLocations);
+soRoute.put("/updateDiemDatQuangCao", isCanboSo, updateDiemDatQuangCao); 
+soRoute.delete("/deleteDiemDatQuangCao", isCanboSo, deleteDiemDatQuangCao);
 
 // BANGQUANGCAO
-soRoute.get("/getAllBangQuangCao", getAllBangQuangCao);
-soRoute.get("/getBangQuangCaoById/:id", getBangQuangCaoById);
-soRoute.put("/updateBangQuangCao", updateBangQuangCao);
-soRoute.delete("/deleteBangQuangCao", deleteBangQuangCao);
+soRoute.get("/getAllBangQuangCao", isCanboSo, getAllBangQuangCao);
+soRoute.get("/getBangQuangCaoById/:id", isCanboSo, getBangQuangCaoById);
+soRoute.put("/updateBangQuangCao", isCanboSo, updateBangQuangCao);
+soRoute.delete("/deleteBangQuangCao", isCanboSo, deleteBangQuangCao);
 
 // YEUCAUCHINHSUA
-soRoute.get("/getAllYeuCauChinhSuaDDQC", getAllYeuCauChinhSuaDDQC);
-soRoute.get("/getAllYeuCauChinhSuaBQC", getAllYeuCauChinhSuaBQC);
+soRoute.get("/getAllYeuCauChinhSuaDDQC", isCanboSo, getAllYeuCauChinhSuaDDQC);
+soRoute.get("/getAllYeuCauChinhSuaBQC", isCanboSo, getAllYeuCauChinhSuaBQC);
 
 // YEUCAUCAPPHEP
-soRoute.get("/getAllYeuCauCapPhep", getAllYeuCauCapPhep);
-soRoute.get("/getYeuCauCapPhepById/:id", getYeuCauCapPhepById);
+soRoute.get("/getAllYeuCauCapPhep", isCanboSo, getAllYeuCauCapPhep);
+soRoute.get("/getYeuCauCapPhepById/:id", isCanboSo, getYeuCauCapPhepById);
 
 // THONGKEBAOCAO
-soRoute.get("/getAllBaoCaoDDQC", getAllBaoCaoDDQC);
-soRoute.get("/getAllBaoCaoBQC", getAllBaoCaoBQC);
-soRoute.get("/getAllBaoCaoDD", getAllBaoCaoDD);
+soRoute.get("/getAllBaoCaoDDQC", isCanboSo, getAllBaoCaoDDQC);
+soRoute.get("/getAllBaoCaoBQC", isCanboSo, getAllBaoCaoBQC);
+soRoute.get("/getAllBaoCaoDD", isCanboSo, getAllBaoCaoDD);
 
-soRoute.get("/getBaoCaoBQCById/:id", getBaoCaoBQCById);
-soRoute.get("/getBaoCaoDDQCById/:id", getBaoCaoDDQCById);
-soRoute.get("/getBaoCaoDDById/:id", getBaoCaoDDById);
+soRoute.get("/getBaoCaoBQCById/:id", isCanboSo, getBaoCaoBQCById);
+soRoute.get("/getBaoCaoDDQCById/:id", isCanboSo, getBaoCaoDDQCById);
+soRoute.get("/getBaoCaoDDById/:id", isCanboSo, getBaoCaoDDById);
 
 module.exports = soRoute;
