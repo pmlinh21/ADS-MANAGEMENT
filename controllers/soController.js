@@ -5,6 +5,7 @@ const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
 const { Op } = require("sequelize");
 const bcrypt = require('bcryptjs');
+const { deleteImage } = require('../middlewares/deleteImage');
 
 // QUANLICHUNG --- Statistic
 const getSoLuongQuan = async (req, res) => {
@@ -601,8 +602,7 @@ const getDiemDatQuangCaoById = async (req, res) => {
 
 const updateDiemDatQuangCao = async (req, res) => {
   try {
-    const photo = req.file;
-    let { id_ads_location, address, ward, district, latitude, longitude, id_loc_type, id_ads_type, is_zoning } = req.body;
+    let { id_ads_location, address, ward, district, latitude, longitude, id_loc_type, id_ads_type, is_zoning, old_photo, photo } = req.body;
 
     const data = await model.Ads_location.update({
       address: address,
@@ -613,12 +613,17 @@ const updateDiemDatQuangCao = async (req, res) => {
       id_loc_type: id_loc_type,
       id_ads_type: id_ads_type,
       is_zoning: is_zoning,
-      photo: photo?.filename
+      photo: photo
     }, {
       where: {
         id_ads_location: id_ads_location
       }
     })
+
+    if (photo != old_photo) {
+      deleteImage(old_photo);
+    }
+
     sucessCode(res, data, "Put thành công");
   } catch (err) {
     errorCode(res, "Lỗi BE");
@@ -627,6 +632,7 @@ const updateDiemDatQuangCao = async (req, res) => {
 
 const deleteDiemDatQuangCao = async (req, res) => {
   try {
+    deleteImage(req.body.photo);
     const id = req.body.id;
     await model.Ads_location.destroy({
       where: {
@@ -684,8 +690,7 @@ const getAllAdsLocations = async (req, res) => {
 
 const updateBangQuangCao = async (req, res) => {
   try {
-    const photo = req.file;
-    let { id_ads, id_ads_location, id_board_type, width, height, quantity, expired_date } = req.body;
+    let { id_ads, id_ads_location, id_board_type, width, height, quantity, expired_date, old_photo, photo } = req.body;
 
     const data = await model.Ads.update({
       id_ads_location: id_ads_location,
@@ -694,12 +699,16 @@ const updateBangQuangCao = async (req, res) => {
       height: height,
       quantity: quantity,
       expired_date: expired_date,
-      photo: photo?.filename
+      photo: photo
     }, {
       where: {
         id_ads: id_ads
       }
     })
+
+    if (photo != old_photo) {
+      deleteImage(old_photo);
+    }
 
     sucessCode(res, data, "Put thành công");
   } catch (err) {
@@ -709,6 +718,7 @@ const updateBangQuangCao = async (req, res) => {
 
 const deleteBangQuangCao = async (req, res) => {
   try {
+    deleteImage(req.body.photo);
     const id = req.body.id;
     await model.Ads.destroy({
       where: {

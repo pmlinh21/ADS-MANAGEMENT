@@ -734,7 +734,6 @@ $(document).ready(function () {
       console.log(error);
     })
 
-
     $(".flex-container input").on('click', function (e) {
       createMarker(filter_info, map)
     })

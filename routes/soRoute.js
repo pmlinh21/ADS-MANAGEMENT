@@ -145,13 +145,13 @@ soRoute.post("/addCanboPhuong", addCanboPhuong);
 soRoute.get("/getAllDiemDatQuangCao", getAllDiemDatQuangCao);
 soRoute.get("/getDiemDatQuangCaoById/:id", getDiemDatQuangCaoById);
 soRoute.get("/getAllAdsLocations", getAllAdsLocations);
-soRoute.put("/updateDiemDatQuangCao", upload("").single("photo"), updateDiemDatQuangCao); 
+soRoute.put("/updateDiemDatQuangCao", updateDiemDatQuangCao); 
 soRoute.delete("/deleteDiemDatQuangCao", deleteDiemDatQuangCao);
 
 // BANGQUANGCAO
 soRoute.get("/getAllBangQuangCao", getAllBangQuangCao);
 soRoute.get("/getBangQuangCaoById/:id", getBangQuangCaoById);
-soRoute.put("/updateBangQuangCao", upload("").single("photo"), updateBangQuangCao);
+soRoute.put("/updateBangQuangCao", updateBangQuangCao);
 soRoute.delete("/deleteBangQuangCao", deleteBangQuangCao);
 
 // YEUCAUCHINHSUA

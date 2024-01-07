@@ -15,6 +15,11 @@ $(document).ready(function(){
       console.log(err);
     }
   });
+
+  $("textarea").on("selectstart dragstart", function (e) {
+    e.preventDefault();
+    return false;
+  });
 });
 
 function buildForm(data) {
@@ -27,6 +32,8 @@ function buildForm(data) {
   form.find("input[name='email']").val(data.email);
   form.find("input[name='phone']").val(data.phone);
   form.find("textarea[name='content']").val(data.content);
+  // $("#content").text(data.content);
+  startRender();
   
   form.find("input[name='report_time']").val(data.report_time.split("T")[0]);
   if (data.status == true) {
@@ -47,11 +54,37 @@ function buildForm(data) {
     form.find("input[name='officer']").val("-");
   }
 
-  if (data.photo1 != null && data.photo2 != "") {
-    form.find("img[id='image1']").attr("src", "/public/images/" + data.photo1);
+  if (data.photo1 == null || data.photo1 == "") {
+    $("#image1").attr("src", "../../../public/image/image-placeholder.jpg");  
+  } else {
+    $("#image1").attr("src", data.photo1);
   }
 
-  if (data.photo2 != null && data.photo2 != "") {
-    form.find("img[id='image2']").attr("src", "/public/images/" + data.photo2);
+  if (data.photo2 == null || data.photo2 == "") {
+    $("#image2").attr("src", "../../../public/image/image-placeholder.jpg");  
+  } else {
+    $("#image2").attr("src", data.photo2);
   }
+}
+
+function render() {
+  let inp = $("#content")[0];
+  let d = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="${inp.offsetWidth}" height="${inp.offsetHeight}">
+    <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:'Montserrat', sans-serif; font-size:18px; font-weight: 500;
+    color: #7E94AB;">
+    ${inp.value}
+    </div>
+    </foreignObject>
+    </svg>`;
+  let blob = new Blob( [d], {type:'image/svg+xml'} );
+  let url=URL.createObjectURL(blob);
+  inp.style.backgroundImage="url("+url+")";
+}
+
+function startRender(){
+  render();
+  const ro = new ResizeObserver(render);
+  ro.observe($("#content")[0]);
 }

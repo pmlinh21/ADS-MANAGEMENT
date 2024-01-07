@@ -39,7 +39,7 @@
                 </div>
                 <div class="input-field textarea span-3 report-content">
                     <label for="content">Nội dung báo cáo</label>
-                    <textarea name="content" id="content" disabled></textarea>
+                    <textarea name="content" id="content" oninput=render() disabled></textarea>
                 </div>
                 <div class="input-field">
                     <label for="status">Trạng thái</label>
@@ -61,16 +61,15 @@
                 <div class="input-field image span-4">
                     <label for="image1">Hình ảnh minh họa</label>
                     <div class="img-container">
-                        <img src="../../../public/image/image-placeholder.jpg" alt="" id="image1">
+                        <img src="" alt="" id="image1">
                     </div>
                 </div>
                 <div class="input-field image span-4">
                     <label for="image2">Hình ảnh minh họa</label>
                     <div class="img-container">
-                        <img src="../../../public/image/image-placeholder.jpg" alt="" id="image2">
+                        <img src="" alt="" id="image2">
                     </div>
                 </div>
-                
             </div>
         </form>
     </div>

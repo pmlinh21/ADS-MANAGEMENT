@@ -15,7 +15,7 @@ const deleteImage = function (link) {
     const public_id = "image" + link.substring(indexSplash,indexDot);
 
     cloudinary.uploader
-        .destroy( public_id)
+        .destroy(public_id)
         .then(result => console.log(result))
 }
 

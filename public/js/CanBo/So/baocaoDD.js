@@ -47,11 +47,15 @@ function buildForm(data) {
     form.find("input[name='officer']").val("-");
   }
 
-  if (data.photo1 != null && data.photo2 != "") {
-    form.find("img[id='image1']").attr("src", "/public/images/" + data.photo1);
+  if (data.photo1 == null || data.photo1 == "") {
+    $("#image1").attr("src", "../../../public/image/image-placeholder.jpg");  
+  } else {
+    $("#image1").attr("src", data.photo1);
   }
 
-  if (data.photo2 != null && data.photo2 != "") {
-    form.find("img[id='image2']").attr("src", "/public/images/" + data.photo2);
+  if (data.photo2 == null || data.photo2 == "") {
+    $("#image2").attr("src", "../../../public/image/image-placeholder.jpg");  
+  } else {
+    $("#image2").attr("src", data.photo2);
   }
 }

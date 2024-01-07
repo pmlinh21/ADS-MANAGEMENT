@@ -27,6 +27,33 @@ body {
     position: fixed;
 }
 
+#loading-bg{
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(2, 18, 4, 0.4);
+  z-index: 5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+  color: white;
+}
+
+#loading-bg img{
+  width: 6%;
+  /* object-fit: cover; */
+  /* display: inline-block;
+  z-index: 6;
+  background-image: url('../../public/image/loading-gif.gif');
+  background-size: cover; */
+}
+
+
 #header {
     background-color: #0B7B31;
     display: flex;
@@ -732,6 +759,7 @@ body {
     font-size: 16px;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
+    /* color: transparent; */
     color: #7E94AB;
     border: none;
     border-bottom: 2px solid #7E94AB;

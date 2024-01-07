@@ -40,13 +40,14 @@ $(document).ready(function () {
             }
           })
 
-          $("#edit-ads button[value='update']").on("click", function (e) {
+          $("#edit-ads button[value='update']").on("click", async function (e) {
             if ($("#edit-ads #id-ads-location").val() == "" || $("#edit-ads #board-type").val() == "" || $("#edit-ads #height").val() == "" || $("#edit-ads #width").val() == "" || $("#edit-ads #quantity").val() == "" || $("#edit-ads #expired-date").val() == "") {
               return;
             }
 
             e.preventDefault();
-            const formData = new FormData();
+            $("#loading-bg").show()
+            let formData = new FormData();
             formData.append("id_ads", parseInt(id));
             formData.append("id_ads_location", parseInt($("#edit-ads #id-ads-location").val()));
             formData.append("id_board_type", parseInt($("#edit-ads #board-type").val()));
@@ -54,24 +55,41 @@ $(document).ready(function () {
             formData.append("width", parseFloat($("#edit-ads #width").val()));
             formData.append("quantity", parseInt($("#edit-ads #quantity").val()));
             formData.append("expired_date", $("#edit-ads #expired-date").val());
-            formData.append("photo", imageData);
+            formData.append("old_photo", bqc.photo);
 
-            $.ajax({
-              url: '/api/so/updateBangQuangCao',
-              type: 'PUT',
-              data: formData,
-              processData: false,
-              contentType: false,
+            let signResponse, signData, cloudinaryData, url;
+            if (imageData != null) {
+              signResponse = await fetch('/api/basic/uploadImage');
+              signData = await signResponse.json();
+        
+              url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
 
-              success: function (res) {
-                window.location.href = "/bangquangcao/chinhsua?id=" + id;
-                alert("Chỉnh sửa thành công");
-              },
-              error: function (xhr, status, err) {
-                alert("Chỉnh sửa thất bại");
-                console.log(err);
-              }
-            })
+              cloudinaryData = new FormData();
+              cloudinaryData.append("file", imageData);
+              cloudinaryData.append("api_key", signData.apikey);
+              cloudinaryData.append("timestamp", signData.timestamp);
+              cloudinaryData.append("signature", signData.signature);
+              cloudinaryData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+              cloudinaryData.append("folder", "image");
+            
+              fetch(url, {
+                method: "POST",
+                body: cloudinaryData
+              })
+              .then((response) => { 
+                return response.text();
+              })
+              .then((data) => {
+                const photo = JSON.parse(data).secure_url
+                formData.append("photo", photo);
+              })
+              .finally(() => {
+                submitUpdate(formData);
+              })
+            } else {
+              formData.append("photo", bqc.photo);
+              submitUpdate(formData);
+            }
           })
 
           $("#edit-ads button[value='delete']").on("click", function (e) {
@@ -206,9 +224,32 @@ function buildForm(data) {
   form.find("#expired-date").val(data.expired_date.split("T")[0]);
   
   if (data.photo != null && data.photo != "") {
-    form.find("#image-preview").attr("src", "../../../public/image/" + data.photo);
+    // form.find("#image-preview").attr("src", "../../../public/image/" + data.photo);
     // form.find("#image").val(data.photo);
+    form.find("#image-preview").attr("src", data.photo);
   } else {
     form.find("#image-preview").attr("src", "../../../public/image/image-placeholder.jpg");
   }
+}
+
+function submitUpdate(formData) {
+  let id = $("#edit-ads #id-ads").val();
+  updateData = Object.fromEntries(formData.entries());
+
+  $.ajax({
+    url: '/api/so/updateBangQuangCao',
+    type: 'PUT',
+    contentType: 'application/json',
+    data: JSON.stringify(updateData),
+    success: function (res) {
+      $("#loading-bg").hide()
+      window.location.href = "/bangquangcao/chinhsua?id=" + id;
+      alert("Chỉnh sửa thành công");
+    },
+    error: function (xhr, status, err) {
+      $("#loading-bg").hide()
+      alert("Chỉnh sửa thất bại");
+      console.log(err);
+    }
+  })
 }
