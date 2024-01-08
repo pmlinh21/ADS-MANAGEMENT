@@ -299,6 +299,7 @@ $(document).ready(function () {
         
       
         $('#example_wrapper').on('click', '.edit-btn', function(e){
+          $('button.style1-button').prop('disabled', true);
           var click_row = $(this).closest('tr').index();
           var result = imageData = null, id_adsloc = filter_info[click_row][10]
           console.log(filter_info[click_row])
@@ -317,6 +318,10 @@ $(document).ready(function () {
           $('#width').val(filter_info[click_row][15])
           $('#height').val(filter_info[click_row][16])
           $('#quantity').val(filter_info[click_row][5])
+
+          $('form.needs-validation').on('change keyup', function () {
+            $('button.style1-button').prop('disabled', false);
+          });
 
           var map = new mapboxgl.Map({
             container: 'map',
@@ -385,7 +390,16 @@ $(document).ready(function () {
       
           $('#edit-info .style1-button').off('click').on('click', async function(e) {
             e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
-            console.log(id_adsloc)
+            const origin_valid_date = filter_info[click_row][6].split('-')
+            var origin_date = origin_valid_date[2] + "-" + origin_valid_date[1] + "-" + origin_valid_date[0]; 
+            
+            if(id_adsloc === filter_info[click_row][10] && parseInt($('#id_board_type').val()) === parseInt(filter_info[click_row][14]) && parseInt($('#quantity').val()) === parseInt(filter_info[click_row][5]) &&
+            parseFloat($('#width').val()) === parseFloat(filter_info[click_row][15]) && parseFloat($('#height').val()) === parseFloat(filter_info[click_row][16]) && $('#expired_date').val() === origin_date){
+              alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
+              return;
+            }
+            
+            // console.log(id_adsloc)
             let reason = $('#reason').val();
             if (!reason){
               alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
