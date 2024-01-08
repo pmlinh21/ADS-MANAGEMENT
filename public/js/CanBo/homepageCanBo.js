@@ -1,13 +1,15 @@
 var flag = false;
 
 function red(item) {
+
   if (item[12])
-    return true
+    if (item[12].some(report => !report.status))
+      return true
 
   if (item[11]) {
     for (let i = 0; i < item[11].length; i++)
-      if (item[11][i].list_report)
-        return true
+      if (item[11][i]?.list_report?.some( report => !report.status))
+      return true
   }
   
   return false
@@ -187,7 +189,7 @@ function createMarker(info, map) {
     else
       colorMarker = '#0B7B31';
     let imagePath
-    if (item[7] != "")
+    if ( item[7] != null && item[7] != "")
       imagePath = item[7]
     else
       imagePath = "../../../public/image/image-placeholder.jpg"
@@ -442,6 +444,8 @@ function changeMapSize() {
 $(document).ready(function () {
   var wards, info, filter_info
 
+  changeMapSize();
+
   $(window).on('resize', function () {
     changeMapSize();
   });
@@ -659,7 +663,6 @@ $(document).ready(function () {
         console.log(info)
         filter_info = [...info]
 
-        changeMapSize()
         createMarker(info, map);
         $("#loading-bg").hide()
       },
@@ -739,16 +742,36 @@ $(document).ready(function () {
   }
   else {
     $("#select-ward").hide();
-    info = AdsLocation.content.map(function (data) {
-      let { id_ads_location, address, ward, loc_type, ads_type,
-        photo, is_zoning, longitude, latitude, hasAds, hasReport } = data
-      let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch"
-      id_ads_location = parseInt(id_ads_location)
-      return [id_ads_location, address, ward, loc_type, ads_type, zoning_text,
-        photo, longitude, latitude, is_zoning, hasAds, hasReport]
+
+    $("#loading-bg").show()
+    $.ajax({
+      url: `/api/so/getMapInfo`,
+      type: "GET",
+      success: function (data) {
+
+        const allAdsLoc = data.content
+
+
+        info = data.content.map(function (item) {
+          let { id_ads_location, address, ward, district, loc_type, ads_type,
+            photo, is_zoning, longitude, latitude, list_ads, list_report, id_district } = item;
+          let zoning_text = (is_zoning) ? "Đã quy hoạch" : "Chưa quy hoạch";
+          return [id_ads_location, address, ward, district, loc_type, ads_type, zoning_text,
+            photo, longitude, latitude, is_zoning, list_ads, list_report, id_district];
+        })
+
+        console.log(info)
+        filter_info = [...info]
+
+        changeMapSize()
+        createMarker(info, map);
+        $("#loading-bg").hide()
+      },
     })
-    // console.log(info)
-    createMarker(info, map);
+
+    $(".flex-container input").on('click', function (e) {
+      createMarker(filter_info, map)
+    })
   }
 
   $('.search-address-bar').on('keydown', function (event) {

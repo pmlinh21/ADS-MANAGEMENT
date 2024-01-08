@@ -13,7 +13,7 @@ $(document).ready(function() {
     const data = {
         email: email
     };
-
+    var area;
     $.ajax({
         url: `/api/basic/findEmail`,
         type: "POST",
@@ -54,7 +54,6 @@ $(document).ready(function() {
             $("#loading-bg").hide();
             info = data.content;
             console.log("info: ", info );
-            var area;
             if(role == 1){
                 $.get(`/api/quan/getDistrictByID/${info.id_district}`, function(data) {
                     area = data.content;
@@ -93,56 +92,64 @@ $(document).ready(function() {
           console.log(error);
         }
     });
-    
-  
+
     // Update info
     $('.btn-info').on('click', function() {
         const newFullname = $('#fullname').val();
         const newBirthdate = $('#birthdate').val();
         const newPhone = $('#phone').val();
-        
-        if (newFullname.trim() === '') {
-            $('#fullname-error').text('Vui lòng nhập họ và tên.').show();
+        console.log(newFullname);
+        console.log(newBirthdate);
+        console.log(newPhone);
+        if (newFullname === info.fullname && newBirthdate === info.birthdate && newPhone === info.phone) {
+            alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
             return;
-        } else {
-            $('#fullname-error').hide();
-        }
-      
-        const birthdateRegex = /^\d{4}-\d{2}-\d{2}$/;
-        if (newBirthdate.trim() === '' || !birthdateRegex.test(newBirthdate)) {
-            $('#birthdate-error').text('Vui lòng nhập ngày tháng năm sinh đúng định dạng.').show();
-            return;
-        } else {
-            $('#birthdate-error').hide();
-        }
-      
-        const phoneRegex = /^\d+$/;
-        if (newPhone.trim() === '' || !phoneRegex.test(newPhone)) {
-            $('#phone-error').text('Vui lòng nhập số điện thoại chỉ chứa số.').show();
-            return;
-        } else {
-            $('#phone-error').hide();
-        }
+        } 
 
-        $.ajax({
-            url: `/api/basic/updateInfo/${email}/${role}`,
-            type: 'POST',
-            data: {
-                fullname: newFullname,
-                birthdate: newBirthdate,
-                phone: newPhone
-            },
-            beforeSend: function () {
-                $("#loading-bg").show()
-            },
-            success: function (data) {
-                $("#loading-bg").hide();
-                // location.reload();
-            },
-            error: function (error) {
-                console.log(error);
+        else{
+            if (newFullname.trim() === '') {
+                $('#fullname-error').text('Vui lòng nhập họ và tên.').show();
+                return;
+            } else {
+                $('#fullname-error').hide();
             }
-        });
+          
+            const birthdateRegex = /^\d{4}-\d{2}-\d{2}$/;
+            if (newBirthdate.trim() === '' || !birthdateRegex.test(newBirthdate)) {
+                $('#birthdate-error').text('Vui lòng nhập ngày tháng năm sinh đúng định dạng.').show();
+                return;
+            } else {
+                $('#birthdate-error').hide();
+            }
+          
+            const phoneRegex = /^\d+$/;
+            if (newPhone.trim() === '' || !phoneRegex.test(newPhone)) {
+                $('#phone-error').text('Vui lòng nhập số điện thoại chỉ chứa số.').show();
+                return;
+            } else {
+                $('#phone-error').hide();
+            }
+    
+            $.ajax({
+                url: `/api/basic/updateInfo/${email}/${role}`,
+                type: 'POST',
+                data: {
+                    fullname: newFullname,
+                    birthdate: newBirthdate,
+                    phone: newPhone
+                },
+                beforeSend: function () {
+                    $("#loading-bg").show()
+                },
+                success: function (data) {
+                    $("#loading-bg").hide();
+                    location.reload();
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }      
     });
 
     // Change password
