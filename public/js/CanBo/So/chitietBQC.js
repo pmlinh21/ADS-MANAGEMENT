@@ -14,7 +14,7 @@ $(document).ready(function () {
       $("#loading-bg").hide()
       let bqcChinhSua = data.content[0];
       buildForm(bqcChinhSua);
-      
+
       $("#update-ads button[value='deny']").on("click", async function (e) {
         e.preventDefault();
         $.ajax({
@@ -40,41 +40,61 @@ $(document).ready(function () {
 
       $("#update-ads button[value='accept']").on("click", async function (e) {
         e.preventDefault();
-        let formData = new FormData();
-        formData.append("id_ads", parseInt(id));
-        formData.append("id_ads_location", parseInt($("#update-ads #id-ads-location").val()));
-        formData.append("id_board_type", parseInt($("#update-ads #board-type").val()));
-        formData.append("height", parseFloat($("#update-ads #height").val()));
-        formData.append("width", parseFloat($("#update-ads #width").val()));
-        formData.append("quantity", parseInt($("#update-ads #quantity").val()));
-        formData.append("expired_date", $("#update-ads #expired-date").val());
-        formData.append("old_photo", bqcChinhSua.photo);
 
-        updateData = Object.fromEntries(formData.entries());
         $.ajax({
-          url: '/api/so/updateBangQuangCao',
-          type: 'PUT',
-          contentType: 'application/json',
-          data: JSON.stringify(updateData),
-          success: function (res) {
+          url: '/api/so/getBangQuangCaoById/' + id,
+          type: 'GET',
+          catch: false,
+          dataType: 'json',
+          beforeSend: function () {
+            $("#loading-bg").show()
+          },
+          success: function (data) {
+            let old_photo = data.content[0].photo;
+
+            let formData = new FormData();
+            formData.append("id_ads", bqcChinhSua.id_ads);
+            formData.append("id_ads_location", bqcChinhSua.id_ads_location);
+            formData.append("id_board_type", bqcChinhSua.id_board_type);
+            formData.append("height", bqcChinhSua.height);
+            formData.append("width", bqcChinhSua.width);
+            formData.append("quantity", bqcChinhSua.quantity);
+            formData.append("expired_date", bqcChinhSua.expired_date);
+            formData.append("photo", bqcChinhSua.photo);
+            formData.append("old_photo", old_photo);
+
+            updateData = Object.fromEntries(formData.entries());
             $.ajax({
-              url: 'api/so/updateYeuCauChinhSuaBQC/id=' + id + '/status=true',
+              url: '/api/so/updateBangQuangCao',
               type: 'PUT',
-              catch: false,
-              dataType: 'json',
-              success: function (data) {
-                $("#loading-bg").hide()
-                alert("Chỉnh sửa thành công");
-                location.reload();
+              contentType: 'application/json',
+              data: JSON.stringify(updateData),
+              success: function (res) {
+                $.ajax({
+                  url: '/api/so/updateYeuCauChinhSuaBQC/' + id + '/true',
+                  type: 'PUT',
+                  catch: false,
+                  dataType: 'json',
+                  success: function (data) {
+                    $("#loading-bg").hide()
+                    alert("Chỉnh sửa thành công");
+                    location.reload();
+                  },
+                  error: function (xhr, status, err) {
+                    $("#loading-bg").hide()
+                    alert("Chỉnh sửa thất bại");
+                    console.log(err);
+                  }
+                })
               },
               error: function (xhr, status, err) {
+                $("#loading-bg").hide()
+                alert("Xử lí thất bại");
                 console.log(err);
               }
             })
           },
           error: function (xhr, status, err) {
-            $("#loading-bg").hide()
-            alert("Chỉnh sửa thất bại");
             console.log(err);
           }
         })

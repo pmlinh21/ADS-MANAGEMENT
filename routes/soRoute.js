@@ -168,7 +168,7 @@ soRoute.get("/getAllYeuCauChinhSuaBQC", isCanboSo, getAllYeuCauChinhSuaBQC);
 soRoute.get("/getYeuCauChinhSuaDDQCById/:id", isCanboSo, getYeuCauChinhSuaDDQCById);
 soRoute.get("/getYeuCauChinhSuaBQCById/:id", isCanboSo, getYeuCauChinhSuaBQCById);
 soRoute.put("/updateYeuCauChinhSuaDDQC/:id/:status", isCanboSo, updateYeuCauChinhSuaDDQC);
-soRoute.put("/updateYeuCauChinhSuaBQC/:id/:status", updateYeuCauChinhSuaBQC);
+soRoute.put("/updateYeuCauChinhSuaBQC/:id/:status", isCanboSo, updateYeuCauChinhSuaBQC);
 
 // YEUCAUCAPPHEP
 soRoute.get("/getAllYeuCauCapPhep", isCanboSo, getAllYeuCauCapPhep);
