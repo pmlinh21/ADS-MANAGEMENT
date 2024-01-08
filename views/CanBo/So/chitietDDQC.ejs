@@ -6,12 +6,12 @@
             <span class="title-text"><h1><a href="/yeucauchinhsua">Quản lí yêu cầu chỉnh sửa thông tin</a> / Chi tiết yêu cầu</h1></span>
         </div>
        
-        <form action="" method="post" class="form" id="update-ads-location">
+        <form class="form" id="update-ads-location">
             <legend><i class="fas fa-info-circle"></i> Thông tin chỉnh sửa điểm đặt quảng cáo</legend>
             <div class="input-container">
                 <div class="input-field">
                     <label for="id">ID Yêu cầu</label>
-                    <input type="text" id="id" name="id" disabled>
+                    <input type="text" id="id" name="id" value="<%= id %>" disabled>
                 </div>
                 <div class="input-field">
                     <label for="id-ads-location">ID Điểm đặt</label>
@@ -64,18 +64,16 @@
                     <input type="text" name="office" id="office" disabled>
                 </div>
                 <div class="input-field image span-4">
-                    <label for="ads-location-image">Hình ảnh minh họa</label>
+                    <label for="image">Hình ảnh minh họa</label>
                     <div class="img-container">
-                        <img src="../../../public/image/image2.png" alt="" id="ads-location-image-preview">
-                        <label for="ads-location-image" class="img-button">Thay đổi</label>
-                        <input type="file" id="ads-location-image" name="ads-location-image" accept="image/*" required>
-                        <div class="dark-background"></div>
+                        <img src="" alt="" id="image-preview">
                     </div>
                 </div>
             </div>
             <div class="button-container">
-                <button type="submit" name="process" value="deny" class="button">Từ chối</button>
-                <button type="submit" name="process" value="accept" class="button button-delete">Duyệt thay đổi</button>
+                <button type="button" name="process" value="deny" class="button button-delete">Từ chối</button>
+                <button type="button" name="process" value="accept" class="button">Duyệt thay đổi</button>
+                <div class="processed">Đã xử lí</div>
             </div>
         </form>
 

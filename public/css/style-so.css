@@ -1295,6 +1295,14 @@ body {
 
 /* END OF PIE CHART */
 
-
+.processed {
+    color: #7E94AB;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 5px 10px;
+    margin-top: 5px;
+    font-family: 'Montserrat', sans-serif;
+    display: none;
+}
 
 /********* END OF CONTENT *********/

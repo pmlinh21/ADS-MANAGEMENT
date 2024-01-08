@@ -33,7 +33,7 @@ function buildForm(data) {
   form.find("input[name='phone']").val(data.phone);
   form.find("textarea[name='content']").val(data.content);
   // $("#content").text(data.content);
-  startRender();
+  // startRender();
   
   form.find("input[name='report_time']").val(data.report_time.split("T")[0]);
   if (data.status == true) {

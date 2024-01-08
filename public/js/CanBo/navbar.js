@@ -7,6 +7,7 @@ if (role === "3"){
   $("#logout").on('click', function(){
     window.location.href  = "/logout"
   })
+  
 } else{
   manageButton.hover(
     function () {

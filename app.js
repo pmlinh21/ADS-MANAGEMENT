@@ -141,94 +141,141 @@ app.get('/account', verifyToken, function(req, res) {
 });
 
 // SO
-app.get('/quanlichung', function(req, res) {
-  res.render('CanBo/So/quanlichung');
+app.get('/quanlichung', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+
+  res.render('CanBo/So/quanlichung', {...content});
 });
 
-app.get('/quanliquan', function(req, res) {
-  res.render('CanBo/So/quanliquan');
+app.get('/quanliquan', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/quanliquan', {...content});
 });
 
-app.get('/quanliphuong', function(req, res) {
-  res.render('CanBo/So/quanliphuong');
+app.get('/quanliphuong', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/quanliphuong', {...content});
 });
 
-app.get('/quanlicanbo', function(req, res) {
-  res.render('CanBo/So/quanlicanbo');
+app.get('/quanlicanbo', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/quanlicanbo', {...content});
 });
 
-app.get('/quanlicanbo/chinhsuacbquan', function(req, res) {
-  res.render('CanBo/So/chinhsuaCBQuan', { email: req.query.email });
+app.get('/quanlicanbo/chinhsuacbquan', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/chinhsuaCBQuan', { email: req.query.email, ...content });
 });
 
-app.get('/quanlicanbo/themcbquan', function(req, res) {
-  res.render('CanBo/So/themCBQuan');
+app.get('/quanlicanbo/themcbquan', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/themCBQuan', {...content});
 });
 
-app.get('/quanlicanbo/chinhsuacbphuong', function(req, res) {
-  res.render('CanBo/So/chinhsuaCBPhuong', { email: req.query.email });
+app.get('/quanlicanbo/chinhsuacbphuong', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/chinhsuaCBPhuong', { email: req.query.email, ...content });
 });
 
-app.get('/quanlicanbo/themcbphuong', function(req, res) {
-  res.render('CanBo/So/themCBPhuong');
+app.get('/quanlicanbo/themcbphuong', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/themCBPhuong', {...content});
 });
 
-app.get('/diemdatquangcao', function(req, res) {
-  res.render('CanBo/So/diemdatquangcao');
+app.get('/diemdatquangcao', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/diemdatquangcao', {...content});
 });
 
-app.get('/diemdatquangcao/chinhsua', function(req, res) {
-  res.render('CanBo/So/chinhsuaDDQC', { id: req.query.id });
+app.get('/diemdatquangcao/chinhsua', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/chinhsuaDDQC', { id: req.query.id, ...content });
 });
 
-app.get('/diemdatquangcao/them', function(req, res) {
-  res.render('CanBo/So/themDDQC');
+app.get('/diemdatquangcao/them', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/themDDQC', {...content});
 });
 
-app.get('/bangquangcao', function(req, res) {  
-  res.render('CanBo/So/bangquangcao');
+app.get('/bangquangcao', verifyToken, function(req, res) {  
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/bangquangcao', {...content});
 });
 
-app.get('/bangquangcao/chinhsua', function(req, res) {
-  res.render('CanBo/So/chinhsuaBQC', { id: req.query.id });
+app.get('/bangquangcao/chinhsua', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/chinhsuaBQC', { id: req.query.id, ...content });
 });
 
-app.get('/bangquangcao/them', function(req, res) {
-  res.render('CanBo/So/themBQC');
+app.get('/bangquangcao/them', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/themBQC', {...content});
 });
 
-app.get('/yeucauchinhsua', function(req, res) {
-  res.render('CanBo/So/yeucauchinhsua');
+app.get('/yeucauchinhsua', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/yeucauchinhsua', {...content});
 });
 
-app.get('/yeucauchinhsua/ddqc', function(req, res) {
-  res.render('CanBo/So/chitietDDQC', { id: req.query.id });
+app.get('/yeucauchinhsua/ddqc', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/chitietDDQC', { id: req.query.id, ...content });
 });
 
-app.get('/yeucauchinhsua/bqc', function(req, res) {
-  res.render('CanBo/So/chitietBQC', { id: req.query.id });
+app.get('/yeucauchinhsua/bqc', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/chitietBQC', { id: req.query.id, ...content });
 });  
 
-app.get('/yeucaucapphep', function(req, res) {
-  res.render('CanBo/So/yeucaucapphep');
+app.get('/yeucaucapphep', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/yeucaucapphep', {...content});
 });
 
-app.get('/yeucaucapphep/chitiet', function(req, res) {
-  res.render('CanBo/So/chitietYCCP', { id: req.query.id });
+app.get('/yeucaucapphep/chitiet', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/chitietYCCP', { id: req.query.id, ...content });
 });
 
-app.get('/thongkebaocao', function(req, res) {
-  res.render('CanBo/So/thongkebaocao');
+app.get('/thongkebaocao', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/thongkebaocao', {...content});
 });
 
-app.get('/thongkebaocao/bqc', function(req, res) {
-  res.render('CanBo/So/baocaoBQC', { id: req.query.id });
+app.get('/thongkebaocao/bqc', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/baocaoBQC', { id: req.query.id, ...content });
 });
 
-app.get('/thongkebaocao/ddqc', function(req, res) {
-  res.render('CanBo/So/baocaoDDQC', { id: req.query.id });
+app.get('/thongkebaocao/ddqc', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/baocaoDDQC', { id: req.query.id, ...content });
 });
 
-app.get('/thongkebaocao/dd', function(req, res) {
-  res.render('CanBo/So/baocaoDD', { id: req.query.id });
+app.get('/thongkebaocao/dd', verifyToken, function(req, res) {
+  const token = req.cookies?.token;
+  const content = decodeToken(token).data
+  res.render('CanBo/So/baocaoDD', { id: req.query.id, ...content });
 });
