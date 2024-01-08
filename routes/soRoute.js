@@ -83,6 +83,8 @@ const {
     getBaoCaoDDQCById,
     getBaoCaoDDById,
 
+    getMapInfo
+
 } = require('../controllers/soController')
 
 const cookieParser = require("cookie-parser");
@@ -183,4 +185,6 @@ soRoute.get("/getBaoCaoBQCById/:id", isCanboSo, getBaoCaoBQCById);
 soRoute.get("/getBaoCaoDDQCById/:id", isCanboSo, getBaoCaoDDQCById);
 soRoute.get("/getBaoCaoDDById/:id", isCanboSo, getBaoCaoDDById);
 
+// MAP
+soRoute.get("/getMapInfo", getMapInfo);
 module.exports = soRoute;

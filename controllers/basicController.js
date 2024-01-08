@@ -707,6 +707,12 @@ const deleteAdsCreateByID = async(req, res) =>{
         // cấp phép tạo ads, không phải cấp phép gia hạn
         if (row.length == 1) {
 
+            await model.Ads_update.destroy({
+                where: {
+                    id_ads: record.id_ads
+                }
+            })
+
             await model.Ads.destroy({
                 where: {
                     id_ads: record.id_ads
