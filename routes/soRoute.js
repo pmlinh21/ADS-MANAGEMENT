@@ -78,6 +78,8 @@ const {
     getBaoCaoDDQCById,
     getBaoCaoDDById,
 
+    getMapInfo
+
 } = require('../controllers/soController')
 
 const { upload, uploadNone } = require('../middlewares/upload');
@@ -167,8 +169,11 @@ soRoute.get("/getAllBaoCaoDDQC", getAllBaoCaoDDQC);
 soRoute.get("/getAllBaoCaoBQC", getAllBaoCaoBQC);
 soRoute.get("/getAllBaoCaoDD", getAllBaoCaoDD);
 
-soRoute.get("/getBaoCaoBQCById/:id", getBaoCaoBQCById);
+soRoute.get("/b/:id", getBaoCaoBQCById);
 soRoute.get("/getBaoCaoDDQCById/:id", getBaoCaoDDQCById);
 soRoute.get("/getBaoCaoDDById/:id", getBaoCaoDDById);
 
+
+// MAP
+soRoute.get("/getMapInfo", getMapInfo);
 module.exports = soRoute;
