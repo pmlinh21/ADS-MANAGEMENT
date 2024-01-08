@@ -60,6 +60,7 @@ $(document).ready(function () {
         })
       
         $("#example_wrapper").on('click', '.edit-btn', function(event){
+          $('button.style1-button').prop('disabled', true);
           var click_row = $(event.target).closest('tr').index();
           var imageData = null
           var address = filter_info[click_row][1], ward = filter_info[click_row][2],  district = filter_info[click_row][12] 
@@ -86,6 +87,10 @@ $(document).ready(function () {
               $('#id_ads_type').append(`<option value=${type.id_ads_type}>${type.ads_type}</option>`);
           })
       
+          $('form.needs-validation').on('change keyup', function () {
+            $('button.style1-button').prop('disabled', false);
+          });
+
           var map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v11',
@@ -236,6 +241,24 @@ $(document).ready(function () {
       
           $('#edit-info .style1-button').off('click').on('click', async function(e) {
             e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
+            var originLocType, originAdsType;
+            loc_type?.forEach(function(type){
+              if (filter_info[click_row][3] == type.loc_type) 
+                originLocType = type.id_loc_type;
+            })
+        
+            ads_type?.forEach(function(type){
+              if (filter_info[click_row][4] == type.ads_type) 
+              originAdsType = type.id_ads_type;
+            })
+            
+            var isZoningValue = ($('#is_zoning').val() === 'true');
+
+            if(latitude === filter_info[click_row][10] && longitude === filter_info[click_row][9] && address === filter_info[click_row][1] && parseInt($('#id_loc_type').val()) === parseInt(originLocType) &&
+            parseInt($('#id_ads_type').val()) === parseInt(originAdsType) && isZoningValue === filter_info[click_row][11]){
+              alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
+              return;
+            }
             console.log(address);
             // console.log(longitude, latitude, filter_info[click_row][0]);
             let reason = $('#reason').val();
@@ -570,7 +593,7 @@ $(document).ready(function () {
             })
             
             var isZoningValue = ($('#is_zoning').val() === 'true');
-            
+
             if(latitude === filter_info[click_row][10] && longitude === filter_info[click_row][9] && address === filter_info[click_row][1] && parseInt($('#id_loc_type').val()) === parseInt(originLocType) &&
             parseInt($('#id_ads_type').val()) === parseInt(originAdsType) && isZoningValue === filter_info[click_row][11]){
               alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
