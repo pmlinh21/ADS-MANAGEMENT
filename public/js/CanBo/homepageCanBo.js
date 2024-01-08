@@ -218,7 +218,6 @@ function createMarker(info, map) {
     }
   });
 
-
   const existingSource = map.getSource('adsloc');
   if (existingSource) {
     map.removeLayer('unclustered-point');

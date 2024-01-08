@@ -74,6 +74,8 @@ const {
 
     getAllYeuCauCapPhep,
     getYeuCauCapPhepById,
+    updateYeuCauCapPhep,
+    createBangQuangCao,
 
     getAllBaoCaoDDQC,
     getAllBaoCaoBQC,
@@ -173,6 +175,8 @@ soRoute.put("/updateYeuCauChinhSuaBQC/:id/:status", isCanboSo, updateYeuCauChinh
 // YEUCAUCAPPHEP
 soRoute.get("/getAllYeuCauCapPhep", isCanboSo, getAllYeuCauCapPhep);
 soRoute.get("/getYeuCauCapPhepById/:id", isCanboSo, getYeuCauCapPhepById);
+soRoute.put("/updateYeuCauCapPhep/:id/:status/:id_ads", isCanboSo, updateYeuCauCapPhep);
+soRoute.post("/createBangQuangCao", isCanboSo, createBangQuangCao);
 
 // THONGKEBAOCAO
 soRoute.get("/getAllBaoCaoDDQC", isCanboSo, getAllBaoCaoDDQC);

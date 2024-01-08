@@ -63,7 +63,7 @@ $(document).ready(function () {
             formData.append("photo", bqcChinhSua.photo);
             formData.append("old_photo", old_photo);
 
-            updateData = Object.fromEntries(formData.entries());
+            let updateData = Object.fromEntries(formData.entries());
             $.ajax({
               url: '/api/so/updateBangQuangCao',
               type: 'PUT',
@@ -110,7 +110,7 @@ $(document).ready(function () {
 
 function buildForm(data) {
   let form = $("#update-ads");
-  form.find("#id").val(data.id_req);
+  // form.find("#id").val(data.id_req);
   form.find("#id-ads").val(data.id_ads);
   form.find("#id-ads-location").val(data.id_ads_location);
   form.find("#board-type").val(data.board_type);

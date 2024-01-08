@@ -128,7 +128,13 @@ $(document).ready(function () {
     catch: false,
     dataType: "json",
     success: function (data) {
-      adslocations = data.content;
+      // adslocations = data.content;
+
+      for (let i = 0; i < data.content.length; i++) {
+        let { id_ads_location, address, ward, is_zoning, longitude, latitude } = data.content[i]
+        if (is_zoning == 1)
+          adslocations.push({ id_ads_location, address, ward, photo, longitude, latitude })
+      }
 
       var map = new mapboxgl.Map({
         container: 'map',
@@ -151,7 +157,7 @@ $(document).ready(function () {
         var marker = new mapboxgl.Marker({
           color: '#0B7B31'
         })
-          .setLngLat([item.longitude, item.latitude])
+          .setLngLat([item.longitude, item.longitude])
           .addTo(map)
           .getElement();
 

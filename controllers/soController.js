@@ -908,8 +908,57 @@ const getAllYeuCauCapPhep = async (req, res) => {
 const getYeuCauCapPhepById = async (req, res) => {
   try {
     const id = req.params.id;
-    [data, metadata] = await sequelize.query(`  `);
+    [data, metadata] = await sequelize.query(`SELECT C.*, B.board_type, L.address AS ads_location, W.ward AS address_ward, D.district AS address_district, D1.district, NULL AS ward
+                                              FROM Ads_create C
+                                              LEFT JOIN Board_type B ON B.id_board_type = C.id_board_type
+                                              LEFT JOIN Ads_location L ON L.id_ads_location = C.id_ads_location
+                                              LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                              LEFT JOIN District D ON D.id_district = W.id_district
+                                              INNER JOIN CanboQuan CB ON CB.email = C.officer
+                                              LEFT JOIN District D1 ON D1.id_district = CB.id_district
+                                              WHERE C.id_create = ${id}
+                                              UNION
+                                              SELECT C.*, B.board_type, L.address AS ads_location, W.ward AS address_ward, D.district AS address_district, D1.district, W1.ward
+                                              FROM Ads_create C
+                                              LEFT JOIN Board_type B ON B.id_board_type = C.id_board_type
+                                              LEFT JOIN Ads_location L ON L.id_ads_location = C.id_ads_location
+                                              LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                              LEFT JOIN District D ON D.id_district = W.id_district
+                                              INNER JOIN CanboPhuong CB ON CB.email = C.officer
+                                              LEFT JOIN Ward W1 ON W1.id_ward = CB.id_ward
+                                              LEFT JOIN District D1 ON D1.id_district = W1.id_district
+                                              WHERE C.id_create = ${id}`);
     sucessCode(res, data, "Get thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi BE");
+  }
+}
+
+const updateYeuCauCapPhep = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const status = req.params.status;
+    const id_ads = req.params.id_ads;
+    [data, meta] = await sequelize.query(`UPDATE Ads_create SET status = ${status}, id_ads = ${id_ads} WHERE id_create = ${id}`);
+    sucessCode(res, data, "Put thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi BE");
+  }
+}
+
+const createBangQuangCao = async (req, res) => {
+  try {
+    const { id_ads_location, id_board_type, width, height, quantity, expired_date, photo } = req.body;
+    const data = await model.Ads.create({
+      id_ads_location: id_ads_location,
+      id_board_type: id_board_type,
+      width: width,
+      height: height,
+      quantity: quantity,
+      expired_date: expired_date,
+      photo: photo
+    });
+    sucessCode(res, data, "Post thành công");
   } catch (err) {
     errorCode(res, "Lỗi BE");
   }
@@ -1186,6 +1235,8 @@ module.exports = {
 
   getAllYeuCauCapPhep,
   getYeuCauCapPhepById,
+  updateYeuCauCapPhep,
+  createBangQuangCao,
 
   getAllBaoCaoDDQC,
   getAllBaoCaoBQC,

@@ -43,7 +43,7 @@ function buildCreateAdsTable(data) {
         } else if (item.status == true) {
             tr.append('<td class="status" style="color: seagreen">Duyệt</td>');
         } else {
-            tr.append('<td class="status" style="color: cornflowerblue">Chờ</td>');
+          tr.append('<td class="status" style="color: indianred">Chưa xử lí</td>');
         }
 
         tr.click(function() {

@@ -6,12 +6,12 @@
             <span class="title-text"><h1><a href="/yeucaucapphep">Quản lí yêu cầu cấp phép quảng cáo</a> / Chi tiết yêu cầu</h1></span>
         </div>
        
-        <form action="" method="post" class="form" id="create-ads">
+        <form class="form" id="create-ads">
             <legend><i class="fas fa-info-circle"></i> Thông tin cấp phép</legend>
             <div class="input-container">
                 <div class="input-field">
                     <label for="id">ID Yêu cầu</label>
-                    <input type="text" id="id" name="id" disabled>
+                    <input type="text" id="id" name="id" value="<%= id %>" disabled>
                 </div>
                 <div class="input-field">
                     <label for="id-ads-location">ID Điểm đặt</label>
@@ -27,12 +27,12 @@
                 </div> 
                 <div class="half-half-field">
                     <div class="input-field">
-                        <label for="board-length">Chiều dài</label>
-                        <input type="text" id="board-length" name="board-length" disabled>
+                        <label for="height">Chiều dài</label>
+                        <input type="text" id="height" name="height" disabled>
                     </div>
                     <div class="input-field">
-                        <label for="board-width">Chiều rộng</label>
-                        <input type="text" id="board-width" name="board-width" disabled>
+                        <label for="width">Chiều rộng</label>
+                        <input type="text" id="width" name="width" disabled>
                     </div>
                 </div>
                 <div class="input-field">
@@ -80,15 +80,16 @@
                     <input type="text" name="office" id="office" disabled>
                 </div>
                 <div class="input-field image span-4">
-                    <label for="ads-location-image">Hình ảnh minh họa</label>
+                    <label for="image">Hình ảnh minh họa</label>
                     <div class="img-container">
-                        <img src="../../../public/image/image5.png" alt="" id="ads-location-image-preview">
+                        <img src="" alt="" id="image-preview">
                     </div>
                 </div>
             </div>
             <div class="button-container">
-                <button type="submit" name="process" value="deny" class="button">Từ chối</button>
-                <button type="submit" name="process" value="accept" class="button button-delete">Duyệt thay đổi</button>
+                <button type="submit" name="process" value="deny" class="button button-delete">Từ chối</button>
+                <button type="submit" name="process" value="accept" class="button">Duyệt thay đổi</button>
+                <div class="processed"></div>
             </div>
         </form>
 
