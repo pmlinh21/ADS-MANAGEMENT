@@ -58,7 +58,7 @@ function buildUpdateAdsLocationTable(data) {
         }
 
         tr.click(function() {
-            // window.location = "/yeucauchinhsua/ddqc?id=" + item.id_req;
+            window.location = "/yeucauchinhsua/ddqc?id=" + item.id_req;
         });
 
         table.append(tr);
@@ -91,7 +91,7 @@ function buildUpdateAdsTable(data) {
         }
 
         tr.click(function() {
-            // window.location = "/yeucauchinhsua/bqc?id=" + item.id_req;
+            window.location = "/yeucauchinhsua/bqc?id=" + item.id_req;
         });
 
         table.append(tr);

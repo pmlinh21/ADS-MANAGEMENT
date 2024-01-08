@@ -66,6 +66,11 @@ const {
 
     getAllYeuCauChinhSuaDDQC,
     getAllYeuCauChinhSuaBQC,
+    getYeuCauChinhSuaDDQCById,
+    getYeuCauChinhSuaBQCById,
+
+    updateYeuCauChinhSuaDDQC,
+    updateYeuCauChinhSuaBQC,
 
     getAllYeuCauCapPhep,
     getYeuCauCapPhepById,
@@ -160,6 +165,10 @@ soRoute.delete("/deleteBangQuangCao", isCanboSo, deleteBangQuangCao);
 // YEUCAUCHINHSUA
 soRoute.get("/getAllYeuCauChinhSuaDDQC", isCanboSo, getAllYeuCauChinhSuaDDQC);
 soRoute.get("/getAllYeuCauChinhSuaBQC", isCanboSo, getAllYeuCauChinhSuaBQC);
+soRoute.get("/getYeuCauChinhSuaDDQCById/:id", isCanboSo, getYeuCauChinhSuaDDQCById);
+soRoute.get("/getYeuCauChinhSuaBQCById/:id", isCanboSo, getYeuCauChinhSuaBQCById);
+soRoute.put("/updateYeuCauChinhSuaDDQC/:id/:status", isCanboSo, updateYeuCauChinhSuaDDQC);
+soRoute.put("/updateYeuCauChinhSuaBQC/:id/:status", updateYeuCauChinhSuaBQC);
 
 // YEUCAUCAPPHEP
 soRoute.get("/getAllYeuCauCapPhep", isCanboSo, getAllYeuCauCapPhep);

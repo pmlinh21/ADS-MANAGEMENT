@@ -795,6 +795,63 @@ const getAllYeuCauChinhSuaBQC = async (req, res) => {
   }
 }
 
+const getYeuCauChinhSuaDDQCById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const [data, metadata] = await model.Ads_loc_update.findAll({
+      where: {
+        id_req: id
+      }
+    });
+    sucessCode(res, data, "Get thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi BE");
+  }
+}
+
+
+const getYeuCauChinhSuaBQCById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const[data, meta] = await sequelize.query(`SELECT U.*, B.board_type, D.district, NULL AS ward
+                                              FROM Ads_update U
+                                              INNER JOIN Board_type B ON B.id_board_type = U.id_board_type
+                                              INNER JOIN CanboQuan CB ON CB.email = U.officer
+                                              INNER JOIN District D ON D.id_district = CB.id_district
+                                              WHERE U.id_req = ${id}
+                                              UNION
+                                              SELECT U.*, B.board_type, D.district, W.ward
+                                              FROM Ads_update U
+                                              INNER JOIN Board_type B ON B.id_board_type = U.id_board_type
+                                              INNER JOIN CanboPhuong CB ON CB.email = U.officer
+                                              INNER JOIN Ward W ON W.id_ward = CB.id_ward
+                                              INNER JOIN District D ON D.id_district = W.id_district
+                                              WHERE U.id_req = ${id}`);
+    sucessCode(res, data, "Get thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi BE");
+  }
+}
+
+const updateYeuCauChinhSuaDDQC = async (req, res) => {
+  try {
+    [data, meta] = await sequelize.query();
+  } catch (err) {
+    errorCode(res, "Lỗi BE");
+  }
+}
+
+const updateYeuCauChinhSuaBQC = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const status = req.params.status;
+    [data, meta] = await sequelize.query(`UPDATE Ads_update SET status = ${status} WHERE id_req = ${id}`);
+    sucessCode(res, data, "Put thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi BE");
+  }
+}
+
 // YEUCAUCAPPHEP
 const getAllYeuCauCapPhep = async (req, res) => {
   try {
@@ -1102,7 +1159,12 @@ module.exports = {
   deleteBangQuangCao,
 
   getAllYeuCauChinhSuaDDQC,
+  getYeuCauChinhSuaDDQCById,
   getAllYeuCauChinhSuaBQC,
+  getYeuCauChinhSuaBQCById,
+
+  updateYeuCauChinhSuaDDQC,
+  updateYeuCauChinhSuaBQC,
 
   getAllYeuCauCapPhep,
   getYeuCauCapPhepById,
