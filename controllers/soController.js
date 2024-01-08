@@ -798,11 +798,26 @@ const getAllYeuCauChinhSuaBQC = async (req, res) => {
 const getYeuCauChinhSuaDDQCById = async (req, res) => {
   try {
     const id = req.params.id;
-    const [data, metadata] = await model.Ads_loc_update.findAll({
-      where: {
-        id_req: id
-      }
-    });
+    const [data, metadata] = await sequelize.query(`SELECT U.*, L.loc_type, A.ads_type, W.ward AS address_ward, D.district AS address_district, D1.district, NULL AS ward
+                                                    FROM Ads_loc_update U
+                                                    LEFT JOIN Location_type L ON L.id_loc_type = U.id_loc_type
+                                                    LEFT JOIN Ads_type A ON A.id_ads_type = U.id_ads_type
+                                                    LEFT JOIN Ward W ON W.id_ward = U.id_ward
+                                                    LEFT JOIN District D ON D.id_district = W.id_district
+                                                    INNER JOIN CanboQuan CB ON CB.email = U.officer
+                                                    LEFT JOIN District D1 ON D1.id_district = CB.id_district
+                                                    WHERE U.id_req = ${id}
+                                                    UNION
+                                                    SELECT U.*, L.loc_type, A.ads_type, W.ward AS address_ward, D.district AS address_district, D1.district, W1.ward
+                                                    FROM Ads_loc_update U
+                                                    LEFT JOIN Location_type L ON L.id_loc_type = U.id_loc_type
+                                                    LEFT JOIN Ads_type A ON A.id_ads_type = U.id_ads_type
+                                                    LEFT JOIN Ward W ON W.id_ward = U.id_ward
+                                                    LEFT JOIN District D ON D.id_district = W.id_district
+                                                    INNER JOIN CanboPhuong CB ON CB.email = U.officer
+                                                    LEFT JOIN Ward W1 ON W1.id_ward = CB.id_ward
+                                                    LEFT JOIN District D1 ON D1.id_district = W1.id_district
+                                                    WHERE U.id_req = ${id}`);
     sucessCode(res, data, "Get thành công");
   } catch (err) {
     errorCode(res, "Lỗi BE");
@@ -835,7 +850,10 @@ const getYeuCauChinhSuaBQCById = async (req, res) => {
 
 const updateYeuCauChinhSuaDDQC = async (req, res) => {
   try {
-    [data, meta] = await sequelize.query();
+    const id = req.params.id;
+    const status = req.params.status;
+    [data, meta] = await sequelize.query(`UPDATE Ads_loc_update SET status = ${status} WHERE id_req = ${id}`);
+    sucessCode(res, data, "Put thành công");
   } catch (err) {
     errorCode(res, "Lỗi BE");
   }

@@ -77,8 +77,8 @@ $(document).ready(function () {
                   dataType: 'json',
                   success: function (data) {
                     $("#loading-bg").hide()
-                    alert("Chỉnh sửa thành công");
                     location.reload();
+                    alert("Chỉnh sửa thành công");
                   },
                   error: function (xhr, status, err) {
                     $("#loading-bg").hide()
@@ -95,12 +95,14 @@ $(document).ready(function () {
             })
           },
           error: function (xhr, status, err) {
+            $("#loading-bg").hide()
             console.log(err);
           }
         })
       });
     },
     error: function (xhr, status, err) {
+      $("#loading-bg").hide()
       console.log(err);
     }
   });
@@ -122,8 +124,6 @@ function buildForm(data) {
     form.find("#status").val("Đã xử lí");
     $("button[name='process']").hide();
     $(".processed").show();
-  } else {
-    form.find("#status").val("Chưa xử lí");
   }
   form.find("#officer").val(data.officer);
   if (data.office == 1) {
