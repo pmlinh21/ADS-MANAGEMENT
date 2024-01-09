@@ -51,8 +51,6 @@ $(document).ready(function () {
           return
         })
 
-        
-      
         $('#example_wrapper').on('click', '.edit-btn', function(e){
           $('button.style1-button').prop('disabled', true);
           var click_row = $(this).closest('tr').index();
