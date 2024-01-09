@@ -260,11 +260,11 @@ $(document).ready(function () {
             var select_adsloc = [], index = null
             console.log(data.content)
             for (let i = 0; i < data.content.length; i++) {
-              let { id_ads_location, address, ward, is_zoning, longitude, latitude } = data.content[i]
+              let { id_ads_location, district, address, ward, is_zoning, longitude, latitude } = data.content[i]
               if (is_zoning == 1)
-                select_adsloc.push({ id_ads_location, address, ward, photo, longitude, latitude })
+                select_adsloc.push({ id_ads_location, district, address, ward, photo, longitude, latitude })
             }
-    
+            console.log(select_adsloc)
             var map_create = new mapboxgl.Map({
               container: 'map_create',
               style: 'mapbox://styles/mapbox/streets-v11',
@@ -296,8 +296,8 @@ $(document).ready(function () {
               let markerId = $(this).attr('id');
               index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
               // console.log('Marker clicked:', index);
-              id_adsloc = select_adsloc[index].id_ads_location
-              result = select_adsloc[index].address + ', phường ' + select_adsloc[index].ward + ', quận ' + id_district;
+              id_adsloc = select_adsloc[index].id_ads_location;
+              result = select_adsloc[index].address + ', phường ' + select_adsloc[index].ward + ', quận ' + select_adsloc[index].district;
               $(".id_ads_location").val(`${result} [${select_adsloc[index].longitude}, ${select_adsloc[index].latitude}]`)
             });
     
@@ -368,7 +368,7 @@ $(document).ready(function () {
             formData.append("end_date", $('#end_date_create').val())
             formData.append("file", imageCreate)
     
-            $("form-create").get(0).reset();
+            $(".form-create").get(0).reset();
     
             $.ajax({
               url: `/api/quan/createAdsWard`,
@@ -788,7 +788,7 @@ $(document).ready(function () {
             formData.append("end_date", $('#end_date_create').val())
             formData.append("file", imageCreate)
     
-            $("form-create").get(0).reset();
+            $(".form-create").get(0).reset();
     
             $.ajax({
               url: `/api/quan/createAdsWard`,
