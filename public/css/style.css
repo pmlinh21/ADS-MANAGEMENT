@@ -841,7 +841,9 @@ table .caption{
 table .edit-btn,
 table .view-btn,
 table .edit-btn:hover,
-table .view-btn:hover {
+table .view-btn:hover,
+table .license-btn,
+table .license-btn:hover{
   background-color: #0B7B31;
   color: white;
   width: 1.5rem;
@@ -852,6 +854,7 @@ table .view-btn:hover {
 
 table .edit-btn:focus,
 table .view-btn:focus,
+table .license-btn:focus,
 .style1-button:focus,
 .style3-button:focus {
   box-shadow: none;

@@ -35,6 +35,7 @@ $(document).ready(function () {
           formatSQLDate_dmy(expired_date), 
           '<button data-target="#view-image" data-toggle="modal" class="btn-cell btn view-btn"><i class="fa-solid fa-eye"></i></button>',
           '<button data-target="#edit-info" data-toggle="modal" class="btn-cell btn edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>',
+          '<button data-target="#detail-popup" data-toggle="modal" class="btn-cell btn license-btn"><i class="fa-solid fa-file-signature"></i></i></button>',
           photo, parseInt(id_ads_location), ward, longitude, latitude, parseInt(id_board_type), width, height]
         })
 
@@ -48,24 +49,77 @@ $(document).ready(function () {
 
         $('#example_wrapper').on('click', '.view-btn', function(){
           let row = $(this).closest('tr').index();
+          let page = $("#example_wrapper .page-item.active a").text();
           console.log(row);
           let path  = "../../../public/image/image-placeholder.jpg"
-          if (filter_info[row][9] != "")
-            path  = `../../../../public/image/${filter_info[row][9]}`
+          if (filter_info[row + 5 * parseInt(page) - 5][9] != "")
+            path  = `../../../../public/image/${filter_info[row + 5 * parseInt(page) - 5][9]}`
           $('#view-image .photo').attr('src', path );
+          return
+        })
+
+        $('#example_wrapper').on('click', '.license-btn', function(){
+          let row = $(this).closest('tr').index();
+          let page = $("#example_wrapper .page-item.active a").text();
+
+          $.ajax({
+            url: `/api/basic/getAdsCreateByAds/${filter_info[row + 5 * parseInt(page) - 5][0]}`,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+              console.log(data)
+              const [info, ...giahan] = data.content
+    
+              $('#id_license').val(info.id_create);
+              $('#board_type_license').val(info.board_type);
+              $('#size_license').val(info.width + 'm x ' + info.height + "m");
+              $('#quantity_license').val(info.quantity);
+              $('#content_license').val(info.content);
+              // $('#adsloc_license').val(`${info.address_adsloc}, phường ${info.ward}, ${info.district}`);
+              $('#company_license').val(info.company);
+              $('#email_license').val(info.email);
+              $('#phone_license').val(info.phone);
+              $('#address_license').val(info.address);
+              $('#start_date_license').val(formatSQLDate_ymd(info.start_date));
+              $('#end_date_license').val(formatSQLDate_ymd(info.end_date));
+              $('#status_license').val(info.status === true ? "Đã duyệt" : (
+                info.status === false ? "Đã từ chối" : "Chưa xét duyệt"));
+              $('#officer_license').val(info.officer);
+              $('#office_license').val(info.office === 1 ? "Quận" : (info.office === 2 ? "Phường" : ""));
+              
+              if (info.photo){
+                $("#detail-popup .image p").hide()
+                $("#detail-popup .image img").show()
+                $("#detail-popup .image img").attr("src", info.photo)
+              } else{
+                $("#detail-popup .image img").hide()
+                $("#detail-popup .image p").show()
+              }
+                
+              if (giahan?.length > 0)
+                renderGiayPhepGiaHan(giahan);
+              
+              $("#loading-bg").hide()
+            },
+            error: function(){
+              $("#loading-bg").hide()
+            }
+          })
           return
         })
       
         $('#example_wrapper').on('click', '.edit-btn', function(e){
           $('button.btn-con').prop('disabled', true);
           var click_row = $(this).closest('tr').index();
-          var result = imageData = null, id_adsloc = filter_info[click_row][10]
+          let page = $("#example_wrapper .page-item.active a").text();
+          click_row = click_row + 5 * parseInt(page) - 5
+          var result = imageData = null, id_adsloc = filter_info[click_row][11]
           console.log(filter_info[click_row])
       
-          $("#address").val(`${filter_info[click_row][2]} [${filter_info[click_row][12]}, ${filter_info[click_row][13]}]` )
+          $("#address").val(`${filter_info[click_row][2]} [${filter_info[click_row][13]}, ${filter_info[click_row][14]}]` )
 
           board_type?.forEach(function(type){
-            if (filter_info[click_row][14] == type.id_board_type) 
+            if (filter_info[click_row][15] == type.id_board_type) 
               $('#id_board_type').append(`<option selected value=${type.id_board_type}>${type.board_type}</option>`);
             else
               $('#id_board_type').append(`<option value=${type.id_board_type}>${type.board_type}</option>`);
@@ -73,8 +127,8 @@ $(document).ready(function () {
 
           const valid_date = filter_info[click_row][6].split('-')
           $('#expired_date').val(`${valid_date[2]}-${valid_date[1]}-${valid_date[0]}`)
-          $('#width').val(filter_info[click_row][15])
-          $('#height').val(filter_info[click_row][16])
+          $('#width').val(filter_info[click_row][16])
+          $('#height').val(filter_info[click_row][17])
           $('#quantity').val(filter_info[click_row][5])
 
           $('form.needs-validation').on('change keyup', function () {
@@ -84,7 +138,7 @@ $(document).ready(function () {
           var map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v11',
-            center: [filter_info[click_row][12], filter_info[click_row][13]],
+            center: [filter_info[click_row][13], filter_info[click_row][14]],
             zoom: 17,
             language: 'vi'
           });
@@ -152,8 +206,8 @@ $(document).ready(function () {
             const origin_valid_date = filter_info[click_row][6].split('-')
             var origin_date = origin_valid_date[2] + "-" + origin_valid_date[1] + "-" + origin_valid_date[0]; 
             
-            if(id_adsloc === filter_info[click_row][10] && parseInt($('#id_board_type').val()) === parseInt(filter_info[click_row][14]) && parseInt($('#quantity').val()) === parseInt(filter_info[click_row][5]) &&
-            parseFloat($('#width').val()) === parseFloat(filter_info[click_row][15]) && parseFloat($('#height').val()) === parseFloat(filter_info[click_row][16]) && $('#expired_date').val() === origin_date){
+            if(id_adsloc === filter_info[click_row][11] && parseInt($('#id_board_type').val()) === parseInt(filter_info[click_row][15]) && parseInt($('#quantity').val()) === parseInt(filter_info[click_row][5]) &&
+            parseFloat($('#width').val()) === parseFloat(filter_info[click_row][16]) && parseFloat($('#height').val()) === parseFloat(filter_info[click_row][17]) && $('#expired_date').val() === origin_date){
               alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
               return;
             }
@@ -343,7 +397,7 @@ $(document).ready(function () {
             alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
           } else {
             $("#loading-bg").show()
-            
+
             var createData = {
               officer: email,
               office: role,
@@ -430,8 +484,9 @@ $(document).ready(function () {
             width, height, quantity, expired_date, longitude, latitude, id_board_type } = data
           return [parseInt(id_ads), board_type, `${address}, phường ${ward}`, loc_type, `${width}m x ${height}m`, quantity, 
           formatSQLDate_dmy(expired_date), 
-          '<button data-target="#view-image" data-toggle="modal" class="btn-cell btn view-btn"><i class="fa-solid fa-eye"></i></button>',
+          '<button data-target="#view-image" data-toggle="modal" class="btn-cell btn view-btn"><i class="fa-solid fa-image"></i></button>',
           '<button data-target="#edit-info" data-toggle="modal" class="btn-cell btn edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>',
+          '<button data-target="#detail-popup" data-toggle="modal" class="btn-cell btn license-btn"><i class="fa-solid fa-file-signature"></i></i></button>',
           photo, parseInt(id_ads_location), ward, longitude, latitude, parseInt(id_board_type), width, height]
         })
 
@@ -450,13 +505,13 @@ $(document).ready(function () {
 
           if ($(this).is(':checked')) {
             for (var i = 0; i < info.length; i++){
-              if (info[i][11] == wards[id_ward])
+              if (info[i][12] == wards[id_ward])
               filter_info.push(info[i]);
             }
           } else {
             var result = []
             for (var i = 0; i < filter_info.length; i++){
-              if (filter_info[i][11] != wards[id_ward])
+              if (filter_info[i][12] != wards[id_ward])
                 result.push(filter_info[i]);
             }
             filter_info = [...result]
@@ -471,26 +526,77 @@ $(document).ready(function () {
 
         $('#example_wrapper').on('click', '.view-btn', function(){
           let row = $(this).closest('tr').index();
-          console.log(row);
+          let page = $("#example_wrapper .page-item.active a").text();
+          console.log(row, " ", page);
           let path  = "../../../public/image/image-placeholder.jpg"
-          if (filter_info[row][9] != "")
-            path  = filter_info[row][9]
+          if (filter_info[row + 5 * parseInt(page) - 5][10] != "")
+            path  = filter_info[row + 5 * parseInt(page) - 5][10]
           $('#view-image .photo').attr('src', path );
           return
         })
 
-        
+        $('#example_wrapper').on('click', '.license-btn', function(){
+          let row = $(this).closest('tr').index();
+          let page = $("#example_wrapper .page-item.active a").text();
+
+          $.ajax({
+            url: `/api/basic/getAdsCreateByAds/${filter_info[row + 5 * parseInt(page) - 5][0]}`,
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+              console.log(data)
+              const [info, ...giahan] = data.content
+    
+              $('#id_license').val(info.id_create);
+              $('#board_type_license').val(info.board_type);
+              $('#size_license').val(info.width + 'm x ' + info.height + "m");
+              $('#quantity_license').val(info.quantity);
+              $('#content_license').val(info.content);
+              // $('#adsloc_license').val(`${info.address_adsloc}, phường ${info.ward}, ${info.district}`);
+              $('#company_license').val(info.company);
+              $('#email_license').val(info.email);
+              $('#phone_license').val(info.phone);
+              $('#address_license').val(info.address);
+              $('#start_date_license').val(formatSQLDate_ymd(info.start_date));
+              $('#end_date_license').val(formatSQLDate_ymd(info.end_date));
+              $('#status_license').val(info.status === true ? "Đã duyệt" : (
+                info.status === false ? "Đã từ chối" : "Chưa xét duyệt"));
+              $('#officer_license').val(info.officer);
+              $('#office_license').val(info.office === 1 ? "Quận" : (info.office === 2 ? "Phường" : ""));
+              
+              if (info.photo){
+                $("#detail-popup .image p").hide()
+                $("#detail-popup .image img").show()
+                $("#detail-popup .image img").attr("src", info.photo)
+              } else{
+                $("#detail-popup .image img").hide()
+                $("#detail-popup .image p").show()
+              }
+                
+              if (giahan?.length > 0)
+                renderGiayPhepGiaHan(giahan);
+              
+              $("#loading-bg").hide()
+            },
+            error: function(){
+              $("#loading-bg").hide()
+            }
+          })
+          return
+        })
       
         $('#example_wrapper').on('click', '.edit-btn', function(e){
           $('button.btn-con').prop('disabled', true);
           var click_row = $(this).closest('tr').index();
-          var result = imageData = null, id_adsloc = filter_info[click_row][10]
+          let page = $("#example_wrapper .page-item.active a").text();
+          click_row = click_row + 5 * parseInt(page) - 5
+          var result = imageData = null, id_adsloc = filter_info[click_row][11]
           console.log(filter_info[click_row])
       
-          $("#address").val(`${filter_info[click_row][2]} [${filter_info[click_row][12]}, ${filter_info[click_row][13]}]` )
+          $("#address").val(`${filter_info[click_row][2]} [${filter_info[click_row][13]}, ${filter_info[click_row][14]}]` )
 
           board_type?.forEach(function(type){
-            if (filter_info[click_row][14] == type.id_board_type) 
+            if (filter_info[click_row][15] == type.id_board_type) 
               $('#id_board_type').append(`<option selected value=${type.id_board_type}>${type.board_type}</option>`);
             else
               $('#id_board_type').append(`<option value=${type.id_board_type}>${type.board_type}</option>`);
@@ -498,8 +604,8 @@ $(document).ready(function () {
 
           const valid_date = filter_info[click_row][6].split('-')
           $('#expired_date').val(`${valid_date[2]}-${valid_date[1]}-${valid_date[0]}`)
-          $('#width').val(filter_info[click_row][15])
-          $('#height').val(filter_info[click_row][16])
+          $('#width').val(filter_info[click_row][16])
+          $('#height').val(filter_info[click_row][17])
           $('#quantity').val(filter_info[click_row][5])
 
           $('form.needs-validation').on('change keyup', function () {
@@ -509,7 +615,7 @@ $(document).ready(function () {
           var map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v11',
-            center: [filter_info[click_row][12], filter_info[click_row][13]],
+            center: [filter_info[click_row][13], filter_info[click_row][14]],
             zoom: 17,
             language: 'vi'
           });
@@ -576,8 +682,8 @@ $(document).ready(function () {
             const origin_valid_date = filter_info[click_row][6].split('-')
             var origin_date = origin_valid_date[2] + "-" + origin_valid_date[1] + "-" + origin_valid_date[0]; 
             
-            if(id_adsloc === filter_info[click_row][10] && parseInt($('#id_board_type').val()) === parseInt(filter_info[click_row][14]) && parseInt($('#quantity').val()) === parseInt(filter_info[click_row][5]) &&
-            parseFloat($('#width').val()) === parseFloat(filter_info[click_row][15]) && parseFloat($('#height').val()) === parseFloat(filter_info[click_row][16]) && $('#expired_date').val() === origin_date){
+            if(id_adsloc === filter_info[click_row][11] && parseInt($('#id_board_type').val()) === parseInt(filter_info[click_row][15]) && parseInt($('#quantity').val()) === parseInt(filter_info[click_row][5]) &&
+            parseFloat($('#width').val()) === parseFloat(filter_info[click_row][16]) && parseFloat($('#height').val()) === parseFloat(filter_info[click_row][17]) && $('#expired_date').val() === origin_date){
               alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
               return;
             }
@@ -866,4 +972,37 @@ function sendCreateRequest(url, formData) {
       console.error(error);
     }
   });
+}
+
+function renderGiayPhepGiaHan(giahan){
+  const note = giahan.map(item => {
+    if (item.status === true)
+      return "Đã duyệt"
+    else if (item.status === false)
+      return "Đã từ chối"
+    else 
+      return "Chưa xét duyệt"
+  })
+
+  var template = `
+    <% for (var i = 0; i < giahan?.length; i++) { %>
+      <form class="row form-ads-create-details mb-3">
+          <div class="col-md-4">
+              <label class="form-label">Ngày bắt đầu hợp đồng</label>
+              <input type="date" class="form-control input-details" value = "<%= formatSQLDate_ymd(giahan[i].start_date)%>" readonly>
+          </div>
+          <div class="col-md-4">
+              <label class="form-label">Ngày kết thúc hợp đồng</label>
+              <input type="date" class="form-control input-details" value = "<%= formatSQLDate_ymd(giahan[i].end_date)%>" readonly>
+          </div>
+          <div class="col-md-4">
+            <label for="height" class="form-label">Trạng thái cấp phép</label>
+            <input type="text" class="form-control input-details" value = "<%= note[i]%>" readonly>
+          </div>
+      </form>
+    <% } %>
+    `;
+
+  var rendered = ejs.render(template, { giahan, note });
+  $("#detail-popup .giay-phep-gia-han .content").html(rendered);
 }

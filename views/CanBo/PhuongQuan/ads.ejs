@@ -128,6 +128,7 @@
                 <th>Ngày hết hạn</th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -214,6 +215,100 @@
         </div>
     </div>
     </div>
+
+    <div class="modal fade" id="detail-popup" style = "display: none" tabindex="-1" role="dialog" aria-labelledby="edit-request"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <!-- <div class="modal-header ">
+        <h5 class="modal-title" id="edit-request">Hình ảnh chi tiết bảng quảng cáo </h5>
+      </div> -->
+      <div class="modal-body">
+
+        <form class="row form-ads-create-details my-3">
+          <div class="col-md-12">
+              <label class="form-label" style="font-weight: 600; margin-bottom: 0.5rem;">Thông tin cấp phép</label>
+          </div>
+          <div class="col-md-2">
+              <label for="id_license" class="form-label">ID</label>
+              <input type="number" class="form-control input-details" id="id_license" readonly>
+          </div>
+          <div class="col-md-4">
+            <label for="board_type_license" class="form-label">Loại bảng quảng cáo</label>
+            <input type="text" class="form-control input-details" id="board_type_license" readonly>
+          </div>
+      
+          <div class="col-md-3">
+            <label for="size_license" class="form-label">Kích thước</label>
+            <input type="text" class="form-control input-details" id="size_license" readonly>
+          </div>
+          <div class="col-md-3">
+            <label for="quantity_license" class="form-label">Số lượng</label>
+            <input type="number" class="form-control input-details" id="quantity_license" readonly>
+          </div>
+      
+          <div class="col-md-12">
+              <label for="content_license" class="form-label">Nội dung quảng cáo</label>
+              <textarea type="text" class="form-control input-details" id="content_license" readonly></textarea>
+          </div>
+      
+          <div class="col-md-4">
+              <label for="company_license" class="form-label">Công ty</label>
+              <input type="text" class="form-control input-details" id="company_license" readonly>
+          </div>
+          <div class="col-md-4">
+              <label for="email_license" class="form-label">Email công ty</label>
+              <input type="email" class="form-control input-details" id="email_license" readonly>
+          </div>
+      
+          <div class="col-md-4">
+              <label for="phone_license" class="form-label">Số điện thoại công ty</label>
+              <input type="phone" class="form-control input-details" id="phone_license" readonly>
+          </div>
+          <div class="col-md-4">
+              <label for="address_license" class="form-label">Địa chỉ công ty</label>
+              <input type="text" class="form-control input-details" id="address_license" readonly>
+          </div>
+      
+          <div class="col-md-4">
+              <label for="start_date_license" class="form-label">Ngày bắt đầu hợp đồng</label>
+              <input type="date" class="form-control input-details" id="start_date_license" readonly>
+          </div>
+          <div class="col-md-4">
+              <label for="end_date_license" class="form-label">Ngày kết thúc hợp đồng</label>
+              <input type="date" class="form-control input-details" id="end_date_license" readonly>
+          </div>
+          <div class="col-md-4">
+              <label for="officer_license" class="form-label">Người tạo cấp phép</label>
+              <input type="email" class="form-control input-details" id="officer_license" readonly>
+          </div>
+          <div class="col-md-4">
+              <label for="office_license" class="form-label">Đơn vị tạo cấp phép</label>
+              <input type="text" class="form-control input-details" id="office_license" readonly>
+          </div>
+          <div class="col-md-4">
+            <label for="status_license" class="form-label">Trạng thái cấp phép</label>
+            <input type="text" class="form-control input-details" id="status_license" readonly>
+        </div>
+        </form>
+        <div class="image my-3">
+          <img>
+          <p>(Không có hình ảnh cấp phép hình ảnh)</p>
+        </div>
+
+        <div class=" row giay-phep-gia-han my-3">
+          <div class="col-md-12">
+            <label class="form-label" style="font-weight: 600; margin-bottom: 0.5rem;">Thông tin cấp phép gia hạn</label>
+          </div>
+          <div class = "col-md-12 content">
+            <p>(Chưa có giấy phép gia hạn)</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
 
 <script defer type = "text/javascript" src="../../public/js/CanBo/PhuongQuan/ads.js"></script>
 <script defer type = "text/javascript" src="../../public/js/CanBo/PhuongQuan/renderWard.js"></script>
