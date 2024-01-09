@@ -306,14 +306,15 @@ function showSidebar(adsloc) {
                 console.log("checking captcha")
                 grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
                     const captcha = token;
-                    console.log(captcha);
+                    console.log("captcha: " + captcha) // Will print the token
                     fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
                         method: 'POST',
                         headers: {
+                            'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ captcha })
-                    }).then((data) => {
+                        body: JSON.stringify({ captcha: captcha })
+                    }).then((res) => res.json()).then((data) => {
                         if (data.success) {
                             const existingReportsJSON = localStorage.getItem("ads_report");
                             const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
@@ -337,6 +338,8 @@ function showSidebar(adsloc) {
                                 },
                             });
                         } else {
+                            console.log("Captcha không hợp lệ")
+                            console.log(data)
                             alert("Captcha không hợp lệ")
                         }
                     })
