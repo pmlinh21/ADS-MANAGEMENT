@@ -50,7 +50,7 @@ class Ads extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'Ads',
+    tableName: 'ads',
     timestamps: false,
     indexes: [
       {

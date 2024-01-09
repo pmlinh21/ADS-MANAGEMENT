@@ -20,36 +20,46 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="6" class="add-item" onclick=addPopup(this)><i class="fas fa-plus"></i></td>
+                    <!-- <tr><td colspan="6" class="add-item" onclick=addPopup(this)><i class="fas fa-plus"></i></td> -->
                 </tbody>
             </table>
         </div>
          <!-- POPUP EDIT FORM -->
-         <form action="" method="post" class="popup form" id="edit-popup">
-            <legend></legend>
+        <form class="popup form" id="edit-popup">
+            <legend>Chỉnh sửa Phường</legend>
             <div class="input-field">
-                <label for="id-district"></label>
-                <input type="text" id="id-ward" name="id-ward" disabled>
+                <label for="id">ID Phường</label>
+                <input type="text" id="id" name="id" class="disabled" readonly>
                 <span class="tooltiptext">Không thể chỉnh sửa ID</span>
             </div>
             <div class="input-field">
-                <label for="ward-name"></label>
-                <input type="text" id="ward-name" name="ward-name" required>
+                <label for="name">Tên Phường</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="input-field">
+                <label for="id-district">Quận trực thuộc</label>
+                <select name="id_district" id="id-district" required>
+                </select>
             </div>
             
-            <button type="submit" value="delete" class="button">Lưu thay đổi</button>
-            <button type="button" value="update" class="button button-delete">Xóa bỏ</button>
+            <button type="button" value="update" onclick=handleButtonClick(this) class="button">Lưu thay đổi</button>
+            <button type="button" value="delete" onclick=handleButtonClick(this) class="button button-delete">Xóa bỏ</button>
         </form>
 
         <!-- POPUP ADD FORM -->
-        <form action="" method="post" class="popup form" id="add-popup">
-            <legend></legend>
+        <form class="popup form" id="add-popup">
+            <legend>Thêm Phường</legend>
             <div class="input-field">
-                <label for="ward-name"></label>
-                <input type="text" id="ward-name" name="ward-name" required>
+                <label for="name">Tên Phường</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="input-field">
+                <label for="id-district">Quận trực thuộc</label>
+                <select name="id_district" id="id-district" required>
+                </select>
             </div>
             
-            <button type="submit" value="add" class="button">Thêm</button>
+            <button type="submit" value="add" onclick=handleButtonClick(this) class="button">Thêm</button>
         </form>
     </div>
 </div>

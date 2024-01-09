@@ -59,13 +59,13 @@
                         <div class=" col-md-6">
                             <label for="id_loc_type" class="col-form-label">Loại vị trí</label>
                             <select id="id_loc_type" class="form-select" aria-label="Default select example">
-                                <option value="" selected>(Trống)</option>
+                                <!-- <option value="" selected>(Trống)</option> -->
                             </select>
                         </div>
                         <div class=" col-md-6">
                             <label for="id_ads_type" class="col-form-label">Hình thức quảng cáo</label>
                             <select id="id_ads_type" class="form-select" aria-label="Default select example">
-                                <option value=""  selected>(Trống)</option>
+                                <!-- <option value=""  selected>(Trống)</option> -->
                             </select>
                         </div>
                     </div>
@@ -73,9 +73,9 @@
                         <div class=" col-md-6">
                             <label for="is_zoning" class="col-form-label">Quy hoạch</label>
                             <select id="is_zoning" class="form-select" aria-label="Default select example">
-                                <option value="" selected>(Trống)</option>
-                                <option value="1">Đã quy hoạch</option>
-                                <option value="0">Chưa quy hoạch</option>
+                                <!-- <option value="" selected>(Trống)</option> -->
+                                <option id = "yes" value="true">Đã quy hoạch</option>
+                                <option id = "no" value="false">Chưa quy hoạch</option>
                             </select>
                         </div>
                         <div class=" col-md-6">
@@ -101,7 +101,7 @@
 
                 <div class="modal-footer col-md-12">
                     <button type="button" class="btn style3-button" data-dismiss="modal">Hủy</button>
-                    <button type="submit" class="btn style1-button">Xác nhận</button>
+                    <button type="submit" class="btn style1-button" disabled>Xác nhận</button>
                 </div>
             </form>
         </div>

@@ -1,39 +1,68 @@
-document.querySelector("#canbo").classList.add("snb-li-active");
+$(document).ready(function(){
+    $("#canbo").addClass("snb-li-active");
 
-$("form").submit(function(event){
-    event.preventDefault();
+    let select = $("#edit-district-officer #id-district");
+    let districts;
+    $.get("/api/so/getAllQuan", function(data){
+        districts = data.content.map(item => [item.id_district, item.district]);
+        select.append("<option value=''>Chọn quận</option>")
+        
+        for (let i = 0; i < districts.length; i++) {
+            let option = $("<option></option>");
+            option.val(districts[i][0]);
+            option.text("Quận " + districts[i][1]);
+            select.append(option);
+        }
+
+        let canboQuan;
+        let email = $("#edit-district-officer input[name='email']").val();
+        $.get("/api/so/getCanboQuanByEmail/" + email, function(data){
+            canboQuan = data.content[0];
+            buildForm(canboQuan);
+        }).fail(function(err){
+            console.log(err);
+        });
+    });  
 });
 
-let districts = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10], [11, 11], [12, 12]];
-let select = document.querySelector("#work-for-district");
-
-let option = document.createElement("option");
-option.value = "";
-option.textContent = "Chọn quận";
-select.appendChild(option);
-
-for (let i = 0; i < districts.length; i++) {
-    let option = document.createElement("option");
-    option.value = districts[i][0];
-    option.textContent = "Quận " + districts[i][1];
-    select.appendChild(option);
+function buildForm(canboQuan) {
+    let form = $("#edit-district-officer");
+    form.find("input[name='fullname']").val(canboQuan.fullname);
+    form.find("input[name='birthdate']").val(canboQuan.birthdate);
+    form.find("input[name='phone']").val(canboQuan.phone);
+    form.find("select[name='id_district']").val(canboQuan.id_district);
 }
 
-// get data from database
-let districtOfficers = [
-    [1, "Nguyễn Trần Minh Anh", "1998-02-12", "nnlien21@gmail.com", "0901234567", 1], 
-    [2, "Phan Đức Long", "1990-11-04", "nthphuc21@clc.fitus.edu.vn", "0907654321", 1], 
-    [3, "Ngô Minh Tuấn", "1997-09-22", "pmlinh21@clc.fitus.edu.vn", "0902828282", 3], 
-    [4, "Nguyễn Hồng Nhung", "2000-01-30", "ncluan21@clc.fitus.edu.vn", "0903737373", 3]]
-;
-let reqid = window.location.href.split('?')[1].split('=')[1];
-for (let i = districtOfficers.length; i > 0; i--) {
-    if (districtOfficers[i-1][0] == reqid) {
-        document.querySelector("#edit-district-officer #id-officer").value = districtOfficers[i-1][0];
-        document.querySelector("#edit-district-officer #name-officer").value = districtOfficers[i-1][1];
-        document.querySelector("#edit-district-officer #dob-officer").value = districtOfficers[i-1][2];
-        document.querySelector("#edit-district-officer #email-officer").value = districtOfficers[i-1][3];
-        document.querySelector("#edit-district-officer #phone-officer").value = districtOfficers[i-1][4];
-        document.querySelector("#edit-district-officer #work-for-district").value = districtOfficers[i-1][5];
+async function handleButtonClick(e) {
+    if (e.value == "update") {
+        const formData = new FormData($("#edit-district-officer")[0]);
+        const editData = Object.fromEntries(formData.entries());
+        let res = await fetch('/api/so/updateCanboQuan', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(editData),
+        }).then(function(res){
+            window.location.href = "/quanlicanbo";
+        });
+    } else if (e.value == "delete") {
+        if (confirm("Bạn có chắc chắn muốn xóa không?")) {
+            const formData = new FormData($("#edit-district-officer")[0]);
+            const deleteData = Object.fromEntries(formData.entries());
+            let res = await fetch('/api/so/deleteCanboQuan', {
+                method: 'DELETE',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(deleteData),
+            }).then(function(res){
+                if (res.status == 500) {
+                    alert("Không thể xóa vì quận đang được sử dụng");
+                } else {
+                    window.location.href = "/quanlicanbo";
+                }
+            });
+        }
     }
 }

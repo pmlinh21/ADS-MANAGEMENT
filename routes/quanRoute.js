@@ -1,50 +1,67 @@
 const express = require('express');
 const quanRoute = express.Router();
-const {
-    getAllAdsLoc,
-    getInfo, getWard, updateInfo, updatePassword, forgetPassword,
+const { 
+    getAllAdsLoc, getMapInfo, getWard, 
     getAdsLocation, getAds, updateAdsLoc, updateAds,
     getAdsLocReport, getAdsReport, getLocReport,
-    updateAdsLocReport, updateAdsReport, updateLocReport,
-    getAdsCreate, adsCreate, deleteAdsCreate } = require('../controllers/quanController')
+    getAdsCreate, createAds, extendAds,
+    getCanBoPhuong, getMapAdsLoc, getAdsWard, getAdsLocationWard,
+    getAdsReportWard, getAdsLocReportWard, getLocReportWard,
+    getAdsCreateWard, createAdsWard, getWardAndDistrict, getDistrictByID } = require('../controllers/quanController')
 const { upload } = require('../middlewares/upload');
 
-quanRoute.get("/getAllAdsLoc", getAllAdsLoc)
+const cookieParser = require("cookie-parser");
+quanRoute.use(cookieParser(process.env.JWT_SECRET_KEY))
+const { isCanboQuan, isCanboPhuong, isCanboPhuongOrQuan } = require('../middlewares/baseToken');
 
-quanRoute.get("/getInfo/:email", getInfo);
+quanRoute.get("/getAllAdsLoc", isCanboPhuongOrQuan, getAllAdsLoc)
 
-quanRoute.put("/updateInfo/:id_district", updateInfo);
+quanRoute.get("/getWard/:id_district", isCanboQuan, getWard);
 
-quanRoute.put("/updatePassword/:id_district", updatePassword);
+quanRoute.get("/getMapInfo/:id_district", isCanboQuan, getMapInfo);
 
-quanRoute.put("/forgetPassword/:id_district", forgetPassword);
+quanRoute.get("/getAdsLocation/:id_district", isCanboQuan, getAdsLocation);
 
-quanRoute.get("/getWard/:id_district", getWard);
+quanRoute.post("/updateAdsLoc/:email", isCanboPhuongOrQuan, updateAdsLoc);
 
-quanRoute.get("/getAdsLocation/:id_district", getAdsLocation);
+quanRoute.get("/getAds/:id_district", isCanboQuan, getAds);
 
-quanRoute.post("/updateAdsLoc/:email", upload('updateAdsLoc').single("file"), updateAdsLoc);
+quanRoute.post("/updateAds/:email", isCanboPhuongOrQuan, updateAds);
 
-quanRoute.get("/getAds/:id_district", getAds);
+quanRoute.get("/getAdsLocReport/:id_district", isCanboQuan, getAdsLocReport);
 
-quanRoute.post("/updateAds/:email", upload('updateAds').single("file"), updateAds);
+quanRoute.get("/getAdsReport/:id_district", isCanboQuan, getAdsReport);
 
-quanRoute.get("/getAdsLocReport/:id_district", getAdsLocReport);
+quanRoute.get("/getLocReport/:id_district", isCanboQuan, getLocReport);
 
-quanRoute.put("/updateAdsLocReport/:id_req", updateAdsLocReport);
+quanRoute.get("/getAdsCreate/:id_district", isCanboQuan, getAdsCreate);
 
-quanRoute.get("/getAdsReport/:id_district", getAdsReport);
+quanRoute.post("/createAds", isCanboQuan, createAds)
 
-quanRoute.put("/updateAdsReport/:id_req", updateAdsReport);
+quanRoute.post("/extendAds", isCanboPhuongOrQuan, extendAds)
 
-quanRoute.get("/getLocReport/:id_district", getLocReport);
 
-quanRoute.put("/updateLocReport/:id_req", updateLocReport);
 
-quanRoute.get("/getAdsCreate/:id_district", getAdsCreate);
+quanRoute.get("/getCanBoPhuong", isCanboPhuong, getCanBoPhuong);
 
-quanRoute.post("/adsCreate/:id_district", upload('adsCreate').single("file"), adsCreate)
+quanRoute.get("/getMapAdsLoc/:id_ward", isCanboPhuong, getMapAdsLoc);
 
-quanRoute.put("/deleteAdsCreate/:id_district", deleteAdsCreate)
+quanRoute.get("/getAdsWard/:id_ward", isCanboPhuong, getAdsWard);
+
+quanRoute.get("/getAdsLocationWard/:id_ward", isCanboPhuong, getAdsLocationWard);
+
+quanRoute.get("/getAdsReportWard/:id_ward", isCanboPhuong, getAdsReportWard);
+
+quanRoute.get("/getAdsLocReportWard/:id_ward", isCanboPhuong, getAdsLocReportWard);
+
+quanRoute.get("/getLocReportWard/:id_ward", isCanboPhuong, getLocReportWard);
+
+quanRoute.get("/getAdsCreateWard/:id_ward", isCanboPhuong, getAdsCreateWard);
+
+quanRoute.post("/createAdsWard", isCanboPhuong, upload('createAdsWard').single("file"), createAdsWard);
+
+quanRoute.get("/getWardAndDistrict/:id_ward", isCanboPhuong, getWardAndDistrict);
+
+quanRoute.get("/getDistrictByID/:id_district", isCanboQuan, getDistrictByID);
 
 module.exports = quanRoute;

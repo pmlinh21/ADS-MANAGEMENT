@@ -18,7 +18,7 @@ class District extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'District',
+    tableName: 'district',
     timestamps: false,
     indexes: [
       {

@@ -13,6 +13,7 @@ const failCode = (res, data, message) =>{
 const errorCode = (res, message) =>{
     res.status(500).send(message);
 }
+
 module.exports = {
     sucessCode,
     failCode,

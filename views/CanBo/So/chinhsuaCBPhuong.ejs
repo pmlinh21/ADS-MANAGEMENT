@@ -6,46 +6,42 @@
             <span class="title-text"><h1><a href="/quanlicanbo">Quản lí cán bộ Phường</a> / Chỉnh sửa thông tin</h1></span>
         </div>
        
-        <form action="" method="post" class="form" id="edit-ward-officer">
+        <form class="form" id="edit-ward-officer">
             <legend><i class='far fa-edit'></i> Chỉnh sửa thông tin cán bộ Phường</legend>
             <div class="input-container">
                 <div class="input-field">
-                    <label for="id-officer">ID Cán bộ</label>
-                    <input type="text" id="id-officer" name="id-officer" disabled>
-                    <span class="tooltiptext">Không thể chỉnh sửa ID</span>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="disabled" name="email" value="<%= email %>" readonly>
+                    <span class="tooltiptext">Không thể chỉnh Email</span>
                 </div>
                 <div class="input-field">
-                    <label for="name-officer">Họ tên</label>
-                    <input type="text" id="name-officer" name="name-officer" required>
+                    <label for="fullname">Họ tên</label>
+                    <input type="text" id="fullname" name="fullname" required>
                 </div>
                 <div class="input-field">
-                    <label for="dob-officer">Ngày sinh</label>
-                    <input type="date" id="dob-officer" name="position-officer" required>
+                    <label for="birthdate">Ngày sinh</label>
+                    <input type="date" id="birthdate" name="birthdate" required>
                 </div>
                 <div class="input-field">
-                    <label for="email-officer">Email</label>
-                    <input type="email" id="email-officer" name="email-officer" required>
-                </div>
-                <div class="input-field">
-                    <label for="phone-officer">Số điện thoại</label>
-                    <input type="tel" id="phone-officer" name="phone-officer" required>
+                    <label for="phone">Số điện thoại</label>
+                    <input type="tel" id="phone" name="phone" required>
                 </div> 
 
                 <div class="input-field">
-                    <label for="of-district">Quận trực thuộc</label>
-                    <select name="of-district" id="of-district" required>
+                    <label for="id-district">Quận trực thuộc</label>
+                    <select name="id_district" id="id-district" required>
                     </select>
                 </div> 
                 <div class="input-field">
-                    <label for="work-for-ward">Phường quản lí</label>
-                    <select name="work-for-ward" id="work-for-ward" required>
+                    <label for="id-ward">Phường quản lí</label>
+                    <select name="id_ward" id="id-ward" required>
                     </select>
                 </div> 
                 
             </div>
             <div class="button-container">
-                <button type="button" value="update" class="button button-delete">Xóa bỏ</button>
-                <button type="submit" value="delete" class="button">Lưu thay đổi</button>
+                <button type="button" value="delete" onclick=handleButtonClick(this) class="button button-delete">Xóa bỏ</button>
+                <button type="button" value="update" onclick=handleButtonClick(this) class="button">Lưu thay đổi</button>
             </div>
         </form>
 

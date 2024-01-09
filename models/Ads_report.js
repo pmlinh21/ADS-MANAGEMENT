@@ -74,7 +74,7 @@ class Ads_report extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'Ads_report',
+    tableName: 'ads_report',
     timestamps: false,
     indexes: [
       {

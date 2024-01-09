@@ -18,7 +18,7 @@ class Ads_type extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'Ads_type',
+    tableName: 'ads_type',
     timestamps: false,
     indexes: [
       {

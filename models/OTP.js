@@ -18,11 +18,13 @@ class OTP extends Sequelize.Model {
     },
     OTP: {
       type: DataTypes.TEXT,
-      allowNull: true
+      allowNull: true,
+      field: 'otp'
     }
   }, {
     sequelize,
-    tableName: 'OTP',
+    tableName: 'otp',
+    modelName: 'OTP',
     timestamps: false,
     indexes: [
       {
@@ -34,7 +36,6 @@ class OTP extends Sequelize.Model {
           { name: "expired_time" },
         ]
       },
-    ]
-  });
+    ]  });
   }
 }

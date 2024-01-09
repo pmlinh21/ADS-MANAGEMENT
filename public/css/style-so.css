@@ -27,6 +27,33 @@ body {
     position: fixed;
 }
 
+#loading-bg{
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(2, 18, 4, 0.4);
+  z-index: 5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+  color: white;
+}
+
+#loading-bg img{
+  width: 6%;
+  /* object-fit: cover; */
+  /* display: inline-block;
+  z-index: 6;
+  background-image: url('../../public/image/loading-gif.gif');
+  background-size: cover; */
+}
+
+
 #header {
     background-color: #0B7B31;
     display: flex;
@@ -127,7 +154,7 @@ body {
     position: fixed;
     left: 0;
     padding-top: 60px;
-    height: 100%;
+    height: 100vh;
     width: 300px;
     background: #0E5025;
     transition: 0.5s ease;
@@ -512,6 +539,15 @@ body {
 
 /* END OF TABLE */
 
+::placeholder {
+    color: #d7dee6;
+    opacity: 1; 
+}
+
+::-ms-input-placeholder { 
+    color: #d7dee6;
+}
+
 /* START OF FORM */
 .popup {
     position: fixed;
@@ -723,6 +759,7 @@ body {
     font-size: 16px;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
+    /* color: transparent; */
     color: #7E94AB;
     border: none;
     border-bottom: 2px solid #7E94AB;
@@ -989,6 +1026,10 @@ body {
     border-color: #7E94AB transparent transparent transparent;
 }
 
+.form input.disabled {
+    background-color: #F4F4F4;
+}
+
 .form input:disabled:hover+.tooltiptext,
 .form input:read-only:hover+.tooltiptext {
     visibility: visible;
@@ -1037,6 +1078,7 @@ body {
     left: 0;
     height: calc(100% - 100px);
     width: 100%;
+    resize: both;
 }
 
 .mapboxgl-canvas {
@@ -1049,9 +1091,9 @@ body {
 .popupmap {
     position: fixed;
     width: 70%;
-    /* min-width: 400px; */
+    /* min-width: 300px; */
     height: 80%;
-    resize: horizontal;
+    resize: both;
     top: calc(50vh - 40%);
     left: calc(50vw - 35%);
     background-color: white;
@@ -1210,7 +1252,7 @@ body {
     width: 100%;
 }
 
-.chart, #piechart {
+.chart, #piechart, #barchart {
     height: 100%;
 }
 
@@ -1241,10 +1283,10 @@ body {
     border-radius: 5px;
 }
 
-.red { background-color: #b91d47; }
+/* .red { background-color: #b91d47; }
 .yellow { background-color: #D9B26F; }
 .green { background-color: #1e7145; }
-.blue { background-color: #2b5797; }
+.blue { background-color: #2b5797; } */
 
 .label .text {
     font-size: 16px;
@@ -1254,6 +1296,14 @@ body {
 
 /* END OF PIE CHART */
 
-
+.processed {
+    color: #7E94AB;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 5px 10px;
+    margin-top: 5px;
+    font-family: 'Montserrat', sans-serif;
+    display: none;
+}
 
 /********* END OF CONTENT *********/

@@ -14,10 +14,38 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+      /* Style the icon */
+      .login-logo{
+        display: flex;
+        justify-content: center;
+      }
+
+      .login-logo a {
+        text-decoration: none;
+      }
+
+      .google-logo i{
+        color: #ea4335;
+        font-size:2.5rem;
+      }
+
+      .fb-logo i{
+        color: #3b5998;
+        font-size:2.5rem;
+      }
+    </style>
+
     <link rel="stylesheet" href="../../public/css/style.css">
     <!-- <script type = "text/javascript" src="../../public/js/CanBo/PhuongQuan/apiObject.js"></script> -->
 </head>
 <body>
+  <div id="loading-bg"  style = "display: none;">
+    <img src="../../public/image/loading-gif.gif" class = "my-3">
+    <p>Vui lòng chờ một chút ...</p>
+  </div>
     <div class="login-container">
         <div class="row justify-content-center">                                                                                                                                                                                                                                                  
 
@@ -41,6 +69,14 @@
                 </div>
                 <button id="login-button" type="submit" class="style1-button btn">Đăng nhập</button>
                 <a class="forget-pass" href = "#"><p>Quên mật khẩu</p></a>
+
+                
+                <div class = "login-logo my-0">
+                  <p style = "text-align: center" class = "mt-4 mb-0">Hoặc đăng nhập với</p>
+                  <a class = "google-logo mx-2" href = "/api/auth/google">
+                    <i class="fa-brands fa-square-google-plus"></i>
+                  </a>  
+                </div>
               </div>
 
               <div class="enter-email-form" style = "display: none">
@@ -53,7 +89,6 @@
                   <button type="button" class="btn style1-button">Xác nhận</button>
                 </div>
               </div>
-
             </form>
           </div>
         </div>

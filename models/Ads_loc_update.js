@@ -94,7 +94,7 @@ class Ads_loc_update extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'Ads_loc_update',
+    tableName: 'ads_loc_update',
     timestamps: false,
     indexes: [
       {

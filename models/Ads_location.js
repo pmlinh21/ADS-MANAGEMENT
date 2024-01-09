@@ -66,7 +66,7 @@ class Ads_location extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'Ads_location',
+    tableName: 'ads_location',
     timestamps: false,
     indexes: [
       {

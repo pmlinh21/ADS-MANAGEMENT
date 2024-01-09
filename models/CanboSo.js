@@ -29,7 +29,7 @@ class CanboSo extends Sequelize.Model {
     }
   }, {
     sequelize,
-    tableName: 'CanboSo',
+    tableName: 'canboso',
     timestamps: false,
     indexes: [
       {
