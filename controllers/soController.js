@@ -676,7 +676,7 @@ const getBangQuangCaoById = async (req, res) => {
 
 const getAllAdsLocations = async (req, res) => {
   try {
-    const [data, metadata] = await sequelize.query(`SELECT L.id_ads_location, L.latitude, L.longitude, L.address, L.id_ward, W.ward, W.id_district, D.district
+    const [data, metadata] = await sequelize.query(`SELECT L.id_ads_location, L.latitude, L.longitude, L.address, L.id_ward, W.ward, W.id_district, D.district, L.is_zoning
                                                     FROM Ads_location L
                                                     LEFT JOIN Ward W ON W.id_ward = L.id_ward
                                                     LEFT JOIN District D ON D.id_district = W.id_district`);

@@ -130,11 +130,14 @@ $(document).ready(function () {
     success: function (data) {
       // adslocations = data.content;
 
+      adslocations = [];
       for (let i = 0; i < data.content.length; i++) {
-        let { id_ads_location, address, ward, is_zoning, longitude, latitude } = data.content[i]
+        let { id_ads_location, address, ward, district, latitude, longitude, is_zoning } = data.content[i];
         if (is_zoning == 1)
-          adslocations.push({ id_ads_location, address, ward, photo, longitude, latitude })
+          adslocations.push({ id_ads_location, address, ward, district, latitude, longitude });
       }
+
+      console.log(adslocations);
 
       var map = new mapboxgl.Map({
         container: 'map',
@@ -157,7 +160,7 @@ $(document).ready(function () {
         var marker = new mapboxgl.Marker({
           color: '#0B7B31'
         })
-          .setLngLat([item.longitude, item.longitude])
+          .setLngLat([item.longitude, item.latitude])
           .addTo(map)
           .getElement();
 
