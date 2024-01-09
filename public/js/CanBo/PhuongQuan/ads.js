@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  console.log(role);
+  //console.log(role);
 
   mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
   
@@ -11,6 +11,12 @@ $(document).ready(function () {
   }).fail(function(error) {
     console.log(error);
   });
+
+  if (role == "1") {
+    document.getElementById("createLicenseButton").style.marginLeft = "78em";
+  } else if (role == "2") {
+    document.getElementById("createLicenseButton").style.marginLeft = "76.3em";
+  }
 
   if (role == "2"){
     $.ajax({
@@ -40,7 +46,6 @@ $(document).ready(function () {
           data: filter_info
         });
 
-
         $('#example_wrapper').on('click', '.view-btn', function(){
           let row = $(this).closest('tr').index();
           console.log(row);
@@ -50,11 +55,9 @@ $(document).ready(function () {
           $('#view-image .photo').attr('src', path );
           return
         })
-
-        
       
         $('#example_wrapper').on('click', '.edit-btn', function(e){
-          $('button.style1-button').prop('disabled', true);
+          $('button.btn-con').prop('disabled', true);
           var click_row = $(this).closest('tr').index();
           var result = imageData = null, id_adsloc = filter_info[click_row][10]
           console.log(filter_info[click_row])
@@ -75,7 +78,7 @@ $(document).ready(function () {
           $('#quantity').val(filter_info[click_row][5])
 
           $('form.needs-validation').on('change keyup', function () {
-            $('button.style1-button').prop('disabled', false);
+            $('button.btn-con').prop('disabled', false);
           });
 
           var map = new mapboxgl.Map({
@@ -155,7 +158,6 @@ $(document).ready(function () {
               return;
             }
             
-      //       // console.log(click_row);
             let reason = $('#reason').val();
             if (!reason){
               alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
@@ -210,6 +212,187 @@ $(document).ready(function () {
                 })
             }
           })
+        });
+
+        $('#createLicenseButton').on('click', function () {
+          $('#create-license').modal('show');
+        });
+
+        var imageCreate = result = id_adsloc = null
+
+        board_type?.forEach(function (type) {
+          $('#id_board_type_create').append(`<option value=${type.id_board_type}>${type.board_type}</option>`);
+        })
+        
+
+        $('#photo_create').on('change', function (e) {
+          if (e.target.files[0])
+            if (e.target.files[0].type.startsWith('image/') && e.target.files[0].size / 1024 <= 4 * 1024) {
+              imageCreate = e.target.files[0]
+            }
+            else if (!e.target.files[0].type.startsWith('image/')) {
+              alert('Avatar must be an image file (.jpg, .png, .jpeg)')
+            }
+            else if (!(e.target.files[0].size / 1024 <= 4)) {
+              alert('Avatar must not exceed 4MB')
+            }
+        });
+
+        $('.form-create .style3-button').off('click').on('click', function (e) {
+          $("#id_ads_location_create").val("")
+          $('#id_board_type_create .default').prop('selected', true)
+          $('#content_create').val("")
+          $('#width_create').val("")
+          $('#height_create').val("")
+          $('#photo_create').val("")
+          $('#quantity_create').val("")
+          $('#company_create').val("")
+          $('#address_create').val("")
+          $('#email_create').val("")
+          $('#phone_create').val("")
+          $('#start_date_create').val("")
+          $('#end_date_create').val("")
+          $('#create-license').modal('hide');
+        });
+
+        $('.form-create .input-group button').on('click', function () {
+          $.get(`/api/quan/getAdsLocationWard/${id_ward}`, function (data) {
+            var select_adsloc = [], index = null
+            console.log(data.content)
+            for (let i = 0; i < data.content.length; i++) {
+              let { id_ads_location, address, ward, is_zoning, longitude, latitude } = data.content[i]
+              if (is_zoning == 1)
+                select_adsloc.push({ id_ads_location, address, ward, photo, longitude, latitude })
+            }
+    
+            var map_create = new mapboxgl.Map({
+              container: 'map_create',
+              style: 'mapbox://styles/mapbox/streets-v11',
+              center: [select_adsloc[0].longitude, select_adsloc[0].latitude],
+              zoom: 17,
+              language: 'vi'
+            });
+    
+            var language = new MapboxLanguage({
+              defaultLanguage: 'vi'
+            });
+            map_create.addControl(language);
+    
+            let canvas = $('.mapboxgl-canvas')
+            canvas.width('100%');
+            canvas.height('100%');
+    
+            select_adsloc.forEach(function (item, index) {
+              var marker = new mapboxgl.Marker({ color: '#0B7B31' })
+                .setLngLat([item.longitude, item.latitude])
+                .addTo(map_create)
+                .getElement();
+    
+              marker.id = `marker-${index}`;
+            });
+    
+            // click marker 
+            $(document).on('click', '.mapboxgl-marker', function () {
+              let markerId = $(this).attr('id');
+              index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
+              // console.log('Marker clicked:', index);
+              id_adsloc = select_adsloc[index].id_ads_location
+              result = select_adsloc[index].address + ', phường ' + select_adsloc[index].ward + ', quận ' + id_district;
+              $(".id_ads_location").val(`${result} [${select_adsloc[index].longitude}, ${select_adsloc[index].latitude}]`)
+            });
+    
+            // click confirm button
+            $('#choose-adsloc .style1-button').off('click').on('click', function (e) {
+              e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
+              $("#id_ads_location").val(`${result} [${select_adsloc[index].longitude}, ${select_adsloc[index].latitude}]`)
+            })
+          }).fail(function (error) {
+            console.log(error);
+          });
+        })
+    
+        // click "tạo cấp phép"
+        $('.form-create .modal-footer .style1-button').off('click').on('click', function (e) {
+          e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
+          // console.log($('#quantity').val() )
+          if ($('#id_board_type_create').val() === "(Trống)") {
+            alert('Vui lòng chọn loại bảng quảng cáo.');
+          } else if (id_adsloc === null) {
+            alert('Vui lòng chọn điểm đặt quảng cáo.');
+          } else if ($('#width_create').val() === "") {
+            alert('Vui lòng nhập chiều dài.');
+          } else if ($('#height_create').val() === "") {
+            alert('Vui lòng nhập chiều rộng.');
+          } else if ($('#quantity_create').val() === "") {
+            alert('Vui lòng nhập số lượng.');
+          } else if ($('#content_create').val() === "") {
+            alert('Vui lòng nhập nội dung.');
+          } else if ($('#company_create').val() === "") {
+            alert('Vui lòng nhập tên công ty.');
+          } else if ($('#address_create').val() === "") {
+            alert('Vui lòng nhập địa chỉ.');
+          } else if ($('#email_create').val() === "") {
+            alert('Vui lòng nhập địa chỉ email.');
+          } else if ($('#phone_create').val() === "") {
+            alert('Vui lòng nhập số điện thoại.');
+          } else if ($('#start_date_create').val() === "") {
+            alert('Vui lòng nhập ngày bắt đầu.');
+          } else if ($('#end_date_create').val() === "") {
+            alert('Vui lòng nhập ngày kết thúc.');
+          } else if ($('#start_date_create').val() > $('#end_date_create').val()) {
+            alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
+          } else {
+            var selected_ward = null;
+            for (let i = 0; i < data.content.length; i++) {
+              // console.log(data.content[i].id_ads_location)
+              if (data.content[i].id_ads_location == id_adsloc) {
+                selected_ward = data.content[i].ward;
+                break;
+              }
+            }
+    
+            const formData = new FormData()
+            formData.append("officer", email)
+            formData.append("office", role)
+            formData.append("id_ads_location", id_adsloc)
+            formData.append("id_board_type", parseInt($('#id_board_type_create').val()))
+            formData.append("width", parseFloat($('#width_create').val()))
+            formData.append("height", parseFloat($('#height_create').val()))
+            formData.append("quantity", parseInt($('#quantity_create').val()))
+            formData.append("content", $('#content_create').val())
+            formData.append("company", $('#company_create').val())
+            formData.append("email", $('#email_create').val())
+            formData.append("phone", $('#phone_create').val())
+            formData.append("address", $('#address_create').val())
+            formData.append("start_date", $('#start_date_create').val())
+            formData.append("end_date", $('#end_date_create').val())
+            formData.append("file", imageCreate)
+    
+            $("form-create").get(0).reset();
+    
+            $.ajax({
+              url: `/api/quan/createAdsWard`,
+              type: 'POST',
+              data: formData,
+              processData: false,
+              contentType: false,
+              beforeSend: function () {
+                $("#loading-bg").show()
+              },
+              success: function (response) {
+                // Handle the successful response here
+                window.location.reload();
+                console.log(response);
+              },
+              error: function (xhr, status, error) {
+                // Handle the error here
+                $("#loading-bg").hide()
+                alert("Tạo cấp phép thất bại")
+                console.error(error);
+              }
+            });
+    
+          }
         })
 
       },
@@ -219,10 +402,7 @@ $(document).ready(function () {
     })
 
 
-
-
-
-    
+ 
   } else if (role == "1"){
     $.get(`/api/quan/getWard/${id_district}`, function(data) {
       wards = data.content.map(ward => ward.ward).sort(sortWard);
@@ -299,7 +479,7 @@ $(document).ready(function () {
         
       
         $('#example_wrapper').on('click', '.edit-btn', function(e){
-          $('button.style1-button').prop('disabled', true);
+          $('button.btn-con').prop('disabled', true);
           var click_row = $(this).closest('tr').index();
           var result = imageData = null, id_adsloc = filter_info[click_row][10]
           console.log(filter_info[click_row])
@@ -320,7 +500,7 @@ $(document).ready(function () {
           $('#quantity').val(filter_info[click_row][5])
 
           $('form.needs-validation').on('change keyup', function () {
-            $('button.style1-button').prop('disabled', false);
+            $('button.btn-con').prop('disabled', false);
           });
 
           var map = new mapboxgl.Map({
@@ -454,7 +634,186 @@ $(document).ready(function () {
                 })
             }
           })
+        });
+
+        $('#createLicenseButton').on('click', function () {
+          $('#create-license').modal('show');
+        });
+
+        var imageCreate = result = id_adsloc = null
+
+        board_type?.forEach(function (type) {
+          $('#id_board_type_create').append(`<option value=${type.id_board_type}>${type.board_type}</option>`);
         })
+        
+
+        $('#photo_create').on('change', function (e) {
+          if (e.target.files[0])
+            if (e.target.files[0].type.startsWith('image/') && e.target.files[0].size / 1024 <= 4 * 1024) {
+              imageCreate = e.target.files[0]
+            }
+            else if (!e.target.files[0].type.startsWith('image/')) {
+              alert('Avatar must be an image file (.jpg, .png, .jpeg)')
+            }
+            else if (!(e.target.files[0].size / 1024 <= 4)) {
+              alert('Avatar must not exceed 4MB')
+            }
+        });
+
+        $('.form-create .style3-button').off('click').on('click', function (e) {
+          $("#id_ads_location_create").val("")
+          $('#id_board_type_create .default').prop('selected', true)
+          $('#content_create').val("")
+          $('#width_create').val("")
+          $('#height_create').val("")
+          $('#photo_create').val("")
+          $('#quantity_create').val("")
+          $('#company_create').val("")
+          $('#address_create').val("")
+          $('#email_create').val("")
+          $('#phone_create').val("")
+          $('#start_date_create').val("")
+          $('#end_date_create').val("")
+          $('#create-license').modal('hide');
+        });
+
+        $.get(`/api/quan/getAdsLocation/${id_district}`, function (data) {
+          var select_adsloc = [], index = null
+          console.log(data.content)
+          for (let i = 0; i < data.content.length; i++) {
+            let { id_ads_location, address, ward, is_zoning, longitude, latitude, district } = data.content[i]
+            if (is_zoning)
+              select_adsloc.push({ id_ads_location, address, ward, district, photo, longitude, latitude })
+          }
+    
+          var map_create = new mapboxgl.Map({
+            container: 'map_create',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [select_adsloc[0].longitude, select_adsloc[0].latitude],
+            zoom: 17,
+            language: 'vi'
+          });
+  
+          var language = new MapboxLanguage({
+            defaultLanguage: 'vi'
+          });
+          map_create.addControl(language);
+    
+          let canvas = $('.mapboxgl-canvas')
+          canvas.width('100%');
+          canvas.height('100%');
+    
+          select_adsloc.forEach(function (item, index) {
+            var marker = new mapboxgl.Marker({ color: '#0B7B31' })
+            .setLngLat([item.longitude, item.latitude])
+            .addTo(map_create)
+            .getElement();
+  
+            marker.id = `marker-${index}`;
+          });
+    
+          // click marker 
+          $(document).on('click', '.mapboxgl-marker', function () {
+            let markerId = $(this).attr('id');
+            index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
+            // console.log('Marker clicked:', index);
+            id_adsloc = select_adsloc[index].id_ads_location
+            result = select_adsloc[index].address + ', phường ' + select_adsloc[index].ward + ', quận ' + id_district;
+            $(".id_ads_location").val(`${result} [${select_adsloc[index].longitude}, ${select_adsloc[index].latitude}]`)
+          });
+    
+          // click confirm button
+          $('#choose-adsloc .style1-button').off('click').on('click', function (e) {
+            e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
+            $("#id_ads_location").val(`${result} [${select_adsloc[index].longitude}, ${select_adsloc[index].latitude}]`)
+          })
+        }).fail(function (error) {
+          console.log(error);
+        });
+    
+        // click "tạo cấp phép"
+        $('.form-create .modal-footer .style1-button').off('click').on('click', function (e) {
+          e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
+          // console.log($('#quantity').val() )
+          if ($('#id_board_type_create').val() === "(Trống)") {
+            alert('Vui lòng chọn loại bảng quảng cáo.');
+          } else if (id_adsloc === null) {
+            alert('Vui lòng chọn điểm đặt quảng cáo.');
+          } else if ($('#width_create').val() === "") {
+            alert('Vui lòng nhập chiều dài.');
+          } else if ($('#height_create').val() === "") {
+            alert('Vui lòng nhập chiều rộng.');
+          } else if ($('#quantity_create').val() === "") {
+            alert('Vui lòng nhập số lượng.');
+          } else if ($('#content_create').val() === "") {
+            alert('Vui lòng nhập nội dung.');
+          } else if ($('#company_create').val() === "") {
+            alert('Vui lòng nhập tên công ty.');
+          } else if ($('#address_create').val() === "") {
+            alert('Vui lòng nhập địa chỉ.');
+          } else if ($('#email_create').val() === "") {
+            alert('Vui lòng nhập địa chỉ email.');
+          } else if ($('#phone_create').val() === "") {
+            alert('Vui lòng nhập số điện thoại.');
+          } else if ($('#start_date_create').val() === "") {
+            alert('Vui lòng nhập ngày bắt đầu.');
+          } else if ($('#end_date_create').val() === "") {
+            alert('Vui lòng nhập ngày kết thúc.');
+          } else if ($('#start_date_create').val() > $('#end_date_create').val()) {
+            alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
+          } else {
+            var selected_ward = null;
+            for (let i = 0; i < data.content.length; i++) {
+              // console.log(data.content[i].id_ads_location)
+              if (data.content[i].id_ads_location == id_adsloc) {
+                selected_ward = data.content[i].ward;
+                break;
+              }
+            }
+    
+            const formData = new FormData()
+            formData.append("officer", email)
+            formData.append("office", role)
+            formData.append("id_ads_location", id_adsloc)
+            formData.append("id_board_type", parseInt($('#id_board_type_create').val()))
+            formData.append("width", parseFloat($('#width_create').val()))
+            formData.append("height", parseFloat($('#height_create').val()))
+            formData.append("quantity", parseInt($('#quantity_create').val()))
+            formData.append("content", $('#content_create').val())
+            formData.append("company", $('#company_create').val())
+            formData.append("email", $('#email_create').val())
+            formData.append("phone", $('#phone_create').val())
+            formData.append("address", $('#address_create').val())
+            formData.append("start_date", $('#start_date_create').val())
+            formData.append("end_date", $('#end_date_create').val())
+            formData.append("file", imageCreate)
+    
+            $("form-create").get(0).reset();
+    
+            $.ajax({
+              url: `/api/quan/createAdsWard`,
+              type: 'POST',
+              data: formData,
+              processData: false,
+              contentType: false,
+              beforeSend: function () {
+                $("#loading-bg").show()
+              },
+              success: function (response) {
+                // Handle the successful response here
+                window.location.reload();
+                console.log(response);
+              },
+              error: function (xhr, status, error) {
+                // Handle the error here
+                $("#loading-bg").hide()
+                alert("Tạo cấp phép thất bại")
+                console.error(error);
+              }
+            });
+    
+          }
+        });
 
       },
       error: function(error) {
