@@ -14,7 +14,7 @@ $(document).ready(function () {
         $("#loading-bg").hide();
         console.log(data)
         info = data.content.map(function (item) {
-          let { id_create, board_type, address, content, company,
+          let { id_create, board_type, id_ads, content, company,
             start_date, end_date, status, address_adsloc, district,
             width, height, quantity, photo, email, phone, ward } = item
           let statusText = status ? "Đã duyệt" : (
@@ -24,7 +24,7 @@ $(document).ready(function () {
           return [id_create, board_type, `${address_adsloc}`, content, company,
             formatSQLDate_dmy(start_date), formatSQLDate_dmy(end_date), statusText,
             '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>',
-            width, height, quantity, photo, email, phone, ward]
+            width, height, quantity, photo, email, phone, ward, id_ads]
         })
 
         info = info.sort((a, b) => a[0] - b[0]);
@@ -64,6 +64,7 @@ $(document).ready(function () {
         select_ads = select_ads.map(item => {
           return item[16]
         })
+        //console.log("select_ads: ", select_ads);
 
         select_ads = [...new Set(select_ads)];
 
@@ -124,9 +125,9 @@ $(document).ready(function () {
         var select_adsloc = [], index = null
         console.log(data.content)
         for (let i = 0; i < data.content.length; i++) {
-          let { id_ads_location, address, ward, is_zoning, longitude, latitude } = data.content[i]
+          let { id_ads_location, district, address, ward, is_zoning, longitude, latitude } = data.content[i]
           if (is_zoning == 1)
-            select_adsloc.push({ id_ads_location, address, ward, photo, longitude, latitude })
+            select_adsloc.push({ id_ads_location, district, address, ward, photo, longitude, latitude })
         }
 
         var map = new mapboxgl.Map({
@@ -161,7 +162,7 @@ $(document).ready(function () {
           index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
           // console.log('Marker clicked:', index);
           id_adsloc = select_adsloc[index].id_ads_location
-          result = select_adsloc[index].address + ', phường ' + select_adsloc[index].ward + ', quận ' + id_district;
+          result = select_adsloc[index].address + ', phường ' + select_adsloc[index].ward + ', quận ' + select_adsloc[index].district;
           $(".id_ads_location").val(`${result} [${select_adsloc[index].longitude}, ${select_adsloc[index].latitude}]`)
         });
 
@@ -176,7 +177,7 @@ $(document).ready(function () {
     })
 
     // click "tạo cấp phép"
-    $('.form-ads-create .button-group .style1-button').off('click').on('click', function (e) {
+    $('.form-ads-create .button-group .style1-button').off('click').on('click', async function (e) {
       e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
       // console.log($('#quantity').val() )
       if ($('#id_board_type').val() === "(Trống)") {
@@ -206,56 +207,58 @@ $(document).ready(function () {
       } else if ($('#start_date').val() > $('#end_date').val()) {
         alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
       } else {
-        var selected_ward = null;
-        for (let i = 0; i < data.content.length; i++) {
-          // console.log(data.content[i].id_ads_location)
-          if (data.content[i].id_ads_location == id_adsloc) {
-            selected_ward = data.content[i].ward;
-            break;
-          }
+        $("#loading-bg").show()
+
+        var createData = {
+          officer: email,
+          office: role,
+          id_ads_location: id_adsloc,
+          id_board_type: parseInt($('#id_board_type').val()),
+          width: parseFloat($('#width').val()),
+          height: parseFloat($('#height').val()),
+          quantity: parseInt($('#quantity').val()),
+          content: $('#content').val(),
+          company: $('#company').val(),
+          email: $('#email').val(),
+          phone: $('#phone').val(),
+          address: $('#address').val(),
+          start_date: $('#start_date').val(),
+          end_date: $('#end_date').val(),
+          photo: null
         }
 
-        const formData = new FormData()
-        formData.append("officer", email)
-        formData.append("office", role)
-        formData.append("id_ads_location", id_adsloc)
-        formData.append("id_board_type", parseInt($('#id_board_type').val()))
-        formData.append("width", parseFloat($('#width').val()))
-        formData.append("height", parseFloat($('#height').val()))
-        formData.append("quantity", parseInt($('#quantity').val()))
-        formData.append("content", $('#content').val())
-        formData.append("company", $('#company').val())
-        formData.append("email", $('#email').val())
-        formData.append("phone", $('#phone').val())
-        formData.append("address", $('#address').val())
-        formData.append("start_date", $('#start_date').val())
-        formData.append("end_date", $('#end_date').val())
-        formData.append("file", imageData)
+        $("form.form-ads-create").get(0).reset();
 
-        $("form").get(0).reset();
+        const signResponse = await fetch('/api/basic/uploadImage');
+        const signData = await signResponse.json();
 
-        $.ajax({
-          url: `/api/quan/createAdsWard`,
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
-          beforeSend: function () {
-            $("#loading-bg").show()
-          },
-          success: function (response) {
-            // Handle the successful response here
-            window.location.reload();
-            console.log(response);
-          },
-          error: function (xhr, status, error) {
-            // Handle the error here
-            $("#loading-bg").hide()
-            alert("Tạo cấp phép thất bại")
-            console.error(error);
-          }
+        const url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
+
+        const cloudinaryData = new FormData();
+        cloudinaryData.append("file", imageData);
+        cloudinaryData.append("api_key", signData.apikey);
+        cloudinaryData.append("timestamp", signData.timestamp);
+        cloudinaryData.append("signature", signData.signature);
+        cloudinaryData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+        cloudinaryData.append("folder", "image");
+
+        fetch(url, {
+          method: "POST",
+          body: cloudinaryData
+        })
+        .then((response) => { 
+          return response.text();
+        })
+        .then((data) => {
+          const photo = JSON.parse(data).secure_url
+          createData.photo = photo;
+        })
+        .catch(error => {
+          // console.log("Error:", error);
+        })
+        .finally(() => {
+          sendCreateRequest(`/api/quan/createAds`, createData)
         });
-
       }
     })
 
@@ -440,7 +443,6 @@ $(document).ready(function () {
           select_ads = select_ads.map(item => {
             return item[16]
           })
-
           select_ads = [...new Set(select_ads)];
 
           select_ads?.forEach(function (item) {

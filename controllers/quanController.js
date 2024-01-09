@@ -540,15 +540,24 @@ const getAdsCreateWard = async(req, res) =>{
 
 const createAdsWard = async(req, res) =>{
     try{
-        const file = req.file
         let {officer, office, id_ads_location, id_board_type, width, height, quantity,
-            content, company, email, phone, address, start_date, end_date} = req.body
+            content, company, email, phone, address, start_date, end_date, photo} = req.body
+
+        const record = await model.Ads.create({
+            id_ads_location: id_ads_location, 
+            id_board_type: id_board_type, width: width, height: height, quantity: quantity,
+            expired_date: end_date,
+            photo: photo,
+        })
 
         await model.Ads_create.create({
-            officer, office, id_ads_location, id_board_type, width, height, quantity,
-            content, company, email, phone, address, start_date, end_date,
-            photo: file?.filename,
-            status: false
+            officer: officer, office: office, id_ads_location: id_ads_location, 
+            id_board_type: id_board_type, width: width, height: height, quantity: quantity,
+            content: content, company: company, email: email, phone: phone, 
+            address: address, start_date: start_date, end_date: end_date,
+            photo: photo,
+            status: null,
+            id_ads: record.id_ads
         })
         sucessCode(res,"","Get thành công")
     }catch(err){
