@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ADS MAP</title>
+  <title>ADS MAP 4 CITIZEN</title>
   <!-- Web icon -->
   <link rel="icon" type="image/x-icon" href="image/favicon.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -31,15 +31,6 @@
   <!-- language -->
   <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-language/v1.0.0/mapbox-gl-language.js'></script>
 
-  <!-- toggle -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@5.0.4/css/bootstrap5-toggle.min.css" rel="stylesheet">
-
-
-  <link rel="stylesheet" href="styleNgDan.css">
-
-</head>
-
-<body>
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"
     integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -47,11 +38,24 @@
   <script src="https://cdn.jsdelivr.net/npm/ejs@3.1.8/ejs.min.js"></script>
   <script id="search-js" defer src="https://api.mapbox.com/search-js/v1.0.0-beta.18/web.js"></script>
 
+  <!-- toggle -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@5.0.4/css/bootstrap5-toggle.min.css" rel="stylesheet">
+
+  <!-- TinyMCE -->
+  <script src="https://cdn.tiny.cloud/1/z7h98dqv0czmzcyan1svrrw5iwbca997bhv3manlxlqqhpuy/tinymce/6/tinymce.min.js"
+    referrerpolicy="origin"></script>
+
+  <!-- Captcha -->
+  <script src="https://www.google.com/recaptcha/api.js?render=6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw"></script>
+
+  <link rel="stylesheet" href="styleNgDan.css">
+</head>
+
+<body>
   <div id="headerNgDan">
     <div class="flex-container">
       <img class="logo-img" src="image/logo.png" alt="logo">
       <i class="bi bi-search"></i>
-
 
       <form id="geocodeForm" action="#" method="get">
         <input type="text" class="form-control" name="address" id="address" aria-describedby="helpId"
@@ -124,8 +128,11 @@
           <div class="modal-header ">
             <h5 class="modal-title" id="edit-request">BÁO CÁO VI PHẠM</h5>
           </div>
+
+          <!-- form -->
           <div class="modal-body">
-            <form class="needs-validation row">
+
+            <form class="needs-validation row" id="reportForm" novalidate>
               <div class="form-group col-md-12">
                 <label class=" control-label required">Hình thức báo cáo</label>
                 <div class="selectContainer">
@@ -175,12 +182,7 @@
 
               <div class="form-group col-md-12">
                 <label class=" control-label required">Nội dung báo cáo</label>
-                <div class=" inputGroupContainer">
-                  <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
-                    <textarea class="form-control" name="reportContent" id="reportContent" rows="2" required></textarea>
-                  </div>
-                </div>
+                <textarea id="content" name="reportContent"></textarea>
               </div>
 
               <div class="form-group col-md-12 row">
@@ -195,7 +197,9 @@
 
               <div class="col-md-12 button-group" style="justify-content: center; margin-bottom: 3%">
                 <button type="button" id="cancel" class="btn style3-button">Hủy</button>
-                <button type="button" id="send" class="btn style1-button">Gửi báo cáo</button>
+                <button type="button" id="send" class="btn style1-button" class="g-recaptcha" 
+                data-sitekey="6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw" 
+                data-callback='onSubmit'>Gửi báo cáo</button>
               </div>
 
             </form>
@@ -214,17 +218,18 @@
           <div class="modal-body">
 
           </div>
-          <div class="modal-footer">
+          <!-- <div class="modal-footer">
             <div class="other-symbol">
               <i class="fa-solid fa-circle"></i> Báo cáo của người khác
             </div>
             <div class="mine-symbol">
               <i class="fa-solid fa-circle"></i> Báo cáo của bạn
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
+
     <!-- toggle switch -->
     <div class="flex-container toggle">
       <label class="switch">
@@ -236,18 +241,17 @@
         <input id="baocao" type="checkbox" checked>
         <span class="slider round" id="switch2"></span>
       </label>
-      <span id="sub">Báo cáo</span>
+      <span id="sub">Báo cáo chưa xử lý</span>
       <label class="switch">
         <input id="quyhoach" type="checkbox" checked>
         <span class="slider round" id="switch3"></span>
       </label>
       <span id="sub">Chưa quy hoạch</span>
     </div>
-  </div>
+
   </div>
 
 </body>
 <script type="text/javascript" src="js/homepageNguoiDan.js"></script>
-<script type="text/javascript" src="js/data.js"></script>
 
 </html>
