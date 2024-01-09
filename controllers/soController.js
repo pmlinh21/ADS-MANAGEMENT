@@ -645,6 +645,27 @@ const deleteDiemDatQuangCao = async (req, res) => {
   }
 }
 
+const getQuanByName = async (req, res) => {
+  try {
+    const name = req.params.name;
+    const [data, metadata] = await sequelize.query(`SELECT id_district FROM District WHERE district = '${name}'`);
+    sucessCode(res, data, "Get thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi BE");
+  }
+}
+
+const getPhuongByNameAndIdQuan = async (req, res) => {
+  try {
+    const name = req.params.name;
+    const id_district = req.params.id_district;
+    const [data, metadata] = await sequelize.query(`SELECT id_ward FROM Ward WHERE ward = '${name}' AND id_district = '${id_district}'`);
+    sucessCode(res, data, "Get thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi BE");
+  }
+}
+
 // BANGQUANGCAO
 const getAllBangQuangCao = async (req, res) => {
   try {
@@ -1278,6 +1299,8 @@ module.exports = {
   getAllAdsLocations,
   updateDiemDatQuangCao,
   deleteDiemDatQuangCao,
+  getQuanByName,
+  getPhuongByNameAndIdQuan,
 
   getAllBangQuangCao,
   getBangQuangCaoById,

@@ -58,6 +58,8 @@ const {
     getAllAdsLocations,
     updateDiemDatQuangCao,
     deleteDiemDatQuangCao,
+    getQuanByName,
+    getPhuongByNameAndIdQuan,
 
     getAllBangQuangCao,
     getBangQuangCaoById,
@@ -159,6 +161,8 @@ soRoute.get("/getDiemDatQuangCaoById/:id", isCanboSo, getDiemDatQuangCaoById);
 soRoute.get("/getAllAdsLocations", isCanboSo, getAllAdsLocations);
 soRoute.put("/updateDiemDatQuangCao", isCanboSo, updateDiemDatQuangCao); 
 soRoute.delete("/deleteDiemDatQuangCao", isCanboSo, deleteDiemDatQuangCao);
+soRoute.get("/getQuanByName/:name", isCanboSo, getQuanByName);
+soRoute.get("/getPhuongByNameAndIdQuan/:name/:id_district", isCanboSo, getPhuongByNameAndIdQuan);
 
 // BANGQUANGCAO
 soRoute.get("/getAllBangQuangCao", isCanboSo, getAllBangQuangCao);

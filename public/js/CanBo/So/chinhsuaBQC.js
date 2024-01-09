@@ -137,15 +137,16 @@ $(document).ready(function () {
           adslocations.push({ id_ads_location, address, ward, district, latitude, longitude });
       }
 
-      console.log(adslocations);
-
       var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v11',
         center: [adslocations[0].longitude, adslocations[0].latitude],
         zoom: 17,
         language: 'vi'
-      })
+      }) 
+      // map.on('render', function () {
+      //   map.resize();
+      // })
 
       var language = new MapboxLanguage({
         defaultLanguage: 'vi'
@@ -168,10 +169,13 @@ $(document).ready(function () {
       })
 
       $('#edit-ads #id-ads-location').on('click', function () {
+        // map.resize();
+        
         let currentId = parseInt($('#edit-ads #id-ads-location').val());
         let currentIndex = null;
 
         $('#select-location-map').css('display', 'block');
+        map.resize();
 
         adslocations.forEach(function (item, index) {
           if (item.id_ads_location == currentId) {

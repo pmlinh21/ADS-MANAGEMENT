@@ -1076,26 +1076,32 @@ body {
     position: absolute;
     top: 50px;
     left: 0;
-    height: calc(100% - 100px);
+    /* width: 600px;
+    height: 400px; */
     width: 100%;
-    resize: both;
+    height: calc(100% - 100px);
 }
 
 .mapboxgl-canvas {
     position: absolute;
     left: 0;
     top: 0;
-    height: 100% !important;
+    /* width: 600px;
+    height: 400px; */
+    width: 100%;
+    height: calc(100% - 100px);
 }
 
 .popupmap {
     position: fixed;
-    width: 70%;
-    /* min-width: 300px; */
+    width: 60%;
     height: 80%;
-    resize: both;
+    /* width: 600px;
+    height: 500px; */
     top: calc(50vh - 40%);
-    left: calc(50vw - 35%);
+    left: calc(50vw - 30%);
+    /* top: calc(50vh - 250px);
+    left: calc(50vw - 300px); */
     background-color: white;
     border-radius: 15px;
     box-shadow: 4px 4px 5px rgba(5, 5, 5, 0.3);
