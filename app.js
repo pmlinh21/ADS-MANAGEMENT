@@ -169,7 +169,7 @@ app.get('/quanlicanbo', verifyToken, function(req, res) {
 app.get('/quanlicanbo/chinhsuacbquan', verifyToken, function(req, res) {
   const token = req.cookies?.token;
   const content = decodeToken(token).data
-  res.render('CanBo/So/chinhsuaCBQuan', { email: req.query.email, ...content });
+  res.render('CanBo/So/chinhsuaCBQuan', { cb_email: req.query.email, ...content });
 });
 
 app.get('/quanlicanbo/themcbquan', verifyToken, function(req, res) {
@@ -181,7 +181,7 @@ app.get('/quanlicanbo/themcbquan', verifyToken, function(req, res) {
 app.get('/quanlicanbo/chinhsuacbphuong', verifyToken, function(req, res) {
   const token = req.cookies?.token;
   const content = decodeToken(token).data
-  res.render('CanBo/So/chinhsuaCBPhuong', { email: req.query.email, ...content });
+  res.render('CanBo/So/chinhsuaCBPhuong', { cb_email: req.query.email, ...content });
 });
 
 app.get('/quanlicanbo/themcbphuong', verifyToken, function(req, res) {
