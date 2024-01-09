@@ -47,7 +47,7 @@ $(document).ready(function () {
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v11',
             center: [106.689636, 10.773695],
-            zoom: 17,
+            zoom: 15,
             language: 'vi'
           }) 
         
@@ -410,7 +410,6 @@ async function prepareForm(id_ward, id_district, latitude, longitude, imageData)
 
 function submitAdd(formData) {
   let data = Object.fromEntries(formData.entries());
-  alert(JSON.stringify(data));
   $.ajax({
     url: '/api/so/addDiemDatQuangCao',
     type: 'POST',
@@ -426,7 +425,6 @@ function submitAdd(formData) {
       $("#loading-bg").hide()
       alert("Thêm thất bại");
       console.log(err);
-      console.log(data);
     }
   })
 }
