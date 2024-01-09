@@ -455,7 +455,8 @@ label.required::after {
 #other-report-popup .report-type,
 #my-report .resolved,
 #my-report .unresolved,
-#my-report .report-type {
+#my-report .report-type,
+#my-report .report-cate {
     color: white;
     display: inline-block;
     padding: 0.15rem 0.5rem;
@@ -470,6 +471,10 @@ label.required::after {
 #other-report-popup .report-type,
 #my-report .report-type {
     background-color: #05ACF4;
+}
+
+#my-report .report-cate {
+    background-color: #6b1111;
 }
 
 .other-symbol i {

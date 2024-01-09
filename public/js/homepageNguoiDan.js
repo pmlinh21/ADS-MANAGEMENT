@@ -481,9 +481,9 @@ function showSidebar(adsloc) {
             // console.log(list_report)
 
             list_report = list_report.filter(item =>
-                (item.longitude.toFixed(4) == adsloc.longitude.toFixed(4) && item.latitude.toFixed(4) == adsloc.latitude.toFixed(4)) 
+                (item.longitude.toFixed(4) == adsloc.longitude.toFixed(4) && item.latitude.toFixed(4) == adsloc.latitude.toFixed(4))
                 || (item.address) == adsloc.address)
-            
+
             // console.log("thông tin của điểm được click: ")
             // console.log(adsloc.longitude.toFixed(4))
             // console.log(adsloc.latitude.toFixed(4))
@@ -967,7 +967,7 @@ $(document).ready(function () {
                 //     address = NguoiDanAdsLoc.content.filter(i => i.list_ads.filter(j => j.id_ads == item.id_ads).length > 0)[0].address
                 else
                     address = item.address
-                
+
                 return {
                     address: address,
                     statusClass: item.status ? "resolved" : "unresolved",
@@ -1003,6 +1003,15 @@ $(document).ready(function () {
                 <% } %>
                 </div>
                     <div class="col-md-12 ">
+                        <div class = "report-cate">
+                        <% if (list_report[i].address) { %>
+                            Địa điểm
+                        <% } else if (note[i].address){ %>
+                            Điểm đặt
+                        <% } else { %>
+                            Biển quảng cáo
+                            <% } %>
+                        </div>
                         <div class = <%= note[i].statusClass %> >
                             <%= note[i].statusText %>
                         </div>
