@@ -300,28 +300,47 @@ function showSidebar(adsloc) {
                     resolve: null, // You may need to handle this differently
                     report_type: idReportType2String(parseInt($("#reportType").val())), // You may need to handle this differently
                 };
-                console.log(reportObject.content)
-                const existingReportsJSON = localStorage.getItem("ads_report");
-                const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                existingReports.push(reportObject);
-                localStorage.setItem("ads_report", JSON.stringify(existingReports));
 
-                // Send data to the server using AJAX
-                $.ajax({
-                    type: "POST",
-                    url: "http://localhost:8080/api/nguoidan/createAdsReport",
-                    data: JSON.stringify(reportObject),
-                    success: function (response) {
-                        // Handle success
-                        alert("Report Successful")
-                        // Optional: Show a success message to the user
-                    },
-                    error: function (error) {
-                        // Handle error
-                        alert(JSON.stringify(error) + "createError");
-                        // Optional: Show an error message to the user
-                    },
-                });
+                console.log(reportObject.content)
+                // check Captcha
+                console.log("checking captcha")
+                grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
+                    const captcha = token;
+                    console.log(captcha);
+                    fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ captcha })
+                    }).then((data) => {
+                        if (data.success) {
+                            const existingReportsJSON = localStorage.getItem("ads_report");
+                            const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
+                            existingReports.push(reportObject);
+                            localStorage.setItem("ads_report", JSON.stringify(existingReports));
+
+                            // Send data to the server using AJAX
+                            $.ajax({
+                                type: "POST",
+                                url: "http://localhost:8080/api/nguoidan/createAdsReport",
+                                data: JSON.stringify(reportObject),
+                                success: function (response) {
+                                    // Handle success
+                                    alert("Report Successful")
+                                    // Optional: Show a success message to the user
+                                },
+                                error: function (error) {
+                                    // Handle error
+                                    alert(JSON.stringify(error) + "createError");
+                                    // Optional: Show an error message to the user
+                                },
+                            });
+                        } else {
+                            alert("Captcha không hợp lệ")
+                        }
+                    })
+                })
 
                 $('#report-popup form').get(0).reset()
                 $("#report-popup").modal("hide")
