@@ -44,12 +44,27 @@ $(document).ready(function () {
           console.log(row);
         })
 
+        // bảng quảng cáo hết hạn = 
+        // bqc có tất cả giấy cấp phép đã duyệt nhưng hết hạn 
 
-        let select_ads = info?.filter(function (item) {
-          return item[7] === "Đã duyệt"
+        // các giấy phép ( mới / gia hạn) đã duyệt và chưa hết hạn
+        let alive_ads = info?.filter(function (item) {
+          const arr = item[6].split('-');
+          return item[7] === "Đã duyệt" && new Date(`${arr[2]}-${arr[1]}-${arr[0]}`) >= new Date()
+        })
+        console.log(alive_ads)
+
+        // các bqc có ít nhất 1 giấy phép đã duyệt và chưa hết hạn
+        alive_ads = alive_ads.map(item => {
+          return item[16]
         })
 
-        select_ads = select_ads.map(item => item[16])
+        select_ads = info?.filter(item => item[7] === "Đã duyệt" && !alive_ads.includes(item[16]))
+        
+        select_ads = select_ads.map(item => {
+          return item[16]
+        })
+
         select_ads = [...new Set(select_ads)];
 
         select_ads?.forEach(function (item) {
@@ -405,11 +420,27 @@ $(document).ready(function () {
 
           })
 
-          let select_ads = info?.filter(function (item) {
-            return item[7] === "Đã duyệt"
+          // bảng quảng cáo hết hạn = 
+          // bqc có tất cả giấy cấp phép đã duyệt nhưng hết hạn 
+
+          // các giấy phép ( mới / gia hạn) đã duyệt và chưa hết hạn
+          let alive_ads = info?.filter(function (item) {
+            const arr = item[6].split('-');
+            return item[7] === "Đã duyệt" && new Date(`${arr[2]}-${arr[1]}-${arr[0]}`) >= new Date()
+          })
+          console.log(alive_ads)
+
+          // các bqc có ít nhất 1 giấy phép đã duyệt và chưa hết hạn
+          alive_ads = alive_ads.map(item => {
+            return item[16]
           })
 
-          select_ads = select_ads.map(item => item[16])
+          select_ads = info?.filter(item => item[7] === "Đã duyệt" && !alive_ads.includes(item[16]))
+          
+          select_ads = select_ads.map(item => {
+            return item[16]
+          })
+
           select_ads = [...new Set(select_ads)];
 
           select_ads?.forEach(function (item) {
@@ -554,7 +585,7 @@ $(document).ready(function () {
         } else {
           $("#loading-bg").show()
 
-          const formData = {
+          var createData = {
             officer: email,
             office: role,
             id_ads_location: id_adsloc,
@@ -569,12 +600,12 @@ $(document).ready(function () {
             address: $('#address').val(),
             start_date: $('#start_date').val(),
             end_date: $('#end_date').val(),
-            photo: ""
+            photo: null
           }
 
           $("form.form-ads-create").get(0).reset();
 
-          if (imageData) {
+          // if (imageData) {
             const signResponse = await fetch('/api/basic/uploadImage');
             const signData = await signResponse.json();
 
@@ -592,19 +623,24 @@ $(document).ready(function () {
               method: "POST",
               body: cloudinaryData
             })
-              .then((response) => { 
-                return response.text();
-              })
-              .then((data) => {
-                const photo = JSON.parse(data).secure_url
-                formData.photo = photo;
-
-                sendCreateRequest(`/api/quan/createAds`, fromData)
-              })
-          }
-          else {
-            sendCreateRequest(`/api/quan/createAds`, fromData)
-          }
+            .then((response) => { 
+              return response.text();
+            })
+            .then((data) => {
+              const photo = JSON.parse(data).secure_url
+              createData.photo = photo;
+            })
+            .catch(error => {
+              // console.log("Error:", error);
+            })
+            .finally(() => {
+              sendCreateRequest(`/api/quan/createAds`, createData)
+            });
+            
+          // }
+          // else {
+          //   sendCreateRequest(`/api/quan/createAds`, fromData)
+          // }
 
         }
       })
@@ -626,7 +662,7 @@ $(document).ready(function () {
         } else if ($('#start_date_extend').val() > $('#end_date_extend').val()) {
           alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
         } else {
-          const formData = {
+          const extendData = {
             id_ads: $('#id_ads').val(),
             start_date: $('#start_date_extend').val(),
             end_date: $('#end_date_extend').val(),
@@ -637,7 +673,7 @@ $(document).ready(function () {
           $.ajax({
             url: `/api/quan/extendAds`,
             type: 'POST',
-            data: JSON.stringify(formData),
+            data: JSON.stringify(extendData),
             contentType: 'application/json',
             beforeSend: function () {
               $("#loading-bg").show()

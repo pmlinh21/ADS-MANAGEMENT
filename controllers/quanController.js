@@ -323,13 +323,18 @@ const extendAds = async(req, res) =>{
     try{
         let {officer, office, id_ads, start_date, end_date} = req.body
 
-        const ads = await model.Ads_create.findOne({where: {id_ads: id_ads}})
+        const ads_create = await model.Ads_create.findOne({where: {id_ads: id_ads}})
+        const ads = await model.Ads.findOne({where: {id_ads: id_ads}})
+
         await model.Ads_create.create({
-            officer: officer, office: office, id_ads: id_ads,
             id_ads_location: ads.id_ads_location, 
-            id_board_type: ads.id_board_type, width: ads.width, height: ads.height, quantity: ads.quantity,
-            content: ads.content, company: ads.company, email: ads.email, phone: ads.phone, 
-            address: ads.address, photo: ads.photo,
+            id_board_type: ads.id_board_type, width: ads.width, height: ads.height, 
+            quantity: ads.quantity, photo: ads.photo,
+
+            content: ads_create.content, company: ads_create.company, email: ads_create.email, 
+            phone: ads_create.phone, address: ads_create.address, 
+
+            officer: officer, office: office, id_ads: id_ads,
             start_date: start_date, end_date: end_date,
             status: null
         })
