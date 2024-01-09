@@ -43,13 +43,29 @@ $(document).ready(function () {
           window.location.href = '/detailAdsCreate?id_create=' + id_create;
           console.log(row);
         })
-      
-        let select_ads = info?.filter(function (item) {
-          return item[7] === "Đã duyệt"
+
+        // bảng quảng cáo hết hạn = 
+        // bqc có tất cả giấy cấp phép đã duyệt nhưng hết hạn 
+
+        // các giấy phép ( mới / gia hạn) đã duyệt và chưa hết hạn
+        let alive_ads = info?.filter(function (item) {
+          const arr = item[6].split('-');
+          return item[7] === "Đã duyệt" && new Date(`${arr[2]}-${arr[1]}-${arr[0]}`) >= new Date()
+        })
+        console.log(alive_ads)
+
+        // các bqc có ít nhất 1 giấy phép đã duyệt và chưa hết hạn
+        alive_ads = alive_ads.map(item => {
+          return item[16]
+        })
+
+        select_ads = info?.filter(item => item[7] === "Đã duyệt" && !alive_ads.includes(item[16]))
+        
+        select_ads = select_ads.map(item => {
+          return item[16]
         })
         //console.log("select_ads: ", select_ads);
 
-        select_ads = select_ads.map(item => item[16])
         select_ads = [...new Set(select_ads)];
 
         select_ads?.forEach(function (item) {
@@ -161,7 +177,7 @@ $(document).ready(function () {
     })
 
     // click "tạo cấp phép"
-    $('.form-ads-create .button-group .style1-button').off('click').on('click', function (e) {
+    $('.form-ads-create .button-group .style1-button').off('click').on('click', async function (e) {
       e.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện submit
       // console.log($('#quantity').val() )
       if ($('#id_board_type').val() === "(Trống)") {
@@ -191,56 +207,58 @@ $(document).ready(function () {
       } else if ($('#start_date').val() > $('#end_date').val()) {
         alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
       } else {
-        var selected_ward = null;
-        for (let i = 0; i < data.content.length; i++) {
-          // console.log(data.content[i].id_ads_location)
-          if (data.content[i].id_ads_location == id_adsloc) {
-            selected_ward = data.content[i].ward;
-            break;
-          }
+        $("#loading-bg").show()
+
+        var createData = {
+          officer: email,
+          office: role,
+          id_ads_location: id_adsloc,
+          id_board_type: parseInt($('#id_board_type').val()),
+          width: parseFloat($('#width').val()),
+          height: parseFloat($('#height').val()),
+          quantity: parseInt($('#quantity').val()),
+          content: $('#content').val(),
+          company: $('#company').val(),
+          email: $('#email').val(),
+          phone: $('#phone').val(),
+          address: $('#address').val(),
+          start_date: $('#start_date').val(),
+          end_date: $('#end_date').val(),
+          photo: null
         }
 
-        const formData = new FormData()
-        formData.append("officer", email)
-        formData.append("office", role)
-        formData.append("id_ads_location", id_adsloc)
-        formData.append("id_board_type", parseInt($('#id_board_type').val()))
-        formData.append("width", parseFloat($('#width').val()))
-        formData.append("height", parseFloat($('#height').val()))
-        formData.append("quantity", parseInt($('#quantity').val()))
-        formData.append("content", $('#content').val())
-        formData.append("company", $('#company').val())
-        formData.append("email", $('#email').val())
-        formData.append("phone", $('#phone').val())
-        formData.append("address", $('#address').val())
-        formData.append("start_date", $('#start_date').val())
-        formData.append("end_date", $('#end_date').val())
-        formData.append("file", imageData)
+        $("form.form-ads-create").get(0).reset();
 
-        $("form").get(0).reset();
+        const signResponse = await fetch('/api/basic/uploadImage');
+        const signData = await signResponse.json();
 
-        $.ajax({
-          url: `/api/quan/createAdsWard`,
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
-          beforeSend: function () {
-            $("#loading-bg").show()
-          },
-          success: function (response) {
-            // Handle the successful response here
-            window.location.reload();
-            console.log(response);
-          },
-          error: function (xhr, status, error) {
-            // Handle the error here
-            $("#loading-bg").hide()
-            alert("Tạo cấp phép thất bại")
-            console.error(error);
-          }
+        const url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
+
+        const cloudinaryData = new FormData();
+        cloudinaryData.append("file", imageData);
+        cloudinaryData.append("api_key", signData.apikey);
+        cloudinaryData.append("timestamp", signData.timestamp);
+        cloudinaryData.append("signature", signData.signature);
+        cloudinaryData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+        cloudinaryData.append("folder", "image");
+
+        fetch(url, {
+          method: "POST",
+          body: cloudinaryData
+        })
+        .then((response) => { 
+          return response.text();
+        })
+        .then((data) => {
+          const photo = JSON.parse(data).secure_url
+          createData.photo = photo;
+        })
+        .catch(error => {
+          // console.log("Error:", error);
+        })
+        .finally(() => {
+          sendCreateRequest(`/api/quan/createAds`, createData)
         });
-
       }
     })
 
@@ -405,10 +423,26 @@ $(document).ready(function () {
 
           })
 
-          let select_ads = info?.filter(function (item) {
-            return item[7] === "Đã duyệt"
+          // bảng quảng cáo hết hạn = 
+          // bqc có tất cả giấy cấp phép đã duyệt nhưng hết hạn 
+
+          // các giấy phép ( mới / gia hạn) đã duyệt và chưa hết hạn
+          let alive_ads = info?.filter(function (item) {
+            const arr = item[6].split('-');
+            return item[7] === "Đã duyệt" && new Date(`${arr[2]}-${arr[1]}-${arr[0]}`) >= new Date()
           })
-          select_ads = select_ads.map(item => item[16])
+          console.log(alive_ads)
+
+          // các bqc có ít nhất 1 giấy phép đã duyệt và chưa hết hạn
+          alive_ads = alive_ads.map(item => {
+            return item[16]
+          })
+
+          select_ads = info?.filter(item => item[7] === "Đã duyệt" && !alive_ads.includes(item[16]))
+          
+          select_ads = select_ads.map(item => {
+            return item[16]
+          })
           select_ads = [...new Set(select_ads)];
 
           select_ads?.forEach(function (item) {
@@ -553,7 +587,7 @@ $(document).ready(function () {
         } else {
           $("#loading-bg").show()
 
-          const formData = {
+          var createData = {
             officer: email,
             office: role,
             id_ads_location: id_adsloc,
@@ -568,12 +602,12 @@ $(document).ready(function () {
             address: $('#address').val(),
             start_date: $('#start_date').val(),
             end_date: $('#end_date').val(),
-            photo: ""
+            photo: null
           }
 
           $("form.form-ads-create").get(0).reset();
 
-          if (imageData) {
+          // if (imageData) {
             const signResponse = await fetch('/api/basic/uploadImage');
             const signData = await signResponse.json();
 
@@ -591,19 +625,24 @@ $(document).ready(function () {
               method: "POST",
               body: cloudinaryData
             })
-              .then((response) => { 
-                return response.text();
-              })
-              .then((data) => {
-                const photo = JSON.parse(data).secure_url
-                formData.photo = photo;
-
-                sendCreateRequest(`/api/quan/createAds`, fromData)
-              })
-          }
-          else {
-            sendCreateRequest(`/api/quan/createAds`, fromData)
-          }
+            .then((response) => { 
+              return response.text();
+            })
+            .then((data) => {
+              const photo = JSON.parse(data).secure_url
+              createData.photo = photo;
+            })
+            .catch(error => {
+              // console.log("Error:", error);
+            })
+            .finally(() => {
+              sendCreateRequest(`/api/quan/createAds`, createData)
+            });
+            
+          // }
+          // else {
+          //   sendCreateRequest(`/api/quan/createAds`, fromData)
+          // }
 
         }
       })
@@ -625,7 +664,7 @@ $(document).ready(function () {
         } else if ($('#start_date_extend').val() > $('#end_date_extend').val()) {
           alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
         } else {
-          const formData = {
+          const extendData = {
             id_ads: $('#id_ads').val(),
             start_date: $('#start_date_extend').val(),
             end_date: $('#end_date_extend').val(),
@@ -636,7 +675,7 @@ $(document).ready(function () {
           $.ajax({
             url: `/api/quan/extendAds`,
             type: 'POST',
-            data: JSON.stringify(formData),
+            data: JSON.stringify(extendData),
             contentType: 'application/json',
             beforeSend: function () {
               $("#loading-bg").show()

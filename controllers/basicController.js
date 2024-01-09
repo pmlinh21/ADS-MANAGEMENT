@@ -679,8 +679,7 @@ const getAdsCreateByAds = async(req, res) =>{
         INNER JOIN Ward w ON w.id_ward = al.id_ward
         INNER JOIN District d ON d.id_district = w.id_district
         WHERE ac.id_ads = ${id_ads}
-        ORDER BY id_create 
-        LIMIT 1`);
+        ORDER BY id_create `);
         
         sucessCode(res,data,"Get thành công")
 

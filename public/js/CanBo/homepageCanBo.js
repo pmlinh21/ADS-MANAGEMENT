@@ -320,6 +320,32 @@ function renderReport(list_report, container) {
   $(container).html(rendered);
 }
 
+function renderGiayPhepGiaHan(list_ads_create){
+  const [tmp, ...giahan] = list_ads_create;
+  
+  var template = `
+    <% for (var i = 0; i < giahan?.length; i++) { %>
+      <form class="row form-ads-create-details">
+          <div class="col-md-4">
+              <label class="form-label">Ngày bắt đầu hợp đồng</label>
+              <input type="date" class="form-control input-details" value = "<%= formatSQLDate_ymd(info.start_date)%>" readonly>
+          </div>
+          <div class="col-md-4">
+              <label class="form-label">Ngày kết thúc hợp đồng</label>
+              <input type="date" class="form-control input-details" value = "<%= formatSQLDate_ymd(info.end_date)%>" readonly>
+          </div>
+          <div class="col-md-4">
+            <label for="height" class="form-label">Trạng thái cấp phép</label>
+            <input type="text" class="form-control input-details" value = "<%= info.status%>" readonly>
+          </div>
+      </form>
+    <% } %>
+    `;
+
+  var rendered = ejs.render(template, { giahan });
+  $("#detail-popup .giay-phep-gia-han .content").html(rendered);
+}
+
 // hiển thị sidebar và bắt sự kiện trên sidebar
 function showSidebar(adsloc) {
   $(".flex-container.toggle").hide();
@@ -337,11 +363,6 @@ function showSidebar(adsloc) {
     const list_ads = JSON.parse(adsloc.list_ads)
     ads = list_ads?.filter(item => item.id_ads == id_ads)[0]
 
-    let imagePath = (!ads.photo
-      ? `../../../public/image/image-placeholder.jpg`
-      : ads.photo)
-    $("#detail-popup .image img").attr("src", imagePath)
-
     $.ajax({
       url: `/api/basic/getAdsCreateByAds/${ads.id_ads}`,
       type: "GET",
@@ -349,6 +370,14 @@ function showSidebar(adsloc) {
       success: function (data) {
         console.log(data)
         console.log(ads.id_ads)
+
+        if (ads.photo){
+          $("#detail-popup .hinh-anh-bqc img").attr("src", ads.photo)
+          $("#detail-popup .hinh-anh-bqc p").show()
+        } else{
+          $("#detail-popup .hinh-anh-bqc img").hide()
+        }
+    
         if (data.content.length > 0) {
           $("#detail-popup").modal('show');
           info = data.content[0]
@@ -369,6 +398,10 @@ function showSidebar(adsloc) {
           $('#officer').val(info.officer);
           $('#office').val(info.office === 1 ? "Quận" : (info.office === 2 ? "Phường" : ""));
 
+            if (data.content.length > 1){
+              renderGiayPhepGiaHan(data.content);
+            }
+          
         }
         else {
           $("#detail-popup").hide()
