@@ -157,9 +157,7 @@ $(document).ready(function () {
       canvas.height('100%');
 
       adslocations.forEach(function (item, index) {
-        var marker = new mapboxgl.Marker({
-          color: '#0B7B31'
-        })
+        var marker = new mapboxgl.Marker({ color: '#0B7B31' })
           .setLngLat([item.longitude, item.latitude])
           .addTo(map)
           .getElement();
