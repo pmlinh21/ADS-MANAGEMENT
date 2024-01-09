@@ -257,7 +257,7 @@ $(document).ready(function () {
           // console.log("Error:", error);
         })
         .finally(() => {
-          sendCreateRequest(`/api/quan/createAds`, createData)
+          sendCreateRequest(`/api/quan/createAdsWard`, createData)
         });
       }
     })
