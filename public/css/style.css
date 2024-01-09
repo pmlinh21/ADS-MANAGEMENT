@@ -774,7 +774,7 @@ input:checked+.slider:before {
 #example1_wrapper,
 #example2_wrapper,
 #example3_wrapper {
-  margin: 1rem 4rem;
+  margin: 0.5rem 4rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -905,11 +905,11 @@ label.required::after {
   border-top: none;
 }
 
-#edit-info .modal-dialog {
+#edit-info .modal-dialog, #create-license .modal-dialog {
   max-width: 90%;
 }
 
-#edit-info .modal-content {
+#edit-info .modal-content, #create-license .modal-content {
   display: flex;
   flex-wrap: wrap;
 }
@@ -1002,7 +1002,7 @@ label.required::after {
   margin-top: 1rem;
 }
 
-#choose-adsloc .map {
+#choose-adsloc .map, #choose-adsloc .map_create{
   height: 21.5rem;
   width: 100%;
   cursor: pointer;

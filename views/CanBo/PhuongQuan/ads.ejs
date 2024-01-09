@@ -7,7 +7,112 @@
     </div>
     <div class = "ward-table"></div>
 
-    <!-- <div id = "ads-location-table"></div> -->
+    <button id="createLicenseButton" class="btn style1-button" style="margin-left: 76em;" data-toggle="modal" data-target="#create-license">
+        Tạo cấp phép quảng cáo
+    </button>
+
+    <div class="modal fade" id="create-license" tabindex="-1" role="dialog" aria-labelledby="create-license-title" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header ">
+            <h5 class="modal-title" id="edit-request">CẤP PHÉP BẢNG QUẢNG CÁO MỚI</h5>
+            </div>
+        <div class="modal-body">
+            <form class="row form-create">
+                    <div class="col-md-3">
+                        <div class="col-md-12">
+                            <label for="id_board_type_create" class="form-label required">Loại bảng quảng cáo</label>
+                            <select id="id_board_type_create" class="form-select" required>
+                                <option class = "default" selected>(Trống)</option>
+                            </select>
+                            </div>
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label required" for="id_ads_location">Điểm đặt</label>
+                        <div class="input-group">
+                            <button type="button" data-target="#choose-adsloc" data-toggle="modal" class="btn style1-button">Chọn điểm đặt</button>
+                            <input type="text" class="form-control" id="id_ads_location" value = "" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="width_create" class="form-label required">Kích thước chiều dài (m)</label>
+                        <input type="number" class="form-control" id="width_create" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="height_create" class="form-label required">Kích thước chiều rộng (m)</label>
+                        <input type="number" class="form-control" id="height_create" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="quantity_create" class="form-label required">Số lượng</label>
+                        <input type="number" class="form-control" id="quantity_create" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="photo_create" class="form-label ">Hình ảnh minh họa</label>
+                        <input class="form-control" type="file" id="photo_create" accept = "image/jpeg, image/png">
+                        </div>
+                    <div class="col-12">
+                        <label for="content_create" class="form-label required">Nội dung quảng cáo</label>
+                        <input type="text" class="form-control" id="content_create" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="company_create" class="form-label required">Công ty</label>
+                        <input type="text" class="form-control" id="company_create" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="address_create" class="form-label required">Địa chỉ công ty</label>
+                        <input type="text" class="form-control" id="address_create" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="email_create" class="form-label required">Email công ty</label>
+                        <input type="email" class="form-control" id="email_create" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="phone_create" class="form-label required">Số điện thoại công ty</label>
+                        <input type="phone" class="form-control" id="phone_create" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="start_date_create" class="form-label required">Ngày bắt đầu hợp đồng</label>
+                        <input type="date" class="form-control" id="start_date_create" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="end_date_create" class="form-label required">Ngày kết thúc hợp đồng</label>
+                        <input type="date" class="form-control" id="end_date_create" required>
+                    </div>
+                    
+                    <div class="col-12 modal-footer">
+                        <button type="button" class="btn style3-button">Hủy</button>
+                        <button type="submit" class="btn style1-button">Tạo cấp phép</button>
+                    </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="modal fade" id="choose-adsloc" tabindex="-1" role="dialog" aria-labelledby="edit-request-1" 
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-body">
+            <div class="col-md-12 mt-3 choose-location_create">
+                <div class="header-map_create">
+                    <label for = "search_create" class = "col-form-label">Nhấn chọn điểm đặt</label> 
+                    <input type = "text" class = "form-control id_ads_location" readonly>
+                </div>
+                <div class="col-md-12 map_create" id = "map_create"> 
+                    <p>Vui lòng chờ một chút</p>
+                </div>
+            </div>
+    
+            <div class="modal-footer col-md-12">
+                <button type="button" class="btn style3-button" data-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn style1-button" data-dismiss="modal">Xác nhận</button>
+            </div>
+        </div>
+        </div>
+        </div>
+    </div>
+
     <table id="example" class="table ads-table" style="width:100%">
         <thead>
             <tr>
@@ -100,7 +205,7 @@
             <!-- </div> -->
                 <div class="modal-footer col-md-12">
                     <button type="button" class="btn style3-button" data-dismiss="modal">Hủy</button>
-                    <button type="submit" class="btn style1-button" disabled>Xác nhận</button>
+                    <button type="submit" class="btn style1-button btn-con" disabled>Xác nhận</button>
                 </div>
             </form>
         </div>

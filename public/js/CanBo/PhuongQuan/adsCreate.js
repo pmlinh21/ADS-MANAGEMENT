@@ -14,7 +14,7 @@ $(document).ready(function () {
         $("#loading-bg").hide();
         console.log(data)
         info = data.content.map(function (item) {
-          let { id_create, board_type, address, content, company,
+          let { id_create, board_type, id_ads, content, company,
             start_date, end_date, status, address_adsloc, district,
             width, height, quantity, photo, email, phone, ward } = item
           let statusText = status ? "Đã duyệt" : (
@@ -24,7 +24,7 @@ $(document).ready(function () {
           return [id_create, board_type, `${address_adsloc}`, content, company,
             formatSQLDate_dmy(start_date), formatSQLDate_dmy(end_date), statusText,
             '<button class="btn view-btn"><i class="fa-solid fa-pen-to-square"></i></button>',
-            width, height, quantity, photo, email, phone, ward]
+            width, height, quantity, photo, email, phone, ward, id_ads]
         })
 
         info = info.sort((a, b) => a[0] - b[0]);
@@ -43,11 +43,11 @@ $(document).ready(function () {
           window.location.href = '/detailAdsCreate?id_create=' + id_create;
           console.log(row);
         })
-
-
+      
         let select_ads = info?.filter(function (item) {
           return item[7] === "Đã duyệt"
         })
+        //console.log("select_ads: ", select_ads);
 
         select_ads = select_ads.map(item => item[16])
         select_ads = [...new Set(select_ads)];
@@ -408,7 +408,6 @@ $(document).ready(function () {
           let select_ads = info?.filter(function (item) {
             return item[7] === "Đã duyệt"
           })
-
           select_ads = select_ads.map(item => item[16])
           select_ads = [...new Set(select_ads)];
 
