@@ -645,6 +645,26 @@ const deleteDiemDatQuangCao = async (req, res) => {
   }
 }
 
+const addDiemDatQuangCao = async (req, res) => {
+  try {
+    const { address, ward, district, latitude, longitude, id_loc_type, id_ads_type, is_zoning, photo } = req.body;
+    const data = await model.Ads_location.create({
+      address: address,
+      id_ward: ward,
+      id_district: district,
+      latitude: latitude,
+      longitude: longitude,
+      id_loc_type: id_loc_type,
+      id_ads_type: id_ads_type,
+      is_zoning: is_zoning,
+      photo: photo
+    });
+    sucessCode(res, data, "Post thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi BE");
+  }
+}
+
 const getQuanByName = async (req, res) => {
   try {
     const name = req.params.name;
@@ -1299,6 +1319,7 @@ module.exports = {
   getAllAdsLocations,
   updateDiemDatQuangCao,
   deleteDiemDatQuangCao,
+  addDiemDatQuangCao,
   getQuanByName,
   getPhuongByNameAndIdQuan,
 

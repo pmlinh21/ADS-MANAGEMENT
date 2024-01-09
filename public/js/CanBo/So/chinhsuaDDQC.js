@@ -8,6 +8,9 @@ $(document).ready(function () {
     method: "GET",
     catch: false,
     dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
     success: function (data) {
       let allLoaiViTri = data.content;
       buildSelectLoaiViTri(allLoaiViTri);
@@ -28,6 +31,7 @@ $(document).ready(function () {
             catch: false,
             dataType: 'json',
             success: function (data) {
+              $("#loading-bg").hide()
               let ddqc = data.content[0];
               buildForm(ddqc);
 
@@ -355,7 +359,10 @@ $(document).ready(function () {
 
               $("#edit-ads-location button[value='delete']").on("click", function (e) {
                 if (confirm("Bạn có chắc chắn muốn xóa không?")) {
-                  const deleteData = { id: parseInt(id) }
+                  const deleteForm = new FormData();
+                  deleteForm.append("id", id);
+                  deleteForm.append("photo", ddqc.photo);
+                  const deleteData = Object.fromEntries(deleteForm.entries());
                   $.ajax({
                     url: '/api/so/deleteDiemDatQuangCao',
                     type: 'DELETE',
