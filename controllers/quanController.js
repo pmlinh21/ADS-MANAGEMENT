@@ -543,7 +543,7 @@ const createAdsWard = async(req, res) =>{
             officer, office, id_ads_location, id_board_type, width, height, quantity,
             content, company, email, phone, address, start_date, end_date,
             photo: file?.filename,
-            status: false
+            status: null
         })
         sucessCode(res,"","Get thành công")
     }catch(err){
