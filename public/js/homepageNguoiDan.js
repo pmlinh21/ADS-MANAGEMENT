@@ -179,8 +179,8 @@ function renderReport(list_report, container, user_email) {
         var template = `
         <p class = "text-center"> (Chưa có báo cáo) </p>
         `;
-      } else {
-    var template = `
+    } else {
+        var template = `
   <% for (var i = 0; i < list_report?.length; i++) { %>
     <div class="<%=note[i].is_user%>-report row" >
       <div class="col-md-12">
@@ -205,7 +205,7 @@ function renderReport(list_report, container, user_email) {
     </div>
   <% } %>
   `;
-      }
+    }
     var rendered = ejs.render(template, { list_report, email, note });
     $(container).html(rendered);
 }
@@ -319,7 +319,6 @@ function showSidebar(adsloc) {
                 // check Captcha
                 grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
                     const captcha = token;
-                    console.log("captcha: " + captcha) // Will print the token
                     fetch('https://adsmap-officer.onrender.com/api/nguoidan/verifyCaptcha', {
                         method: 'POST',
                         headers: {
@@ -453,6 +452,8 @@ function showSidebar(adsloc) {
                     })
 
                 } else {
+                    console.log("creating loc report")
+                    console.log(adsloc)
                     reportObject = {
                         id_report: null, // You may need to generate a unique ID
                         officer: null, // You may need to handle this differently
@@ -476,10 +477,9 @@ function showSidebar(adsloc) {
                         id_ward: address2wardid(adsloc.ward, adsloc.district),
                     };
 
-
                     grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
                         const captcha = token;
-                        fetch('https://adsmap-officer.onrender.com//api/nguoidan/verifyCaptcha', {
+                        fetch('https://adsmap-officer.onrender.com/api/nguoidan/verifyCaptcha', {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
@@ -772,11 +772,11 @@ $.ajax({
 }).done(function (data) {
     localStorage.setItem("loc_report", JSON.stringify(data.content))
 })
-.fail(function (jqXHR, textStatus, errorThrown) {
-    console.log(errorThrown + "getLocReport")
-})
+    .fail(function (jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown + "getLocReport")
+    })
 
-$(document).ready(function () { 
+$(document).ready(function () {
     // tạo bản đồ
     mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
     var map = new mapboxgl.Map({
@@ -799,7 +799,7 @@ $(document).ready(function () {
     });
 
     map.addControl(new mapboxgl.NavigationControl());
-    
+
     // Add geolocate control to the map.
     map.addControl(
         new mapboxgl.GeolocateControl({
@@ -882,7 +882,7 @@ $(document).ready(function () {
             longitude = lngLat.lng;
             latitude = lngLat.lat;
             $(".mapboxgl-marker").remove()
-            
+
             marker = new mapboxgl.Marker({
                 color: '#0B7B31'
             }).setLngLat(lngLat).addTo(map);
@@ -997,51 +997,58 @@ $(document).ready(function () {
                     imagePath2: item.photo2,
                 }
             })
-            var template = `
-            <% for (var i = 0; i < list_report?.length; i++) { %>
-                <div class="other-report row" >
-                <div class="col-md-12 location">
-                    <strong>Địa điểm:</strong> 
-                    <% if (list_report[i].address) { %>
-                        <%= list_report[i].address %>
-                    <% } else if (note[i].address){ %>
-                        <%= note[i].address %>
-                    <% } else { %>
-                        Biển quảng cáo
-                        <% } %>
-                </div>
-                <div class="col-md-12">
-                    <%- list_report[i].content %>
-                </div>
 
-                <div class="col-md-12 view-image">
-                <% if (note[i].imagePath1) { %>
-                    <img class="col-md-6 image1" src="<%= note[i].imagePath1 %>">
-                <% } %>
-                <% if (note[i].imagePath2) { %>
-                    <img class="col-md-6 image2" src="<%= note[i].imagePath2 %>">
-                <% } %>
-                </div>
-                    <div class="col-md-12 ">
-                        <div class = "report-cate">
-                        <% if (list_report[i].address) { %>
-                            Địa điểm
-                        <% } else if (note[i].address){ %>
-                            Điểm đặt
-                        <% } else { %>
-                            Biển quảng cáo
-                            <% } %>
+            if (!list_report || list_report.length == 0) {
+                var template = `
+                <p class = "text-center"> (Chưa có báo cáo) </p>
+                `;
+            } else {
+                var template = `
+                    <% for (var i = 0; i < list_report?.length; i++) { %>
+                        <div class="other-report row" >
+                        <div class="col-md-12 location">
+                            <strong>Địa điểm:</strong> 
+                            <% if (list_report[i].address) { %>
+                                <%= list_report[i].address %>
+                            <% } else if (note[i].address){ %>
+                                <%= note[i].address %>
+                            <% } else { %>
+                                Biển quảng cáo
+                                <% } %>
                         </div>
-                        <div class = <%= note[i].statusClass %> >
-                            <%= note[i].statusText %>
+                        <div class="col-md-12">
+                            <%- list_report[i].content %>
                         </div>
-                        <div class = "report-type">
-                            <%= note[i].report_type %>
+
+                        <div class="col-md-12 view-image">
+                        <% if (note[i].imagePath1) { %>
+                            <img class="col-md-6 image1" src="<%= note[i].imagePath1 %>">
+                        <% } %>
+                        <% if (note[i].imagePath2) { %>
+                            <img class="col-md-6 image2" src="<%= note[i].imagePath2 %>">
+                        <% } %>
                         </div>
-                    </div>
-                </div>
-            <% } %>
+                            <div class="col-md-12 ">
+                                <div class = "report-cate">
+                                <% if (list_report[i].address) { %>
+                                    Địa điểm
+                                <% } else if (note[i].address){ %>
+                                    Điểm đặt
+                                <% } else { %>
+                                    Biển quảng cáo
+                                    <% } %>
+                                </div>
+                                <div class = <%= note[i].statusClass %> >
+                                    <%= note[i].statusText %>
+                                </div>
+                                <div class = "report-type">
+                                    <%= note[i].report_type %>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
             `;
+            }
             var rendered = ejs.render(template, { list_report, note });
             $('#my-report .modal-body').html(rendered)
         })
@@ -1150,12 +1157,12 @@ $(document).ready(function () {
     }
 
     $(document).mouseup(function (e) {
-        const container = $('.search-address-bar'); 
-    
+        const container = $('.search-address-bar');
+
         if (!container.is(e.target) && container.has(e.target).length === 0) {
-          $(".search-address hr").hide()
-          $(".resultapi-address").hide()
-          $('#map').css('pointer-events', 'auto');
+            $(".search-address hr").hide()
+            $(".resultapi-address").hide()
+            $('#map').css('pointer-events', 'auto');
         }
     });
 })
