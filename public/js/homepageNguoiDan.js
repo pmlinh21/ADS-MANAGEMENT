@@ -317,44 +317,44 @@ function showSidebar(adsloc) {
                 };
 
                 // check Captcha
-                grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
-                    const captcha = token;
-                    console.log("captcha: " + captcha) // Will print the token
-                    fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ captcha: captcha })
-                    }).then((res) => res.json()).then((data) => {
-                        if (data.success) {
-                            const existingReportsJSON = localStorage.getItem("ads_report");
-                            const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                            existingReports.push(reportObject);
-                            localStorage.setItem("ads_report", JSON.stringify(existingReports));
+                // grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
+                //     const captcha = token;
+                //     console.log("captcha: " + captcha) // Will print the token
+                //     fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
+                //         method: 'POST',
+                //         headers: {
+                //             'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
+                //             'Content-Type': 'application/json',
+                //         },
+                //         body: JSON.stringify({ captcha: captcha })
+                //     }).then((res) => res.json()).then((data) => {
+                //         if (data.success) {
+                const existingReportsJSON = localStorage.getItem("ads_report");
+                const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
+                existingReports.push(reportObject);
+                localStorage.setItem("ads_report", JSON.stringify(existingReports));
 
-                            // Send data to the server using AJAX
-                            $.ajax({
-                                type: "POST",
-                                url: "http://localhost:8080/api/nguoidan/createAdsReport",
-                                data: JSON.stringify(reportObject),
-                                success: function (response) {
-                                    // Handle success
-                                    alert("Report Successful")
-                                    // Optional: Show a success message to the user
-                                },
-                                error: function (error) {
-                                    // Handle error
-                                    alert(JSON.stringify(error) + "createError");
-                                    // Optional: Show an error message to the user
-                                },
-                            });
-                        } else {
-                            alert("Captcha không hợp lệ")
-                        }
-                    })
-                })
+                // Send data to the server using AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/api/nguoidan/createAdsReport",
+                    data: JSON.stringify(reportObject),
+                    success: function (response) {
+                        // Handle success
+                        alert("Report Successful")
+                        // Optional: Show a success message to the user
+                    },
+                    error: function (error) {
+                        // Handle error
+                        alert(JSON.stringify(error) + "createError");
+                        // Optional: Show an error message to the user
+                    },
+                });
+                //         } else {
+                //             alert("Captcha không hợp lệ")
+                //         }
+                //     })
+                // })
 
                 $('#report-popup form').get(0).reset()
                 $("#report-popup").modal("hide")
@@ -411,45 +411,45 @@ function showSidebar(adsloc) {
                         report_type: idReportType2String(parseInt($("#reportType").val())), // You may need to handle this differently
                     };
 
-                    grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
-                        const captcha = token;
-                        fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ captcha: captcha })
-                        }).then((res) => res.json()).then((data) => {
-                            if (data.success) {
-                                const existingReportsJSON = localStorage.getItem("ads_loc_report");
-                                const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                                existingReports.push(reportObject);
-                                // console.log(JSON.stringify(reportObject))
-                                localStorage.setItem("ads_loc_report", JSON.stringify(existingReports));
+                    // grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
+                    //     const captcha = token;
+                    //     fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
+                    //         method: 'POST',
+                    //         headers: {
+                    //             'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
+                    //             'Content-Type': 'application/json',
+                    //         },
+                    //         body: JSON.stringify({ captcha: captcha })
+                    //     }).then((res) => res.json()).then((data) => {
+                    //         if (data.success) {
+                    const existingReportsJSON = localStorage.getItem("ads_loc_report");
+                    const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
+                    existingReports.push(reportObject);
+                    // console.log(JSON.stringify(reportObject))
+                    localStorage.setItem("ads_loc_report", JSON.stringify(existingReports));
 
-                                console.log(JSON.stringify(reportObject))
-                                // Send data to the server using AJAX
-                                $.ajax({
-                                    type: "POST",
-                                    url: "http://localhost:8080/api/nguoidan/createAdsLocReport",
-                                    data: JSON.stringify(reportObject),
-                                    success: function (response) {
-                                        // Handle success
-                                        alert("Report Successful")
-                                        // Optional: Show a success message to the user
-                                    },
-                                    error: function (error) {
-                                        // Handle error
-                                        alert(JSON.stringify(error) + "createError");
-                                        // Optional: Show an error message to the user
-                                    },
-                                });
-                            } else {
-                                alert("Captcha không hợp lệ")
-                            }
-                        })
-                    })
+                    console.log(JSON.stringify(reportObject))
+                    // Send data to the server using AJAX
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:8080/api/nguoidan/createAdsLocReport",
+                        data: JSON.stringify(reportObject),
+                        success: function (response) {
+                            // Handle success
+                            alert("Report Successful")
+                            // Optional: Show a success message to the user
+                        },
+                        error: function (error) {
+                            // Handle error
+                            alert(JSON.stringify(error) + "createError");
+                            // Optional: Show an error message to the user
+                        },
+                    });
+                    //         } else {
+                    //             alert("Captcha không hợp lệ")
+                    //         }
+                    //     })
+                    // })
 
                 } else {
                     reportObject = {
@@ -476,43 +476,43 @@ function showSidebar(adsloc) {
                     };
 
 
-                    grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
-                        const captcha = token;
-                        fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ captcha: captcha })
-                        }).then((res) => res.json()).then((data) => {
-                            if (data.success) {
-                                const existingReportsJSON = localStorage.getItem("loc_report");
-                                const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                                existingReports.push(reportObject);
-                                localStorage.setItem("loc_report", JSON.stringify(existingReports));
+                    // grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
+                    //     const captcha = token;
+                    //     fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
+                    //         method: 'POST',
+                    //         headers: {
+                    //             'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
+                    //             'Content-Type': 'application/json',
+                    //         },
+                    //         body: JSON.stringify({ captcha: captcha })
+                    //     }).then((res) => res.json()).then((data) => {
+                    //         if (data.success) {
+                    const existingReportsJSON = localStorage.getItem("loc_report");
+                    const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
+                    existingReports.push(reportObject);
+                    localStorage.setItem("loc_report", JSON.stringify(existingReports));
 
-                                // Send data to the server using AJAX
-                                $.ajax({
-                                    type: "POST",
-                                    url: "http://localhost:8080/api/nguoidan/createLocReport",
-                                    data: JSON.stringify(reportObject),
-                                    success: function (response) {
-                                        // Handle success
-                                        alert("Report Successful")
-                                        // Optional: Show a success message to the user
-                                    },
-                                    error: function (error) {
-                                        // Handle error
-                                        alert(JSON.stringify(error) + "createError");
-                                        // Optional: Show an error message to the user
-                                    },
-                                });
-                            } else {
-                                alert("Captcha không hợp lệ")
-                            }
-                        })
-                    })
+                    // Send data to the server using AJAX
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:8080/api/nguoidan/createLocReport",
+                        data: JSON.stringify(reportObject),
+                        success: function (response) {
+                            // Handle success
+                            alert("Report Successful")
+                            // Optional: Show a success message to the user
+                        },
+                        error: function (error) {
+                            // Handle error
+                            alert(JSON.stringify(error) + "createError");
+                            // Optional: Show an error message to the user
+                        },
+                    });
+                    //             } else {
+                    //                 alert("Captcha không hợp lệ")
+                    //             }
+                    //         })
+                    //     })
                 }
 
                 $('#report-popup form').get(0).reset()
@@ -1053,61 +1053,61 @@ $(document).ready(function () {
                 map.getCanvas().style.cursor = 'pointer';
             })
         }
-    
+
 
         // map.on('scroll', function () {
         //   $('#sidebar').hide()
         // });
 
-    
+
         $(".my-report").on("click", () => {
-        let email = JSON.parse(localStorage.getItem('email'));
+            let email = JSON.parse(localStorage.getItem('email'));
 
-        let my_adsloc_report = []
-        let adsloc = localStorage.getItem('adsloc_report');
-        adsloc = (adsloc) ? JSON.parse(adsloc) : []
-        adsloc.forEach(item => {
-            if (item.email == email)
-                my_adsloc_report.push(item)
-        })
+            let my_adsloc_report = []
+            let adsloc = localStorage.getItem('adsloc_report');
+            adsloc = (adsloc) ? JSON.parse(adsloc) : []
+            adsloc.forEach(item => {
+                if (item.email == email)
+                    my_adsloc_report.push(item)
+            })
 
-        let my_ads_report = []
-        let ads_report = localStorage.getItem('ads_report');
-        ads_report = (ads_report) ? JSON.parse(ads_report) : []
-        ads_report.forEach(item => {
-            if (item.email == email)
-                my_ads_report.push(item)
-        })
+            let my_ads_report = []
+            let ads_report = localStorage.getItem('ads_report');
+            ads_report = (ads_report) ? JSON.parse(ads_report) : []
+            ads_report.forEach(item => {
+                if (item.email == email)
+                    my_ads_report.push(item)
+            })
 
-        let my_loc_report = []
-        let loc_report = localStorage.getItem('loc_report');
-        loc_report = (loc_report) ? JSON.parse(loc_report) : []
-        loc_report.forEach(item => {
-            if (item.email == email)
-                my_loc_report.push(item)
-        })
+            let my_loc_report = []
+            let loc_report = localStorage.getItem('loc_report');
+            loc_report = (loc_report) ? JSON.parse(loc_report) : []
+            loc_report.forEach(item => {
+                if (item.email == email)
+                    my_loc_report.push(item)
+            })
 
-        const list_report = [...my_ads_report, ...my_loc_report, ...my_adsloc_report]
-        console.log(JSON.stringify(list_report) + "list_report")
+            const list_report = [...my_ads_report, ...my_loc_report, ...my_adsloc_report]
+            console.log(JSON.stringify(list_report) + "list_report")
 
-        const note = list_report?.map(item => {
-            if (item.id_ads_location)
-                address = NguoiDanAdsLoc.content.filter(i => i.id_ads_location == item.id_ads_location)[0].address
-            // else if(item.id_ads)
-            //     address = NguoiDanAdsLoc.content.filter(i => i.list_ads.filter(j => j.id_ads == item.id_ads).length > 0)[0].address
-            else
-                address = item.address
+            const note = list_report?.map(item => {
+                if (item.id_ads_location)
+                    address = NguoiDanAdsLoc.content.filter(i => i.id_ads_location == item.id_ads_location)[0].address
+                // else if(item.id_ads)
+                //     address = NguoiDanAdsLoc.content.filter(i => i.list_ads.filter(j => j.id_ads == item.id_ads).length > 0)[0].address
+                else
+                    address = item.address
 
-            return {
-                address: address,
-                statusClass: item.status ? "resolved" : "unresolved",
-                statusText: item.status ? "Đã xử lí" : "Chưa xử lí",
-                report_type: idReportType2String(item.id_report_type),
-                imagePath1: item.photo1,
-                imagePath2: item.photo2,
-            }
-        })
-        var template = `
+                return {
+                    address: address,
+                    statusClass: item.status ? "resolved" : "unresolved",
+                    statusText: item.status ? "Đã xử lí" : "Chưa xử lí",
+                    report_type: idReportType2String(item.id_report_type),
+                    imagePath1: item.photo1,
+                    imagePath2: item.photo2,
+                }
+            })
+            var template = `
             <% for (var i = 0; i < list_report?.length; i++) { %>
                 <div class="other-report row" >
                 <div class="col-md-12 location">
@@ -1152,9 +1152,9 @@ $(document).ready(function () {
                 </div>
             <% } %>
             `;
-        var rendered = ejs.render(template, { list_report, note });
-        $('#my-report .modal-body').html(rendered)
-    })
+            var rendered = ejs.render(template, { list_report, note });
+            $('#my-report .modal-body').html(rendered)
+        })
     }).fail(function (jqXHR, textStatus, errorThrown) {
         console.log(errorThrown + "getAdsLoc")
     })
