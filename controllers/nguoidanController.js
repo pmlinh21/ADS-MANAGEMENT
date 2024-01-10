@@ -220,7 +220,7 @@ const createLocReport = async (req, res) => {
             fullname: data.fullname,
             email: data.email,
             phone: data.phone,
-            content: data.content,
+            content: decodeURIComponent(data.content),
             status: data.status,
             photo1: data.photo1,
             photo2: data.photo2,

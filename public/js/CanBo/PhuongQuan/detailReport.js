@@ -385,7 +385,7 @@ $(document).ready(function() {
         
         $("#loading-bg").hide()
         $('#id_loc_report').val(info.id_report);
-        $('#address').val(info.address + ', phường ' + info.ward + ', quận' + info.district);
+        $('#address').val(info.address + ', phường ' + info.ward + ', quận ' + info.district);
         $('#report_type').val(info.report_type);
         $('#name').val(info.fullname);
         $('#email').val(info.email);
