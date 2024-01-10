@@ -265,7 +265,7 @@ $(document).ready(function () {
                           dataType: 'json',
                           data: newDistrictData,
                           success: function (data) {
-                            id_district = data.content[0].id_district;
+                            id_district = data.content.id_district;
                             $.ajax({
                               url: '/api/so/getPhuongByNameAndIdQuan/' + ward + '/' + id_district,
                               type: 'GET',
@@ -287,7 +287,7 @@ $(document).ready(function () {
                                       $("#loading-bg").show()
                                     },
                                     success: function (data) {
-                                      id_ward = data.content[0].id_ward;
+                                      id_ward = data.content.id_ward;
                                       console.log(id_ward + " " + id_district);
                                       prepareForm(imageData, ddqc, latitude, longitude, id_ward, id_district, id);
                                     }
@@ -324,7 +324,7 @@ $(document).ready(function () {
                                   $("#loading-bg").show()
                                 },
                                 success: function (data) {
-                                  id_ward = data.content[0].id_ward;
+                                  id_ward = data.content.id_ward;
                                   console.log(id_ward + " " + id_district);
                                   prepareForm(imageData, ddqc, latitude, longitude, id_ward, id_district, id);
                                 }

@@ -4,24 +4,43 @@ $(document).ready(function(){
     $("#loading-bg").show()
 
     let allCanboQuan;
-    $.get("/api/so/getAllCanboQuan", function(data){
+    $.ajax({
+      url: "/api/so/getAllCanboQuan",
+      type: "GET",
+      catch: false,
+      dataType: "json",
+      beforeSend: function () {
+        $("#loading-bg").show()
+      },
+      success: function (data) {
         count++;
-        allCanboQuan = data.content.map(item => [item.fullname, item.birthdate, item.email, item.phone, item.district]);
+        let allCanboQuan = data.content.map(item => [item.fullname, item.birthdate, item.email, item.phone, item.district]);
         buildDistrictOfficerTable(allCanboQuan);
-    }).fail(function(err){
+      },
+      error: function (err) {
         count++;
         console.log(err);
-    });
+      }
+    })
 
-    let allCanboPhuong;
-    $.get("/api/so/getAllCanboPhuong", function(data){
+    $.ajax({
+      url: "/api/so/getAllCanboPhuong",
+      type: "GET",
+      catch: false,
+      dataType: "json",
+      beforeSend: function () {
+        $("#loading-bg").show()
+      },
+      success: function (data) {
         count++;
-        allCanboPhuong = data.content.map(item => [item.fullname, item.birthdate, item.email, item.phone, item.ward, item.district]);
+        let allCanboPhuong = data.content.map(item => [item.fullname, item.birthdate, item.email, item.phone, item.ward, item.district]);
         buildWardOfficerTable(allCanboPhuong);
-    }).fail(function(err){
+      },
+      error: function (err) {
         count++;
         console.log(err);
-    });
+      }
+    })
   
     let check = setInterval(() => {
       if (count >= 2) {

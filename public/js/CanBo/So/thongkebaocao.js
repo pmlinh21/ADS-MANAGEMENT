@@ -145,18 +145,30 @@ $(document).ready(function () {
               buildReportAdsTable(allBaoCaoBQC);
               buildReportAdsLocationTable(allBaoCaoDDQC);
               buildReportLocationTable(allBaoCaoDD);
+
+              setInterval(function () {
+                if (count >= 2) {
+                  $("#loading-bg").hide()
+                }
+              }, 200)
+            },
+            error: function (err) {
+              $("#loading-bg").hide()
+              console.log(err);
             }
           })
+        }, 
+        error: function (err) {
+          $("#loading-bg").hide()
+          console.log(err);
         }
       })
+    },
+    error: function (err) {
+      $("#loading-bg").hide()
+      console.log(err);
     }
   })
-
-  setInterval(function () {
-    if (count >= 2) {
-      $("#loading-bg").hide()
-    }
-  }, 200)
 })
 
 
