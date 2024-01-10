@@ -719,7 +719,7 @@ function createMarker(info, map) {
         if (item[7] != "")
             imagePath = item[7]
         else
-            imagePath = "../image/image-placeholder.jpg"
+            imagePath = "./image/image-placeholder.jpg"
         return {
             type: 'Feature',
             geometry: {
