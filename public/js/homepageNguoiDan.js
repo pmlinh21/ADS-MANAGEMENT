@@ -39,8 +39,6 @@ function validateDate(date) {
 }
 
 
-
-
 function address2wardid(wardString, districtString) {
     if (districtString == "Quận 1") {
         if (wardString == "Phường Bến Nghé") return 1;
@@ -177,7 +175,11 @@ function renderReport(list_report, container, user_email) {
     })
     // console.log(note)
     // list_report.forEach((item, index) => console.log(item, note[index]))
-
+    if (!list_report || list_report.length == 0) {
+        var template = `
+        <p class = "text-center"> (Chưa có báo cáo) </p>
+        `;
+      } else {
     var template = `
   <% for (var i = 0; i < list_report?.length; i++) { %>
     <div class="<%=note[i].is_user%>-report row" >
@@ -203,6 +205,7 @@ function renderReport(list_report, container, user_email) {
     </div>
   <% } %>
   `;
+      }
     var rendered = ejs.render(template, { list_report, email, note });
     $(container).html(rendered);
 }
@@ -249,10 +252,7 @@ function showSidebar(adsloc) {
     renderAds(adsloc)
     flag = true;
 
-    if (adsloc.id_ads_location)
-        $(".locInfo .address").text(`${adsloc.address}, Phường ${adsloc.ward}, ${adsloc.district}`)
-    else
-        $(".locInfo .address").text(`${adsloc.address}, ${adsloc.ward}, ${adsloc.district}`)
+    $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, quận ${adsloc.district}`)
 
     // Chi tiết bảng quảng cáo
     $("#sidebar .detail-button").on("click", function () {
@@ -363,6 +363,7 @@ function showSidebar(adsloc) {
     })
 
     $("#sidebar .locInfo .report-button").on("click", function () {
+        console.log(adsloc)
         let imageData3 = null, imageData4 = null
 
         $('#image1').on('change', async function (e) {
@@ -551,7 +552,7 @@ function showSidebar(adsloc) {
 
             list_report = list_report.filter(item =>
                 (item.longitude.toFixed(4) == adsloc.longitude.toFixed(4) && item.latitude.toFixed(4) == adsloc.latitude.toFixed(4))
-                || (item.address) == adsloc.address)
+                || ((item.address) == adsloc.address && item.ward == adsloc.ward))
 
             // console.log("thông tin của điểm được click: ")
             // console.log(adsloc.longitude.toFixed(4))
@@ -757,11 +758,8 @@ function createMarker(info, map) {
         map.removeSource('adsloc');
 
         createLayer(map, features)
-    } else {
-        map.on('load', () => {
-            createLayer(map, features)
-        });
     }
+    createLayer(map, features)
 }
 
 let marker = new mapboxgl.Marker();
@@ -774,13 +772,49 @@ $.ajax({
 }).done(function (data) {
     localStorage.setItem("loc_report", JSON.stringify(data.content))
 })
-    .fail(function (jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown + "getLocReport")
-    })
+.fail(function (jqXHR, textStatus, errorThrown) {
+    console.log(errorThrown + "getLocReport")
+})
 
+$(document).ready(function () { 
+    // tạo bản đồ
+    mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [106.6974, 10.7743],
+        zoom: 15,
+        language: 'vi'
+    });
 
-$(document).ready(function () {
+    $(window).on('resize', function () {
+        let windowHeight = $(window).height();
+        let headerHeight = $('#headerNgDan').height();
+        let mapHeight = windowHeight - headerHeight;
+        $('#map').css('top', headerHeight);
+        $('#sidebar').css('top', headerHeight);
+        // console.log(windowHeight, headerHeight, mapHeight)
+        $('#map').height(mapHeight);
+        $('#sidebar').height(mapHeight);
+    });
+
+    map.addControl(new mapboxgl.NavigationControl());
+    
+    // Add geolocate control to the map.
+    map.addControl(
+        new mapboxgl.GeolocateControl({
+            positionOptions: {
+                enableHighAccuracy: true
+            },
+            // When active the map will receive updates to the device's location as it changes.
+            trackUserLocation: true,
+            // Draw an arrow next to the location dot to indicate which direction the device is heading.
+            showUserHeading: true
+        })
+    );
+
     let NguoiDanAdsLoc
+    $("#loading-bg").show()
     $.ajax({
         url: `http://localhost:8080/api/nguoidan/getAdsLoc`,
         // url: `https://adsmap-officer.onrender.com/api/nguoidan/getAdsLoc`,
@@ -824,82 +858,6 @@ $(document).ready(function () {
         const ads_report = getAllReports(NguoiDanAdsLoc);
         localStorage.setItem("ads_report", JSON.stringify(ads_report))
 
-        // thay đổi kích thước bản đồ khi resize cửa sổ trình duyệt
-        $(window).on('resize', function () {
-            let windowHeight = $(window).height();
-            let headerHeight = $('#headerNgDan').height();
-            let mapHeight = windowHeight - headerHeight;
-            $('#map').css('top', headerHeight);
-            $('#sidebar').css('top', headerHeight);
-            // console.log(windowHeight, headerHeight, mapHeight)
-            $('#map').height(mapHeight);
-            $('#sidebar').height(mapHeight);
-        });
-
-        // tạo bản đồ
-        mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
-        var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: [106.6974, 10.7743],
-            zoom: 15,
-            language: 'vi'
-        });
-        map.addControl(new mapboxgl.NavigationControl());
-
-        // Add geolocate control to the map.
-        map.addControl(
-            new mapboxgl.GeolocateControl({
-                positionOptions: {
-                    enableHighAccuracy: true
-                },
-                // When active the map will receive updates to the device's location as it changes.
-                trackUserLocation: true,
-                // Draw an arrow next to the location dot to indicate which direction the device is heading.
-                showUserHeading: true
-            })
-        );
-
-        $('.search-address-bar').on('keydown', function (event) {
-            if (event.keyCode === 13) { // Kiểm tra phím Enter
-                let address = $('.search-address-bar').val()
-                console.log(address)
-
-                $(".search-address hr").show()
-                $(".resultapi-address").show()
-                $('.gray-bg').show()
-                $('#manage').css('pointer-events', 'none');
-                $('#account').css('pointer-events', 'none');
-                $('#logout').css('pointer-events', 'none');
-                $('#map').css('pointer-events', 'none');
-                $('.flex-container').css('pointer-events', 'none');
-
-                $.ajax({
-                    url: `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(address)}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc`,
-                    type: 'GET',
-                    data: {
-                        access_token: mapboxgl.accessToken,
-                        language: "vi"
-                    },
-                    success: function (response) {
-                        console.log(response.items);
-                        renderAddressResult(response.items.slice(0, 3));
-
-                        $('.resultapi-address div').on('click', function (event) {
-                            let index = $(this).attr("class").split("-")[1];
-
-                            console.log(index);
-                            console.log(response.items[index])
-                            geocoding(marker, response.items[index]);
-                        })
-                    },
-                    error: function () {
-                        alert('Error occurred during geocoding');
-                    }
-                });
-            }
-        });
-
         // lấy dữ liệu lưu vào info
         var info = NguoiDanAdsLoc.content.map(function (item) {
             let { id_ads_location, address, ward, district, loc_type, ads_type,
@@ -911,9 +869,10 @@ $(document).ready(function () {
 
         // tạo điểm trên map
         createMarker(info, map);
+        $("#loading-bg").hide()
 
         // bắt sự kiện toggle
-        $(".flex-container input").on('click', function (e) {
+        $(".toggle input").on('click', function (e) {
             createMarker(info, map)
         })
 
@@ -922,7 +881,8 @@ $(document).ready(function () {
             let lngLat = e.lngLat;
             longitude = lngLat.lng;
             latitude = lngLat.lat;
-            marker.remove()
+            $(".mapboxgl-marker").remove()
+            
             marker = new mapboxgl.Marker({
                 color: '#0B7B31'
             }).setLngLat(lngLat).addTo(map);
@@ -951,8 +911,8 @@ $(document).ready(function () {
                 .then(response => response.json())
                 .then(data => {
                     const feature = data.items[0].address;
-                    locObject.ward = feature.district;
-                    locObject.district = feature.city;
+                    locObject.ward = feature?.district.substring(7)
+                    locObject.district = feature.city.substring(5);
                     locObject.address = (feature?.houseNumber && feature?.street)
                         ? feature?.houseNumber + " " + feature?.street
                         : feature?.label.substring(0, feature?.label.indexOf(", Phường"));
@@ -988,76 +948,6 @@ $(document).ready(function () {
             })
 
         });
-
-        function geocoding(marker, item) {
-            console.log(item + "item")
-            $(".mapboxgl-marker").remove();
-
-            let longitude = item.position.lng;
-            let latitude = item.position.lat;
-
-            marker = new mapboxgl.Marker({
-                color: '#0B7B31'
-            }).setLngLat([longitude, latitude]).addTo(map);
-            map.flyTo({
-                center: [longitude, latitude],
-                zoom: 17
-            })
-
-            let locObject = {
-                "colorMarker": null,
-                "id_ads_location": null,
-                "address": null,
-                "ward": null,
-                "district": null,
-                "loc_type": null,
-                "ads_type": null,
-                "zoning_text": null,
-                "imagePath": null,
-                "longitude": null,
-                "latitude": null,
-                "is_zoning": null,
-                "list_ads": "null",
-                "list_report": "null"
-            }
-
-            const feature = item.address
-            locObject.ward = feature?.district.substring(7)
-            locObject.district = feature?.city
-            locObject.address = (feature?.houseNumber && feature?.street)
-                ? feature?.houseNumber + " " + feature?.street
-                : feature?.label.substring(0, feature?.label.indexOf(", Phường"))
-            locObject.longitude = longitude
-            locObject.latitude = latitude
-
-            $('.search-address-bar').val(`${item.title}`)
-
-            if (!flag) {
-                console.log(flag)
-                showSidebar(locObject)
-            } else {
-                console.log(flag)
-            }
-
-            flag = false
-
-            // Lắng nghe sự kiện mousedown trên bản đồ
-            map.on('mousedown', function () {
-                // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
-                map.getCanvas().style.cursor = 'grab';
-            });
-
-            // Lắng nghe sự kiện mouseup trên bản đồ
-            map.on('mouseup', function () {
-                // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
-                map.getCanvas().style.cursor = 'pointer';
-            })
-        }
-
-
-        // map.on('scroll', function () {
-        //   $('#sidebar').hide()
-        // });
 
 
         $(".my-report").on("click", () => {
@@ -1158,6 +1048,116 @@ $(document).ready(function () {
     }).fail(function (jqXHR, textStatus, errorThrown) {
         console.log(errorThrown + "getAdsLoc")
     })
+
+    $('.search-address-bar').on('keydown', function (event) {
+        if (event.keyCode === 13) { // Kiểm tra phím Enter
+            let address = $('.search-address-bar').val()
+            console.log(address)
+
+            $(".search-address hr").show()
+            $(".resultapi-address").show()
+            $('#map').css('pointer-events', 'none');
+
+            $.ajax({
+                url: `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(address)}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc`,
+                type: 'GET',
+                data: {
+                    access_token: mapboxgl.accessToken,
+                    language: "vi"
+                },
+                success: function (response) {
+                    console.log(response.items);
+                    renderAddressResult(response.items.slice(0, 3));
+
+                    $('.resultapi-address div').on('click', function (event) {
+                        let index = $(this).attr("class").split("-")[1];
+
+                        console.log(index);
+                        console.log(response.items[index])
+                        geocoding(marker, response.items[index]);
+                    })
+                },
+                error: function () {
+                    alert('Error occurred during geocoding');
+                }
+            });
+        }
+    });
+
+    function geocoding(marker, item) {
+        console.log(item + "item")
+        $(".mapboxgl-marker").remove();
+
+        let longitude = item.position.lng;
+        let latitude = item.position.lat;
+
+        marker = new mapboxgl.Marker({
+            color: '#0B7B31'
+        }).setLngLat([longitude, latitude]).addTo(map);
+        map.flyTo({
+            center: [longitude, latitude],
+            zoom: 17
+        })
+
+        let locObject = {
+            "colorMarker": null,
+            "id_ads_location": null,
+            "address": null,
+            "ward": null,
+            "district": null,
+            "loc_type": null,
+            "ads_type": null,
+            "zoning_text": null,
+            "imagePath": null,
+            "longitude": null,
+            "latitude": null,
+            "is_zoning": null,
+            "list_ads": "null",
+            "list_report": "null"
+        }
+
+        const feature = item.address
+        locObject.ward = feature?.district.substring(7)
+        locObject.district = feature?.city.substring(5)
+        locObject.address = (feature?.houseNumber && feature?.street)
+            ? feature?.houseNumber + " " + feature?.street
+            : feature?.label.substring(0, feature?.label.indexOf(", Phường"))
+        locObject.longitude = longitude
+        locObject.latitude = latitude
+
+        $('.search-address-bar').val(`${item.title}`)
+
+        if (!flag) {
+            console.log(flag)
+            showSidebar(locObject)
+        } else {
+            console.log(flag)
+        }
+
+        flag = false
+
+        // Lắng nghe sự kiện mousedown trên bản đồ
+        map.on('mousedown', function () {
+            // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
+            map.getCanvas().style.cursor = 'grab';
+        });
+
+        // Lắng nghe sự kiện mouseup trên bản đồ
+        map.on('mouseup', function () {
+            // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
+            map.getCanvas().style.cursor = 'pointer';
+        })
+    }
+
+    $(document).mouseup(function (e) {
+        const container = $('.search-address-bar'); 
+    
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+          $(".search-address hr").hide()
+          $(".resultapi-address").hide()
+          $('#map').css('pointer-events', 'auto');
+        }
+    });
 })
 
 
