@@ -1027,7 +1027,7 @@ body {
 }
 
 .form input.disabled {
-    background-color: #F4F4F4;
+    background-color: #FAFAFA;
 }
 
 .form input:disabled:hover+.tooltiptext,

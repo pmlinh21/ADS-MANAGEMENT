@@ -41,7 +41,13 @@ $(document).ready(function () {
         essential: true
       });
       
-      $("#coordinates").on("click", async function(e) {
+      $("#id-ads-location").on("click", openMap);
+      $("#coordinates").on("click", openMap);
+      $("#address").on("click", openMap);
+      $("#district").on("click", openMap);
+      $("#ward").on("click", openMap);
+
+      async function openMap(e) {
         $('#select-location-map').css('display', 'block');
         map.resize();
         let div = $('<div></div>');
@@ -51,7 +57,7 @@ $(document).ready(function () {
           $('#select-location-map').css('display', 'none');
         })
         $('body').append(div);
-      })
+      }
 
       $("#update-ads-location button[value='deny']").on("click", async function (e) {
         e.preventDefault();

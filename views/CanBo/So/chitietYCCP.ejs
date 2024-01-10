@@ -15,11 +15,11 @@
                 </div>
                 <div class="input-field">
                     <label for="id-ads-location">ID Điểm đặt</label>
-                    <input type="text" id="id-ads-location" name="id-ads-location" disabled>
+                    <input type="text" id="id-ads-location" name="id-ads-location" class="disabled" readonly>
                 </div>
                 <div class="input-field">
                     <label for="address">Địa chỉ điểm đặt</label>
-                    <input type="text" id="address" name="address" disabled>
+                    <input type="text" id="address" name="address" class="disabled" readonly>
                 </div>
                 <div class="input-field">
                     <label for="board-type">Loại bảng</label>
@@ -93,20 +93,20 @@
             </div>
         </form>
 
-        <!-- <div class="popupmap" id="select-location-map">
-            <div class="popupmap-header">
-                <span class="title">Xác định vị trí điểm đặt</span>
-                <span class="search-bar">
-                    <input type="text" id="search">
-                    <i class="fas fa-search"></i>
-                </span>
-                
-            </div>
-            <div class="popupmap-footer">
-                <div class="chosen-address"></div>
-                <button>Xác nhận</button>
-            </div>
-        </div> -->
+        <div class="popupmap" id="select-location-map">
+          <div class="popupmap-header">
+              <span class="title">Xem vị trí điểm đặt</span>
+              <!-- <span class="search-bar">
+                  <input type="text" id="search">
+                  <i class="fas fa-search"></i>
+              </span> -->
+          </div>
+          <div class="map" id="map"></div>
+          <div class="popupmap-footer">
+              <!-- <div class="chosen-address" id="chosen-address" style="z-index: 1000;"></div> -->
+              <!-- <button>Xác nhận</button> -->
+          </div>
+        </div>
 
     </div>
 </div>

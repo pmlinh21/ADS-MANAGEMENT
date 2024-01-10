@@ -1,5 +1,6 @@
 $(document).ready(function () {
   $("#capphep").addClass("snb-li-active");
+  mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
 
   let id = $("#create-ads #id").val();
   $.ajax({
@@ -13,6 +14,57 @@ $(document).ready(function () {
     success: function (data) {
       let yccp = data.content[0];
       buildForm(yccp);
+
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [yccp.longitude, yccp.latitude],
+        zoom: 15,
+        language: 'vi'
+      }) 
+    
+      var language = new MapboxLanguage({
+        defaultLanguage: 'vi'
+      });
+      map.addControl(language);
+
+      let canvas = $('.mapboxgl-canvas')
+        canvas.width('100%');
+        canvas.height('100%');
+      let marker = new mapboxgl.Marker({
+        color: '#0B7B31'
+      }).setLngLat([yccp.longitude, yccp.latitude]).addTo(map);
+      map.flyTo({
+        center: [yccp.longitude, yccp.latitude],
+        zoom: 15,
+        essential: true
+      });
+      
+      $("#id-ads-location").on("click", async function(e) {
+        $('#select-location-map').css('display', 'block');
+        map.resize();
+        let div = $('<div></div>');
+        div.addClass('popup-background');
+        div.on('click', function () {
+          div.remove();
+          $('#select-location-map').css('display', 'none');
+        })
+        $('body').append(div);
+      })
+
+      $("#address").on("click", async function(e) {
+        $('#select-location-map').css('display', 'block');
+        map.resize();
+        let div = $('<div></div>');
+        div.addClass('popup-background');
+        div.on('click', function () {
+          div.remove();
+          $('#select-location-map').css('display', 'none');
+        })
+        $('body').append(div);
+      })
+
+
       $.ajax({
         url: '/api/so/getAdsCreateByIdAdsNotIdCreate/' + yccp.id_ads + '/' + id,
         type: 'GET',
