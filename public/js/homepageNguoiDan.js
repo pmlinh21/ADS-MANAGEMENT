@@ -2,6 +2,7 @@ var flag = false
 let ads_report
 let NguoiDanAdsLoc
 localStorage.setItem("email", JSON.stringify("iot.nhom.5@gmail.com"))
+// localStorage.setItem("email", JSON.stringify("kreema1602@gmail.com"))
 
 function renderAddressResult(res) {
     var template = ` 
@@ -320,6 +321,7 @@ function showSidebar(adsloc) {
                 // check Captcha
                 grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
                     const captcha = token;
+
                     fetch('https://ads-map-officer.onrender.com/api/nguoidan/verifyCaptcha', {
                         method: 'POST',
                         headers: {
@@ -328,6 +330,7 @@ function showSidebar(adsloc) {
                         },
                         body: JSON.stringify({ captcha: captcha })
                     }).then((res) => res.json()).then((data) => {
+                        console.log(data)
                         if (data.success) {
                             const existingReportsJSON = localStorage.getItem("ads_report");
                             const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
@@ -843,7 +846,7 @@ $(document).ready(function () {
                     location.list_ads.forEach(ad => {
                         if (ad.list_report) {
                             for (let i = 0; i < ad.list_report.length; i++) {
-                                ad.list_report[i].address = location.address;
+                                ad.list_report[i].address = location.address + ", phường " + location.ward + ", quận " + location.district;
                                 allReports.push(ad.list_report[i]);
                             }
                         }
@@ -1032,7 +1035,7 @@ $(document).ready(function () {
                                     Địa điểm
                                 <% } else if (note[i].address){ %>
                                     Điểm đặt
-                                <% } else { %>
+                                <% } else if (list_report[i].id_ads) { %>
                                     Biển quảng cáo
                                     <% } %>
                                 </div>
