@@ -1,7 +1,7 @@
 const express = require('express');
 const db = require('../models/index')
 const nguoidanRoute = express.Router();
-const { getAdsLoc, getReport, getLocReport, createAdsReport, createLocReport, createAdsLocReport, } = require('../controllers/nguoidanController')
+const { getAdsLoc, getReport, getLocReport, createAdsReport, createLocReport, createAdsLocReport,verifyCaptcha } = require('../controllers/nguoidanController')
 const { upload } = require('../middlewares/upload');
 const { AdsReport } = require('../models/Ads_report');
 const init_models = require('../models/init-models');
@@ -18,5 +18,7 @@ nguoidanRoute.post('/createLocReport', createLocReport);
 nguoidanRoute.post('/createAdsLocReport', createAdsLocReport);
 
 nguoidanRoute.get("/getLocReport", getLocReport);
+
+nguoidanRoute.get("/verifyCaptcha", verifyCaptcha);
 
 module.exports = nguoidanRoute;
