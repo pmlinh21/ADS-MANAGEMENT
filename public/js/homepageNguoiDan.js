@@ -3,6 +3,18 @@ let ads_report
 let NguoiDanAdsLoc
 localStorage.setItem("email", JSON.stringify("lvduc@gmail.com"))
 
+function renderAddressResult(res) {
+    var template = ` 
+        <% for (var i = 0; i < res.length; i++) { %>
+            <div class = "result-<%=i%>">
+              <hr>  
+              <p><%=res[i].title%></p>
+            </div>
+        <% } %>`
+    var rendered = ejs.render(template, { res: res });
+    $(".resultapi-address").html(rendered);
+}
+
 // DATETIME (SQL) -> dd/mm/yyyy
 function validateSQLDate(dateString) {
     const date = new Date(dateString);
@@ -25,6 +37,9 @@ function validateDate(date) {
 
     return formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
+
+
+
 
 function address2wardid(wardString, districtString) {
     if (districtString == "Quận 1") {
@@ -203,10 +218,10 @@ function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
       <div id="data-<%= list_ads[i].id_ads %>">
           <p style="width: 90%;font-size: 1rem; margin-bottom: 0.3rem"><strong><%= list_ads[i].board_type %></strong></p>
           <p style="font-size: 0.7rem; color: gray; margin-bottom: 0.3rem"><%= address %>, phường <%= ward %>, <%= district %></p>
-          <p>Kích thước:  <strong><%= list_ads[i].width %>m x <%= list_ads[i].height %>m</strong></p>
-          <p>Số lượng:  <strong><%= list_ads[i].quantity %> trụ / bảng</strong></p>
-          <p>Hình thức:  <strong><%= ads_type %></strong></p>
-          <p>Phân loại:  <strong><%= loc_type %></strong></p>
+          <p> Kích thước:  <strong><%= list_ads[i].width %>m x <%= list_ads[i].height %>m</strong></p>
+          <p> Số lượng:  <strong><%= list_ads[i].quantity %> trụ / bảng</strong></p>
+          <p> Hình thức:  <strong><%= ads_type %></strong></p>
+          <p> Phân loại:  <strong><%= loc_type %></strong></p>
 
           <div class="detail-button data-<%= list_ads[i].id_ads %>" data-target="#detail-popup" data-toggle="modal">
             <i class="fa-solid fa-circle-info"></i>
@@ -301,9 +316,7 @@ function showSidebar(adsloc) {
                     report_type: idReportType2String(parseInt($("#reportType").val())), // You may need to handle this differently
                 };
 
-                console.log(reportObject.content)
                 // check Captcha
-                console.log("checking captcha")
                 grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
                     const captcha = token;
                     console.log("captcha: " + captcha) // Will print the token
@@ -316,8 +329,6 @@ function showSidebar(adsloc) {
                         body: JSON.stringify({ captcha: captcha })
                     }).then((res) => res.json()).then((data) => {
                         if (data.success) {
-                            console.log("captcha")
-                            console.log(data)
                             const existingReportsJSON = localStorage.getItem("ads_report");
                             const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
                             existingReports.push(reportObject);
@@ -340,8 +351,6 @@ function showSidebar(adsloc) {
                                 },
                             });
                         } else {
-                            console.log("Captcha không hợp lệ")
-                            console.log(data)
                             alert("Captcha không hợp lệ")
                         }
                     })
@@ -404,7 +413,6 @@ function showSidebar(adsloc) {
 
                     grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
                         const captcha = token;
-                        console.log("captcha: " + captcha) // Will print the token
                         fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
                             method: 'POST',
                             headers: {
@@ -438,13 +446,10 @@ function showSidebar(adsloc) {
                                     },
                                 });
                             } else {
-                                console.log("Captcha không hợp lệ")
-                                console.log(data)
                                 alert("Captcha không hợp lệ")
                             }
                         })
                     })
-
 
                 } else {
                     reportObject = {
@@ -473,7 +478,6 @@ function showSidebar(adsloc) {
 
                     grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
                         const captcha = token;
-                        console.log("captcha: " + captcha) // Will print the token
                         fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
                             method: 'POST',
                             headers: {
@@ -487,7 +491,7 @@ function showSidebar(adsloc) {
                                 const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
                                 existingReports.push(reportObject);
                                 localStorage.setItem("loc_report", JSON.stringify(existingReports));
-            
+
                                 // Send data to the server using AJAX
                                 $.ajax({
                                     type: "POST",
@@ -505,8 +509,6 @@ function showSidebar(adsloc) {
                                     },
                                 });
                             } else {
-                                console.log("Captcha không hợp lệ")
-                                console.log(data)
                                 alert("Captcha không hợp lệ")
                             }
                         })
@@ -858,6 +860,46 @@ $(document).ready(function () {
             })
         );
 
+        $('.search-address-bar').on('keydown', function (event) {
+            if (event.keyCode === 13) { // Kiểm tra phím Enter
+                let address = $('.search-address-bar').val()
+                console.log(address)
+
+                $(".search-address hr").show()
+                $(".resultapi-address").show()
+                $('.gray-bg').show()
+                $('#manage').css('pointer-events', 'none');
+                $('#account').css('pointer-events', 'none');
+                $('#logout').css('pointer-events', 'none');
+                $('#map').css('pointer-events', 'none');
+                $('.flex-container').css('pointer-events', 'none');
+
+                $.ajax({
+                    url: `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(address)}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc`,
+                    type: 'GET',
+                    data: {
+                        access_token: mapboxgl.accessToken,
+                        language: "vi"
+                    },
+                    success: function (response) {
+                        console.log(response.items);
+                        renderAddressResult(response.items.slice(0, 3));
+
+                        $('.resultapi-address div').on('click', function (event) {
+                            let index = $(this).attr("class").split("-")[1];
+
+                            console.log(index);
+                            console.log(response.items[index])
+                            geocoding(marker, response.items[index]);
+                        })
+                    },
+                    error: function () {
+                        alert('Error occurred during geocoding');
+                    }
+                });
+            }
+        });
+
         // lấy dữ liệu lưu vào info
         var info = NguoiDanAdsLoc.content.map(function (item) {
             let { id_ads_location, address, ward, district, loc_type, ads_type,
@@ -947,104 +989,125 @@ $(document).ready(function () {
 
         });
 
+        function geocoding(marker, item) {
+            console.log(item + "item")
+            $(".mapboxgl-marker").remove();
+
+            let longitude = item.position.lng;
+            let latitude = item.position.lat;
+
+            marker = new mapboxgl.Marker({
+                color: '#0B7B31'
+            }).setLngLat([longitude, latitude]).addTo(map);
+            map.flyTo({
+                center: [longitude, latitude],
+                zoom: 17
+            })
+
+            let locObject = {
+                "colorMarker": null,
+                "id_ads_location": null,
+                "address": null,
+                "ward": null,
+                "district": null,
+                "loc_type": null,
+                "ads_type": null,
+                "zoning_text": null,
+                "imagePath": null,
+                "longitude": null,
+                "latitude": null,
+                "is_zoning": null,
+                "list_ads": "null",
+                "list_report": "null"
+            }
+
+            const feature = item.address
+            locObject.ward = feature?.district.substring(7)
+            locObject.district = feature?.city
+            locObject.address = (feature?.houseNumber && feature?.street)
+                ? feature?.houseNumber + " " + feature?.street
+                : feature?.label.substring(0, feature?.label.indexOf(", Phường"))
+            locObject.longitude = longitude
+            locObject.latitude = latitude
+
+            $('.search-address-bar').val(`${item.title}`)
+
+            if (!flag) {
+                console.log(flag)
+                showSidebar(locObject)
+            } else {
+                console.log(flag)
+            }
+
+            flag = false
+
+            // Lắng nghe sự kiện mousedown trên bản đồ
+            map.on('mousedown', function () {
+                // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
+                map.getCanvas().style.cursor = 'grab';
+            });
+
+            // Lắng nghe sự kiện mouseup trên bản đồ
+            map.on('mouseup', function () {
+                // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
+                map.getCanvas().style.cursor = 'pointer';
+            })
+        }
+    
+
         // map.on('scroll', function () {
         //   $('#sidebar').hide()
         // });
 
-        document.getElementById('geocodeForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            const address = document.getElementById('address').value;
+    
+        $(".my-report").on("click", () => {
+        let email = JSON.parse(localStorage.getItem('email'));
 
-            fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(address)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
-                .then(response => response.json())
-                .then(data => {
-                    let locObject = {
-                        "colorMarker": null,
-                        "id_ads_location": null,
-                        "address": null,
-                        "ward": null,
-                        "district": null,
-                        "loc_type": null,
-                        "ads_type": null,
-                        "zoning_text": null,
-                        "imagePath": null,
-                        "longitude": null,
-                        "latitude": null,
-                        "is_zoning": null,
-                        "list_ads": "null",
-                        "list_report": "null"
-                    }
-
-                    let center = data.features[0].center;
-                    map.flyTo({
-                        center: center,
-                        zoom: 17
-                    })
-                    // Create a new marker.
-                    marker.remove()
-                    marker = new mapboxgl.Marker().setLngLat(center).addTo(map);
-                    locObject.ward = data.features[0].context[0].text;
-                    locObject.district = data.features[0].context[2].text;
-                    locObject.address = data.features[0].properties.address;
-                    if ($('#sidebar').is(':visible')) { } else {
-                        showSidebar(locObject)
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    const resultDiv = document.getElementById('result');
-                    resultDiv.innerHTML = '<p>Error during geocoding.</p>';
-                });
+        let my_adsloc_report = []
+        let adsloc = localStorage.getItem('adsloc_report');
+        adsloc = (adsloc) ? JSON.parse(adsloc) : []
+        adsloc.forEach(item => {
+            if (item.email == email)
+                my_adsloc_report.push(item)
         })
 
-        $(".my-report").on("click", () => {
-            let email = JSON.parse(localStorage.getItem('email'));
+        let my_ads_report = []
+        let ads_report = localStorage.getItem('ads_report');
+        ads_report = (ads_report) ? JSON.parse(ads_report) : []
+        ads_report.forEach(item => {
+            if (item.email == email)
+                my_ads_report.push(item)
+        })
 
-            let my_adsloc_report = []
-            let adsloc = localStorage.getItem('adsloc_report');
-            adsloc = (adsloc) ? JSON.parse(adsloc) : []
-            adsloc.forEach(item => {
-                if (item.email == email)
-                    my_adsloc_report.push(item)
-            })
+        let my_loc_report = []
+        let loc_report = localStorage.getItem('loc_report');
+        loc_report = (loc_report) ? JSON.parse(loc_report) : []
+        loc_report.forEach(item => {
+            if (item.email == email)
+                my_loc_report.push(item)
+        })
 
-            let my_ads_report = []
-            let ads_report = localStorage.getItem('ads_report');
-            ads_report = (ads_report) ? JSON.parse(ads_report) : []
-            ads_report.forEach(item => {
-                if (item.email == email)
-                    my_ads_report.push(item)
-            })
+        const list_report = [...my_ads_report, ...my_loc_report, ...my_adsloc_report]
+        console.log(JSON.stringify(list_report) + "list_report")
 
-            let my_loc_report = []
-            let loc_report = localStorage.getItem('loc_report');
-            loc_report = (loc_report) ? JSON.parse(loc_report) : []
-            loc_report.forEach(item => {
-                if (item.email == email)
-                    my_loc_report.push(item)
-            })
+        const note = list_report?.map(item => {
+            if (item.id_ads_location)
+                address = NguoiDanAdsLoc.content.filter(i => i.id_ads_location == item.id_ads_location)[0].address
+            // else if(item.id_ads)
+            //     address = NguoiDanAdsLoc.content.filter(i => i.list_ads.filter(j => j.id_ads == item.id_ads).length > 0)[0].address
+            else
+                address = item.address
 
-            const list_report = [...my_ads_report, ...my_loc_report, ...my_adsloc_report]
-            console.log(JSON.stringify(list_report) + "list_report")
-
-            const note = list_report?.map(item => {
-                if (item.id_ads_location)
-                    address = NguoiDanAdsLoc.content.filter(i => i.id_ads_location == item.id_ads_location)[0].address
-                // else if(item.id_ads)
-                //     address = NguoiDanAdsLoc.content.filter(i => i.list_ads.filter(j => j.id_ads == item.id_ads).length > 0)[0].address
-                else
-                    address = item.address
-
-                return {
-                    address: address,
-                    statusClass: item.status ? "resolved" : "unresolved",
-                    statusText: item.status ? "Đã xử lí" : "Chưa xử lí",
-                    report_type: idReportType2String(item.id_report_type),
-                    imagePath1: item.photo1,
-                    imagePath2: item.photo2,
-                }
-            })
-            var template = `
+            return {
+                address: address,
+                statusClass: item.status ? "resolved" : "unresolved",
+                statusText: item.status ? "Đã xử lí" : "Chưa xử lí",
+                report_type: idReportType2String(item.id_report_type),
+                imagePath1: item.photo1,
+                imagePath2: item.photo2,
+            }
+        })
+        var template = `
             <% for (var i = 0; i < list_report?.length; i++) { %>
                 <div class="other-report row" >
                 <div class="col-md-12 location">
@@ -1089,9 +1152,9 @@ $(document).ready(function () {
                 </div>
             <% } %>
             `;
-            var rendered = ejs.render(template, { list_report, note });
-            $('#my-report .modal-body').html(rendered)
-        })
+        var rendered = ejs.render(template, { list_report, note });
+        $('#my-report .modal-body').html(rendered)
+    })
     }).fail(function (jqXHR, textStatus, errorThrown) {
         console.log(errorThrown + "getAdsLoc")
     })
