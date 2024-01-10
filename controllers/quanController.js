@@ -603,6 +603,16 @@ const getDistrictByID = async (req, res) => {
     }
 }
 
+const testDB = async (req, res) => {
+    try {
+        await sequelize.query('ALTER SEQUENCE ads_create_id_create_seq RESTART WITH 24');
+        sucessCode(res, "", "Lấy thành công");
+    } catch (error) {
+        console.log(error);
+        errorCode(res,"Lỗi BE");
+    }
+}
+
 module.exports = {
     getAllAdsLoc, getMapInfo, getWard,
     getAdsLocation, getAds, updateAdsLoc, updateAds,
@@ -610,4 +620,5 @@ module.exports = {
     getAdsCreate, createAds, extendAds,
     getCanBoPhuong, getMapAdsLoc, getAdsWard, getAdsLocationWard,
     getAdsReportWard, getAdsLocReportWard, getLocReportWard,
-    getAdsCreateWard, createAdsWard, getWardAndDistrict, getDistrictByID }
+    getAdsCreateWard, createAdsWard, getWardAndDistrict, getDistrictByID,
+    testDB }

@@ -7,12 +7,15 @@ const {
     getAdsCreate, createAds, extendAds,
     getCanBoPhuong, getMapAdsLoc, getAdsWard, getAdsLocationWard,
     getAdsReportWard, getAdsLocReportWard, getLocReportWard,
-    getAdsCreateWard, createAdsWard, getWardAndDistrict, getDistrictByID } = require('../controllers/quanController')
+    getAdsCreateWard, createAdsWard, getWardAndDistrict, getDistrictByID,
+    testDB } = require('../controllers/quanController')
 const { upload } = require('../middlewares/upload');
 
 const cookieParser = require("cookie-parser");
 quanRoute.use(cookieParser(process.env.JWT_SECRET_KEY))
 const { isCanboQuan, isCanboPhuong, isCanboPhuongOrQuan } = require('../middlewares/baseToken');
+
+quanRoute.get("/testDB", testDB)
 
 quanRoute.get("/getAllAdsLoc", isCanboPhuongOrQuan, getAllAdsLoc)
 
@@ -58,7 +61,7 @@ quanRoute.get("/getLocReportWard/:id_ward", isCanboPhuong, getLocReportWard);
 
 quanRoute.get("/getAdsCreateWard/:id_ward", isCanboPhuong, getAdsCreateWard);
 
-quanRoute.post("/createAdsWard", isCanboPhuong, upload('createAdsWard').single("file"), createAdsWard);
+quanRoute.post("/createAdsWard", isCanboPhuong, createAdsWard);
 
 quanRoute.get("/getWardAndDistrict/:id_ward", isCanboPhuong, getWardAndDistrict);
 

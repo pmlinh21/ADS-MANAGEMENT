@@ -1,183 +1,192 @@
 <%- include("../partial/header"); %>
 
-<div class = "div-in-header">
-<div id = "select-ward">
-    <div class = "select-ward-bar"> Chọn phường để xem ...</div>
-    <hr style = "display: none">
-    <form id="ward-container" style = "display: none"></form>
-</div>  
-
-<div class="search-address">
-  <input type="text" class = "form-control search-address-bar " placeholder = "Nhập địa chỉ ...">
-  <hr style = "display: none">
-  <div class="resultapi-address" style = "display: none"></div>
-</div>
-</div>
-
-<%- include("../partial/navbar"); %>
-
-
-<div id="sidebar" style="display: none">
-  <div class="adInfo" style="display: block;">
-  </div>
-  <div class="locInfo">
-    <i class="fa-solid fa-location-dot"></i> Thông tin địa điểm
-    <div class="data">
-      <p class="place"></p>
-      <p class="address"></p>
+  <div class="div-in-header">
+    <div id="select-ward">
+      <div class="select-ward-bar"> Chọn phường để xem ...</div>
+      <hr style="display: none">
+      <form id="ward-container" style="display: none"></form>
     </div>
-    <div class="button-group">
-      <button data-target="#other-report-popup" data-toggle="modal" class="btn style1-button other-report-button">
-        <i class="fa-solid fa-eye"></i> Xem báo cáo
+
+    <div class="search-address">
+      <input type="text" class="form-control search-address-bar " placeholder="Nhập địa chỉ ...">
+      <hr style="display: none">
+      <div class="resultapi-address" style="display: none"></div>
+    </div>
+  </div>
+
+  <%- include("../partial/navbar"); %>
+
+
+    <div id="sidebar" style="display: none">
+      <div class="adInfo" style="display: block;">
+      </div>
+      <div class="locInfo">
+        <i class="fa-solid fa-location-dot"></i> Thông tin địa điểm
+        <div class="data">
+          <p class="place"></p>
+          <p class="address"></p>
+        </div>
+        <div class="button-group">
+          <button data-target="#other-report-popup" data-toggle="modal" class="btn style1-button other-report-button">
+            <i class="fa-solid fa-eye"></i> Xem báo cáo
+          </button>
+        </div>
+      </div>
+      <button type="button" class="btn close-button btn-sm" role="button"> <i class="fa-solid fa-arrow-left"></i> Close
       </button>
     </div>
-  </div>
-  <button type="button" class="btn close-button btn-sm" role="button"> <i class="fa-solid fa-arrow-left"></i> Close
-  </button>
-</div>
 
-<div class="modal fade" id="detail-popup" style = "display: none" tabindex="-1" role="dialog" aria-labelledby="edit-request"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <!-- <div class="modal-header ">
+    <div class="modal fade" id="detail-popup" style="display: none" tabindex="-1" role="dialog"
+      aria-labelledby="edit-request" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <!-- <div class="modal-header ">
         <h5 class="modal-title" id="edit-request">Hình ảnh chi tiết bảng quảng cáo </h5>
       </div> -->
-      <div class="modal-body">
-        <div class = "row hinh-anh-bqc">
-          <div class="col-md-12">
-            <label class="form-label" style="font-weight: 600; margin-bottom: 0.5rem;">Hình ảnh bảng quảng cáo</label>
-          </div>
-          <img>
-          <p>(Chưa có hình ảnh)</p>
-        </div>
-        <form class="row form-ads-create-details">
-          <div class="col-md-12">
-              <label class="form-label" style="font-weight: 600; margin-bottom: 0.5rem;">Thông tin cấp phép</label>
-          </div>
-          <div class="col-md-2">
-              <label for="id_ads_create" class="form-label">ID</label>
-              <input type="number" class="form-control input-details" id="id" readonly>
-          </div>
-          <div class="col-md-4">
-            <label for="width" class="form-label">Loại bảng quảng cáo</label>
-            <input type="text" class="form-control input-details" id="board_type" readonly>
-          </div>
-      
-          <div class="col-md-3">
-            <label for="height" class="form-label">Kích thước</label>
-            <input type="text" class="form-control input-details" id="size" readonly>
-          </div>
-          <div class="col-md-3">
-            <label for="quantity" class="form-label">Số lượng</label>
-            <input type="number" class="form-control input-details" id="quantity" readonly>
-          </div>
+          <div class="modal-body">
 
-          <!-- <div class="col-md-4">
+            <div class="row hinh-anh-bqc my-3">
+              <div class="col-md-12">
+                <label class="form-label" style="font-weight: 600; margin-bottom: 0.5rem;">Hình ảnh bảng quảng
+                  cáo</label>
+              </div>
+              <img>
+              <p>(Chưa có hình ảnh)</p>
+            </div>
+
+            <form class="row form-ads-create-details my-3">
+              <div class="col-md-12">
+                <label class="form-label" style="font-weight: 600; margin-bottom: 0.5rem;">Thông tin cấp phép</label>
+              </div>
+              <div class="col-md-2">
+                <label for="id_ads_create" class="form-label">ID</label>
+                <input type="number" class="form-control input-details" id="id" readonly>
+              </div>
+              <div class="col-md-4">
+                <label for="width" class="form-label">Loại bảng quảng cáo</label>
+                <input type="text" class="form-control input-details" id="board_type" readonly>
+              </div>
+
+              <div class="col-md-3">
+                <label for="height" class="form-label">Kích thước</label>
+                <input type="text" class="form-control input-details" id="size" readonly>
+              </div>
+              <div class="col-md-3">
+                <label for="quantity" class="form-label">Số lượng</label>
+                <input type="number" class="form-control input-details" id="quantity" readonly>
+              </div>
+
+              <!-- <div class="col-md-4">
             <label for="adsloc" class="form-label">Điểm đặt</label>
             <input class="form-control input-details" type="text" id="adsloc" readonly>
           </div> -->
-      
-          <div class="col-md-12">
-              <label for="content" class="form-label">Nội dung quảng cáo</label>
-              <textarea type="text" class="form-control input-details" id="content" readonly></textarea>
-          </div>
-      
-          
-      
-          <div class="col-md-4">
-              <label for="company" class="form-label">Công ty</label>
-              <input type="text" class="form-control input-details" id="company" readonly>
-          </div>
-          <div class="col-md-4">
-              <label for="email" class="form-label">Email công ty</label>
-              <input type="email" class="form-control input-details" id="email" readonly>
-          </div>
-      
-          <div class="col-md-4">
-              <label for="phone" class="form-label">Số điện thoại công ty</label>
-              <input type="phone" class="form-control input-details" id="phone" readonly>
-          </div>
-          <div class="col-md-4">
-              <label for="address" class="form-label">Địa chỉ công ty</label>
-              <input type="text" class="form-control input-details" id="address" readonly>
-          </div>
-      
-          <div class="col-md-4">
-              <label for="start" class="form-label">Ngày bắt đầu hợp đồng</label>
-              <input type="date" class="form-control input-details" id="start_date" readonly>
-          </div>
-          <div class="col-md-4">
-              <label for="end" class="form-label">Ngày kết thúc hợp đồng</label>
-              <input type="date" class="form-control input-details" id="end_date" readonly>
-          </div>
-          <div class="col-md-4">
-              <label for="officer" class="form-label">Người tạo cấp phép</label>
-              <input type="email" class="form-control input-details" id="officer" readonly>
-          </div>
-          <div class="col-md-4">
-              <label for="office" class="form-label">Đơn vị tạo cấp phép</label>
-              <input type="text" class="form-control input-details" id="office" readonly>
-          </div>
-          <div class="col-md-4">
-            <label for="status" class="form-label">Trạng thái cấp phép</label>
-            <input type="text" class="form-control input-details" id="status" readonly>
-        </div>
-        </form>
-        <div class="col-md-8 image mt-2">
-          <img>
-        </div>
-        <div class=" row giay-phep-gia-han">
-          <div class="col-md-12">
-            <label class="form-label" style="font-weight: 600; margin-bottom: 0.5rem;">Thông tin cấp phép gia hạn</label>
-          </div>
-          <div class = "col-md-12 content">
-            <p>(Chưa có giấy phép gia hạn)</p>
+
+              <div class="col-md-12">
+                <label for="content" class="form-label">Nội dung quảng cáo</label>
+                <textarea type="text" class="form-control input-details" id="content" readonly></textarea>
+              </div>
+
+
+
+              <div class="col-md-4">
+                <label for="company" class="form-label">Công ty</label>
+                <input type="text" class="form-control input-details" id="company" readonly>
+              </div>
+              <div class="col-md-4">
+                <label for="email" class="form-label">Email công ty</label>
+                <input type="email" class="form-control input-details" id="email" readonly>
+              </div>
+
+              <div class="col-md-4">
+                <label for="phone" class="form-label">Số điện thoại công ty</label>
+                <input type="phone" class="form-control input-details" id="phone" readonly>
+              </div>
+              <div class="col-md-4">
+                <label for="address" class="form-label">Địa chỉ công ty</label>
+                <input type="text" class="form-control input-details" id="address" readonly>
+              </div>
+
+              <div class="col-md-4">
+                <label for="start" class="form-label">Ngày bắt đầu hợp đồng</label>
+                <input type="date" class="form-control input-details" id="start_date" readonly>
+              </div>
+              <div class="col-md-4">
+                <label for="end" class="form-label">Ngày kết thúc hợp đồng</label>
+                <input type="date" class="form-control input-details" id="end_date" readonly>
+              </div>
+              <div class="col-md-4">
+                <label for="officer" class="form-label">Người tạo cấp phép</label>
+                <input type="email" class="form-control input-details" id="officer" readonly>
+              </div>
+              <div class="col-md-4">
+                <label for="office" class="form-label">Đơn vị tạo cấp phép</label>
+                <input type="text" class="form-control input-details" id="office" readonly>
+              </div>
+              <div class="col-md-4">
+                <label for="status" class="form-label">Trạng thái cấp phép</label>
+                <input type="text" class="form-control input-details" id="status" readonly>
+              </div>
+            </form>
+            <div class="image my-3">
+              <img>
+              <p>(Không có hình ảnh cấp phép hình ảnh)</p>
+            </div>
+
+            <div class=" row giay-phep-gia-han my-3" style="text-align: center;">
+              <div class="col-md-12">
+                <label class="form-label" style="font-weight: 600; margin-bottom: 0.5rem;">Thông tin cấp phép gia
+                  hạn</label>
+              </div>
+              <div class="col-md-12 content">
+                <p>(Chưa có giấy phép gia hạn)</p>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<div class="modal fade" id="other-report-popup" tabindex="-1" role="dialog" aria-labelledby="edit-request" aria-hidden="true" data-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header ">
-        <h5 class="modal-title" id="edit-request">TỔNG HỢP BÁO CÁO VI PHẠM </h5>
-      </div>
-      <div class="modal-body">
+    <div class="modal fade" id="other-report-popup" tabindex="-1" role="dialog" aria-labelledby="edit-request"
+      aria-hidden="true" data-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header ">
+            <h5 class="modal-title" id="edit-request">TỔNG HỢP BÁO CÁO VI PHẠM </h5>
+          </div>
+          <div class="modal-body">
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<div class="flex-container toggle">
-    <label class="switch">
-      <input type="checkbox" id = "quangcao" checked>
-      <span class="slider round" id="switch1"></span>
-    </label>
-    <span id="sub">Bảng quảng cáo</span>
-    <label class="switch">
-      <input type="checkbox" id = "baocao" checked>
-      <span class="slider round" id="switch2"></span>
-    </label>
-    <span id="sub">Báo cáo chưa xử lí</span>
-    <label class="switch">
-      <input type="checkbox" id = "quyhoach" checked>
-      <span class="slider round" id="switch3"></span>
-    </label>
-    <span id="sub">Chưa quy hoạch</span>
-  </div>
-</div>
+    <div class="flex-container toggle">
+      <label class="switch">
+        <input type="checkbox" id="quangcao" checked>
+        <span class="slider round" id="switch1"></span>
+      </label>
+      <span id="sub">Bảng quảng cáo</span>
+      <label class="switch">
+        <input type="checkbox" id="baocao" checked>
+        <span class="slider round" id="switch2"></span>
+      </label>
+      <span id="sub">Báo cáo chưa xử lí</span>
+      <label class="switch">
+        <input type="checkbox" id="quyhoach" checked>
+        <span class="slider round" id="switch3"></span>
+      </label>
+      <span id="sub">Chưa quy hoạch</span>
+    </div>
+    </div>
 
-<div class="w-100 h-100 gray-bg" style = "display: none;"></div>
+    <div class="w-100 h-100 gray-bg" style="display: none;"></div>
 
-<div id='map' class = "container-fluid"></div> 
+    <div id='map' class="container-fluid"></div>
 
 
-<script type = "text/javascript" src="../../public/js/CanBo/homepageCanBo.js"></script>
-<script defer type = "text/javascript" src="../../public/js/CanBo/PhuongQuan/renderWard.js"></script>
+    <script type="text/javascript" src="../../public/js/CanBo/homepageCanBo.js"></script>
+    <script defer type="text/javascript" src="../../public/js/CanBo/PhuongQuan/renderWard.js"></script>
 
-</body>
-</html>
+    </body>
+
+    </html>

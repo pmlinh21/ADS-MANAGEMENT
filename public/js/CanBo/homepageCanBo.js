@@ -8,10 +8,10 @@ function red(item) {
 
   if (item[11]) {
     for (let i = 0; i < item[11].length; i++)
-      if (item[11][i]?.list_report?.some( report => !report.status))
-      return true
+      if (item[11][i]?.list_report?.some(report => !report.status))
+        return true
   }
-  
+
   return false
 }
 
@@ -45,129 +45,133 @@ function renderMapWard(wards) {
 }
 
 function createLayer(map, features) {
+  // tạo cluster
   map.addSource('adsloc', {
-    type: 'geojson',
-    data: {
-      type: 'FeatureCollection',
-      features: features
-    },
-    cluster: true,
-    clusterMaxZoom: 14,
-    clusterRadius: 50
+      type: 'geojson',
+      data: {
+          type: 'FeatureCollection',
+          features: features
+      },
+      cluster: true,
+      clusterMaxZoom: 14,
+      clusterRadius: 50
   });
-  console.log(features)
+  // console.log(info)
 
+  // style layer cluster
   map.addLayer({
-    id: 'clusters',
-    type: 'circle',
-    source: 'adsloc',
-    filter: ['has', 'point_count'],
-    paint: {
-      'circle-color': '#51bbd6',
-      'circle-radius': [
-        'step',
-        ['get', 'point_count'],
-        20,
-        100,
-        30,
-        750,
-        40
-      ]
-    }
-  });
-
-  map.addLayer({
-    id: 'cluster-count',
-    type: 'symbol',
-    source: 'adsloc',
-    filter: ['has', 'point_count'],
-    layout: {
-      'text-field': ['get', 'point_count_abbreviated'],
-      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-      'text-size': 20
-    }
-  });
-
-
-  map.addLayer({
-    id: 'unclustered-point',
-    type: 'circle',
-    source: 'adsloc',
-    filter: ['!', ['has', 'point_count']],
-    paint: {
-      'circle-color': ['get', 'colorMarker'],
-      'circle-radius': 10,
-    }
-  });
-
-  // inspect a cluster on click
-  map.on('click', 'clusters', (e) => {
-    const features = map.queryRenderedFeatures(e.point, {
-      layers: ['clusters']
-    });
-    const clusterId = features[0].properties.cluster_id;
-    map.getSource('adsloc').getClusterExpansionZoom(
-      clusterId,
-      (err, zoom) => {
-        if (err) return;
-
-        map.easeTo({
-          center: features[0].geometry.coordinates,
-          zoom: zoom
-        });
+      id: 'clusters',
+      type: 'circle',
+      source: 'adsloc',
+      filter: ['has', 'point_count'],
+      paint: {
+          'circle-color': '#51bbd6',
+          'circle-radius': [
+              'step',
+              ['get', 'point_count'],
+              20,
+              100,
+              30,
+              750,
+              40
+          ]
       }
-    );
   });
 
+  // style số hiển thị trên cluster
+  map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'adsloc',
+      filter: ['has', 'point_count'],
+      layout: {
+          'text-field': ['get', 'point_count_abbreviated'],
+          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+          'text-size': 20
+      }
+  });
+
+  // style các điểm ban đầu khi chưa gom nhóm
+  map.addLayer({
+      id: 'unclustered-point',
+      type: 'circle',
+      source: 'adsloc',
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+          'circle-color': ['get', 'colorMarker'],
+          'circle-radius': 10,
+      }
+  });
+
+  // click vào cluster -> map zoom to ra
+  map.on('click', 'clusters', (e) => {
+      const features = map.queryRenderedFeatures(e.point, {
+          layers: ['clusters']
+      });
+      const clusterId = features[0].properties.cluster_id;
+      map.getSource('adsloc').getClusterExpansionZoom(
+          clusterId,
+          (err, zoom) => {
+              if (err) return;
+
+              map.easeTo({
+                  center: features[0].geometry.coordinates,
+                  zoom: zoom
+              });
+          }
+      );
+  });
+
+  // hover vào điểm đặt
   map.on('mouseenter', 'unclustered-point', (e) => {
+      const coordinates = e.features[0].geometry.coordinates.slice();
+      const ads_type = e.features[0].properties.ads_type;
+      const loc_type = e.features[0].properties.loc_type;
+      const address = e.features[0].properties.address;
+      const ward = e.features[0].properties.ward;
+      const district = e.features[0].properties.district;
+      const zoning_text = e.features[0].properties.zoning_text;
+      const imagePath = e.features[0].properties.imagePath;
 
-    const coordinates = e.features[0].geometry.coordinates.slice();
-    const ads_type = e.features[0].properties.ads_type;
-    const loc_type = e.features[0].properties.loc_type;
-    const address = e.features[0].properties.address;
-    const zoning_text = e.features[0].properties.zoning_text;
-    const imagePath = e.features[0].properties.imagePath;
+      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+      }
 
-    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-      coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-    }
+      // console.log(e.features[0])
 
-    // console.log(e.features[0])
-
-    const popup = new mapboxgl.Popup({
-      closeButton: false,
-      offset: 15
-    })
-      .setLngLat(coordinates)
-      .setHTML(
-        `<div class="popup-content"> 
+      const popup = new mapboxgl.Popup({
+          closeButton: false,
+          offset: 15
+      })
+          .setLngLat(coordinates)
+          .setHTML(
+              `<div class="popup-content"> 
     <p class = "ads-type"  style = "font-weight: 900">${ads_type}</p>
     <p class = "loc-type">${loc_type}</p>
-    <p class = "address">${address}</p>
+    <p class = "address">${address}, Phường ${ward}, Quận ${district} </p>
     <p class = "zoning-text" style = "font-weight: 900; font-style: italic">${zoning_text}</p>
     <img src = ${imagePath} class = "img-thumbnail" />
     </div>`
-      )
-    e.features[0].popup = popup;
-    popup.addTo(map)
+          )
+      e.features[0].popup = popup;
+      popup.addTo(map)
 
-    map.getCanvas().style.cursor = 'pointer'
+      map.getCanvas().style.cursor = 'pointer'
 
-    map.on('mouseleave', 'unclustered-point', () => {
-      // Remove the popup from the map
-      popup.remove();
-    });
-
+      map.on('mouseleave', 'unclustered-point', () => {
+          // Remove the popup from the map
+          popup.remove();
+      })
   });
-  // nhấn vào điểm đặt
-  map.on('mousedown', 'unclustered-point', (e) => {
-    const feature = e.features[0];
-    if (feature.popup) {
-      feature.popup.remove();
-      delete feature.popup;
-    }
 
-    showSidebar(e.features[0].properties);
+  // nhán vào điểm đặt
+  map.on('mousedown', 'unclustered-point', (e) => {
+      const feature = e.features[0];
+      if (feature.popup) {
+          feature.popup.remove();
+          delete feature.popup;
+      }
+      showSidebar(e.features[0].properties);
   })
 }
 
@@ -189,7 +193,7 @@ function createMarker(info, map) {
     else
       colorMarker = '#0B7B31';
     let imagePath
-    if ( item[7] != null && item[7] != "")
+    if (item[7] != null && item[7] != "")
       imagePath = item[7]
     else
       imagePath = "../../../public/image/image-placeholder.jpg"
@@ -320,29 +324,36 @@ function renderReport(list_report, container) {
   $(container).html(rendered);
 }
 
-function renderGiayPhepGiaHan(list_ads_create){
-  const [tmp, ...giahan] = list_ads_create;
-  
+function renderGiayPhepGiaHan(giahan) {
+  const note = giahan.map(item => {
+    if (item.status === true)
+      return "Đã duyệt"
+    else if (item.status === false)
+      return "Đã từ chối"
+    else
+      return "Chưa xét duyệt"
+  })
+
   var template = `
     <% for (var i = 0; i < giahan?.length; i++) { %>
-      <form class="row form-ads-create-details">
+      <form class="row form-ads-create-details mb-3">
           <div class="col-md-4">
               <label class="form-label">Ngày bắt đầu hợp đồng</label>
-              <input type="date" class="form-control input-details" value = "<%= formatSQLDate_ymd(info.start_date)%>" readonly>
+              <input type="date" class="form-control input-details" value = "<%= formatSQLDate_ymd(giahan[i].start_date)%>" readonly>
           </div>
           <div class="col-md-4">
               <label class="form-label">Ngày kết thúc hợp đồng</label>
-              <input type="date" class="form-control input-details" value = "<%= formatSQLDate_ymd(info.end_date)%>" readonly>
+              <input type="date" class="form-control input-details" value = "<%= formatSQLDate_ymd(giahan[i].end_date)%>" readonly>
           </div>
           <div class="col-md-4">
             <label for="height" class="form-label">Trạng thái cấp phép</label>
-            <input type="text" class="form-control input-details" value = "<%= info.status%>" readonly>
+            <input type="text" class="form-control input-details" value = "<%= note[i]%>" readonly>
           </div>
       </form>
     <% } %>
     `;
 
-  var rendered = ejs.render(template, { giahan });
+  var rendered = ejs.render(template, { giahan, note });
   $("#detail-popup .giay-phep-gia-han .content").html(rendered);
 }
 
@@ -356,12 +367,22 @@ function showSidebar(adsloc) {
   $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, quận ${adsloc.district}`)
 
   $("#sidebar .detail-button").on("click", function () {
+    $("#loading-bg").show()
     let str_id_ads = $(this).attr("class").split(" ")[1];
     let id_ads = parseInt(str_id_ads.split("-")[1])
     // console.log(id_ads)
 
     const list_ads = JSON.parse(adsloc.list_ads)
     ads = list_ads?.filter(item => item.id_ads == id_ads)[0]
+
+    if (ads.photo) {
+      $("#detail-popup .hinh-anh-bqc img").attr("src", ads.photo)
+      $("#detail-popup .hinh-anh-bqc img").show()
+      $("#detail-popup .hinh-anh-bqc p").hide()
+    } else {
+      $("#detail-popup .hinh-anh-bqc img").hide()
+      $("#detail-popup .hinh-anh-bqc p").show()
+    }
 
     $.ajax({
       url: `/api/basic/getAdsCreateByAds/${ads.id_ads}`,
@@ -371,16 +392,10 @@ function showSidebar(adsloc) {
         console.log(data)
         console.log(ads.id_ads)
 
-        if (ads.photo){
-          $("#detail-popup .hinh-anh-bqc img").attr("src", ads.photo)
-          $("#detail-popup .hinh-anh-bqc p").show()
-        } else{
-          $("#detail-popup .hinh-anh-bqc img").hide()
-        }
-    
         if (data.content.length > 0) {
           $("#detail-popup").modal('show');
-          info = data.content[0]
+          const [info, ...giahan] = data.content
+
           $('#id').val(info.id_create);
           $('#board_type').val(info.board_type);
           $('#size').val(info.width + 'm x ' + info.height + "m");
@@ -398,16 +413,28 @@ function showSidebar(adsloc) {
           $('#officer').val(info.officer);
           $('#office').val(info.office === 1 ? "Quận" : (info.office === 2 ? "Phường" : ""));
 
-            if (data.content.length > 1){
-              renderGiayPhepGiaHan(data.content);
-            }
-          
+          if (info.photo) {
+            $("#detail-popup .image p").hide()
+            $("#detail-popup .image img").show()
+            $("#detail-popup .image img").attr("src", info.photo)
+          } else {
+            $("#detail-popup .image img").hide()
+            $("#detail-popup .image p").show()
+          }
+
+          if (giahan?.length > 0)
+            renderGiayPhepGiaHan(giahan);
+
         }
         else {
           $("#detail-popup").hide()
           alert("Chưa có thông tin giấy cấp phép")
         }
 
+        $("#loading-bg").hide()
+      },
+      error: function () {
+        $("#loading-bg").hide()
       }
     })
   })
@@ -430,28 +457,43 @@ function showSidebar(adsloc) {
       console.log(list_report)
       renderReport(list_report, "#other-report-popup .modal-body")
       return
+
     } else {
-      const id_district = parseInt(localStorage.getItem('id_district'));
-      const id_ward = parseInt(localStorage.getItem('id_ward'));
-      const param = isNaN(id_district) ? id_ward : id_district;
-      console.log("param: ", param);
 
-      $.get(`/api/quan/getLocReport/${param}`, function (data) {
-        console.log("~");
+      var url = "";
+      if (id_district)
+        url = "api/quan/getLocReport/" + id_district
+      else if (id_ward)
+        url = "api/ward/getLocReportWard/" + id_ward
+      else
+        url = "api/ward/getAllBaoCaoDD"
 
-        const loc_report = data.content.filter(function (item) {
-          return (item.longitude == adsloc.longitude && item.latitude == adsloc.latitude) ||
-            (item.address == adsloc.address && item.ward == adsloc.ward)
-        })
+      $.ajax({
+        url: url,
+        type: "GET",
+        success: function (data) {
+          console.log(data.content)
 
-        console.log(loc_report)
-        renderReport(loc_report, "#other-report-popup .modal-body")
-        return
-      }).fail(function (error) {
-        console.log(error);
-      })
+          console.log("thông tin của điểm được click: ")
+          console.log(adsloc.longitude.toFixed(4))
+          console.log(adsloc.latitude.toFixed(4))
+          console.log(adsloc.address)
+          console.log(adsloc.ward)
+          const loc_report = data.content.filter(function (item) {
+            return (
+              (item.longitude.toFixed(4) == adsloc.longitude.toFixed(4) && item.latitude.toFixed(4) == adsloc.latitude.toFixed(4) ||
+                (item.address == adsloc.address && item.ward == adsloc.ward))
+            );
+          });
+
+          renderReport(loc_report, "#other-report-popup .modal-body");
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      });
+
     }
-
   })
 
   $("#sidebar").on("click", '.close-button', function () {
@@ -473,9 +515,15 @@ function changeMapSize() {
   $('#sidebar').height(mapHeight);
 }
 
+window.onclick = e => {
+  console.log(e.target);  // to get the element
+  console.log(e.target.tagName);  // to get the element tag name alone
+}
+
 // hard code
 $(document).ready(function () {
   var wards, info, filter_info
+  
 
   changeMapSize();
 
@@ -491,8 +539,8 @@ $(document).ready(function () {
   var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: [106.6974, 10.7743],
-    zoom: 15,
+    center: [106.6924, 10.7759],
+    zoom: 16,
     language: 'vi',
     interactive: true
   });
@@ -544,7 +592,7 @@ $(document).ready(function () {
       .then(data => {
         const feature = data.items[0].address
         locObject.ward = feature?.district.substring(7)
-        locObject.district = feature?.city
+        locObject.district = feature?.city.substring(5)
         locObject.address = (feature?.houseNumber && feature?.street)
           ? feature?.houseNumber + " " + feature?.street
           : feature?.label.substring(0, feature?.label.indexOf(", Phường"))
@@ -612,7 +660,7 @@ $(document).ready(function () {
 
     const feature = item.address
     locObject.ward = feature?.district.substring(7)
-    locObject.district = feature?.city
+    locObject.district = feature?.city.substring(5)
     locObject.address = (feature?.houseNumber && feature?.street)
       ? feature?.houseNumber + " " + feature?.street
       : feature?.label.substring(0, feature?.label.indexOf(", Phường"))
