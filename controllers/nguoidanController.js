@@ -116,8 +116,8 @@ const getLocReport = async (req, res) => {
             (`SELECT lr.*, rt.report_type, w.ward, d.district
             FROM Location_report lr
             INNER JOIN Report_type rt ON lr.id_report_type = rt.id_report_type
-            INNER JOIN Ward w ON lr.id_ward = w.id_ward
-            INNER JOIN District d ON w.id_district = d.id_district
+            LEFT JOIN Ward w ON lr.id_ward = w.id_ward
+            LEFT JOIN District d ON w.id_district = d.id_district
             `);
         sucessCode(res, data, "Get thành công")
     } catch (err) {
@@ -201,12 +201,20 @@ const createLocReport = async (req, res) => {
 
     console.log(data.content + "data")
     try {
+        let findDistrict = await model.District.findOne({where:{district: data.district}})
+        
+        let findWard = await model.Ward.findOne({where:{
+            ward: data.ward,
+            id_district: findDistrict.id_district
+        }})
+
+
         const loc_report = await model.Location_report.create({
             longitude: data.longitude.toFixed(4),
             latitude: data.latitude.toFixed(4),
             officer: data.officer,
             office: data.office,
-            id_ward: data.id_ward,
+            id_ward: findWard.id_ward,
             id_report_type: data.id_report_type,
             fullname: data.fullname,
             email: data.email,

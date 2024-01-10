@@ -45,136 +45,133 @@ function renderMapWard(wards) {
 }
 
 function createLayer(map, features) {
+  // tạo cluster
   map.addSource('adsloc', {
-    type: 'geojson',
-    data: {
-      type: 'FeatureCollection',
-      features: features
-    },
-    cluster: true,
-    clusterMaxZoom: 14,
-    clusterRadius: 50
+      type: 'geojson',
+      data: {
+          type: 'FeatureCollection',
+          features: features
+      },
+      cluster: true,
+      clusterMaxZoom: 14,
+      clusterRadius: 50
   });
-  console.log(features)
+  // console.log(info)
 
+  // style layer cluster
   map.addLayer({
-    id: 'clusters',
-    type: 'circle',
-    source: 'adsloc',
-    filter: ['has', 'point_count'],
-    paint: {
-      'circle-color': '#51bbd6',
-      'circle-radius': [
-        'step',
-        ['get', 'point_count'],
-        20,
-        100,
-        30,
-        750,
-        40
-      ]
-    }
-  });
-
-  map.addLayer({
-    id: 'cluster-count',
-    type: 'symbol',
-    source: 'adsloc',
-    filter: ['has', 'point_count'],
-    layout: {
-      'text-field': ['get', 'point_count_abbreviated'],
-      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-      'text-size': 20
-    }
-  });
-
-
-  map.addLayer({
-    id: 'unclustered-point',
-    type: 'circle',
-    source: 'adsloc',
-    filter: ['!', ['has', 'point_count']],
-    paint: {
-      'circle-color': ['get', 'colorMarker'],
-      // 'circle-radius': 10,
-      'circle-radius': 10,
-      'circle-stroke-width': 2,
-      'circle-stroke-color': '#ffffff'
-    }
-  });
-
-  // inspect a cluster on click
-  map.on('click', 'clusters', (e) => {
-    const features = map.queryRenderedFeatures(e.point, {
-      layers: ['clusters']
-    });
-    const clusterId = features[0].properties.cluster_id;
-    map.getSource('adsloc').getClusterExpansionZoom(
-      clusterId,
-      (err, zoom) => {
-        if (err) return;
-
-        map.easeTo({
-          center: features[0].geometry.coordinates,
-          zoom: zoom
-        });
+      id: 'clusters',
+      type: 'circle',
+      source: 'adsloc',
+      filter: ['has', 'point_count'],
+      paint: {
+          'circle-color': '#51bbd6',
+          'circle-radius': [
+              'step',
+              ['get', 'point_count'],
+              20,
+              100,
+              30,
+              750,
+              40
+          ]
       }
-    );
   });
 
-  
+  // style số hiển thị trên cluster
+  map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'adsloc',
+      filter: ['has', 'point_count'],
+      layout: {
+          'text-field': ['get', 'point_count_abbreviated'],
+          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+          'text-size': 20
+      }
+  });
 
+  // style các điểm ban đầu khi chưa gom nhóm
+  map.addLayer({
+      id: 'unclustered-point',
+      type: 'circle',
+      source: 'adsloc',
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+          'circle-color': ['get', 'colorMarker'],
+          'circle-radius': 10,
+      }
+  });
+
+  // click vào cluster -> map zoom to ra
+  map.on('click', 'clusters', (e) => {
+      const features = map.queryRenderedFeatures(e.point, {
+          layers: ['clusters']
+      });
+      const clusterId = features[0].properties.cluster_id;
+      map.getSource('adsloc').getClusterExpansionZoom(
+          clusterId,
+          (err, zoom) => {
+              if (err) return;
+
+              map.easeTo({
+                  center: features[0].geometry.coordinates,
+                  zoom: zoom
+              });
+          }
+      );
+  });
+
+  // hover vào điểm đặt
   map.on('mouseenter', 'unclustered-point', (e) => {
+      const coordinates = e.features[0].geometry.coordinates.slice();
+      const ads_type = e.features[0].properties.ads_type;
+      const loc_type = e.features[0].properties.loc_type;
+      const address = e.features[0].properties.address;
+      const ward = e.features[0].properties.ward;
+      const district = e.features[0].properties.district;
+      const zoning_text = e.features[0].properties.zoning_text;
+      const imagePath = e.features[0].properties.imagePath;
 
-    map.getCanvas().style.cursor = 'pointer'
+      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+      }
 
-    const coordinates = e.features[0].geometry.coordinates.slice();
-    const ads_type = e.features[0].properties.ads_type;
-    const loc_type = e.features[0].properties.loc_type;
-    const address = e.features[0].properties.address;
-    const zoning_text = e.features[0].properties.zoning_text;
-    const imagePath = e.features[0].properties.imagePath;
+      // console.log(e.features[0])
 
-    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-      coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-    }
-
-    const popup = new mapboxgl.Popup({
-      closeButton: false,
-      closeOnClick: false,
-      offset: 15
-    }).setLngLat(coordinates)
-      .setHTML(
-        `<div class="popup-content"> 
+      const popup = new mapboxgl.Popup({
+          closeButton: false,
+          offset: 15
+      })
+          .setLngLat(coordinates)
+          .setHTML(
+              `<div class="popup-content"> 
     <p class = "ads-type"  style = "font-weight: 900">${ads_type}</p>
     <p class = "loc-type">${loc_type}</p>
-    <p class = "address">${address}</p>
+    <p class = "address">${address}, Phường ${ward}, Quận ${district} </p>
     <p class = "zoning-text" style = "font-weight: 900; font-style: italic">${zoning_text}</p>
     <img src = ${imagePath} class = "img-thumbnail" />
     </div>`
-      )
-    e.features[0].popup = popup;
-    popup.addTo(map)
+          )
+      e.features[0].popup = popup;
+      popup.addTo(map)
 
-    map.on('mouseleave', 'unclustered-point', () => {
-      // map.getCanvas().style.cursor = '';
-        popup.remove();
-    });
-    
+      map.getCanvas().style.cursor = 'pointer'
+
+      map.on('mouseleave', 'unclustered-point', () => {
+          // Remove the popup from the map
+          popup.remove();
+      })
   });
 
-  
-
-
-  // nhấn vào điểm đặt
+  // nhán vào điểm đặt
   map.on('mousedown', 'unclustered-point', (e) => {
-    const feature = e.features[0];
-    if (feature.popup) {
-      feature.popup.remove();
-      delete feature.popup;
-    }
-
-    showSidebar(e.features[0].properties);
+      const feature = e.features[0];
+      if (feature.popup) {
+          feature.popup.remove();
+          delete feature.popup;
+      }
+      showSidebar(e.features[0].properties);
   })
 }
 
@@ -518,9 +515,15 @@ function changeMapSize() {
   $('#sidebar').height(mapHeight);
 }
 
+window.onclick = e => {
+  console.log(e.target);  // to get the element
+  console.log(e.target.tagName);  // to get the element tag name alone
+}
+
 // hard code
 $(document).ready(function () {
   var wards, info, filter_info
+  
 
   changeMapSize();
 
@@ -589,7 +592,7 @@ $(document).ready(function () {
       .then(data => {
         const feature = data.items[0].address
         locObject.ward = feature?.district.substring(7)
-        locObject.district = feature?.city
+        locObject.district = feature?.city.substring(5)
         locObject.address = (feature?.houseNumber && feature?.street)
           ? feature?.houseNumber + " " + feature?.street
           : feature?.label.substring(0, feature?.label.indexOf(", Phường"))
@@ -657,7 +660,7 @@ $(document).ready(function () {
 
     const feature = item.address
     locObject.ward = feature?.district.substring(7)
-    locObject.district = feature?.city
+    locObject.district = feature?.city.substring(5)
     locObject.address = (feature?.houseNumber && feature?.street)
       ? feature?.houseNumber + " " + feature?.street
       : feature?.label.substring(0, feature?.label.indexOf(", Phường"))
