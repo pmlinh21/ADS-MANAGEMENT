@@ -2,7 +2,6 @@ var flag = false
 let ads_report
 let NguoiDanAdsLoc
 localStorage.setItem("email", JSON.stringify("iot.nhom.5@gmail.com"))
-// localStorage.setItem("email", JSON.stringify("kreema1602@gmail.com"))
 
 function renderAddressResult(res) {
     var template = ` 
@@ -164,9 +163,10 @@ function red(item) {
 
 // hiển thị danh sách report
 function renderReport(list_report, container, user_email) {
+    console.log(list_report)
     const note = list_report?.map(item => {
         return {
-            is_user: (item[1] == user_email) ? "mine" : "other",
+            is_user: (item.email == user_email) ? "mine" : "other",
             statusClass: item.status ? "resolved" : "unresolved",
             statusText: item.status ? "Đã xử lí" : "Chưa xử lí",
             report_type: idReportType2String(item.id_report_type),
@@ -174,7 +174,7 @@ function renderReport(list_report, container, user_email) {
             imagePath2: item.photo2,
         }
     })
-    // console.log(note)
+    console.log(note)
     // list_report.forEach((item, index) => console.log(item, note[index]))
     if (!list_report || list_report.length == 0) {
         var template = `
