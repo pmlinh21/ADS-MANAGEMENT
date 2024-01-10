@@ -1,7 +1,7 @@
 var flag = false
 let ads_report
 let NguoiDanAdsLoc
-localStorage.setItem("email", JSON.stringify("lvduc@gmail.com"))
+localStorage.setItem("email", JSON.stringify("iot.nhom.5@gmail.com"))
 
 function renderAddressResult(res) {
     var template = ` 
@@ -37,9 +37,6 @@ function validateDate(date) {
 
     return formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
-
-
-
 
 function address2wardid(wardString, districtString) {
     if (districtString == "Quận 1") {
@@ -123,7 +120,7 @@ async function imageValidate(e) {
 
 async function uploadImage(file) {
     if (!file) return null
-    const signResponse = await fetch('http://localhost:8080/api/basic/uploadImage')
+    const signResponse = await fetch('https://adsmap-officer.onrender.com/api/basic/uploadImage')
     const signData = await signResponse.json()
     const cloudinaryData = new FormData();
     const url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
@@ -317,44 +314,44 @@ function showSidebar(adsloc) {
                 };
 
                 // check Captcha
-                // grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
-                //     const captcha = token;
-                //     console.log("captcha: " + captcha) // Will print the token
-                //     fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
-                //         method: 'POST',
-                //         headers: {
-                //             'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
-                //             'Content-Type': 'application/json',
-                //         },
-                //         body: JSON.stringify({ captcha: captcha })
-                //     }).then((res) => res.json()).then((data) => {
-                //         if (data.success) {
-                const existingReportsJSON = localStorage.getItem("ads_report");
-                const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                existingReports.push(reportObject);
-                localStorage.setItem("ads_report", JSON.stringify(existingReports));
+                grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
+                    const captcha = token;
+                    console.log("captcha: " + captcha) // Will print the token
+                    fetch('https://adsmap-officer.onrender.com/api/nguoidan/verifyCaptcha', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ captcha: captcha })
+                    }).then((res) => res.json()).then((data) => {
+                        if (data.success) {
+                            const existingReportsJSON = localStorage.getItem("ads_report");
+                            const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
+                            existingReports.push(reportObject);
+                            localStorage.setItem("ads_report", JSON.stringify(existingReports));
 
-                // Send data to the server using AJAX
-                $.ajax({
-                    type: "POST",
-                    url: "http://localhost:8080/api/nguoidan/createAdsReport",
-                    data: JSON.stringify(reportObject),
-                    success: function (response) {
-                        // Handle success
-                        alert("Report Successful")
-                        // Optional: Show a success message to the user
-                    },
-                    error: function (error) {
-                        // Handle error
-                        alert(JSON.stringify(error) + "createError");
-                        // Optional: Show an error message to the user
-                    },
-                });
-                //         } else {
-                //             alert("Captcha không hợp lệ")
-                //         }
-                //     })
-                // })
+                            // Send data to the server using AJAX
+                            $.ajax({
+                                type: "POST",
+                                url: "https://adsmap-officer.onrender.com/api/nguoidan/createAdsReport",
+                                data: JSON.stringify(reportObject),
+                                success: function (response) {
+                                    // Handle success
+                                    alert("Report Successful")
+                                    // Optional: Show a success message to the user
+                                },
+                                error: function (error) {
+                                    // Handle error
+                                    alert(JSON.stringify(error) + "createError");
+                                    // Optional: Show an error message to the user
+                                },
+                            });
+                        } else {
+                            alert("Captcha không hợp lệ")
+                        }
+                    })
+                })
 
                 $('#report-popup form').get(0).reset()
                 $("#report-popup").modal("hide")
@@ -411,45 +408,45 @@ function showSidebar(adsloc) {
                         report_type: idReportType2String(parseInt($("#reportType").val())), // You may need to handle this differently
                     };
 
-                    // grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
-                    //     const captcha = token;
-                    //     fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
-                    //         method: 'POST',
-                    //         headers: {
-                    //             'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
-                    //             'Content-Type': 'application/json',
-                    //         },
-                    //         body: JSON.stringify({ captcha: captcha })
-                    //     }).then((res) => res.json()).then((data) => {
-                    //         if (data.success) {
-                    const existingReportsJSON = localStorage.getItem("ads_loc_report");
-                    const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                    existingReports.push(reportObject);
-                    // console.log(JSON.stringify(reportObject))
-                    localStorage.setItem("ads_loc_report", JSON.stringify(existingReports));
+                    grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
+                        const captcha = token;
+                        fetch('https://adsmap-officer.onrender.com/api/nguoidan/verifyCaptcha', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ captcha: captcha })
+                        }).then((res) => res.json()).then((data) => {
+                            if (data.success) {
+                                const existingReportsJSON = localStorage.getItem("ads_loc_report");
+                                const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
+                                existingReports.push(reportObject);
+                                // console.log(JSON.stringify(reportObject))
+                                localStorage.setItem("ads_loc_report", JSON.stringify(existingReports));
 
-                    console.log(JSON.stringify(reportObject))
-                    // Send data to the server using AJAX
-                    $.ajax({
-                        type: "POST",
-                        url: "http://localhost:8080/api/nguoidan/createAdsLocReport",
-                        data: JSON.stringify(reportObject),
-                        success: function (response) {
-                            // Handle success
-                            alert("Report Successful")
-                            // Optional: Show a success message to the user
-                        },
-                        error: function (error) {
-                            // Handle error
-                            alert(JSON.stringify(error) + "createError");
-                            // Optional: Show an error message to the user
-                        },
-                    });
-                    //         } else {
-                    //             alert("Captcha không hợp lệ")
-                    //         }
-                    //     })
-                    // })
+                                console.log(JSON.stringify(reportObject))
+                                // Send data to the server using AJAX
+                                $.ajax({
+                                    type: "POST",
+                                    url: "https://adsmap-officer.onrender.com/api/nguoidan/createAdsLocReport",
+                                    data: JSON.stringify(reportObject),
+                                    success: function (response) {
+                                        // Handle success
+                                        alert("Report Successful")
+                                        // Optional: Show a success message to the user
+                                    },
+                                    error: function (error) {
+                                        // Handle error
+                                        alert(JSON.stringify(error) + "createError");
+                                        // Optional: Show an error message to the user
+                                    },
+                                });
+                            } else {
+                                alert("Captcha không hợp lệ")
+                            }
+                        })
+                    })
 
                 } else {
                     reportObject = {
@@ -476,43 +473,43 @@ function showSidebar(adsloc) {
                     };
 
 
-                    // grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
-                    //     const captcha = token;
-                    //     fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
-                    //         method: 'POST',
-                    //         headers: {
-                    //             'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
-                    //             'Content-Type': 'application/json',
-                    //         },
-                    //         body: JSON.stringify({ captcha: captcha })
-                    //     }).then((res) => res.json()).then((data) => {
-                    //         if (data.success) {
-                    const existingReportsJSON = localStorage.getItem("loc_report");
-                    const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                    existingReports.push(reportObject);
-                    localStorage.setItem("loc_report", JSON.stringify(existingReports));
+                    grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
+                        const captcha = token;
+                        fetch('https://adsmap-officer.onrender.com//api/nguoidan/verifyCaptcha', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ captcha: captcha })
+                        }).then((res) => res.json()).then((data) => {
+                            if (data.success) {
+                                const existingReportsJSON = localStorage.getItem("loc_report");
+                                const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
+                                existingReports.push(reportObject);
+                                localStorage.setItem("loc_report", JSON.stringify(existingReports));
 
-                    // Send data to the server using AJAX
-                    $.ajax({
-                        type: "POST",
-                        url: "http://localhost:8080/api/nguoidan/createLocReport",
-                        data: JSON.stringify(reportObject),
-                        success: function (response) {
-                            // Handle success
-                            alert("Report Successful")
-                            // Optional: Show a success message to the user
-                        },
-                        error: function (error) {
-                            // Handle error
-                            alert(JSON.stringify(error) + "createError");
-                            // Optional: Show an error message to the user
-                        },
-                    });
-                    //             } else {
-                    //                 alert("Captcha không hợp lệ")
-                    //             }
-                    //         })
-                    //     })
+                                // Send data to the server using AJAX
+                                $.ajax({
+                                    type: "POST",
+                                    url: "https://adsmap-officer.onrender.com/api/nguoidan/createLocReport",
+                                    data: JSON.stringify(reportObject),
+                                    success: function (response) {
+                                        // Handle success
+                                        alert("Tạo báo cáo thành công")
+                                        // Optional: Show a success message to the user
+                                    },
+                                    error: function (error) {
+                                        // Handle error
+                                        alert(JSON.stringify(error) + "Lỗi tạo báo cáo");
+                                        // Optional: Show an error message to the user
+                                    },
+                                });
+                            } else {
+                                alert("Captcha không hợp lệ")
+                            }
+                        })
+                    })
                 }
 
                 $('#report-popup form').get(0).reset()
@@ -768,8 +765,8 @@ let marker = new mapboxgl.Marker();
 
 // get location report from server
 $.ajax({
-    url: `http://localhost:8080/api/nguoidan/getLocReport`,
-    // url: `https://adsmap-officer.onrender.com/api/nguoidan/getLocReport`,
+    // url: `http://localhost:8080/api/nguoidan/getLocReport`,
+    url: `https://adsmap-officer.onrender.com/api/nguoidan/getLocReport`,
     type: "GET",
 }).done(function (data) {
     localStorage.setItem("loc_report", JSON.stringify(data.content))
@@ -782,8 +779,8 @@ $.ajax({
 $(document).ready(function () {
     let NguoiDanAdsLoc
     $.ajax({
-        url: `http://localhost:8080/api/nguoidan/getAdsLoc`,
-        // url: `https://adsmap-officer.onrender.com/api/nguoidan/getAdsLoc`,
+        // url: `http://localhost:8080/api/nguoidan/getAdsLoc`,
+        url: `https://adsmap-officer.onrender.com/api/nguoidan/getAdsLoc`,
         type: "GET",
     }).done(function (data) {
         NguoiDanAdsLoc = data;
