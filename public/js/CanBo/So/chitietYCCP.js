@@ -36,27 +36,77 @@ $(document).ready(function () {
                   $("#loading-bg").show()
                 },
                 success: function (data) {
-                  let deleteForm = new FormData();
-                  deleteForm.append("id", yccp.id_ads);
-                  deleteForm.append("photo", "");
-                  let deleteData = Object.fromEntries(deleteForm.entries());
                   $.ajax({
-                    url: '/api/so/deleteBangQuangCao', 
+                    url: '/api/so/deleteAdsUpdateByIdAds/' + yccp.id_ads,
                     type: 'DELETE',
                     catch: false,
                     dataType: 'json',
-                    data: deleteData,
                     success: function (res) {
-                      $("#loading-bg").hide()
-                      location.reload();
-                      alert("Từ chối yêu cầu thành công! tạo mới");
+                      let deleteForm = new FormData();
+                      deleteForm.append("id", yccp.id_ads);
+                      deleteForm.append("photo", "");
+                      let deleteData = Object.fromEntries(deleteForm.entries());
+                      $.ajax({
+                        url: '/api/so/deleteBangQuangCao', 
+                        type: 'DELETE',
+                        catch: false,
+                        dataType: 'json',
+                        data: deleteData,
+                        success: function (res) {
+                          $("#loading-bg").hide()
+                          location.reload();
+                          alert("Từ chối yêu cầu thành công!");
+                        },
+                        error: function (xhr, status, err) {
+                          $("#loading-bg").hide()
+                          alert("Từ chối yêu cầu thất bại. 7");
+                          console.log(err);
+                        }
+                      })
                     },
                     error: function (xhr, status, err) {
-                      $("#loading-bg").hide()
-                      alert("Từ chối yêu cầu thất bại.");
+                      let deleteForm = new FormData();
+                      deleteForm.append("id", yccp.id_ads);
+                      deleteForm.append("photo", "");
+                      let deleteData = Object.fromEntries(deleteForm.entries());
+                      $.ajax({
+                        url: '/api/so/deleteBangQuangCao', 
+                        type: 'DELETE',
+                        catch: false,
+                        dataType: 'json',
+                        data: deleteData,
+                        success: function (res) {
+                          $("#loading-bg").hide()
+                          location.reload();
+                          alert("Từ chối yêu cầu thành công!");
+                        },
+                        error: function (xhr, status, err) {
+                          $("#loading-bg").hide()
+                          alert("Từ chối yêu cầu thất bại.");
+                          console.log(err);
+                        }
+                      })
+                      // alert("Từ chối yêu cầu thất bại! 8");
                       console.log(err);
                     }
                   })
+                  // $.ajax({
+                  //   url: '/api/so/deleteBangQuangCao', 
+                  //   type: 'DELETE',
+                  //   catch: false,
+                  //   dataType: 'json',
+                  //   data: deleteData,
+                  //   success: function (res) {
+                  //     $("#loading-bg").hide()
+                  //     location.reload();
+                  //     alert("Từ chối yêu cầu thành công! tạo mới");
+                  //   },
+                  //   error: function (xhr, status, err) {
+                  //     $("#loading-bg").hide()
+                  //     alert("Từ chối yêu cầu thất bại.");
+                  //     console.log(err);
+                  //   }
+                  // })
                 },
                 error: function (xhr, status, err) {
                   $("#loading-bg").hide()
@@ -108,7 +158,7 @@ $(document).ready(function () {
                 success: function (data) {
                   $("#loading-bg").hide()
                   location.reload();
-                  alert("Từ chối yêu cầu thành công! gia hạn");
+                  alert("Từ chối yêu cầu thành công!");
                 },
                 error: function (xhr, status, err) {
                   $("#loading-bg").hide()

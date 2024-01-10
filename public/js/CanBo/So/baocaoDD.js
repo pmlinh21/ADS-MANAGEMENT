@@ -1,6 +1,8 @@
 $(document).ready(function(){
   $("#baocao").addClass("snb-li-active");
 
+  mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
+
   let id = $('#report-location input[name="id_report"]').val();
   $.ajax({
     url: '/api/so/getBaoCaoDDById/' + id,
@@ -14,6 +16,43 @@ $(document).ready(function(){
       $("#loading-bg").hide()
       let report = data.content[0];
       buildForm(report);
+
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [report.longitude, report.latitude],
+        zoom: 15,
+        language: 'vi'
+      }) 
+    
+      var language = new MapboxLanguage({
+        defaultLanguage: 'vi'
+      });
+      map.addControl(language);
+
+      let canvas = $('.mapboxgl-canvas')
+        canvas.width('100%');
+        canvas.height('100%');
+      let marker = new mapboxgl.Marker({
+        color: '#0B7B31'
+      }).setLngLat([report.longitude, report.latitude]).addTo(map);
+      map.flyTo({
+        center: [report.longitude, report.latitude],
+        zoom: 15,
+        essential: true
+      });
+      
+      $("#report-location #address").on("click", async function(e) {
+        $('#select-location-map').css('display', 'block');
+        map.resize();
+        let div = $('<div></div>');
+        div.addClass('popup-background');
+        div.on('click', function () {
+          div.remove();
+          $('#select-location-map').css('display', 'none');
+        })
+        $('body').append(div);
+      })
     },
     error: function(xhr, status, err) {
       $("#loading-bg").hide()
@@ -26,7 +65,7 @@ function buildForm(data) {
   console.log(data);
   let form = $("#report-location");
   // form.find("input[name='id_report']").val(data.id_report);
-  form.find("input[name='address']").val(data.address + ", P." + data.address_ward + ", Q." + data.address_district);
+  form.find("input[name='address']").val(data.address + ", P." + data.address_ward + ", Q." + data.address_district + " [" + data.latitude + ", " + data.longitude + "]");
   form.find("input[name='report_type']").val(data.report_type);
   form.find("input[name='fullname']").val(data.fullname);
   form.find("input[name='email']").val(data.email);

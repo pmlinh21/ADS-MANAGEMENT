@@ -915,6 +915,20 @@ const updateYeuCauChinhSuaBQC = async (req, res) => {
   }
 }
 
+const deleteAdsUpdateByIdAds = async (req, res) => {
+  try {
+    const id = req.body.id;
+    data = await model.Ads_update.destroy({
+      where: {
+        id_ads: id
+      }
+    });
+    sucessCode(res, "", "Delete thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi khóa ngoại");
+  }
+}
+
 // YEUCAUCAPPHEP
 const getAllYeuCauCapPhep = async (req, res) => {
   try {
@@ -1200,7 +1214,7 @@ const getBaoCaoDDQCById = async (req, res) => {
 const getBaoCaoDDById = async (req, res) => {
   try {
     const id = req.params.id;
-    [data, metadata] = await sequelize.query(`SELECT R.id_report, R.address, W1.ward AS address_ward, D1.district AS address_district, T.report_type, R.fullname, R.email, R.phone, R.content, R.report_time, R.status, R.resolve, R.photo1, R.photo2, R.officer, R.office, D.district, NULL AS ward
+    [data, metadata] = await sequelize.query(`SELECT R.longitude, R.latitude, R.id_report, R.address, W1.ward AS address_ward, D1.district AS address_district, T.report_type, R.fullname, R.email, R.phone, R.content, R.report_time, R.status, R.resolve, R.photo1, R.photo2, R.officer, R.office, D.district, NULL AS ward
                                                     FROM Location_report R
                                                     LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
                                                     LEFT JOIN CanboQuan C ON C.email = R.officer
@@ -1209,7 +1223,7 @@ const getBaoCaoDDById = async (req, res) => {
                                                     LEFT JOIN District D1 ON D1.id_district = W1.id_district
                                                     WHERE R.office = 1 AND R.id_report = ${id}
                                                     UNION
-                                                    SELECT R.id_report, R.address, W1.ward AS address_ward, D1.district AS address_district, T.report_type, R.fullname, R.email, R.phone, R.content, R.report_time, R.status, R.resolve, R.photo1, R.photo2, R.officer, R.office, D.district, W.ward
+                                                    SELECT R.longitude, R.latitude, R.id_report, R.address, W1.ward AS address_ward, D1.district AS address_district, T.report_type, R.fullname, R.email, R.phone, R.content, R.report_time, R.status, R.resolve, R.photo1, R.photo2, R.officer, R.office, D.district, W.ward
                                                     FROM Location_report R
                                                     LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
                                                     LEFT JOIN CanboPhuong C ON C.email = R.officer
@@ -1219,7 +1233,7 @@ const getBaoCaoDDById = async (req, res) => {
                                                     LEFT JOIN District D1 ON D1.id_district = W1.id_district
                                                     WHERE R.office = 2 AND R.id_report = ${id}
                                                     UNION
-                                                    SELECT R.id_report, R.address, W1.ward AS address_ward, D1.district AS address_district, T.report_type, R.fullname, R.email, R.phone, R.content, R.report_time, R.status, R.resolve, R.photo1, R.photo2, R.officer, R.office, NULL AS district, NULL AS ward
+                                                    SELECT R.longitude, R.latitude, R.id_report, R.address, W1.ward AS address_ward, D1.district AS address_district, T.report_type, R.fullname, R.email, R.phone, R.content, R.report_time, R.status, R.resolve, R.photo1, R.photo2, R.officer, R.office, NULL AS district, NULL AS ward
                                                     FROM Location_report R
                                                     LEFT JOIN Report_type T ON T.id_report_type = R.id_report_type
                                                     LEFT JOIN Ward W1 ON W1.id_ward = R.id_ward
@@ -1365,6 +1379,7 @@ module.exports = {
 
   updateYeuCauChinhSuaDDQC,
   updateYeuCauChinhSuaBQC,
+  deleteAdsUpdateByIdAds,
 
   getAllYeuCauCapPhep,
   getYeuCauCapPhepById,

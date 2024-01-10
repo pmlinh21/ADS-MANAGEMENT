@@ -71,6 +71,7 @@ const {
     getAllYeuCauChinhSuaBQC,
     getYeuCauChinhSuaDDQCById,
     getYeuCauChinhSuaBQCById,
+    deleteAdsUpdateByIdAds,
 
     updateYeuCauChinhSuaDDQC,
     updateYeuCauChinhSuaBQC,
@@ -181,6 +182,7 @@ soRoute.get("/getYeuCauChinhSuaDDQCById/:id", isCanboSo, getYeuCauChinhSuaDDQCBy
 soRoute.get("/getYeuCauChinhSuaBQCById/:id", isCanboSo, getYeuCauChinhSuaBQCById);
 soRoute.put("/updateYeuCauChinhSuaDDQC/:id/:status", isCanboSo, updateYeuCauChinhSuaDDQC);
 soRoute.put("/updateYeuCauChinhSuaBQC/:id/:status", isCanboSo, updateYeuCauChinhSuaBQC);
+soRoute.delete("/deleteAdsUpdateByIdAds/:id", isCanboSo, deleteAdsUpdateByIdAds);
 
 // YEUCAUCAPPHEP
 soRoute.get("/getAllYeuCauCapPhep", isCanboSo, getAllYeuCauCapPhep);

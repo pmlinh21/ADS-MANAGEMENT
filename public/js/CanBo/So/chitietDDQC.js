@@ -1,5 +1,6 @@
 $(document).ready(function () {
   $("#chinhsua").addClass("snb-li-active");
+  mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
 
   let id = $("#update-ads-location #id").val();
   $.ajax({
@@ -14,6 +15,43 @@ $(document).ready(function () {
       $("#loading-bg").hide()
       let ddqcChinhSua = data.content[0];
       buildForm(ddqcChinhSua);
+
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [ddqcChinhSua.longitude, ddqcChinhSua.latitude],
+        zoom: 15,
+        language: 'vi'
+      }) 
+    
+      var language = new MapboxLanguage({
+        defaultLanguage: 'vi'
+      });
+      map.addControl(language);
+
+      let canvas = $('.mapboxgl-canvas')
+        canvas.width('100%');
+        canvas.height('100%');
+      let marker = new mapboxgl.Marker({
+        color: '#0B7B31'
+      }).setLngLat([ddqcChinhSua.longitude, ddqcChinhSua.latitude]).addTo(map);
+      map.flyTo({
+        center: [ddqcChinhSua.longitude, ddqcChinhSua.latitude],
+        zoom: 15,
+        essential: true
+      });
+      
+      $("#coordinates").on("click", async function(e) {
+        $('#select-location-map').css('display', 'block');
+        map.resize();
+        let div = $('<div></div>');
+        div.addClass('popup-background');
+        div.on('click', function () {
+          div.remove();
+          $('#select-location-map').css('display', 'none');
+        })
+        $('body').append(div);
+      })
 
       $("#update-ads-location button[value='deny']").on("click", async function (e) {
         e.preventDefault();
