@@ -79,6 +79,8 @@ const {
     getYeuCauCapPhepById,
     updateYeuCauCapPhep,
     createBangQuangCao,
+    getAdsCreateByIdAdsNotIdCreate,
+    updateAdsExpiredDate,
 
     getAllBaoCaoDDQC,
     getAllBaoCaoBQC,
@@ -88,7 +90,7 @@ const {
     getBaoCaoDDQCById,
     getBaoCaoDDById,
 
-    getMapInfo
+    getMapInfo,
 
 } = require('../controllers/soController')
 
@@ -183,8 +185,10 @@ soRoute.put("/updateYeuCauChinhSuaBQC/:id/:status", isCanboSo, updateYeuCauChinh
 // YEUCAUCAPPHEP
 soRoute.get("/getAllYeuCauCapPhep", isCanboSo, getAllYeuCauCapPhep);
 soRoute.get("/getYeuCauCapPhepById/:id", isCanboSo, getYeuCauCapPhepById);
-soRoute.put("/updateYeuCauCapPhep/:id/:status/:id_ads", isCanboSo, updateYeuCauCapPhep);
+soRoute.put("/updateYeuCauCapPhep/:id/:status", isCanboSo, updateYeuCauCapPhep);
 soRoute.post("/createBangQuangCao", isCanboSo, createBangQuangCao);
+soRoute.get("/getAdsCreateByIdAdsNotIdCreate/:id/:id_create", isCanboSo, getAdsCreateByIdAdsNotIdCreate);
+soRoute.put("/updateAdsExpiredDate", isCanboSo, updateAdsExpiredDate);
 
 // THONGKEBAOCAO
 soRoute.get("/getAllBaoCaoDDQC", isCanboSo, getAllBaoCaoDDQC);

@@ -632,7 +632,9 @@ const updateDiemDatQuangCao = async (req, res) => {
 
 const deleteDiemDatQuangCao = async (req, res) => {
   try {
-    deleteImage(req.body.photo);
+    if (req.body.photo != null || req.body.photo != "") {
+      deleteImage(req.body.photo);
+    }
     const id = req.body.id;
     await model.Ads_location.destroy({
       where: {
@@ -759,7 +761,9 @@ const updateBangQuangCao = async (req, res) => {
 
 const deleteBangQuangCao = async (req, res) => {
   try {
-    deleteImage(req.body.photo);
+    if (req.body.photo != null || req.body.photo != "") {
+      deleteImage(req.body.photo);
+    }
     const id = req.body.id;
     await model.Ads.destroy({
       where: {
@@ -975,12 +979,38 @@ const getYeuCauCapPhepById = async (req, res) => {
   }
 }
 
+const getAdsCreateByIdAdsNotIdCreate = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const id_create = req.params.id_create;
+    [data, metadata] = await sequelize.query(`SELECT * FROM Ads_create WHERE id_ads = ${id} AND id_create != ${id_create}`);
+    sucessCode(res, data, "Get thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi BE");
+  }
+}
+
+const updateAdsExpiredDate = async (req, res) => {
+  try {
+    const { id, expired_date } = req.body;
+    const data = await model.Ads.update({
+      expired_date: expired_date
+    }, {
+      where: {
+        id_ads: id
+      }
+    });
+    sucessCode(res, data, "Put thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi BE");
+  }
+}
+
 const updateYeuCauCapPhep = async (req, res) => {
   try {
     const id = req.params.id;
     const status = req.params.status;
-    const id_ads = req.params.id_ads;
-    [data, meta] = await sequelize.query(`UPDATE Ads_create SET status = ${status}, id_ads = ${id_ads} WHERE id_create = ${id}`);
+    [data, meta] = await sequelize.query(`UPDATE Ads_create SET status = ${status} WHERE id_create = ${id}`);
     sucessCode(res, data, "Put thành công");
   } catch (err) {
     errorCode(res, "Lỗi BE");
@@ -1340,6 +1370,8 @@ module.exports = {
   getYeuCauCapPhepById,
   updateYeuCauCapPhep,
   createBangQuangCao,
+  getAdsCreateByIdAdsNotIdCreate,
+  updateAdsExpiredDate,
 
   getAllBaoCaoDDQC,
   getAllBaoCaoBQC,
