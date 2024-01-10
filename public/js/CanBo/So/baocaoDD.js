@@ -7,11 +7,16 @@ $(document).ready(function(){
     type: 'GET',
     catch: false,
     dataType: 'json',
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
     success: function(data) {
+      $("#loading-bg").hide()
       let report = data.content[0];
       buildForm(report);
     },
     error: function(xhr, status, err) {
+      $("#loading-bg").hide()
       console.log(err);
     }
   });
