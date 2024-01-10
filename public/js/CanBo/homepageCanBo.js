@@ -122,11 +122,7 @@ function createLayer(map, features) {
     );
   });
 
-  const popup = new mapboxgl.Popup({
-    closeButton: false,
-    closeOnClick: false,
-    offset: [0,15]
-  })
+  
 
   map.on('mouseenter', 'unclustered-point', (e) => {
 
@@ -143,7 +139,11 @@ function createLayer(map, features) {
       coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
     }
 
-    popup.setLngLat(coordinates)
+    const popup = new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      offset: 15
+    }).setLngLat(coordinates)
       .setHTML(
         `<div class="popup-content"> 
     <p class = "ads-type"  style = "font-weight: 900">${ads_type}</p>
@@ -156,13 +156,14 @@ function createLayer(map, features) {
     e.features[0].popup = popup;
     popup.addTo(map)
 
+    map.on('mouseleave', 'unclustered-point', () => {
+      // map.getCanvas().style.cursor = '';
+        popup.remove();
+    });
     
   });
 
-  map.on('mouseleave', 'unclustered-point', () => {
-    map.getCanvas().style.cursor = '';
-      popup.remove();
-  });
+  
 
 
   // nhấn vào điểm đặt
