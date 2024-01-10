@@ -452,8 +452,6 @@ function showSidebar(adsloc) {
                     })
 
                 } else {
-                    console.log("creating loc report")
-                    console.log(adsloc)
                     reportObject = {
                         id_report: null, // You may need to generate a unique ID
                         officer: null, // You may need to handle this differently
@@ -766,7 +764,6 @@ let marker = new mapboxgl.Marker();
 
 // get location report from server
 $.ajax({
-    // url: `http://localhost:8080/api/nguoidan/getLocReport`,
     url: `https://adsmap-officer.onrender.com/api/nguoidan/getLocReport`,
     type: "GET",
 }).done(function (data) {
@@ -816,7 +813,6 @@ $(document).ready(function () {
     let NguoiDanAdsLoc
     $("#loading-bg").show()
     $.ajax({
-        // url: `http://localhost:8080/api/nguoidan/getAdsLoc`,
         url: `https://adsmap-officer.onrender.com/api/nguoidan/getAdsLoc`,
         type: "GET",
     }).done(function (data) {
