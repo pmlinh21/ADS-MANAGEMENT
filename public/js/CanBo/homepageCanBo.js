@@ -373,7 +373,7 @@ function showSidebar(adsloc) {
 
         if (ads.photo){
           $("#detail-popup .hinh-anh-bqc img").attr("src", ads.photo)
-          $("#detail-popup .hinh-anh-bqc p").show()
+          $("#detail-popup .hinh-anh-bqc p").hide()
         } else{
           $("#detail-popup .hinh-anh-bqc img").hide()
         }
