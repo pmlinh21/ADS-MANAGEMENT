@@ -841,7 +841,10 @@ $(document).ready(function () {
                     // Iterate through 'list_ads' and push each report to 'allReports'
                     location.list_ads.forEach(ad => {
                         if (ad.list_report) {
-                            allReports.push(...ad.list_report);
+                            for (let i = 0; i < ad.list_report.length; i++) {
+                                ad.list_report[i].address = location.address;
+                                allReports.push(ad.list_report[i]);
+                            }
                         }
                     });
                 }
