@@ -314,6 +314,7 @@ function showSidebar(adsloc) {
                     status: false, // You may need to handle this differently
                     resolve: null, // You may need to handle this differently
                     report_type: idReportType2String(parseInt($("#reportType").val())), // You may need to handle this differently
+                    address: adsloc.address,
                 };
 
                 // check Captcha
