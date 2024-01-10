@@ -52,8 +52,8 @@ $(document).ready(function () {
           let page = $("#example_wrapper .page-item.active a").text();
           console.log(row);
           let path  = "../../../public/image/image-placeholder.jpg"
-          if (filter_info[row + 5 * parseInt(page) - 5][9] != "")
-            path  = filter_info[row + 5 * parseInt(page) - 5][9]
+          if (filter_info[row + 5 * parseInt(page) - 5][10] != "")
+            path  = filter_info[row + 5 * parseInt(page) - 5][10]
           $('#view-image .photo').attr('src', path );
           return
         })
