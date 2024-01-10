@@ -8,10 +8,10 @@ function red(item) {
 
   if (item[11]) {
     for (let i = 0; i < item[11].length; i++)
-      if (item[11][i]?.list_report?.some( report => !report.status))
-      return true
+      if (item[11][i]?.list_report?.some(report => !report.status))
+        return true
   }
-  
+
   return false
 }
 
@@ -125,13 +125,13 @@ function createLayer(map, features) {
   const popup = new mapboxgl.Popup({
     closeButton: false,
     closeOnClick: false,
-    offset: [0,15]
+    offset: [0, 15]
   })
 
   map.on('mouseenter', 'unclustered-point', (e) => {
 
     map.getCanvas().style.cursor = 'pointer'
-    
+
     const coordinates = e.features[0].geometry.coordinates.slice();
     const ads_type = e.features[0].properties.ads_type;
     const loc_type = e.features[0].properties.loc_type;
@@ -156,12 +156,12 @@ function createLayer(map, features) {
     e.features[0].popup = popup;
     popup.addTo(map)
 
-    
+
   });
 
   map.on('mouseleave', 'unclustered-point', () => {
     map.getCanvas().style.cursor = '';
-      popup.remove();
+    popup.remove();
   });
 
 
@@ -195,7 +195,7 @@ function createMarker(info, map) {
     else
       colorMarker = '#0B7B31';
     let imagePath
-    if ( item[7] != null && item[7] != "")
+    if (item[7] != null && item[7] != "")
       imagePath = item[7]
     else
       imagePath = "../../../public/image/image-placeholder.jpg"
@@ -326,13 +326,13 @@ function renderReport(list_report, container) {
   $(container).html(rendered);
 }
 
-function renderGiayPhepGiaHan(giahan){
+function renderGiayPhepGiaHan(giahan) {
   const note = giahan.map(item => {
     if (item.status === true)
       return "Đã duyệt"
     else if (item.status === false)
       return "Đã từ chối"
-    else 
+    else
       return "Chưa xét duyệt"
   })
 
@@ -377,11 +377,11 @@ function showSidebar(adsloc) {
     const list_ads = JSON.parse(adsloc.list_ads)
     ads = list_ads?.filter(item => item.id_ads == id_ads)[0]
 
-    if (ads.photo){
+    if (ads.photo) {
       $("#detail-popup .hinh-anh-bqc img").attr("src", ads.photo)
       $("#detail-popup .hinh-anh-bqc img").show()
       $("#detail-popup .hinh-anh-bqc p").hide()
-    } else{
+    } else {
       $("#detail-popup .hinh-anh-bqc img").hide()
       $("#detail-popup .hinh-anh-bqc p").show()
     }
@@ -393,7 +393,7 @@ function showSidebar(adsloc) {
       success: function (data) {
         console.log(data)
         console.log(ads.id_ads)
-    
+
         if (data.content.length > 0) {
           $("#detail-popup").modal('show');
           const [info, ...giahan] = data.content
@@ -414,19 +414,19 @@ function showSidebar(adsloc) {
             info.status === false ? "Đã từ chối" : "Chưa xét duyệt"));
           $('#officer').val(info.officer);
           $('#office').val(info.office === 1 ? "Quận" : (info.office === 2 ? "Phường" : ""));
-          
-          if (info.photo){
+
+          if (info.photo) {
             $("#detail-popup .image p").hide()
             $("#detail-popup .image img").show()
             $("#detail-popup .image img").attr("src", info.photo)
-          } else{
+          } else {
             $("#detail-popup .image img").hide()
             $("#detail-popup .image p").show()
           }
-            
+
           if (giahan?.length > 0)
             renderGiayPhepGiaHan(giahan);
-          
+
         }
         else {
           $("#detail-popup").hide()
@@ -435,7 +435,7 @@ function showSidebar(adsloc) {
 
         $("#loading-bg").hide()
       },
-      error: function(){
+      error: function () {
         $("#loading-bg").hide()
       }
     })
@@ -467,13 +467,13 @@ function showSidebar(adsloc) {
         url = "api/quan/getLocReport/" + id_district
       else if (id_ward)
         url = "api/ward/getLocReportWard/" + id_ward
-      else 
+      else
         url = "api/ward/getAllBaoCaoDD"
 
       $.ajax({
         url: url,
         type: "GET",
-        success: function(data) {
+        success: function (data) {
           console.log(data.content)
 
           console.log("thông tin của điểm được click: ")
@@ -481,16 +481,16 @@ function showSidebar(adsloc) {
           console.log(adsloc.latitude.toFixed(4))
           console.log(adsloc.address)
           console.log(adsloc.ward)
-          const loc_report = data.content.filter(function(item) {
+          const loc_report = data.content.filter(function (item) {
             return (
               (item.longitude.toFixed(4) == adsloc.longitude.toFixed(4) && item.latitude.toFixed(4) == adsloc.latitude.toFixed(4) ||
-              (item.address == adsloc.address && item.ward == adsloc.ward))
+                (item.address == adsloc.address && item.ward == adsloc.ward))
             );
           });
-      
+
           renderReport(loc_report, "#other-report-popup .modal-body");
         },
-        error: function(error) {
+        error: function (error) {
           console.log(error);
         }
       });
@@ -535,7 +535,7 @@ $(document).ready(function () {
   var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: [106.6924 , 10.7759],
+    center: [106.6924, 10.7759],
     zoom: 16,
     language: 'vi',
     interactive: true
