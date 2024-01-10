@@ -1031,12 +1031,12 @@ $(document).ready(function () {
                         </div>
                             <div class="col-md-12 ">
                                 <div class = "report-cate">
-                                <% if (list_report[i].address) { %>
-                                    Địa điểm
+                                <% if (list_report[i].id_ads) { %>
+                                    Biển quảng cáo
                                 <% } else if (note[i].address){ %>
                                     Điểm đặt
-                                <% } else if (list_report[i].id_ads) { %>
-                                    Biển quảng cáo
+                                <% } else if (list_report[i].address) { %>
+                                    Địa điểm
                                     <% } %>
                                 </div>
                                 <div class = <%= note[i].statusClass %> >
