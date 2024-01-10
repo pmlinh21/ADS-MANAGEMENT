@@ -1164,4 +1164,6 @@ $(document).ready(function () {
 
 tinymce.init({
     selector: 'textarea',  // change this value according to your HTML
+    menubar: 'file edit view',
+    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
   });
