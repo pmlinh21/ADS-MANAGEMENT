@@ -121,7 +121,7 @@ async function imageValidate(e) {
 
 async function uploadImage(file) {
     if (!file) return null
-    const signResponse = await fetch('https://adsmap-officer.onrender.com/api/basic/uploadImage')
+    const signResponse = await fetch('https://ads-map-officer.onrender.com/api/basic/uploadImage')
     const signData = await signResponse.json()
     const cloudinaryData = new FormData();
     const url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
@@ -319,7 +319,7 @@ function showSidebar(adsloc) {
                 // check Captcha
                 grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
                     const captcha = token;
-                    fetch('https://adsmap-officer.onrender.com/api/nguoidan/verifyCaptcha', {
+                    fetch('https://ads-map-officer.onrender.com/api/nguoidan/verifyCaptcha', {
                         method: 'POST',
                         headers: {
                             'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
@@ -336,7 +336,7 @@ function showSidebar(adsloc) {
                             // Send data to the server using AJAX
                             $.ajax({
                                 type: "POST",
-                                url: "https://adsmap-officer.onrender.com/api/nguoidan/createAdsReport",
+                                url: "https://ads-map-officer.onrender.com/api/nguoidan/createAdsReport",
                                 data: JSON.stringify(reportObject),
                                 success: function (response) {
                                     // Handle success
@@ -413,7 +413,7 @@ function showSidebar(adsloc) {
 
                     grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
                         const captcha = token;
-                        fetch('https://adsmap-officer.onrender.com/api/nguoidan/verifyCaptcha', {
+                        fetch('https://ads-map-officer.onrender.com/api/nguoidan/verifyCaptcha', {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
@@ -432,7 +432,7 @@ function showSidebar(adsloc) {
                                 // Send data to the server using AJAX
                                 $.ajax({
                                     type: "POST",
-                                    url: "https://adsmap-officer.onrender.com/api/nguoidan/createAdsLocReport",
+                                    url: "https://ads-map-officer.onrender.com/api/nguoidan/createAdsLocReport",
                                     data: JSON.stringify(reportObject),
                                     success: function (response) {
                                         // Handle success
@@ -477,7 +477,7 @@ function showSidebar(adsloc) {
 
                     grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
                         const captcha = token;
-                        fetch('https://adsmap-officer.onrender.com/api/nguoidan/verifyCaptcha', {
+                        fetch('https://ads-map-officer.onrender.com/api/nguoidan/verifyCaptcha', {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
@@ -494,7 +494,7 @@ function showSidebar(adsloc) {
                                 // Send data to the server using AJAX
                                 $.ajax({
                                     type: "POST",
-                                    url: "https://adsmap-officer.onrender.com/api/nguoidan/createLocReport",
+                                    url: "https://ads-map-officer.onrender.com/api/nguoidan/createLocReport",
                                     data: JSON.stringify(reportObject),
                                     success: function (response) {
                                         // Handle success
@@ -754,8 +754,6 @@ function createMarker(info, map) {
         map.removeLayer('cluster-count');
         map.removeLayer('clusters');
         map.removeSource('adsloc');
-
-        createLayer(map, features)
     }
     createLayer(map, features)
 }
@@ -764,7 +762,7 @@ let marker = new mapboxgl.Marker();
 
 // get location report from server
 $.ajax({
-    url: `https://adsmap-officer.onrender.com/api/nguoidan/getLocReport`,
+    url: `https://ads-map-officer.onrender.com/api/nguoidan/getLocReport`,
     type: "GET",
 }).done(function (data) {
     localStorage.setItem("loc_report", JSON.stringify(data.content))
@@ -813,7 +811,7 @@ $(document).ready(function () {
     let NguoiDanAdsLoc
     $("#loading-bg").show()
     $.ajax({
-        url: `https://adsmap-officer.onrender.com/api/nguoidan/getAdsLoc`,
+        url: `https://ads-map-officer.onrender.com/api/nguoidan/getAdsLoc`,
         type: "GET",
     }).done(function (data) {
         NguoiDanAdsLoc = data;
@@ -1165,14 +1163,5 @@ $(document).ready(function () {
 
 
 tinymce.init({
-    selector: 'textarea',
-    plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
-    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-    tinycomments_mode: 'embedded',
-    tinycomments_author: 'Author name',
-    mergetags_list: [
-        { value: 'First.Name', title: 'First Name' },
-        { value: 'Email', title: 'Email' },
-    ],
-    ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
-});
+    selector: 'textarea',  // change this value according to your HTML
+  });
