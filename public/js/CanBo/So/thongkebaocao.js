@@ -1,133 +1,162 @@
+var count = 0;
 $(document).ready(function () {
-    $('#baocao').addClass('snb-li-active');
+  $('#baocao').addClass('snb-li-active');
 
-    // STATISTIC
-    var allBaoCaoDDQC, allBaoCaoBQC, allBaoCaoDD;
-    $.ajax({
-      url: "/api/so/getAllBaoCaoDDQC",
-      type: "GET",
-      catch: false,
-      dataType: "json",
-      success: function (data) {
-        allBaoCaoDDQC = data.content;
+  // STATISTIC
+  var allBaoCaoDDQC, allBaoCaoBQC, allBaoCaoDD;
+  $.ajax({
+    url: "/api/so/getAllBaoCaoDDQC",
+    type: "GET",
+    catch: false,
+    dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
+    success: function (data) {
+      allBaoCaoDDQC = data.content;
+      $.ajax({
+        url: "/api/so/getAllBaoCaoBQC",
+        type: "GET",
+        catch: false,
+        dataType: "json",
+        success: function (data) {
+          allBaoCaoBQC = data.content;
+          console.log(allBaoCaoBQC);
+          $.ajax({
+            url: "/api/so/getAllBaoCaoDD",
+            type: "GET",
+            catch: false,
+            dataType: "json",
+            success: function (data) {
+              allBaoCaoDD = data.content;
 
-        $.ajax({
-          url: "/api/so/getAllBaoCaoBQC",
-          type: "GET",
-          catch: false,
-          dataType: "json",
-          success: function (data) {
-            allBaoCaoBQC = data.content;
-            console.log(allBaoCaoBQC);
+              let total = allBaoCaoDDQC.length + allBaoCaoBQC.length + allBaoCaoDD.length;
+              $('#report-statistic .statistic-number').text(total);
 
-            $.ajax({
-              url: "/api/so/getAllBaoCaoDD",
-              type: "GET",
-              catch: false,
-              dataType: "json",
-              success: function (data) {
-                allBaoCaoDD = data.content;
+              let complete = allBaoCaoDDQC.filter(function (item) {
+                return item.status == 1;
+              }).length + allBaoCaoBQC.filter(function (item) {
+                return item.status == 1;
+              }).length + allBaoCaoDD.filter(function (item) {
+                return item.status == 1;
+              }).length;
+              $('#complete-statistic .statistic-number').text(complete);
 
-                let total = allBaoCaoDDQC.length + allBaoCaoBQC.length + allBaoCaoDD.length;
-                $('#report-statistic .statistic-number').text(total);
+              let incomplete = total - complete;
+              $('#incomplete-statistic .statistic-number').text(incomplete);
 
-                let complete = allBaoCaoDDQC.filter(function (item) {
-                  return item.status == 1;
-                }).length + allBaoCaoBQC.filter(function (item) {
-                  return item.status == 1;
-                }).length + allBaoCaoDD.filter(function (item) {
-                  return item.status == 1;
-                }).length;
-                $('#complete-statistic .statistic-number').text(complete);
+              let district_report = allBaoCaoDDQC.filter(function (item) {
+                return item.office == 1;
+              }).length + allBaoCaoBQC.filter(function (item) {
+                return item.ward == null;
+              }).length + allBaoCaoDD.filter(function (item) {
+                return item.office == 1;
+              }).length;
+              $('#district-report-statistic .statistic-number').text(district_report);
 
-                let incomplete = total - complete;
-                $('#incomplete-statistic .statistic-number').text(incomplete);
+              let ward_report = complete - district_report;
+              $('#ward-report-statistic .statistic-number').text(ward_report);
 
-                let district_report = allBaoCaoDDQC.filter(function (item) {
-                  return item.office == 1;
-                }).length + allBaoCaoBQC.filter(function (item) {
-                  return item.ward == null;
-                }).length + allBaoCaoDD.filter(function (item) {
-                  return item.office == 1;
-                }).length;
-                $('#district-report-statistic .statistic-number').text(district_report);
+              let allLoaiHinhBaoCao;
+              $.ajax({
+                url: "/api/so/getLoaiHinhBaoCao",
+                type: 'GET',
+                catch: false,
+                dataType: 'json',
+                success: function (data) {
+                  count++;
+                  allLoaiHinhBaoCao = data.content;
 
-                let ward_report = complete - district_report;
-                $('#ward-report-statistic .statistic-number').text(ward_report);
+                  let allLoaiHinhBaoCaoName = allLoaiHinhBaoCao.map(function (item) {
+                    return item.report_type;
+                  });
 
-                let allLoaiHinhBaoCao;
-                $.ajax({
-                  url: "/api/so/getLoaiHinhBaoCao",
-                  type: 'GET',
-                  catch: false,
-                  dataType: 'json',
-                  success: function (data) {
-                    allLoaiHinhBaoCao = data.content;
+                  let allLoaiHinhBaoCaoId = allLoaiHinhBaoCao.map(function (item) {
+                    return item.id_report_type;
+                  });
 
-                    let allLoaiHinhBaoCaoName = allLoaiHinhBaoCao.map(function (item) {
-                      return item.report_type;
-                    });
-
-                    let allLoaiHinhBaoCaoId = allLoaiHinhBaoCao.map(function (item) {
-                      return item.id_report_type;
-                    });
-
-                    let allLoaiHinhBaoCaoQuantity = [];
-                    for (let i = 0; i < allLoaiHinhBaoCaoId.length; i++) {
-                      allLoaiHinhBaoCaoQuantity.push(allBaoCaoDDQC.filter(function (item) {
-                        return item.id_report_type == allLoaiHinhBaoCaoId[i];
-                      }).length + allBaoCaoBQC.filter(function (item) {
-                        return item.id_report_type == allLoaiHinhBaoCaoId[i];
-                      }).length + allBaoCaoDD.filter(function (item) {
-                        return item.id_report_type == allLoaiHinhBaoCaoId[i];
-                      }).length);
-                    }
-
-                    buildPieChart(allLoaiHinhBaoCaoName, allLoaiHinhBaoCaoQuantity, pieColors);
+                  let allLoaiHinhBaoCaoQuantity = [];
+                  for (let i = 0; i < allLoaiHinhBaoCaoId.length; i++) {
+                    allLoaiHinhBaoCaoQuantity.push(allBaoCaoDDQC.filter(function (item) {
+                      return item.id_report_type == allLoaiHinhBaoCaoId[i];
+                    }).length + allBaoCaoBQC.filter(function (item) {
+                      return item.id_report_type == allLoaiHinhBaoCaoId[i];
+                    }).length + allBaoCaoDD.filter(function (item) {
+                      return item.id_report_type == allLoaiHinhBaoCaoId[i];
+                    }).length);
                   }
-                })
 
-                let allQuan;
-                $.ajax({
-                  url: "/api/so/getAllQuan",
-                  type: "GET",
-                  catch: false,
-                  dataType: "json",
-                  success: function (data) {
-                    allQuan = data.content;
+                  buildPieChart(allLoaiHinhBaoCaoName, allLoaiHinhBaoCaoQuantity, pieColors);
+                }, 
+                error: function (err) {
+                  count++;
+                  console.log(err);
+                }
+              })
 
-                    let allQuanName = allQuan.map(function (item) {
-                      return 'Quận ' + item.district;
-                    });
+              let allQuan;
+              $.ajax({
+                url: "/api/so/getAllQuan",
+                type: "GET",
+                catch: false,
+                dataType: "json",
+                success: function (data) {
+                  count++;
+                  allQuan = data.content;
 
-                    let allQuanId = allQuan.map(function (item) {
-                      return item.id_district;
-                    });
+                  let allQuanName = allQuan.map(function (item) {
+                    return 'Quận ' + item.district;
+                  });
 
-                    let allQuanQuantity = [];
-                    for (let i = 0; i < allQuanId.length; i++) {
-                      allQuanQuantity.push(allBaoCaoDDQC.filter(function (item) {
-                        return item.id_district == allQuanId[i];
-                      }).length + allBaoCaoBQC.filter(function (item) {
-                        return item.id_district == allQuanId[i];
-                      }).length + allBaoCaoDD.filter(function (item) {
-                        return item.id_district == allQuanId[i];
-                      }).length);
-                    }
+                  let allQuanId = allQuan.map(function (item) {
+                    return item.id_district;
+                  });
 
-                    buildBarChart(allQuanName, allQuanQuantity);
+                  let allQuanDone = [];
+                  for (let i = 0; i < allQuanId.length; i++) {
+                    allQuanDone.push(allBaoCaoDDQC.filter(function (item) {
+                      return (item.id_district == allQuanId[i]) && (item.status == 1);
+                    }).length + allBaoCaoBQC.filter(function (item) {
+                      return (item.id_district == allQuanId[i]) && (item.status == 1);
+                    }).length + allBaoCaoDD.filter(function (item) {
+                      return (item.id_district == allQuanId[i]) && (item.status == 1);
+                    }).length);
                   }
-                });
 
-                buildReportAdsTable(allBaoCaoBQC);
-                buildReportAdsLocationTable(allBaoCaoDDQC);
-                buildReportLocationTable(allBaoCaoDD);
-              }
-            })
-          }
-        })
-      }
-    })
+                  let allQuanNotDone = [];
+                  for (let i = 0; i < allQuanId.length; i++) {
+                    allQuanNotDone.push(allBaoCaoDDQC.filter(function (item) {
+                      return (item.id_district == allQuanId[i]) && (item.status == 0);
+                    }).length + allBaoCaoBQC.filter(function (item) {
+                      return (item.id_district == allQuanId[i]) && (item.status == 0);
+                    }).length + allBaoCaoDD.filter(function (item) {
+                      return (item.id_district == allQuanId[i]) && (item.status == 0);
+                    }).length);
+                  }
+
+                  buildBarChart(allQuanName, allQuanDone, allQuanNotDone);
+                },
+                error: function (err) {
+                  count++;
+                  console.log(err);
+                }
+              });
+
+              buildReportAdsTable(allBaoCaoBQC);
+              buildReportAdsLocationTable(allBaoCaoDDQC);
+              buildReportLocationTable(allBaoCaoDD);
+            }
+          })
+        }
+      })
+    }
+  })
+
+  setInterval(function () {
+    if (count >= 2) {
+      $("#loading-bg").hide()
+    }
+  }, 200)
 })
 
 
@@ -148,7 +177,7 @@ function buildReportAdsTable(data) {
     } else if (item.district != null && item.ward == null) {
       tr.append('<td class="office">Quận ' + item.district + '</td>');
     } else {
-      tr.append('<td class="office">Phường ' + item.ward + ', Quận ' + item.district +  '</td>');
+      tr.append('<td class="office">Phường ' + item.ward + ', Quận ' + item.district + '</td>');
     }
 
     if (item.status == true) {
@@ -180,7 +209,7 @@ function buildReportAdsLocationTable(data) {
     } else if (item.district != null && item.ward == null) {
       tr.append('<td class="office">Quận ' + item.district + '</td>');
     } else {
-      tr.append('<td class="office">Phường ' + item.ward + ', Quận ' + item.district +  '</td>');
+      tr.append('<td class="office">Phường ' + item.ward + ', Quận ' + item.district + '</td>');
     }
 
     if (item.status == true) {
@@ -214,7 +243,7 @@ function buildReportLocationTable(data) {
     } else if (item.district != null && item.ward == null) {
       tr.append('<td class="office">Quận ' + item.district + '</td>');
     } else {
-      tr.append('<td class="office">Phường ' + item.ward + ',<br> Quận ' + item.district +  '</td>');
+      tr.append('<td class="office">Phường ' + item.ward + ',<br> Quận ' + item.district + '</td>');
     }
 
     if (item.status == true) {
@@ -304,17 +333,27 @@ function buildPieChart(labels, quantity) {
   buildChartLabels(labels, pieColors);
 }
 
-function buildBarChart(labels, quantity) {
+function buildBarChart(labels, done, notDone) {
   // '#2b5797'
   let barColor = generateBarColor();
+  let anotherBarColor = generateBarColor();
+  while (anotherBarColor == barColor) {
+    anotherBarColor = generateBarColor();
+  }
 
   new Chart("barchart", {
     type: "bar",
     data: {
       labels: labels,
       datasets: [{
+        label: "Đã xử lý",
         backgroundColor: barColor,
-        data: quantity
+        data: done
+      },
+      {
+        label: "Chưa xử lý",
+        backgroundColor: anotherBarColor,
+        data: notDone
       }]
     },
     options: {
@@ -325,7 +364,7 @@ function buildBarChart(labels, quantity) {
         text: "Thống kê số lượng báo cáo theo từng quận",
       },
       legend: {
-        display: false
+        display: true
       }
     },
   });
