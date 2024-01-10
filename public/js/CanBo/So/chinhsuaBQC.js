@@ -8,6 +8,9 @@ $(document).ready(function () {
     method: "GET",
     catch: false,
     dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
     success: function (data) {
       let allLoaiBang = data.content;
       buildSelectLoaiBang(allLoaiBang);
@@ -19,6 +22,7 @@ $(document).ready(function () {
         catch: false,
         dataType: 'json',
         success: function (data) {
+          $("#loading-bg").hide()
           let bqc = data.content[0];
           buildForm(bqc);
 
@@ -112,11 +116,16 @@ $(document).ready(function () {
               })
             }
           })
+        }, 
+        error: function (err) {
+          $("#loading-bg").hide()
+          console.log(err);
         }
       })
 
     },
     error: function (err) {
+      $("#loading-bg").show()
       console.log(err);
     },
   })

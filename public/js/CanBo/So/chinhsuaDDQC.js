@@ -8,6 +8,9 @@ $(document).ready(function () {
     method: "GET",
     catch: false,
     dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
     success: function (data) {
       let allLoaiViTri = data.content;
       buildSelectLoaiViTri(allLoaiViTri);
@@ -28,6 +31,7 @@ $(document).ready(function () {
             catch: false,
             dataType: 'json',
             success: function (data) {
+              $("#loading-bg").hide()
               let ddqc = data.content[0];
               buildForm(ddqc);
 
@@ -262,100 +266,89 @@ $(document).ready(function () {
                           data: newDistrictData,
                           success: function (data) {
                             id_district = data.content[0].id_district;
+                            $.ajax({
+                              url: '/api/so/getPhuongByNameAndIdQuan/' + ward + '/' + id_district,
+                              type: 'GET',
+                              catch: false,
+                              dataType: 'json',
+                              success: function (data) {
+                                let newWardForm = new FormData();
+                                newWardForm.append("name", ward);
+                                newWardForm.append("id_district", id_district);
+                                let newWardData = Object.fromEntries(newWardForm.entries());
+                                if (data.content.length == 0) {
+                                  $.ajax({
+                                    url: '/api/so/addPhuong',
+                                    type: 'POST',
+                                    catch: false,
+                                    dataType: 'json',
+                                    data: newWardData,
+                                    beforeSend: function () {
+                                      $("#loading-bg").show()
+                                    },
+                                    success: function (data) {
+                                      id_ward = data.content[0].id_ward;
+                                      console.log(id_ward + " " + id_district);
+                                      prepareForm(imageData, ddqc, latitude, longitude, id_ward, id_district, id);
+                                    }
+                                  })
+                                } else {
+                                  id_ward = data.content[0].id_ward;
+                                  console.log(id_ward + " " + id_district);
+                                  prepareForm(imageData, ddqc, latitude, longitude, id_ward, id_district, id);
+                                }
+                              }
+                            })
                           }
                         })
                       } else {
                         id_district = data.content[0].id_district;
-                      }
-                      $.ajax({
-                        url: '/api/so/getPhuongByNameAndIdQuan/' + ward + '/' + id_district,
-                        type: 'GET',
-                        catch: false,
-                        dataType: 'json',
-                        success: function (data) {
-                          let newWardForm = new FormData();
-                          newWardForm.append("name", ward);
-                          newWardForm.append("id_district", id_district);
-                          let newWardData = Object.fromEntries(newWardForm.entries());
-                          if (data.content.length == 0) {
-                            $.ajax({
-                              url: '/api/so/addPhuong',
-                              type: 'POST',
-                              catch: false,
-                              dataType: 'json',
-                              data: newWardData,
-                              beforeSend: function () {
-                                $("#loading-bg").show()
-                              },
-                              success: function (data) {
-                                id_ward = data.content[0].id_ward;
-                              }
-                            })
-                          } else {
-                            id_ward = data.content[0].id_ward;
+                        $.ajax({
+                          url: '/api/so/getPhuongByNameAndIdQuan/' + ward + '/' + id_district,
+                          type: 'GET',
+                          catch: false,
+                          dataType: 'json',
+                          success: function (data) {
+                            let newWardForm = new FormData();
+                            newWardForm.append("name", ward);
+                            newWardForm.append("id_district", id_district);
+                            let newWardData = Object.fromEntries(newWardForm.entries());
+                            if (data.content.length == 0) {
+                              $.ajax({
+                                url: '/api/so/addPhuong',
+                                type: 'POST',
+                                catch: false,
+                                dataType: 'json',
+                                data: newWardData,
+                                beforeSend: function () {
+                                  $("#loading-bg").show()
+                                },
+                                success: function (data) {
+                                  id_ward = data.content[0].id_ward;
+                                  console.log(id_ward + " " + id_district);
+                                  prepareForm(imageData, ddqc, latitude, longitude, id_ward, id_district, id);
+                                }
+                              })
+                            } else {
+                              id_ward = data.content[0].id_ward;
+                              prepareForm(imageData, ddqc, latitude, longitude, id_ward, id_district, id);
+                            }
                           }
-                        }
-                      })
+                        })
+                      }
                     }
                   })
-                }
-
-                let formData = new FormData();
-                formData.append("id_ads_location", parseInt(id));
-                formData.append("address", $("#address").val());
-                formData.append("ward", parseInt(id_ward));
-                formData.append("district", parseInt(id_district));
-                formData.append("latitude", latitude);
-                formData.append("longitude", longitude);
-                formData.append("id_loc_type", parseInt($("#ads-location-type").val()));
-                formData.append("id_ads_type", parseInt($("#ads-type").val()));
-                formData.append("old_photo", ddqc.photo);
-
-                if ($("#is-zoning").val() == "0") {
-                  formData.append("is_zoning", false);
-                } else if ($("#is-zoning").val() == "1") {
-                  formData.append("is_zoning", true);
                 } else {
-                  formData.append("is_zoning", null);
-                }
-                let signResponse, signData, cloudinaryData, url;
-                if (imageData != null) {
-                  signResponse = await fetch('/api/basic/uploadImage');
-                  signData = await signResponse.json();
-
-                  url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
-
-                  cloudinaryData = new FormData();
-                  cloudinaryData.append("file", imageData);
-                  cloudinaryData.append("api_key", signData.apikey);
-                  cloudinaryData.append("timestamp", signData.timestamp);
-                  cloudinaryData.append("signature", signData.signature);
-                  cloudinaryData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
-                  cloudinaryData.append("folder", "image");
-
-                  fetch(url, {
-                    method: "POST",
-                    body: cloudinaryData
-                  })
-                  .then((response) => { 
-                    return response.text();
-                  })
-                  .then((data) => {
-                    const photo = JSON.parse(data).secure_url
-                    formData.append("photo", photo);
-                  })
-                  .finally(() => {
-                    submitUpdate(formData);
-                  })
-                } else {
-                  formData.append("photo", ddqc.photo);
-                  submitUpdate(formData);
+                  prepareForm(imageData, ddqc, latitude, longitude, id_ward, id_district, id);
                 }
               });
 
               $("#edit-ads-location button[value='delete']").on("click", function (e) {
                 if (confirm("Bạn có chắc chắn muốn xóa không?")) {
-                  const deleteData = { id: parseInt(id) }
+                  const deleteForm = new FormData();
+                  deleteForm.append("id", id);
+                  deleteForm.append("photo", ddqc.photo);
+                  const deleteData = Object.fromEntries(deleteForm.entries());
                   $.ajax({
                     url: '/api/so/deleteDiemDatQuangCao',
                     type: 'DELETE',
@@ -430,9 +423,64 @@ function buildForm(data) {
   }
 }
 
+async function prepareForm(imageData, ddqc, latitude, longitude, id_ward, id_district, id) {
+  let formData = new FormData();
+  formData.append("id_ads_location", parseInt(id));
+  formData.append("address", $("#address").val());
+  formData.append("ward", parseInt(id_ward));
+  formData.append("district", parseInt(id_district));
+  formData.append("latitude", latitude);
+  formData.append("longitude", longitude);
+  formData.append("id_loc_type", parseInt($("#ads-location-type").val()));
+  formData.append("id_ads_type", parseInt($("#ads-type").val()));
+  formData.append("old_photo", ddqc.photo);
+
+  if ($("#is-zoning").val() == "0") {
+    formData.append("is_zoning", false);
+  } else if ($("#is-zoning").val() == "1") {
+    formData.append("is_zoning", true);
+  } else {
+    formData.append("is_zoning", null);
+  }
+  let signResponse, signData, cloudinaryData, url;
+  if (imageData != null) {
+    signResponse = await fetch('/api/basic/uploadImage');
+    signData = await signResponse.json();
+
+    url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
+
+    cloudinaryData = new FormData();
+    cloudinaryData.append("file", imageData);
+    cloudinaryData.append("api_key", signData.apikey);
+    cloudinaryData.append("timestamp", signData.timestamp);
+    cloudinaryData.append("signature", signData.signature);
+    cloudinaryData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+    cloudinaryData.append("folder", "image");
+
+    fetch(url, {
+      method: "POST",
+      body: cloudinaryData
+    })
+    .then((response) => { 
+      return response.text();
+    })
+    .then((data) => {
+      const photo = JSON.parse(data).secure_url
+      formData.append("photo", photo);
+    })
+    .finally(() => {
+      submitUpdate(formData);
+    })
+  } else {
+    formData.append("photo", ddqc.photo);
+    submitUpdate(formData);
+  }
+}
+
 function submitUpdate(formData) {
   let id = $("#edit-ads-location #id-ads-location").val();
   updateData = Object.fromEntries(formData.entries());
+  console.log(updateData);
 
   $.ajax({
     url: '/api/so/updateDiemDatQuangCao',

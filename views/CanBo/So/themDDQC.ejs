@@ -6,7 +6,7 @@
             <span class="title-text"><h1><a href="/diemdatquangcao">Quản lí điểm đặt quảng cáo</a> / Thêm điểm đặt quảng cáo</h1></span>
         </div>
        
-        <form action="" method="post" class="form" id="add-ads-location">
+        <form class="form" id="add-ads-location">
             <legend><i class="fas fa-plus-square"></i> Thêm điểm đặt quảng cáo</legend>
             <div class="input-container">
                 <!-- <div class="input-field">
@@ -15,23 +15,23 @@
                     <span class="tooltiptext">Không thể chỉnh sửa ID</span>
                 </div> -->
                 <div class="input-field">
-                    <label for="address-ads-location">Địa chỉ</label>
-                    <input type="text" id="address-ads-location" name="address-ads-location" disabled>
+                    <label for="address">Địa chỉ</label>
+                    <input type="text" id="address" name="address" disabled>
                     <span class="tooltiptext">Chỉnh sửa bằng tọa độ</span>
                 </div>
                 <div class="input-field">
-                    <label for="ward-ads-location">Phường</label>
-                    <input type="text" id="ward-ads-location" name="ward-ads-location" disabled>
+                    <label for="ward">Phường</label>
+                    <input type="text" id="ward" name="ward" disabled>
                     <span class="tooltiptext">Chỉnh sửa bằng tọa độ</span>
                 </div>
                 <div class="input-field">
-                    <label for="district-ads-location">Quận</label>
-                    <input type="text" id="district-ads-location" name="district-ads-location" disabled>
+                    <label for="district">Quận</label>
+                    <input type="text" id="district" name="district" disabled>
                     <span class="tooltiptext">Chỉnh sửa bằng tọa độ</span>
                 </div> 
                 <div class="input-field">
-                    <label for="coordinates-ads-location">Tọa độ</label>
-                    <input type="text" id="coordinates-ads-location" name="coordinates-ads-location" onclick=mapPopup() readonly>
+                    <label for="coordinates">Tọa độ</label>
+                    <input type="text" id="coordinates" name="coordinates" readonly>
                 </div>
                 <div class="input-field">
                     <label for="ads-location-type">Loại vị trí</label>
@@ -44,19 +44,19 @@
                     </select>
                 </div> 
                 <div class="input-field">
-                    <label for="zoning-status">Tình trạng quy hoạch</label>
-                    <select name="zoning-status" id="zoning-status" required>
+                    <label for="is-zoning">Tình trạng quy hoạch</label>
+                    <select name="is-zoning" id="is-zoning" required>
                         <option value="">Chọn tình trạng</option>
                         <option value="1">Đã quy hoạch</option>
                         <option value="0">Chưa quy hoạch</option>
                     </select>
                 </div>
                 <div class="input-field image span-5">
-                    <label for="ads-location-image">Hình ảnh minh họa</label>
+                    <label for="image">Hình ảnh minh họa</label>
                     <div class="img-container">
-                        <img src="../../../public/image/image-placeholder.jpg" alt="" id="ads-location-image-preview">
-                        <label for="ads-location-image" class="img-button">Thay đổi</label>
-                        <input type="file" id="ads-location-image" name="ads-location-image" accept="image/*" required>
+                        <img src="../../../public/image/image-placeholder.jpg" alt="" id="image-preview">
+                        <label for="image" class="img-button">Thay đổi</label>
+                        <input type="file" id="image" name="image" accept="image/*" required>
                         <div class="dark-background"></div>
                     </div>
                     

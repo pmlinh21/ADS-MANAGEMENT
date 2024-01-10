@@ -5,6 +5,9 @@ $(document).ready(function () {
     type: 'GET',
     catch: false,
     dataType: 'json',
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
     success: function (data) {
       console.log(data);
       buildSelectDistrict(data.content);
@@ -15,6 +18,7 @@ $(document).ready(function () {
         catch: false,
         dataType: 'json',
         success: function (data) {
+          $("#loading-bg").hide()
           allEmail = data.content.map(item => item.email);
 
           $("#add-ward-officer button").on("click", function (e) {
@@ -36,12 +40,17 @@ $(document).ready(function () {
                 catch: false,
                 dataType: 'json',
                 data: addData,
-
+                beforeSend: function () {
+                  $("#loading-bg").show()
+                },
                 success: function (res) {
-                  window.location.href = "/quanlicanbo";
-                  console.log("Thêm thành công");
+                  // $("#loading-bg").hide()
+                  location.reload();
+                  // window.location.href = "/quanlicanbo";
+                  alert("Thêm thành công");
                 },
                 error: function (xhr, status, err) {
+                  $("#loading-bg").hide()
                   alert("Thêm cán bộ thất bại");
                   console.log(err);
                 }
@@ -49,9 +58,14 @@ $(document).ready(function () {
             }
           });
         },
+        error: function (xhr, status, err) {
+          $("#loading-bg").hide()
+          console.log(err);
+        }
       });
     },
     error: function (xhr, status, err) {
+      $("#loading-bg").hide()
       console.log(err);
     }
   });

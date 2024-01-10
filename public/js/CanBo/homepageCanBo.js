@@ -8,10 +8,10 @@ function red(item) {
 
   if (item[11]) {
     for (let i = 0; i < item[11].length; i++)
-      if (item[11][i]?.list_report?.some( report => !report.status))
-      return true
+      if (item[11][i]?.list_report?.some(report => !report.status))
+        return true
   }
-  
+
   return false
 }
 
@@ -96,7 +96,10 @@ function createLayer(map, features) {
     filter: ['!', ['has', 'point_count']],
     paint: {
       'circle-color': ['get', 'colorMarker'],
+      // 'circle-radius': 10,
       'circle-radius': 10,
+      'circle-stroke-width': 2,
+      'circle-stroke-color': '#ffffff'
     }
   });
 
@@ -119,7 +122,15 @@ function createLayer(map, features) {
     );
   });
 
+  const popup = new mapboxgl.Popup({
+    closeButton: false,
+    closeOnClick: false,
+    offset: [0, 15]
+  })
+
   map.on('mouseenter', 'unclustered-point', (e) => {
+
+    map.getCanvas().style.cursor = 'pointer'
 
     const coordinates = e.features[0].geometry.coordinates.slice();
     const ads_type = e.features[0].properties.ads_type;
@@ -132,13 +143,7 @@ function createLayer(map, features) {
       coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
     }
 
-    // console.log(e.features[0])
-
-    const popup = new mapboxgl.Popup({
-      closeButton: false,
-      offset: 15
-    })
-      .setLngLat(coordinates)
+    popup.setLngLat(coordinates)
       .setHTML(
         `<div class="popup-content"> 
     <p class = "ads-type"  style = "font-weight: 900">${ads_type}</p>
@@ -151,14 +156,15 @@ function createLayer(map, features) {
     e.features[0].popup = popup;
     popup.addTo(map)
 
-    map.getCanvas().style.cursor = 'pointer'
-
-    map.on('mouseleave', 'unclustered-point', () => {
-      // Remove the popup from the map
-      popup.remove();
-    });
 
   });
+
+  map.on('mouseleave', 'unclustered-point', () => {
+    map.getCanvas().style.cursor = '';
+    popup.remove();
+  });
+
+
   // nhấn vào điểm đặt
   map.on('mousedown', 'unclustered-point', (e) => {
     const feature = e.features[0];
@@ -189,7 +195,7 @@ function createMarker(info, map) {
     else
       colorMarker = '#0B7B31';
     let imagePath
-    if ( item[7] != null && item[7] != "")
+    if (item[7] != null && item[7] != "")
       imagePath = item[7]
     else
       imagePath = "../../../public/image/image-placeholder.jpg"
@@ -320,29 +326,36 @@ function renderReport(list_report, container) {
   $(container).html(rendered);
 }
 
-function renderGiayPhepGiaHan(list_ads_create){
-  const [tmp, ...giahan] = list_ads_create;
-  
+function renderGiayPhepGiaHan(giahan) {
+  const note = giahan.map(item => {
+    if (item.status === true)
+      return "Đã duyệt"
+    else if (item.status === false)
+      return "Đã từ chối"
+    else
+      return "Chưa xét duyệt"
+  })
+
   var template = `
     <% for (var i = 0; i < giahan?.length; i++) { %>
-      <form class="row form-ads-create-details">
+      <form class="row form-ads-create-details mb-3">
           <div class="col-md-4">
               <label class="form-label">Ngày bắt đầu hợp đồng</label>
-              <input type="date" class="form-control input-details" value = "<%= formatSQLDate_ymd(info.start_date)%>" readonly>
+              <input type="date" class="form-control input-details" value = "<%= formatSQLDate_ymd(giahan[i].start_date)%>" readonly>
           </div>
           <div class="col-md-4">
               <label class="form-label">Ngày kết thúc hợp đồng</label>
-              <input type="date" class="form-control input-details" value = "<%= formatSQLDate_ymd(info.end_date)%>" readonly>
+              <input type="date" class="form-control input-details" value = "<%= formatSQLDate_ymd(giahan[i].end_date)%>" readonly>
           </div>
           <div class="col-md-4">
             <label for="height" class="form-label">Trạng thái cấp phép</label>
-            <input type="text" class="form-control input-details" value = "<%= info.status%>" readonly>
+            <input type="text" class="form-control input-details" value = "<%= note[i]%>" readonly>
           </div>
       </form>
     <% } %>
     `;
 
-  var rendered = ejs.render(template, { giahan });
+  var rendered = ejs.render(template, { giahan, note });
   $("#detail-popup .giay-phep-gia-han .content").html(rendered);
 }
 
@@ -356,12 +369,22 @@ function showSidebar(adsloc) {
   $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, quận ${adsloc.district}`)
 
   $("#sidebar .detail-button").on("click", function () {
+    $("#loading-bg").show()
     let str_id_ads = $(this).attr("class").split(" ")[1];
     let id_ads = parseInt(str_id_ads.split("-")[1])
     // console.log(id_ads)
 
     const list_ads = JSON.parse(adsloc.list_ads)
     ads = list_ads?.filter(item => item.id_ads == id_ads)[0]
+
+    if (ads.photo) {
+      $("#detail-popup .hinh-anh-bqc img").attr("src", ads.photo)
+      $("#detail-popup .hinh-anh-bqc img").show()
+      $("#detail-popup .hinh-anh-bqc p").hide()
+    } else {
+      $("#detail-popup .hinh-anh-bqc img").hide()
+      $("#detail-popup .hinh-anh-bqc p").show()
+    }
 
     $.ajax({
       url: `/api/basic/getAdsCreateByAds/${ads.id_ads}`,
@@ -371,16 +394,10 @@ function showSidebar(adsloc) {
         console.log(data)
         console.log(ads.id_ads)
 
-        if (ads.photo){
-          $("#detail-popup .hinh-anh-bqc img").attr("src", ads.photo)
-          $("#detail-popup .hinh-anh-bqc p").hide()
-        } else{
-          $("#detail-popup .hinh-anh-bqc img").hide()
-        }
-    
         if (data.content.length > 0) {
           $("#detail-popup").modal('show');
-          info = data.content[0]
+          const [info, ...giahan] = data.content
+
           $('#id').val(info.id_create);
           $('#board_type').val(info.board_type);
           $('#size').val(info.width + 'm x ' + info.height + "m");
@@ -398,16 +415,28 @@ function showSidebar(adsloc) {
           $('#officer').val(info.officer);
           $('#office').val(info.office === 1 ? "Quận" : (info.office === 2 ? "Phường" : ""));
 
-            if (data.content.length > 1){
-              renderGiayPhepGiaHan(data.content);
-            }
-          
+          if (info.photo) {
+            $("#detail-popup .image p").hide()
+            $("#detail-popup .image img").show()
+            $("#detail-popup .image img").attr("src", info.photo)
+          } else {
+            $("#detail-popup .image img").hide()
+            $("#detail-popup .image p").show()
+          }
+
+          if (giahan?.length > 0)
+            renderGiayPhepGiaHan(giahan);
+
         }
         else {
           $("#detail-popup").hide()
           alert("Chưa có thông tin giấy cấp phép")
         }
 
+        $("#loading-bg").hide()
+      },
+      error: function () {
+        $("#loading-bg").hide()
       }
     })
   })
@@ -430,28 +459,43 @@ function showSidebar(adsloc) {
       console.log(list_report)
       renderReport(list_report, "#other-report-popup .modal-body")
       return
+
     } else {
-      const id_district = parseInt(localStorage.getItem('id_district'));
-      const id_ward = parseInt(localStorage.getItem('id_ward'));
-      const param = isNaN(id_district) ? id_ward : id_district;
-      console.log("param: ", param);
 
-      $.get(`/api/quan/getLocReport/${param}`, function (data) {
-        console.log("~");
+      var url = "";
+      if (id_district)
+        url = "api/quan/getLocReport/" + id_district
+      else if (id_ward)
+        url = "api/ward/getLocReportWard/" + id_ward
+      else
+        url = "api/ward/getAllBaoCaoDD"
 
-        const loc_report = data.content.filter(function (item) {
-          return (item.longitude == adsloc.longitude && item.latitude == adsloc.latitude) ||
-            (item.address == adsloc.address && item.ward == adsloc.ward)
-        })
+      $.ajax({
+        url: url,
+        type: "GET",
+        success: function (data) {
+          console.log(data.content)
 
-        console.log(loc_report)
-        renderReport(loc_report, "#other-report-popup .modal-body")
-        return
-      }).fail(function (error) {
-        console.log(error);
-      })
+          console.log("thông tin của điểm được click: ")
+          console.log(adsloc.longitude.toFixed(4))
+          console.log(adsloc.latitude.toFixed(4))
+          console.log(adsloc.address)
+          console.log(adsloc.ward)
+          const loc_report = data.content.filter(function (item) {
+            return (
+              (item.longitude.toFixed(4) == adsloc.longitude.toFixed(4) && item.latitude.toFixed(4) == adsloc.latitude.toFixed(4) ||
+                (item.address == adsloc.address && item.ward == adsloc.ward))
+            );
+          });
+
+          renderReport(loc_report, "#other-report-popup .modal-body");
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      });
+
     }
-
   })
 
   $("#sidebar").on("click", '.close-button', function () {
@@ -491,8 +535,8 @@ $(document).ready(function () {
   var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: [106.6974, 10.7743],
-    zoom: 15,
+    center: [106.6924, 10.7759],
+    zoom: 16,
     language: 'vi',
     interactive: true
   });

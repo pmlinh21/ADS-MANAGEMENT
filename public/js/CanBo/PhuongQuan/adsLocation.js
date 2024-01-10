@@ -51,10 +51,11 @@ $(document).ready(function () {
 
         $('#example_wrapper').on('click', ".view-btn", function(){
           let row = $(this).closest('tr').index();
-          console.log(filter_info[row][8]);
+          let page = $("#example_wrapper .page-item.active a").text();
+          console.log(filter_info[row + 5 * parseInt(page) - 5][8]);
           let path  = "../../../public/image/image-placeholder.jpg"
-          if (filter_info[row][8] != "")
-            path  = `../../../../public/image/${filter_info[row][8]}`
+          if (filter_info[row + 5 * parseInt(page) - 5][8] != "")
+            path  = `../../../../public/image/${filter_info[row + 5 * parseInt(page) - 5][8]}`
           $('#view-image .photo').attr('src', path );
           return
         })
@@ -62,6 +63,8 @@ $(document).ready(function () {
         $("#example_wrapper").on('click', '.edit-btn', function(event){
           $('button.style1-button').prop('disabled', true);
           var click_row = $(event.target).closest('tr').index();
+          let page = $("#example_wrapper .page-item.active a").text();
+          click_row = click_row + 5 * parseInt(page) - 5
           var imageData = null
           var address = filter_info[click_row][1], ward = filter_info[click_row][2],  district = filter_info[click_row][12] 
           var longitude = filter_info[click_row][9], latitude = filter_info[click_row][10]
@@ -361,10 +364,11 @@ $(document).ready(function () {
 
         $('#example_wrapper').on('click', ".view-btn", function(){
           let row = $(this).closest('tr').index();
-          console.log(filter_info[row][8]);
+          let page = $("#example_wrapper .page-item.active a").text();
+          console.log(filter_info[row + 5 * parseInt(page) - 5][8]);
           let path  = "../../../public/image/image-placeholder.jpg"
-          if (filter_info[row][8] != "")
-            path  = filter_info[row][8]
+          if (filter_info[row + 5 * parseInt(page) - 5][8] != "")
+            path  = filter_info[row + 5 * parseInt(page) - 5][8]
           $('#view-image .photo').attr('src', path );
           return
         })
@@ -396,6 +400,8 @@ $(document).ready(function () {
         $("#example_wrapper").on('click', '.edit-btn', function(event){
           $('button.style1-button').prop('disabled', true);
           var click_row = $(event.target).closest('tr').index();
+          let page = $("#example_wrapper .page-item.active a").text();
+          click_row = click_row + 5 * parseInt(page) - 5
           var imageData = null
           var address = filter_info[click_row][1], ward = filter_info[click_row][2],  district = filter_info[click_row][12] 
           var longitude = filter_info[click_row][9], latitude = filter_info[click_row][10]

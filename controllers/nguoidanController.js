@@ -229,4 +229,22 @@ const createLocReport = async (req, res) => {
     }
 }
 
-module.exports = { getAdsLoc, getLocReport, createAdsReport, createAdsLocReport, createLocReport }
+const verifyCaptcha = async (req, res) => {
+    const secretKey = "6LeUpUopAAAAAFA06ZshY9K_3BewDRTQuT3ld0iL"
+    if (!req.body.captcha) {
+        return res.status(400).json({ code: errorCode, message: "Không có captcha" })
+    }
+    const verifyUrl = `https://google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${req.body.captcha}`
+    request(verifyUrl, (err, response, body) => {
+        if (err) {
+            return res.status(400).json({ code: errorCode, message: "Lỗi captcha" })
+        }
+        body = JSON.parse(body)
+        if (!body.success || body.score < 0.4) {
+            return res.status(400).json({ 'success': false, code: errorCode, score: body.score, message: "Captcha không đúng" })
+        }
+        return res.status(200).json({ 'success': true, code: sucessCode, score: body.score, message: "Captcha đúng" })
+    })
+};
+
+module.exports = { getAdsLoc, getLocReport, createAdsReport, createAdsLocReport, createLocReport, verifyCaptcha }

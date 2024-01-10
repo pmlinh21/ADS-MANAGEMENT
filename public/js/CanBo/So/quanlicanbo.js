@@ -1,21 +1,34 @@
+var count = 0;
 $(document).ready(function(){
     $("#canbo").addClass("snb-li-active");
+    $("#loading-bg").show()
 
     let allCanboQuan;
     $.get("/api/so/getAllCanboQuan", function(data){
+        count++;
         allCanboQuan = data.content.map(item => [item.fullname, item.birthdate, item.email, item.phone, item.district]);
         buildDistrictOfficerTable(allCanboQuan);
     }).fail(function(err){
+        count++;
         console.log(err);
     });
 
     let allCanboPhuong;
     $.get("/api/so/getAllCanboPhuong", function(data){
+        count++;
         allCanboPhuong = data.content.map(item => [item.fullname, item.birthdate, item.email, item.phone, item.ward, item.district]);
         buildWardOfficerTable(allCanboPhuong);
     }).fail(function(err){
+        count++;
         console.log(err);
     });
+  
+    let check = setInterval(() => {
+      if (count >= 2) {
+        $("#loading-bg").hide()
+        clearInterval(check);
+      }
+    }, 200);
 });
 
 function buildDistrictOfficerTable(officers) {

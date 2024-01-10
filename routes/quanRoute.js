@@ -58,7 +58,7 @@ quanRoute.get("/getLocReportWard/:id_ward", isCanboPhuong, getLocReportWard);
 
 quanRoute.get("/getAdsCreateWard/:id_ward", isCanboPhuong, getAdsCreateWard);
 
-quanRoute.post("/createAdsWard", isCanboPhuong, upload('createAdsWard').single("file"), createAdsWard);
+quanRoute.post("/createAdsWard", isCanboPhuong, createAdsWard);
 
 quanRoute.get("/getWardAndDistrict/:id_ward", isCanboPhuong, getWardAndDistrict);
 
