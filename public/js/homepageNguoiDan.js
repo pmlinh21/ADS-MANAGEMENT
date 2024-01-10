@@ -204,7 +204,7 @@ function renderReport(list_report, container, user_email) {
   <% for (var i = 0; i < list_report?.length; i++) { %>
     <div class="<%=note[i].is_user%>-report row" >
       <div class="col-md-12">
-        <%- list_report[i].content %>
+        <%- list_report[i].content%>
       </div>
       <div class="col-md-12 view-image">
       <% if (note[i].imagePath1) { %>
@@ -324,7 +324,6 @@ function showSidebar(adsloc) {
             
             else {
                 const reportContent = encodeURIComponent(tinymce.get("content").getContent())
-                console.log(reportContent)
 
                 let reportObject = {
                     id_report: null, // You may need to generate a unique ID
@@ -361,7 +360,7 @@ function showSidebar(adsloc) {
                         if (data.success) {
                             const existingReportsJSON = localStorage.getItem("ads_report");
                             const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                            existingReports.push(reportObject);
+                            existingReports.push({...reportObject, content: decodeURIComponent(reportContent)});
                             localStorage.setItem("ads_report", JSON.stringify(existingReports));
 
                             // Send data to the server using AJAX
@@ -419,9 +418,16 @@ function showSidebar(adsloc) {
                 alert("Trường 'Số điện thoại' bắt buộc")
             else if ($("#reportContent").val() == "")
                 alert("Trường 'Nội dung báo cáo' bắt buộc")
+            else if (!isValidEmail($("#email").val()))
+                alert("Trường 'Email' không hợp lệ")
+            else if (!isValidPhoneNumber($("#phone").val()))
+                alert("Trường 'Số điện thoại' không hợp lệ")
             else {
+                const reportContent = encodeURIComponent(tinymce.get("content").getContent())
+
                 if (adsloc.id_ads_location) {
                     console.log("creating adsloc report")
+                    
                     reportObject = {
                         id_report: null, // You may need to generate a unique ID
                         officer: null, // You may need to handle this differently
@@ -432,7 +438,7 @@ function showSidebar(adsloc) {
                         email: $("#email").val(),
                         phone: $("#phone").val(),
                         // content: tinymce.$("#reportContent").getContent(),
-                        content: tinymce.get("content").getContent(),
+                        content: reportContent,
                         photo1: await uploadImage(imageData3),
                         photo2: await uploadImage(imageData4),
                         report_time: validateDate(new Date()),
@@ -454,7 +460,7 @@ function showSidebar(adsloc) {
                             if (data.success) {
                                 const existingReportsJSON = localStorage.getItem("ads_loc_report");
                                 const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                                existingReports.push(reportObject);
+                                existingReports.push({...reportObject, content: decodeURIComponent(reportContent)});
                                 // console.log(JSON.stringify(reportObject))
                                 localStorage.setItem("ads_loc_report", JSON.stringify(existingReports));
 
@@ -496,7 +502,7 @@ function showSidebar(adsloc) {
                         email: $("#email").val(),
                         phone: $("#phone").val(),
                         // content: tinymce.$("#reportContent").getContent(),
-                        content: tinymce.get("content").getContent(),
+                        content: reportContent,
                         photo1: await uploadImage(imageData3),
                         photo2: await uploadImage(imageData4),
                         report_time: validateDate(new Date()),
@@ -518,7 +524,7 @@ function showSidebar(adsloc) {
                             if (data.success) {
                                 const existingReportsJSON = localStorage.getItem("loc_report");
                                 const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                                existingReports.push(reportObject);
+                                existingReports.push({...reportObject, content: decodeURIComponent(reportContent)});
                                 localStorage.setItem("loc_report", JSON.stringify(existingReports));
 
                                 // Send data to the server using AJAX
