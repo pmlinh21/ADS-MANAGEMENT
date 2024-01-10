@@ -3,6 +3,25 @@ let ads_report
 let NguoiDanAdsLoc
 localStorage.setItem("email", JSON.stringify("iot.nhom.5@gmail.com"))
 
+function isValidPhoneNumber(phoneNumber) {
+    // Regular expression pattern to match a phone number
+    const phoneRegex = /^\d{10}$/;
+  
+    // Remove any non-digit characters from the input
+    const cleanedPhoneNumber = phoneNumber.replace(/\D/g, '');
+  
+    // Check if the cleaned phone number matches the regex pattern
+    return phoneRegex.test(cleanedPhoneNumber);
+}
+
+function isValidEmail(email) {
+    // Regular expression pattern to match an email address
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+    // Check if the email matches the regex pattern
+    return emailRegex.test(email);
+  }
+
 function renderAddressResult(res) {
     var template = ` 
         <% for (var i = 0; i < res.length; i++) { %>
@@ -263,7 +282,7 @@ function showSidebar(adsloc) {
         const list_ads = JSON.parse(adsloc.list_ads)
         ads = list_ads?.filter(item => item.id_ads == id_ads)[0]
 
-        let imagePath = (!ads.photo ? `./image/image-placeholder.jpg` : `${ads.photo}`)
+        let imagePath = (!ads.photo ? `../image/image-placeholder.jpg` : `${ads.photo}`)
         $("#detail-popup .image img").attr("src", imagePath)
         $("#detail-popup .expired-date").text("Ngày hết hạn hợp đồng: " + validateSQLDate(ads.expired_date))
     })
@@ -298,7 +317,15 @@ function showSidebar(adsloc) {
                 alert("Trường 'Số điện thoại' bắt buộc")
             else if (tinymce.get("content").getContent() == "")
                 alert("Trường 'Nội dung báo cáo' bắt buộc")
+            else if (!isValidEmail($("#email").val()))
+                alert("Trường 'Email' không hợp lệ")
+            else if (!isValidPhoneNumber($("#phone").val()))
+                alert("Trường 'Số điện thoại' không hợp lệ")
+            
             else {
+                const reportContent = encodeURIComponent(tinymce.get("content").getContent())
+                console.log(reportContent)
+
                 let reportObject = {
                     id_report: null, // You may need to generate a unique ID
                     officer: null, // You may need to handle this differently
@@ -308,7 +335,7 @@ function showSidebar(adsloc) {
                     fullname: $("#name").val(),
                     email: $("#email").val(),
                     phone: $("#phone").val(),
-                    content: tinymce.get("content").getContent(),
+                    content: reportContent,
                     photo1: await uploadImage(imageData1),
                     photo2: await uploadImage(imageData2),
                     report_time: validateDate(new Date()),
@@ -358,7 +385,6 @@ function showSidebar(adsloc) {
                         }
                     })
                 })
-
                 $('#report-popup form').get(0).reset()
                 $("#report-popup").modal("hide")
             }
@@ -723,7 +749,7 @@ function createMarker(info, map) {
         if (item[7] != "")
             imagePath = item[7]
         else
-            imagePath = "./image/image-placeholder.jpg"
+            imagePath = "../image/image-placeholder.jpg"
         return {
             type: 'Feature',
             geometry: {
