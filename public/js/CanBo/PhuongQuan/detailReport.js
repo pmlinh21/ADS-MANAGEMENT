@@ -53,7 +53,7 @@ $(document).ready(function() {
 
       <div class="col-md-12">
         <label for="report" class="form-label">Nội dung báo cáo</label>
-        <textarea type="text" class="form-control input-details fixed-size-textarea" id="report" readonly></textarea>
+        <div class="form-control input-details " id="report"></div>
       </div>
 
       <div class="col-md-4">
@@ -105,7 +105,7 @@ $(document).ready(function() {
       $('#name').val(info?.fullname);
       $('#email').val(info?.email);
       $('#phone').val(info?.phone);
-      $('#report').val(info?.content);
+      $('#report').html(info?.content);
       $('#time').val(formatSQLDate_ymd(info?.report_time));
       $('#officer').val(info?.officer);
       $('#office').val(info?.office === 1 ? "Quận" : (info?.office === 2 ? "Phường" : ""));
@@ -194,7 +194,7 @@ $(document).ready(function() {
 
       <div class="col-md-12">
           <label for="report" class="form-label">Nội dung báo cáo</label>
-          <textarea type="text" class="form-control input-details fixed-size-textarea" id="report" readonly></textarea>
+          <div class="form-control input-details " id="report"></div>
       </div>
 
       <div class="col-md-4">
@@ -247,7 +247,7 @@ $(document).ready(function() {
       $('#name').val(info?.fullname);
       $('#email').val(info?.email);
       $('#phone').val(info?.phone);
-      $('#report').val(info?.content);
+      $('#report').html(info?.content);
       $('#time').val(formatSQLDate_ymd(info?.report_time));
       $('#officer').val(info?.officer);
       $('#office').val(info?.office === 1 ? "Quận" : (info?.office === 2 ? "Phường" : ""));
@@ -332,7 +332,7 @@ $(document).ready(function() {
 
       <div class="col-md-12">
           <label for="report" class="form-label">Nội dung báo cáo</label>
-          <textarea type="text" class="form-control input-details" id="report" readonly></textarea>
+          <div class="form-control input-details " id="report"></div>
       </div>
 
       <div class="col-md-4">
@@ -390,7 +390,7 @@ $(document).ready(function() {
         $('#name').val(info.fullname);
         $('#email').val(info.email);
         $('#phone').val(info.phone);
-        $('#report').val(info.content);
+        $('#report').html(info.content);
         $('#time').val(formatSQLDate_ymd(info.report_time));
         if (info.status === true) {
           $('#statusProcessed').prop('checked', true);

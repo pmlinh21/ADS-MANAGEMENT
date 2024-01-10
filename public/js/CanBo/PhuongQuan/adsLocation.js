@@ -55,7 +55,7 @@ $(document).ready(function () {
           console.log(filter_info[row + 5 * parseInt(page) - 5][8]);
           let path  = "../../../public/image/image-placeholder.jpg"
           if (filter_info[row + 5 * parseInt(page) - 5][8] != "")
-            path  = `../../../../public/image/${filter_info[row + 5 * parseInt(page) - 5][8]}`
+            path  = filter_info[row + 5 * parseInt(page) - 5][8]
           $('#view-image .photo').attr('src', path );
           return
         })

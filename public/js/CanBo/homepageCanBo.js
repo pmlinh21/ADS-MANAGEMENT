@@ -459,14 +459,14 @@ function showSidebar(adsloc) {
       return
 
     } else {
-
+      list_report = []
       var url = "";
       if (id_district)
         url = "api/quan/getLocReport/" + id_district
       else if (id_ward)
-        url = "api/ward/getLocReportWard/" + id_ward
+        url = "api/quan/getLocReportWard/" + id_ward
       else
-        url = "api/ward/getAllBaoCaoDD"
+        url = "api/so/getAllBaoCaoDD"
 
       $.ajax({
         url: url,
@@ -515,16 +515,10 @@ function changeMapSize() {
   $('#sidebar').height(mapHeight);
 }
 
-window.onclick = e => {
-  console.log(e.target);  // to get the element
-  console.log(e.target.tagName);  // to get the element tag name alone
-}
-
 // hard code
 $(document).ready(function () {
   var wards, info, filter_info
   
-
   changeMapSize();
 
   $(window).on('resize', function () {

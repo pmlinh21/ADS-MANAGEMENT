@@ -19,6 +19,6 @@ nguoidanRoute.post('/createAdsLocReport', createAdsLocReport);
 
 nguoidanRoute.get("/getLocReport", getLocReport);
 
-nguoidanRoute.get("/verifyCaptcha", verifyCaptcha);
+nguoidanRoute.post("/verifyCaptcha", verifyCaptcha);
 
 module.exports = nguoidanRoute;

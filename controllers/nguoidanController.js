@@ -3,6 +3,7 @@ const sequelize = db.sequelize;
 const init_models = require('../models/init-models');
 const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
+const request = require('request');
 
 const getAdsLoc = async (req, res) => {
     try {
@@ -141,7 +142,7 @@ const createAdsReport = async (req, res) => {
             fullname: data.fullname,
             email: data.email,
             phone: data.phone,
-            content: data.content,
+            content: decodeURIComponent(data.content),
             status: data.status,
             photo1: data.photo1,
             photo2: data.photo2,
@@ -174,7 +175,7 @@ const createAdsLocReport = async (req, res) => {
             fullname: data.fullname,
             email: data.email,
             phone: data.phone,
-            content: data.content,
+            content: decodeURIComponent(data.content),
             status: data.status,
             photo1: data.photo1,
             photo2: data.photo2,
