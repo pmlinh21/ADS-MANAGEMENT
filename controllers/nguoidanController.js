@@ -3,6 +3,7 @@ const sequelize = db.sequelize;
 const init_models = require('../models/init-models');
 const model = init_models(sequelize);
 const { sucessCode, failCode, errorCode } = require('../config/response');
+const request = require('request');
 
 const getAdsLoc = async (req, res) => {
     try {
