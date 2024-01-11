@@ -157,9 +157,27 @@ $(document).ready(function() {
         const curPass = $('#curpass').val();
         const newPass = $('#newpass').val();
         const confirmPass = $('#cfpass').val();
-        
+
+        if (curPass.length < 8) {
+            $('#curpass-error').text('Mật khẩu phải có ít nhất 8 kí tự.').show();
+            $('#newpass-error').hide();
+            $('#cfpass-error').hide();
+            return;
+        } else {
+            $('#curpass-error').hide();
+        }
+
         if (newPass.length < 8) {
             $('#newpass-error').text('Mật khẩu mới phải có ít nhất 8 kí tự.').show();
+            $('#cfpass-error').hide();
+            return;
+        } else {
+            $('#newpass-error').hide();
+        }
+
+        if (newPass === curPass) {
+            $('#newpass-error').text('Mật khẩu mới trùng với mật khẩu hiện tại.').show();
+            $('#cfpass-error').hide();
             return;
         } else {
             $('#newpass-error').hide();

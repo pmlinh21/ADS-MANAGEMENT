@@ -709,6 +709,7 @@ function sendCreateRequest(url, formData) {
     contentType: "application/json",
     success: function (response) {
       // Handle the successful response here
+      alert("Tạo cấp phép thành công")
       window.location.reload();
       console.log(response);
     },

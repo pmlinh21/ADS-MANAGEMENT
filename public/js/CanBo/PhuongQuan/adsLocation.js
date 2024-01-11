@@ -76,6 +76,9 @@ $(document).ready(function () {
           else
             $("#no").prop('selected', true);
 
+          $('#id_loc_type').empty();
+          $('#id_ads_type').empty();
+
           loc_type?.forEach(function(type){
             if (filter_info[click_row][3] == type.loc_type) 
               $('#id_loc_type').append(`<option selected value=${type.id_loc_type}>${type.loc_type}</option>`);
@@ -113,8 +116,9 @@ $(document).ready(function () {
           });
           geocoder.setLanguage('vi');
       
-          let canvas = $('.mapboxgl-canvas')
-          canvas.width('100%');
+          map.on('idle',function(){
+            map.resize()
+          })
       
           let marker = new mapboxgl.Marker();
 
@@ -258,7 +262,8 @@ $(document).ready(function () {
             var isZoningValue = ($('#is_zoning').val() === 'true');
 
             if(latitude === filter_info[click_row][10] && longitude === filter_info[click_row][9] && address === filter_info[click_row][1] && parseInt($('#id_loc_type').val()) === parseInt(originLocType) &&
-            parseInt($('#id_ads_type').val()) === parseInt(originAdsType) && isZoningValue === filter_info[click_row][11]){
+            parseInt($('#id_ads_type').val()) === parseInt(originAdsType) && isZoningValue === filter_info[click_row][11] 
+            && imageData == null){
               alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
               return;
             }
@@ -415,6 +420,9 @@ $(document).ready(function () {
           else
             $("#no").prop('selected', true);
 
+          $('#id_loc_type').empty();
+          $('#id_ads_type').empty();
+
           loc_type?.forEach(function(type){
             if (filter_info[click_row][3] == type.loc_type) 
               $('#id_loc_type').append(`<option selected value=${type.id_loc_type}>${type.loc_type}</option>`);
@@ -452,9 +460,9 @@ $(document).ready(function () {
           });
           geocoder.setLanguage('vi');
       
-          let canvas = $('.mapboxgl-canvas')
-          canvas.width('100%');
-          canvas.height('100%');
+          map.on('idle',function(){
+            map.resize()
+          })
           let marker = new mapboxgl.Marker();
 
           $('#search').append(geocoder.onAdd(map));
@@ -601,7 +609,8 @@ $(document).ready(function () {
             var isZoningValue = ($('#is_zoning').val() === 'true');
 
             if(latitude === filter_info[click_row][10] && longitude === filter_info[click_row][9] && address === filter_info[click_row][1] && parseInt($('#id_loc_type').val()) === parseInt(originLocType) &&
-            parseInt($('#id_ads_type').val()) === parseInt(originAdsType) && isZoningValue === filter_info[click_row][11]){
+            parseInt($('#id_ads_type').val()) === parseInt(originAdsType) && isZoningValue === filter_info[click_row][11] 
+            && imageData == null){
               alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
               return;
             }

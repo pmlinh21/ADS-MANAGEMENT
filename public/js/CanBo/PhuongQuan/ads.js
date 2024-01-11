@@ -15,7 +15,7 @@ $(document).ready(function () {
   if (role == "1") {
     document.getElementById("createLicenseButton").style.marginLeft = "78em";
   } else if (role == "2") {
-    document.getElementById("createLicenseButton").style.marginLeft = "76.3em";
+    document.getElementById("createLicenseButton").style.marginLeft = "78.5em";
   }
 
   if (role == "2"){
@@ -116,8 +116,9 @@ $(document).ready(function () {
           var result = imageData = null, id_adsloc = filter_info[click_row][11]
           console.log(filter_info[click_row])
       
-          $("#address").val(`${filter_info[click_row][2]} [${filter_info[click_row][13]}, ${filter_info[click_row][14]}]` )
+          $("#address").val(`${filter_info[click_row][2]}, phường ${filter_info[click_row][12]} [${filter_info[click_row][13]}, ${filter_info[click_row][14]}]` )
 
+          $('#id_board_type').empty()
           board_type?.forEach(function(type){
             if (filter_info[click_row][15] == type.id_board_type) 
               $('#id_board_type').append(`<option selected value=${type.id_board_type}>${type.board_type}</option>`);
@@ -147,9 +148,10 @@ $(document).ready(function () {
             defaultLanguage: 'vi'
           });
           map.addControl(language);
-      
-          let canvas = $('.mapboxgl-canvas')
-          canvas.width('100%');
+
+          map.on('idle',function(){
+            map.resize()
+          })
       
           $.get(`/api/quan/getAllAdsLoc`, function(data) {
             adsloc = data.content
@@ -168,7 +170,7 @@ $(document).ready(function () {
               index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
               console.log(adsloc[index].district);
               id_adsloc = adsloc[index].id_ads_location
-              result = adsloc[index].address + ', phường ' + adsloc[index].ward + ', quận' + adsloc[index].district;
+              result = adsloc[index].address + ', phường ' + adsloc[index].ward + ', quận ' + adsloc[index].district;
               $("#address").val(`${result} [${adsloc[index].longitude}, ${adsloc[index].latitude}]` )
             });
 
@@ -207,7 +209,8 @@ $(document).ready(function () {
             var origin_date = origin_valid_date[2] + "-" + origin_valid_date[1] + "-" + origin_valid_date[0]; 
             
             if(id_adsloc === filter_info[click_row][11] && parseInt($('#id_board_type').val()) === parseInt(filter_info[click_row][15]) && parseInt($('#quantity').val()) === parseInt(filter_info[click_row][5]) &&
-            parseFloat($('#width').val()) === parseFloat(filter_info[click_row][16]) && parseFloat($('#height').val()) === parseFloat(filter_info[click_row][17]) && $('#expired_date').val() === origin_date){
+            parseFloat($('#width').val()) === parseFloat(filter_info[click_row][16]) && parseFloat($('#height').val()) === parseFloat(filter_info[click_row][17]) && $('#expired_date').val() === origin_date
+             && imageData == null){
               alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
               return;
             }
@@ -233,7 +236,7 @@ $(document).ready(function () {
                 photo: ""
               }
 
-              $("form").get(0).reset();
+              $("#edit-info form").get(0).reset();
               $("#edit-info").modal("hide")
 
                 const signResponse = await fetch('/api/basic/uploadImage');
@@ -332,9 +335,9 @@ $(document).ready(function () {
             });
             map_create.addControl(language);
     
-            let canvas = $('.mapboxgl-canvas')
-            canvas.width('100%');
-            canvas.height('100%');
+            map_create.on('idle',function(){
+              map_create.resize()
+            })
     
             select_adsloc.forEach(function (item, index) {
               var marker = new mapboxgl.Marker({ color: '#0B7B31' })
@@ -416,6 +419,7 @@ $(document).ready(function () {
               photo: null
             }
 
+            $("#create-license").modal("hide")
             $(".form-create").get(0).reset();
     
             const signResponse = await fetch('/api/basic/uploadImage');
@@ -595,6 +599,7 @@ $(document).ready(function () {
       
           $("#address").val(`${filter_info[click_row][2]} [${filter_info[click_row][13]}, ${filter_info[click_row][14]}]` )
 
+          $('#id_board_type').empty()
           board_type?.forEach(function(type){
             if (filter_info[click_row][15] == type.id_board_type) 
               $('#id_board_type').append(`<option selected value=${type.id_board_type}>${type.board_type}</option>`);
@@ -683,7 +688,8 @@ $(document).ready(function () {
             var origin_date = origin_valid_date[2] + "-" + origin_valid_date[1] + "-" + origin_valid_date[0]; 
             
             if(id_adsloc === filter_info[click_row][11] && parseInt($('#id_board_type').val()) === parseInt(filter_info[click_row][15]) && parseInt($('#quantity').val()) === parseInt(filter_info[click_row][5]) &&
-            parseFloat($('#width').val()) === parseFloat(filter_info[click_row][16]) && parseFloat($('#height').val()) === parseFloat(filter_info[click_row][17]) && $('#expired_date').val() === origin_date){
+            parseFloat($('#width').val()) === parseFloat(filter_info[click_row][16]) && parseFloat($('#height').val()) === parseFloat(filter_info[click_row][17]) && $('#expired_date').val() === origin_date
+            && imageData == null){
               alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
               return;
             }
@@ -871,7 +877,7 @@ $(document).ready(function () {
           } else if ($('#start_date_create').val() > $('#end_date_create').val()) {
             alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
           } else { 
-            $("#loading-bg").show()
+            
             
             var createData = {
               officer: email,
@@ -892,6 +898,8 @@ $(document).ready(function () {
             }
 
             $(".form-create").get(0).reset();
+            $("#create-license").modal("hide")
+            $("#loading-bg").show()
     
             const signResponse = await fetch('/api/basic/uploadImage');
             const signData = await signResponse.json();
@@ -962,6 +970,7 @@ function sendCreateRequest(url, formData) {
     contentType: "application/json",
     success: function (response) {
       // Handle the successful response here
+      alert("Tạo cấp phép thành công")
       window.location.reload();
       console.log(response);
     },

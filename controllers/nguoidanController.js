@@ -128,11 +128,8 @@ const getLocReport = async (req, res) => {
 
 const createAdsReport = async (req, res) => {
     // Access the request body
-    const requestData = req.body;
-    const jsonString = Object.keys(requestData)[0];
-    const data = JSON.parse(jsonString);
-
-    console.log(data.content + "data")
+    const data = req.body;
+    console.log(data)
     try {
         const ads_report = await model.Ads_report.create({
             officer: data.officer,
@@ -142,7 +139,7 @@ const createAdsReport = async (req, res) => {
             fullname: data.fullname,
             email: data.email,
             phone: data.phone,
-            content: decodeURIComponent(data.content),
+            content: data.content,
             status: data.status,
             photo1: data.photo1,
             photo2: data.photo2,
@@ -161,11 +158,8 @@ const createAdsReport = async (req, res) => {
 
 const createAdsLocReport = async (req, res) => {
     // Access the request body
-    const requestData = req.body;
-    const jsonString = Object.keys(requestData)[0];
-    const data = JSON.parse(jsonString);
-
-    console.log(JSON.stringify(data) + "data")
+    const data = req.body;
+    console.log(data)
     try {
         const adsloc_report = await model.Ads_loc_report.create({
             officer: data.officer,
@@ -175,7 +169,7 @@ const createAdsLocReport = async (req, res) => {
             fullname: data.fullname,
             email: data.email,
             phone: data.phone,
-            content: decodeURIComponent(data.content),
+            content: data.content,
             status: data.status,
             photo1: data.photo1,
             photo2: data.photo2,
@@ -194,13 +188,8 @@ const createAdsLocReport = async (req, res) => {
 
 const createLocReport = async (req, res) => {
     // Access the request body
-    const requestData = req.body;
-    const jsonString = Object.keys(requestData)[0];
-    const data = JSON.parse(jsonString);
-
-    console.log(typeof data.longitude + "data")
-
-    console.log(data.content + "data")
+    const data = req.body;
+    console.log(data)
     try {
         let findDistrict = await model.District.findOne({where:{district: data.district}})
         
@@ -208,7 +197,6 @@ const createLocReport = async (req, res) => {
             ward: data.ward,
             id_district: findDistrict.id_district
         }})
-
 
         const loc_report = await model.Location_report.create({
             longitude: data.longitude.toFixed(4),
@@ -220,7 +208,7 @@ const createLocReport = async (req, res) => {
             fullname: data.fullname,
             email: data.email,
             phone: data.phone,
-            content: decodeURIComponent(data.content),
+            content: data.content,
             status: data.status,
             photo1: data.photo1,
             photo2: data.photo2,
