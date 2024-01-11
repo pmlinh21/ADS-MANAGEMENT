@@ -545,7 +545,7 @@ function showSidebar(adsloc) {
                         fullname: $("#name").val(),
                         email: $("#email").val(),
                         phone: $("#phone").val(),
-                        content: tinymce.$("#reportContent").getContent(),
+                        content: tinymce.get("content").getContent(),
                         photo1: await uploadImage(imageData3),
                         photo2: await uploadImage(imageData4),
                         report_time: validateDate(reportTime),
