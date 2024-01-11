@@ -1095,6 +1095,12 @@ label.required::after {
   left: 0;
 }
 
+.create-ads{
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 4rem;
+}
+
 @media (max-width: 768px) {
   .image-container {
     width: 300px; 
@@ -1102,9 +1108,6 @@ label.required::after {
   .image-container img {
     width: 90%; 
   }
-  /* #createLicenseButton{
-
-  } */
 }
 
 @media (min-width: 1400px) {
