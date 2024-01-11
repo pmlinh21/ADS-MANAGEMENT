@@ -116,7 +116,7 @@ $(document).ready(function () {
           var result = imageData = null, id_adsloc = filter_info[click_row][11]
           console.log(filter_info[click_row])
       
-          $("#address").val(`${filter_info[click_row][2]} [${filter_info[click_row][13]}, ${filter_info[click_row][14]}]` )
+          $("#address").val(`${filter_info[click_row][2]}, phường ${filter_info[click_row][12]} [${filter_info[click_row][13]}, ${filter_info[click_row][14]}]` )
 
           board_type?.forEach(function(type){
             if (filter_info[click_row][15] == type.id_board_type) 
@@ -147,9 +147,10 @@ $(document).ready(function () {
             defaultLanguage: 'vi'
           });
           map.addControl(language);
-      
-          let canvas = $('.mapboxgl-canvas')
-          canvas.width('100%');
+
+          map.on('idle',function(){
+            map.resize()
+          })
       
           $.get(`/api/quan/getAllAdsLoc`, function(data) {
             adsloc = data.content
@@ -168,7 +169,7 @@ $(document).ready(function () {
               index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
               console.log(adsloc[index].district);
               id_adsloc = adsloc[index].id_ads_location
-              result = adsloc[index].address + ', phường ' + adsloc[index].ward + ', quận' + adsloc[index].district;
+              result = adsloc[index].address + ', phường ' + adsloc[index].ward + ', quận ' + adsloc[index].district;
               $("#address").val(`${result} [${adsloc[index].longitude}, ${adsloc[index].latitude}]` )
             });
 
@@ -233,7 +234,7 @@ $(document).ready(function () {
                 photo: ""
               }
 
-              $("form").get(0).reset();
+              $("#edit-info form").get(0).reset();
               $("#edit-info").modal("hide")
 
                 const signResponse = await fetch('/api/basic/uploadImage');
@@ -332,9 +333,9 @@ $(document).ready(function () {
             });
             map_create.addControl(language);
     
-            let canvas = $('.mapboxgl-canvas')
-            canvas.width('100%');
-            canvas.height('100%');
+            map.on('idle',function(){
+              map.resize()
+            })
     
             select_adsloc.forEach(function (item, index) {
               var marker = new mapboxgl.Marker({ color: '#0B7B31' })

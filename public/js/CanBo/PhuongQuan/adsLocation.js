@@ -113,8 +113,9 @@ $(document).ready(function () {
           });
           geocoder.setLanguage('vi');
       
-          let canvas = $('.mapboxgl-canvas')
-          canvas.width('100%');
+          map.on('idle',function(){
+            map.resize()
+          })
       
           let marker = new mapboxgl.Marker();
 
@@ -452,9 +453,9 @@ $(document).ready(function () {
           });
           geocoder.setLanguage('vi');
       
-          let canvas = $('.mapboxgl-canvas')
-          canvas.width('100%');
-          canvas.height('100%');
+          map.on('idle',function(){
+            map.resize()
+          })
           let marker = new mapboxgl.Marker();
 
           $('#search').append(geocoder.onAdd(map));
