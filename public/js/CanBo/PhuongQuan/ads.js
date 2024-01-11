@@ -209,12 +209,14 @@ $(document).ready(function () {
             var origin_date = origin_valid_date[2] + "-" + origin_valid_date[1] + "-" + origin_valid_date[0]; 
             
             if(id_adsloc === filter_info[click_row][11] && parseInt($('#id_board_type').val()) === parseInt(filter_info[click_row][15]) && parseInt($('#quantity').val()) === parseInt(filter_info[click_row][5]) &&
-            parseFloat($('#width').val()) === parseFloat(filter_info[click_row][16]) && parseFloat($('#height').val()) === parseFloat(filter_info[click_row][17]) && $('#expired_date').val() === origin_date){
+            parseFloat($('#width').val()) === parseFloat(filter_info[click_row][16]) && parseFloat($('#height').val()) === parseFloat(filter_info[click_row][17]) && $('#expired_date').val() === origin_date
+             && imageData == null){
               alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
               return;
             }
             
-            let reason = $('#reason').val();
+            let reason = $('#reason').v
+            al();
             if (!reason){
               alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
             }
@@ -276,7 +278,6 @@ $(document).ready(function () {
 
         var imageCreate = result = id_adsloc = null
 
-        $('#id_board_type_create').empty()
         board_type?.forEach(function (type) {
           $('#id_board_type_create').append(`<option value=${type.id_board_type}>${type.board_type}</option>`);
         })
@@ -688,7 +689,8 @@ $(document).ready(function () {
             var origin_date = origin_valid_date[2] + "-" + origin_valid_date[1] + "-" + origin_valid_date[0]; 
             
             if(id_adsloc === filter_info[click_row][11] && parseInt($('#id_board_type').val()) === parseInt(filter_info[click_row][15]) && parseInt($('#quantity').val()) === parseInt(filter_info[click_row][5]) &&
-            parseFloat($('#width').val()) === parseFloat(filter_info[click_row][16]) && parseFloat($('#height').val()) === parseFloat(filter_info[click_row][17]) && $('#expired_date').val() === origin_date){
+            parseFloat($('#width').val()) === parseFloat(filter_info[click_row][16]) && parseFloat($('#height').val()) === parseFloat(filter_info[click_row][17]) && $('#expired_date').val() === origin_date
+            && imageData == null){
               alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
               return;
             }
@@ -756,7 +758,6 @@ $(document).ready(function () {
 
         var imageCreate = result = id_adsloc = null
 
-        $("#id_board_type_create").empty()
         board_type?.forEach(function (type) {
           $('#id_board_type_create').append(`<option value=${type.id_board_type}>${type.board_type}</option>`);
         })
