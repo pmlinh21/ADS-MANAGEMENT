@@ -701,6 +701,22 @@ const updateAdsLocReportByID = async(req, res) =>{
                 id_report
             }
        })
+
+       const [data, metadata] = await sequelize.query
+            (`SELECT ar.content, ar.email, ar.report_time, ar.resolve,
+            rt.report_type, w.ward, d.district, al.address
+            FROM Ads_loc_report ar
+            INNER JOIN Report_type rt ON ar.id_report = ${id_report} AND rt.id_report_type = ar.id_report_type
+            INNER JOIN Ads_location al ON al.id_ads_location = ar.id_ads_location
+            INNER JOIN Ward w ON w.id_ward = al.id_ward
+            INNER JOIN District d ON d.id_district = w.id_district`);
+        const record = data[0]
+
+        await sendMail(record.email, "Thông báo xử lí báo cáo vi phạm", 
+            getReportHtmlContent(record.content, formatDate(record.report_time), record.report_type, record.resolve, 
+            "điểm đặt", `${record.address}, phường ${record.ward}, ${record.district}`
+        ))
+        
         sucessCode(res,{resolve, status, role, email},"Update thành công")
 
     }catch(err){
@@ -723,6 +739,20 @@ const updateLocReportByID = async(req, res) =>{
                 id_report
             }
        })
+
+       const [data, metadata] = await sequelize.query
+            (`SELECT ar.email, ar.report_time, ar.content, ar.resolve, ar.address, rt.report_type, w.ward, d.district
+            FROM Location_report ar
+            INNER JOIN Report_type rt ON ar.id_report = ${id_report} AND rt.id_report_type = ar.id_report_type
+            INNER JOIN Ward w ON w.id_ward = ar.id_ward
+            INNER JOIN District d ON d.id_district = w.id_district`);
+        const record = data[0]
+
+        await sendMail(record.email, "Thông báo xử lí báo cáo vi phạm", 
+            getReportHtmlContent(record.content, formatDate(record.report_time), record.report_type, record.resolve, 
+            "", `${record.address}, phường ${record.ward}, ${record.district}`
+        ))
+
         sucessCode(res,{resolve, status, role, email},"Update thành công")
 
     }catch(err){
