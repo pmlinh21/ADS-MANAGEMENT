@@ -26,6 +26,101 @@ $(document).ready(function () {
           let bqc = data.content[0];
           buildForm(bqc);
 
+          // map
+          var adslocations;
+          $.ajax({
+            url: "/api/so/getAllAdsLocations",
+            method: "GET",
+            catch: false,
+            dataType: "json",
+            success: function (data) {
+              adslocations = [];
+              let curLng, curLat;
+              for (let i = 0; i < data.content.length; i++) {
+                let { id_ads_location, address, ward, district, latitude, longitude, is_zoning } = data.content[i];
+                // chỉ hiển thị những địa điểm đã được quy hoạch
+                if (is_zoning == 1)
+                  adslocations.push({ id_ads_location, address, ward, district, latitude, longitude });
+                if (id_ads_location == bqc.id_ads_location) {
+                  curLng = longitude;
+                  curLat = latitude;
+                }
+              }
+
+              var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v11',
+                center: [curLng, curLat],
+                zoom: 17,
+                language: 'vi'
+              })
+
+              var language = new MapboxLanguage({
+                defaultLanguage: 'vi'
+              });
+              map.addControl(language);
+
+              let canvas = $('.mapboxgl-canvas')
+              canvas.width('100%');
+              canvas.height('100%');
+
+              adslocations.forEach(function (item, index) {
+                var marker = new mapboxgl.Marker({
+                  color: '#0B7B31'
+                })
+                  .setLngLat([item.longitude, item.latitude])
+                  .addTo(map)
+                  .getElement();
+
+                  marker.id = `marker-${index}`;
+              })
+
+              $('#edit-ads #id-ads-location').on('click', function () {
+                let currentId = parseInt($('#edit-ads #id-ads-location').val());
+                let currentIndex = null;
+
+                $('#select-location-map').css('display', 'block');
+                map.resize();
+
+                adslocations.forEach(function (item, index) {
+                  if (item.id_ads_location == currentId) {
+                    currentIndex = index;
+                    $('#select-location-map .chosen-address').text('(' + adslocations[currentIndex].id_ads_location + ') - ' + adslocations[currentIndex].address + ', Phường ' + adslocations[currentIndex].ward + ', Quận ' + adslocations[currentIndex].district + ' [' + adslocations[currentIndex].latitude + ', ' + adslocations[currentIndex].longitude + ']');
+                    return;
+                  }
+                })
+
+                // $('#select-location-map .chosen-address').text(adslocations[currentIndex].address + ', Phường ' + adslocations[currentIndex].ward + ', Quận ' + adslocations[currentIndex].district + ' [' + adslocations[currentIndex].latitude + ', ' + adslocations[currentIndex].longitude + ']');
+
+                let div = $('<div></div>');
+                div.addClass('popup-background');
+                div.on('click', function () {
+                  div.remove();
+                  $('#select-location-map').css('display', 'none');
+                })
+                $('body').append(div);
+
+                // marker click event
+                $(document).on('click', '.mapboxgl-marker', function () {
+                  let markerId = $(this).attr('id');
+                  currentIndex = parseInt(markerId.split('-')[1]);
+                  $('#select-location-map .chosen-address').text('(' + adslocations[currentIndex].id_ads_location + ') - ' + adslocations[currentIndex].address + ', Phường ' + adslocations[currentIndex].ward + ', Quận ' + adslocations[currentIndex].district + ' [' + adslocations[currentIndex].latitude + ', ' + adslocations[currentIndex].longitude + ']');
+                })
+
+                // button click event
+                $('#select-location-map button').on('click', function () {
+                  $('#edit-ads #id-ads-location').val(adslocations[currentIndex].id_ads_location);
+                  $('#select-location-map').css('display', 'none');
+                  $('.popup-background').remove();
+                })
+              })
+            }, 
+            error: function (err) {
+              console.log(err);
+            }
+          })
+
+
           let imageData = null;
           $("#image").on("change", function (e) {
             let reader = new FileReader();
@@ -98,22 +193,92 @@ $(document).ready(function () {
 
           $("#edit-ads button[value='delete']").on("click", function (e) {
             if (confirm("Bạn có chắc chắn muốn xóa không?")) {
-              const deleteData = { id: parseInt(id) }
+              // xóa update
               $.ajax({
-                url: '/api/so/deleteBangQuangCao',
+                url: '/api/so/deleteAdsUpdateByIdAds/' + id,
                 type: 'DELETE',
                 catch: false,
                 dataType: 'json',
-                data: deleteData, 
+                beforeSend: function () {
+                  $("#loading-bg").show()
+                },
                 success: function (res) {
-                  window.location.href = "/bangquangcao";
-                  alert("Xóa thành công");
+                  // xóa report
+                  $.ajax({
+                    url: '/api/so/deleteAdsReportByIdAds/' + id,
+                    type: 'DELETE',
+                    catch: false,
+                    dataType: 'json',
+                    success: function (res) {
+                      // xóa create
+                      $.ajax({
+                        url: '/api/so/deleteAdsCreateByIdAds/' + id,
+                        type: 'DELETE',
+                        catch: false,
+                        dataType: 'json',
+                        success: function (res) {
+                          const deleteForm = new FormData();
+                          deleteForm.append("id", parseInt(id));
+                          deleteForm.append("photo", bqc.photo);
+                          const deleteData = Object.fromEntries(deleteForm.entries());
+                          $.ajax({
+                            url: '/api/so/deleteBangQuangCao',
+                            type: 'DELETE',
+                            catch: false,
+                            dataType: 'json',
+                            data: deleteData, 
+                            success: function (res) {
+                              $("#loading-bg").hide()
+                              window.location.href = "/bangquangcao";
+                              alert("Xóa thành công!");
+                            },
+                            error: function (xhr, status, err) {
+                              $("#loading-bg").hide()
+                              alert("Xóa thất bại.");
+                              console.log(err);
+                            }
+                          })
+                        },
+                        error: function (xhr, status, err) {
+                          $("#loading-bg").hide()
+                          alert("Xóa thất bại.");
+                          console.log(err);
+                        }
+                      })
+                    },
+                    error: function (xhr, status, err) {
+                      $("#loading-bg").hide()
+                      alert("Xóa thất bại.");
+                      console.log(err);
+                    }
+                  })
                 },
                 error: function (xhr, status, err) {
-                  alert("Xóa thất bại");
+                  $("#loading-bg").hide()
+                  alert("Xóa thất bại.");
                   console.log(err);
                 }
               })
+
+              // const deleteForm = new FormData();
+              // deleteForm.append("id", parseInt(id));
+              // deleteForm.append("photo", bqc.photo);
+              // const deleteData = Object.fromEntries(deleteForm.entries());
+              // $.ajax({
+              //   url: '/api/so/deleteBangQuangCao',
+              //   type: 'DELETE',
+              //   catch: false,
+              //   dataType: 'json',
+              //   data: deleteData, 
+              //   success: function (res) {
+              //     window.location.href = "/bangquangcao";
+              //     alert("Xóa thành công");
+              //   },
+              //   error: function (xhr, status, err) {
+              //     alert("Xóa thất bại");
+              //     console.log(err);
+              //   }
+              // })
             }
           })
         }, 
@@ -128,101 +293,6 @@ $(document).ready(function () {
       $("#loading-bg").show()
       console.log(err);
     },
-  })
-
-  var adslocations;
-  $.ajax({
-    url: "/api/so/getAllAdsLocations",
-    method: "GET",
-    catch: false,
-    dataType: "json",
-    success: function (data) {
-      // adslocations = data.content;
-
-      adslocations = [];
-      for (let i = 0; i < data.content.length; i++) {
-        let { id_ads_location, address, ward, district, latitude, longitude, is_zoning } = data.content[i];
-        // chỉ hiển thị những địa điểm đã được quy hoạch
-        if (is_zoning == 1)
-          adslocations.push({ id_ads_location, address, ward, district, latitude, longitude });
-      }
-
-      var map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [adslocations[0].longitude, adslocations[0].latitude],
-        zoom: 17,
-        language: 'vi'
-      }) 
-      // map.on('render', function () {
-      //   map.resize();
-      // })
-
-      var language = new MapboxLanguage({
-        defaultLanguage: 'vi'
-      });
-      map.addControl(language);
-
-      let canvas = $('.mapboxgl-canvas')
-      canvas.width('100%');
-      canvas.height('100%');
-
-      adslocations.forEach(function (item, index) {
-        var marker = new mapboxgl.Marker({
-          color: '#0B7B31'
-        })
-          .setLngLat([item.longitude, item.latitude])
-          .addTo(map)
-          .getElement();
-
-          marker.id = `marker-${index}`;
-      })
-
-      $('#edit-ads #id-ads-location').on('click', function () {
-        // map.resize();
-        
-        let currentId = parseInt($('#edit-ads #id-ads-location').val());
-        let currentIndex = null;
-
-        $('#select-location-map').css('display', 'block');
-        map.resize();
-
-        adslocations.forEach(function (item, index) {
-          if (item.id_ads_location == currentId) {
-            currentIndex = index;
-            $('#select-location-map .chosen-address').text('(' + adslocations[currentIndex].id_ads_location + ') - ' + adslocations[currentIndex].address + ', Phường ' + adslocations[currentIndex].ward + ', Quận ' + adslocations[currentIndex].district + ' [' + adslocations[currentIndex].latitude + ', ' + adslocations[currentIndex].longitude + ']');
-            return;
-          }
-        })
-
-        // $('#select-location-map .chosen-address').text(adslocations[currentIndex].address + ', Phường ' + adslocations[currentIndex].ward + ', Quận ' + adslocations[currentIndex].district + ' [' + adslocations[currentIndex].latitude + ', ' + adslocations[currentIndex].longitude + ']');
-
-        let div = $('<div></div>');
-        div.addClass('popup-background');
-        div.on('click', function () {
-          div.remove();
-          $('#select-location-map').css('display', 'none');
-        })
-        $('body').append(div);
-
-        // marker click event
-        $(document).on('click', '.mapboxgl-marker', function () {
-          let markerId = $(this).attr('id');
-          currentIndex = parseInt(markerId.split('-')[1]);
-          $('#select-location-map .chosen-address').text('(' + adslocations[currentIndex].id_ads_location + ') - ' + adslocations[currentIndex].address + ', Phường ' + adslocations[currentIndex].ward + ', Quận ' + adslocations[currentIndex].district + ' [' + adslocations[currentIndex].latitude + ', ' + adslocations[currentIndex].longitude + ']');
-        })
-
-        // button click event
-        $('#select-location-map button').on('click', function () {
-          $('#edit-ads #id-ads-location').val(adslocations[currentIndex].id_ads_location);
-          $('#select-location-map').css('display', 'none');
-          $('.popup-background').remove();
-        })
-      })
-    }, 
-    error: function (err) {
-      console.log(err);
-    }
   })
 });
 

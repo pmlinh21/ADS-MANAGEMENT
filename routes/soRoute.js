@@ -61,6 +61,7 @@ const {
     addDiemDatQuangCao,
     getQuanByName,
     getPhuongByNameAndIdQuan,
+    getAdsByIdAdsLocation,
 
     getAllBangQuangCao,
     getBangQuangCaoById,
@@ -71,7 +72,11 @@ const {
     getAllYeuCauChinhSuaBQC,
     getYeuCauChinhSuaDDQCById,
     getYeuCauChinhSuaBQCById,
+
     deleteAdsUpdateByIdAds,
+    deleteAdsReportByIdAds,
+    deleteAdsCreateByIdAds,
+    deleteAdsByIdAdsLocation,
 
     updateYeuCauChinhSuaDDQC,
     updateYeuCauChinhSuaBQC,
@@ -168,6 +173,7 @@ soRoute.delete("/deleteDiemDatQuangCao", isCanboSo, deleteDiemDatQuangCao);
 soRoute.post("/addDiemDatQuangCao", isCanboSo, addDiemDatQuangCao);
 soRoute.get("/getQuanByName/:name", isCanboSo, getQuanByName);
 soRoute.get("/getPhuongByNameAndIdQuan/:name/:id_district", isCanboSo, getPhuongByNameAndIdQuan);
+soRoute.get("/getAdsByIdAdsLocation/:id", isCanboSo, getAdsByIdAdsLocation);
 
 // BANGQUANGCAO
 soRoute.get("/getAllBangQuangCao", isCanboSo, getAllBangQuangCao);
@@ -182,7 +188,12 @@ soRoute.get("/getYeuCauChinhSuaDDQCById/:id", isCanboSo, getYeuCauChinhSuaDDQCBy
 soRoute.get("/getYeuCauChinhSuaBQCById/:id", isCanboSo, getYeuCauChinhSuaBQCById);
 soRoute.put("/updateYeuCauChinhSuaDDQC/:id/:status", isCanboSo, updateYeuCauChinhSuaDDQC);
 soRoute.put("/updateYeuCauChinhSuaBQC/:id/:status", isCanboSo, updateYeuCauChinhSuaBQC);
+
 soRoute.delete("/deleteAdsUpdateByIdAds/:id", isCanboSo, deleteAdsUpdateByIdAds);
+soRoute.delete("/deleteAdsReportByIdAds/:id", isCanboSo, deleteAdsReportByIdAds);
+soRoute.delete("/deleteAdsCreateByIdAds/:id", isCanboSo, deleteAdsCreateByIdAds);
+soRoute.delete("/deleteAdsByIdAdsLocation/:id", isCanboSo, deleteAdsByIdAdsLocation);
+
 
 // YEUCAUCAPPHEP
 soRoute.get("/getAllYeuCauCapPhep", isCanboSo, getAllYeuCauCapPhep);

@@ -101,41 +101,67 @@ async function handleButtonClick(e) {
   if (e.value == "update") {
     const formData = new FormData($("#edit-popup")[0]);
     const editData = Object.fromEntries(formData.entries());
-    let res = await fetch('/api/so/updateQuan', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
+    $.ajax({
+      url: '/api/so/updateQuan',
+      type: 'PUT',
+      contentType: 'application/json',
+      data: JSON.stringify(editData),
+      beforeSend: function () {
+        $("#loading-bg").show()
       },
-      body: JSON.stringify(editData),
-    });
-    location.reload();
+      success: function (data) {
+        location.reload();
+        alert("Cập nhật thành công!");
+      },
+      error: function (xhr, status, err) {
+        $("#loading-bg").hide()
+        alert("Cập nhật thất bại!");
+        console.log(err);
+      }
+    })
   } else if (e.value == "delete") {
     if (confirm("Bạn có chắc chắn muốn xóa không?")) {
       const formData = new FormData($("#edit-popup")[0]);
       const deleteData = Object.fromEntries(formData.entries());
-      let res = await fetch('/api/so/deleteQuan', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
+      $.ajax({
+        url: '/api/so/deleteQuan',
+        type: 'DELETE',
+        dataType: 'json',
+        data: deleteData,
+        beforeSend: function () {
+          $("#loading-bg").show()
         },
-        body: JSON.stringify(deleteData),
-      });
-      if (res.status == 500) {
-        alert("Không thể xóa vì quận đang được sử dụng");
-      } else {
-        location.reload();
-      }
+        success: function (data) {
+          location.reload();
+          alert("Xóa thành công!")
+        },
+        error: function (xhr, status, err) {
+          $("#loading-bg").hide()
+          alert("Không thể xóa vì quận đang được sử dụng");
+          console.log(err);
+        }
+      })
     }
   } else if (e.value == "add") {
     const formData = new FormData($("#add-popup")[0]);
     const addData = Object.fromEntries(formData.entries());
-    let res = await fetch('/api/so/addQuan', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
+    $.ajax({
+      url: '/api/so/addQuan',
+      type: 'POST', 
+      dataType: 'json',
+      data: addData,
+      beforeSend: function () {
+        $("#loading-bg").show()
       },
-      body: JSON.stringify(addData),
-    });
-    location.reload();
+      success: function (data) {
+        location.reload();
+        alert("Thêm thành công!");
+      },
+      error: function (xhr, status, err) {
+        $("#loading-bg").hide()
+        alert("Thêm thất bại!");
+        console.log(err);
+      }
+    })
   }
 }

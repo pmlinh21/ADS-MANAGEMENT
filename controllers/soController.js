@@ -6,6 +6,7 @@ const { sucessCode, failCode, errorCode } = require('../config/response');
 const { Op } = require("sequelize");
 const bcrypt = require('bcryptjs');
 const { deleteImage } = require('../middlewares/deleteImage');
+const { all } = require('../routes/soRoute');
 
 // QUANLICHUNG --- Statistic
 const getSoLuongQuan = async (req, res) => {
@@ -688,6 +689,17 @@ const getPhuongByNameAndIdQuan = async (req, res) => {
   }
 }
 
+const getAdsByIdAdsLocation = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const [data, metadata] = await sequelize.query(`SELECT * FROM Ads WHERE id_ads_location = ${id}`);
+    sucessCode(res, data, "Get thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi BE");
+  }
+
+}
+
 // BANGQUANGCAO
 const getAllBangQuangCao = async (req, res) => {
   try {
@@ -921,6 +933,17 @@ const updateYeuCauChinhSuaBQC = async (req, res) => {
 const deleteAdsUpdateByIdAds = async (req, res) => {
   try {
     const id = req.params.id;
+    allAdsUpdate = await model.Ads_update.findAll({
+      where: {
+        id_ads: id
+      }
+    });
+    for (let i = 0; i < allAdsUpdate.length; i++) {
+      if (allAdsUpdate[i].photo != null || allAdsUpdate[i].photo != "") {
+        deleteImage(allAdsUpdate[i].photo);
+      }
+    }
+
     data = await model.Ads_update.destroy({
       where: {
         id_ads: id
@@ -930,6 +953,139 @@ const deleteAdsUpdateByIdAds = async (req, res) => {
   } catch (err) {
     errorCode(res, "Lỗi khóa ngoại");
   }
+}
+
+const deleteAdsReportByIdAds = async (req, res) => {
+  try {
+    const id = req.params.id;
+    allAdsReport = await model.Ads_report.findAll({
+      where: {
+        id_ads: id
+      }
+    });
+    for (let i = 0; i < allAdsReport.length; i++) {
+      if (allAdsReport[i].photo1 != null || allAdsReport[i].photo1 != "") {
+        deleteImage(allAdsReport[i].photo1);
+      }
+      if (allAdsReport[i].photo2 != null || allAdsReport[i].photo2 != "") {
+        deleteImage(allAdsReport[i].photo2);
+      }
+    }
+
+    data = await model.Ads_report.destroy({
+      where: {
+        id_ads: id
+      }
+    });
+    sucessCode(res, "", "Delete thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi khóa ngoại");
+  }
+}
+
+const deleteAdsCreateByIdAds = async (req, res) => {
+  try {
+    const id = req.params.id;
+    allAdsCreate = await model.Ads_create.findAll({
+      where: {
+        id_ads: id
+      }
+    });
+    for (let i = 0; i < allAdsCreate.length; i++) {
+      if (allAdsCreate[i].photo != null || allAdsCreate[i].photo != "") {
+        deleteImage(allAdsCreate[i].photo);
+      }
+    }
+
+    data = await model.Ads_create.destroy({
+      where: {
+        id_ads: id
+      }
+    });
+    sucessCode(res, "", "Delete thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi khóa ngoại");
+  }
+}
+
+const deleteAdsByIdAdsLocation = async (req, res) => {
+  try {
+    const id = req.params.id;
+    allAds = await model.Ads.findAll({
+      where: {
+        id_ads_location: id
+      }
+    });
+    for (let i = 0; i < allAds.length; i++) {
+      // xóa update
+      allAdsUpdate = await model.Ads_update.findAll({
+        where: {
+          id_ads: allAds[i].id_ads
+        }
+      });
+      for (let j = 0; j < allAdsUpdate.length; j++) {
+        if (allAdsUpdate[j].photo != null || allAdsUpdate[j].photo != "") {
+          deleteImage(allAdsUpdate[j].photo);
+        }
+      }
+      updateDelete = await model.Ads_update.destroy({
+        where: {
+          id_ads: allAds[i].id_ads
+        }
+      })
+
+      // xóa report
+      allAdsReport = await model.Ads_report.findAll({
+        where: {
+          id_ads: allAds[i].id_ads
+        }
+      });
+      for (let j = 0; j < allAdsReport.length; j++) {
+        if (allAdsReport[j].photo1 != null || allAdsReport[j].photo1 != "") {
+          deleteImage(allAdsReport[j].photo1);
+        }
+        if (allAdsReport[j].photo2 != null || allAdsReport[j].photo2 != "") {
+          deleteImage(allAdsReport[j].photo2);
+        }
+      }
+      reportDelete = await model.Ads_report.destroy({
+        where: {
+          id_ads: allAds[i].id_ads
+        }
+      })
+
+      // xóa create
+      allAdsCreate = await model.Ads_create.findAll({
+        where: {
+          id_ads: allAds[i].id_ads
+        }
+      });
+      for (let j = 0; j < allAdsCreate.length; j++) {
+        if (allAdsCreate[j].photo != null || allAdsCreate[j].photo != "") {
+          deleteImage(allAdsCreate[j].photo);
+        }
+      }
+      createDelete = await model.Ads_create.destroy({
+        where: {
+          id_ads: allAds[i].id_ads
+        }
+      })
+
+      if (allAds[i].photo != null || allAds[i].photo != "") {
+        deleteImage(allAds[i].photo);
+      }
+    }
+
+    data = await model.Ads.destroy({
+      where: {
+        id_ads_location: id
+      }
+    });
+    sucessCode(res, "", "Delete thành công");
+  } catch (err) {
+    errorCode(res, "Lỗi khóa ngoại");
+  }
+
 }
 
 // YEUCAUCAPPHEP
@@ -1379,6 +1535,7 @@ module.exports = {
   addDiemDatQuangCao,
   getQuanByName,
   getPhuongByNameAndIdQuan,
+  getAdsByIdAdsLocation,
 
   getAllBangQuangCao,
   getBangQuangCaoById,
@@ -1392,7 +1549,11 @@ module.exports = {
 
   updateYeuCauChinhSuaDDQC,
   updateYeuCauChinhSuaBQC,
+
   deleteAdsUpdateByIdAds,
+  deleteAdsReportByIdAds,
+  deleteAdsCreateByIdAds,
+  deleteAdsByIdAdsLocation,
 
   getAllYeuCauCapPhep,
   getYeuCauCapPhepById,
