@@ -118,6 +118,7 @@ $(document).ready(function () {
       
           $("#address").val(`${filter_info[click_row][2]}, phường ${filter_info[click_row][12]} [${filter_info[click_row][13]}, ${filter_info[click_row][14]}]` )
 
+          $('#id_board_type').empty()
           board_type?.forEach(function(type){
             if (filter_info[click_row][15] == type.id_board_type) 
               $('#id_board_type').append(`<option selected value=${type.id_board_type}>${type.board_type}</option>`);
@@ -275,6 +276,7 @@ $(document).ready(function () {
 
         var imageCreate = result = id_adsloc = null
 
+        $('#id_board_type_create').empty()
         board_type?.forEach(function (type) {
           $('#id_board_type_create').append(`<option value=${type.id_board_type}>${type.board_type}</option>`);
         })
@@ -597,6 +599,7 @@ $(document).ready(function () {
       
           $("#address").val(`${filter_info[click_row][2]} [${filter_info[click_row][13]}, ${filter_info[click_row][14]}]` )
 
+          $('#id_board_type').empty()
           board_type?.forEach(function(type){
             if (filter_info[click_row][15] == type.id_board_type) 
               $('#id_board_type').append(`<option selected value=${type.id_board_type}>${type.board_type}</option>`);
@@ -753,6 +756,7 @@ $(document).ready(function () {
 
         var imageCreate = result = id_adsloc = null
 
+        $("#id_board_type_create").empty()
         board_type?.forEach(function (type) {
           $('#id_board_type_create').append(`<option value=${type.id_board_type}>${type.board_type}</option>`);
         })

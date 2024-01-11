@@ -76,6 +76,9 @@ $(document).ready(function () {
           else
             $("#no").prop('selected', true);
 
+          $('#id_loc_type').empty();
+          $('#id_ads_type').empty();
+
           loc_type?.forEach(function(type){
             if (filter_info[click_row][3] == type.loc_type) 
               $('#id_loc_type').append(`<option selected value=${type.id_loc_type}>${type.loc_type}</option>`);
@@ -415,6 +418,9 @@ $(document).ready(function () {
             $("#yes").prop('selected', true);
           else
             $("#no").prop('selected', true);
+
+          $('#id_loc_type').empty();
+          $('#id_ads_type').empty();
 
           loc_type?.forEach(function(type){
             if (filter_info[click_row][3] == type.loc_type) 
