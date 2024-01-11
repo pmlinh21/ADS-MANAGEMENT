@@ -879,6 +879,12 @@ $(document).ready(function () {
         $('#map').height(mapHeight);
         $('#sidebar').height(mapHeight);
     });
+    
+    var language = new MapboxLanguage({
+        defaultLanguage: 'vi'
+      });
+    
+      map.addControl(language);
 
     map.addControl(new mapboxgl.NavigationControl());
 
