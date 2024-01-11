@@ -162,6 +162,7 @@ $(document).ready(function() {
             $('#curpass-error').text('Mật khẩu phải có ít nhất 8 kí tự.').show();
             $('#newpass-error').hide();
             $('#cfpass-error').hide();
+            document.getElementById("text1").style.marginTop = "2.5rem";
             return;
         } else {
             $('#curpass-error').hide();
@@ -170,6 +171,7 @@ $(document).ready(function() {
         if (newPass.length < 8) {
             $('#newpass-error').text('Mật khẩu mới phải có ít nhất 8 kí tự.').show();
             $('#cfpass-error').hide();
+            document.getElementById("text1").style.marginTop = "2.5rem";
             return;
         } else {
             $('#newpass-error').hide();
@@ -178,6 +180,7 @@ $(document).ready(function() {
         if (newPass === curPass) {
             $('#newpass-error').text('Mật khẩu mới trùng với mật khẩu hiện tại.').show();
             $('#cfpass-error').hide();
+            document.getElementById("text1").style.marginTop = "2.5rem";
             return;
         } else {
             $('#newpass-error').hide();
@@ -185,9 +188,11 @@ $(document).ready(function() {
 
         if (newPass !== confirmPass) {
             $('#cfpass-error').text('Xác nhận mật khẩu mới không khớp.').show();
+            document.getElementById("text1").style.marginTop = "2.5rem";
             return;
         } else {
             $('#cfpass-error').hide();
+            document.getElementById("text1").style.marginTop = "4rem";
         }
 
         $.ajax({
@@ -257,17 +262,18 @@ $(document).ready(function() {
             </div>
 
             <p class="pass-text" >Chúng tôi đã gửi một mã xác minh gồm 6 chữ số đến địa chỉ email của bạn.</p>
-            <a class="pass-text resendmail" style="text-decoration: underline; color: #0B7B31; margin-top: -1rem; margin-bottom: 1rem; cursor: pointer;">Bạn không nhận được mã? Gửi lại mã OTP</a>
+            <a class="pass-text resendmail" style="text-decoration: underline; color: #0B7B31; margin-top: 0rem; margin-bottom: 2rem; cursor: pointer;">Bạn không nhận được mã? Gửi lại mã OTP</a>
             <button type="button" class="btn style1-button btn-confirm">Xác nhận</button>
-            <div style="margin-top: 6rem"></div>
+            <div id="space1"></div>
         `;
 
         const btnBack = `
             <button type="button" class="btn style2-button btn-back">Quay lại</button>
         `
         $('.form-forget').html(formHtml).addClass('visible');
-        const pos = document.querySelector('.btn-pass');
+        const pos = document.querySelector('.form-forget');
         pos.insertAdjacentHTML('afterend', btnBack);
+        $('.btn-back').addClass('visible');
 
         $(".resendmail").on("click",function(){
             console.log("resend")
@@ -331,16 +337,16 @@ $(document).ready(function() {
                     <div class="col-md-12">
                         <label class="form-label" style="font-weight: 600; font-size: 1rem;">Quên mật khẩu</label>
                     </div>
-                    <div class="col-md-12" style="margin-top: -5px;">
+                    <div class="col-md-12">
                         <label for="pass" class="form-label">Mật khẩu mới</label>
                         <input type="password" class="form-control pass-details" id="pass">
                         <span toggle="#pass" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                         <div class="error-message" id="pass-error"></div>
                     </div>
             
-                    <p class="pass-text" style="margin-top: -0.5rem; margin-bottom: -0.5rem;">Mật khẩu phải có ít nhất 8 kí tự</p>
+                    <p class="pass-text" style="margin-top: 1rem; margin-bottom: 1.5rem;">Mật khẩu phải có ít nhất 8 kí tự</p>
                     <button type="button" class="btn style1-button btn-confirm-new">Xác nhận</button>
-                    <div style="margin-top: 10rem"></div>
+                    <div style="margin-top: 14.5rem"></div>
                     `;
                     $('.form-forget').html(formHtml).addClass('visible');
 

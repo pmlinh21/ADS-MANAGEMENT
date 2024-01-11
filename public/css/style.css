@@ -1171,11 +1171,11 @@ label.required::after {
   border-radius: 1rem;
 }
 
-.form-info{
+#form-info{
   flex: 1;
 }
 
-.form-pass {
+#form-pass {
   flex: 1;
 }
 
@@ -1226,11 +1226,14 @@ label.required::after {
   margin-top: -0.5rem;
 }
 
-.form-forget {
+#form-forget {
   visibility: hidden;
   flex: 1;
 }
-.form-forget.visible {
+#form-forget.visible {
+  visibility: visible;
+}
+#btn-back.visible {
   visibility: visible;
 }
 
@@ -1242,11 +1245,40 @@ label.required::after {
 }
 
 .btn-pass {
-  margin-left: calc(27rem);
+  margin-left: calc(4rem);
 }
 
 .btn-back {
-  margin-left: calc(27rem);
+  margin-left: calc(4rem);
+}
+
+@media (min-width: 1348px) {
+  #space1 {
+    margin-top: 11rem;
+  }
+}
+
+@media (max-width: 1348px) {
+  #space1 {
+    margin-top: 10rem;
+  }
+}
+
+@media (max-width: 1310px) {
+  #space1 {
+    margin-top: 9rem;
+  }
+}
+
+@media (min-width: 1180px) {
+  #text1 {
+    margin-top: 4rem;
+  }
+}
+@media (max-width: 1180px) {
+  #text1 {
+    margin-top: 2.5rem;
+  }
 }
 
 /* PHAN HE SO: side-navbar */
