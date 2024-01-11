@@ -3,75 +3,77 @@
 <div class="title-page">
 </div>
 <div class="forms-container">
-    <form class="row g-3 form-account form-info">
-        <div class="col-md-12">
-            <label class="form-label" style="font-weight: 600; font-size: 1rem;">Thông tin chi tiết</label>
-        </div>
-        <div class="col-md-12">
-            <label for="fullname" class="form-label">Họ và tên</label>
-            <input type="text" class="form-control input-details" id="fullname">
-            <div class="error-message" id="fullname-error"></div>
-        </div>
-        <div class="col-md-12">
-          <label for="birthdate" class="form-label">Ngày tháng năm sinh</label>
-          <input type="date" class="form-control input-details" id="birthdate">
-          <div class="error-message" id="birthdate-error"></div>
-        </div>
-    
-        <div class="col-md-12">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control input-details" id="email" readonly>
-        </div>
-    
-        <div class="col-md-12">
-            <label for="phone" class="form-label">Số điện thoại</label>
-            <input type="phone" class="form-control input-details" id="phone" >
-            <div class="error-message" id="phone-error"></div>
-        </div>
-        <div class="col-md-12 manage_area">
-            <label for="address" class="form-label">Khu vực quản lý</label>
-            <input type="text" class="form-control input-details" id="address" readonly>
-        </div>
-    </form>
-    
-    <form class="row g-3 form-account form-pass">
-        <div class="col-md-12">
-            <label class="form-label" style="font-weight: 600; font-size: 1rem;">Đổi mật khẩu</label>
-        </div>
-        <div class="col-md-12" style="margin-top: -5px;">
-            <label for="curpass" class="form-label required">Mật khẩu hiện tại</label>
-            <input type="password" class="form-control pass-details" id="curpass">
-            <span toggle="#curpass" class="fa fa-fw fa-eye field-icon toggle-password"></span>
-            <div class="error-message" id="curpass-error"></div>
-        </div>
-        <div class="col-md-12">
-          <label for="newpass" class="form-label required">Mật khẩu mới</label>
-          <input type="password" class="form-control pass-details" id="newpass">
-          <span toggle="#newpass" class="fa fa-fw fa-eye field-icon toggle-password"></span>
-          <div class="error-message" id="newpass-error"></div>
-        </div>
-        <div class="col-md-12">
-            <label for="cfpass" class="form-label required">Xác nhận mật khẩu mới</label>
-            <input type="password" class="form-control pass-details" id="cfpass" >
-            <span toggle="#cfpass" class="fa fa-fw fa-eye field-icon toggle-password"></span>
-            <div class="error-message" id="cfpass-error"></div>
-        </div>
-
-        <p class="pass-text" style="margin-bottom: -2rem;">Mật khẩu phải có ít nhất 8 kí tự</p>
-    </form>
-
-    <form class="row g-3 form-account form-forget" >
+    <div id="form-info">
+        <form class="row g-3 form-account form-info">
+            <div class="col-md-12">
+                <label class="form-label" style="font-weight: 600; font-size: 1rem;">Thông tin chi tiết</label>
+            </div>
+            <div class="col-md-12">
+                <label for="fullname" class="form-label">Họ và tên</label>
+                <input type="text" class="form-control input-details" id="fullname">
+                <div class="error-message" id="fullname-error"></div>
+            </div>
+            <div class="col-md-12">
+              <label for="birthdate" class="form-label">Ngày tháng năm sinh</label>
+              <input type="date" class="form-control input-details" id="birthdate">
+              <div class="error-message" id="birthdate-error"></div>
+            </div>
         
-    </form>
+            <div class="col-md-12">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control input-details" id="email" readonly>
+            </div>
+        
+            <div class="col-md-12">
+                <label for="phone" class="form-label">Số điện thoại</label>
+                <input type="phone" class="form-control input-details" id="phone" >
+                <div class="error-message" id="phone-error"></div>
+            </div>
+            <div class="col-md-12 manage_area">
+                <label for="address" class="form-label">Khu vực quản lý</label>
+                <input type="text" class="form-control input-details" id="address" readonly>
+            </div>
+        </form>
+        <button type="button" class="btn style1-button btn-info" style="margin-left: 4rem;">Cập nhật</button>
+    </div>
+    
+    <div id="form-pass">
+        <form class="row g-3 form-account form-pass">
+            <div class="col-md-12">
+                <label class="form-label" style="font-weight: 600; font-size: 1rem;">Đổi mật khẩu</label>
+            </div>
+            <div class="col-md-12" style="margin-top: 1rem;">
+                <label for="curpass" class="form-label required">Mật khẩu hiện tại</label>
+                <input type="password" class="form-control pass-details" id="curpass">
+                <span toggle="#curpass" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                <div class="error-message" id="curpass-error"></div>
+            </div>
+            <div class="col-md-12" style="margin-top: 3rem;">
+              <label for="newpass" class="form-label required">Mật khẩu mới</label>
+              <input type="password" class="form-control pass-details" id="newpass">
+              <span toggle="#newpass" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+              <div class="error-message" id="newpass-error"></div>
+            </div>
+            <div class="col-md-12" style="margin-top: 3rem;">
+                <label for="cfpass" class="form-label required">Xác nhận mật khẩu mới</label>
+                <input type="password" class="form-control pass-details" id="cfpass" >
+                <span toggle="#cfpass" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                <div class="error-message" id="cfpass-error"></div>
+            </div>
+    
+            <p class="pass-text" id="text1" style="margin-top: 4rem;">Mật khẩu phải có ít nhất 8 kí tự</p>
+        </form>
+        <button type="button" class="btn style1-button btn-pass">Cập nhật</button>
+    </div>
+
+    <div id="form-forget">
+        <form class="row g-3 form-account form-forget" >
+        
+        </form>
+    </div>
+</div>
 </div>
 
-
-</div>
-
-<div class="d-flex justify-content-start mt-1">
-    <button type="button" class="btn style1-button btn-info" style="margin-left: 4rem;">Cập nhật</button>
-    <button type="button" class="btn style1-button btn-pass" style="margin-left: 27rem;">Cập nhật</button>
-</div>
 <button type="button" class="btn style2-button btn-forget my-4" style="margin-left: 4rem;">Quên mật khẩu</button>
 
 <script defer type = "text/javascript" src="../../public/js/CanBo/account.js"></script>
