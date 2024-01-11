@@ -31,7 +31,6 @@ $(document).ready(function () {
             catch: false,
             dataType: 'json',
             success: function (data) {
-              $("#loading-bg").hide()
               let ddqc = data.content[0];
               buildForm(ddqc);
 
@@ -57,7 +56,7 @@ $(document).ready(function () {
                 container: 'map',
                 style: 'mapbox://styles/mapbox/streets-v11',
                 center: [ddqc.longitude, ddqc.latitude],
-                zoom: 17,
+                zoom: 15,
                 language: 'vi'
               }) 
             
@@ -75,7 +74,10 @@ $(document).ready(function () {
               let canvas = $('.mapboxgl-canvas')
               canvas.width('100%');
               canvas.height('100%');
-              let marker = new mapboxgl.Marker();
+              let marker = new mapboxgl.Marker({
+                color: '#0B7B31'
+              }).setLngLat([ddqc.longitude, ddqc.latitude]).addTo(map);
+
 
               $('#search').append(geocoder.onAdd(map));
               $(".search-bar i").on('click', async () => {
@@ -117,7 +119,7 @@ $(document).ready(function () {
               
                       map.flyTo({
                         center: [longitude, latitude],
-                        zoom: 17
+                        zoom: 15
                       });
               
                       marker.remove()
@@ -173,7 +175,7 @@ $(document).ready(function () {
                 }).setLngLat(lngLat).addTo(map);
                 map.flyTo({
                   center: lngLat,
-                  zoom: 17
+                  zoom: 15
                 })
     
                 $.ajax({
@@ -221,6 +223,17 @@ $(document).ready(function () {
               $('#edit-ads-location #coordinates').on('click', async () => {
                 $('#select-location-map').css('display', 'block');
                 map.resize();
+                marker.remove()
+                let curLng = $('#edit-ads-location #coordinates').val().split(',')[1].trim();
+                let curLat = $('#edit-ads-location #coordinates').val().split(',')[0].trim();
+                marker = new mapboxgl.Marker({
+                  color: '#0B7B31'
+                }).setLngLat([curLng, curLat]).addTo(map);
+                map.flyTo({
+                  center: [curLng, curLat],
+                  zoom: 15
+                })
+
                 let div = $('<div></div>');
                 div.addClass('popup-background');
                 div.on('click', function () {
@@ -241,7 +254,7 @@ $(document).ready(function () {
               })
 
               $("#edit-ads-location button[value='update']").on("click", async function (e) {
-                if ($("#edit-ads-location #address").val() == "" || $("#edit-ads-location #ward").val() == "" || $("#edit-ads-location #district").val() == "" || $("#edit-ads-location #coordinates").val() == "" || $("#edit-ads-location #ads-location-type").val() == "" || $("#edit-ads-location #ads-type").val() == "") {
+                if ($("#edit-ads-location #address").val() == "" || $("#edit-ads-location #ward").val() == "" || $("#edit-ads-location #district").val() == "" || $("#edit-ads-location #coordinates").val() == "" || $("#edit-ads-location #ads-location-type").val() == "" || $("#edit-ads-location #ads-type").val() == "" || $("#edit-ads-location #is-zoning").val() == "") {
                   return;
                 }
                 e.preventDefault();
@@ -344,26 +357,58 @@ $(document).ready(function () {
               });
 
               $("#edit-ads-location button[value='delete']").on("click", function (e) {
-                if (confirm("Bạn có chắc chắn muốn xóa không?")) {
-                  const deleteForm = new FormData();
-                  deleteForm.append("id", id);
-                  deleteForm.append("photo", ddqc.photo);
-                  const deleteData = Object.fromEntries(deleteForm.entries());
+                if (confirm("Xóa điểm đặt quảng cáo sẽ xóa tất cả các bảng quảng cáo liên quan. Bạn có chắc chắn muốn xóa không?")) {
                   $.ajax({
-                    url: '/api/so/deleteDiemDatQuangCao',
+                    url: '/api/so/deleteAdsByIdAdsLocation/' + id,
                     type: 'DELETE',
                     catch: false,
                     dataType: 'json',
-                    data: deleteData,
-                    success: function (res) {
-                      window.location.href = "/diemdatquangcao";
-                      alert("Xóa thành công");
+                    beforeSend: function () {
+                      $("#loading-bg").show()
                     },
-                    error: function (xhr, status, err) {
-                      alert("Xóa thất bại");
+                    success: function (res) {
+                      const deleteForm = new FormData();
+                      deleteForm.append("id", id);
+                      deleteForm.append("photo", ddqc.photo);
+                      const deleteData = Object.fromEntries(deleteForm.entries());
+                      $.ajax({
+                        url: '/api/so/deleteDiemDatQuangCao',
+                        type: 'DELETE',
+                        catch: false,
+                        dataType: 'json',
+                        data: deleteData,
+                        success: function (res) {
+                          window.location.href = "/diemdatquangcao";
+                          alert("Xóa thành công!");
+                        },
+                        error: function (xhr, status, err) {
+                          $("#loading-bg").hide()
+                          alert("Xóa thất bại.2");
+                          console.log(err);
+                        }
+                      })
+                    },
+                    error: function (err) {
+                      $("#loading-bg").hide()
+                      alert("Xóa thất bại.1");
                       console.log(err);
-                    }
+                    },
                   })
+                  // $.ajax({
+                  //   url: '/api/so/deleteDiemDatQuangCao',
+                  //   type: 'DELETE',
+                  //   catch: false,
+                  //   dataType: 'json',
+                  //   data: deleteData,
+                  //   success: function (res) {
+                  //     window.location.href = "/diemdatquangcao";
+                  //     alert("Xóa thành công!");
+                  //   },
+                  //   error: function (xhr, status, err) {
+                  //     alert("Xóa thất bại.");
+                  //     console.log(err);
+                  //   }
+                  // })
                 }
               })
             }
@@ -409,13 +454,32 @@ function buildForm(data) {
   form.find("#coordinates").val(data.latitude + ", " + data.longitude);
   form.find("#ads-location-type").val(data.id_loc_type);
   form.find("#ads-type").val(data.id_ads_type);
-  if (data.is_zoning == false) {
-    form.find("#is-zoning").val("0");
-  } else if (data.is_zoning == true) {
-    form.find("#is-zoning").val("1");
-  } else {
-    form.find("#is-zoning").val("");
-  }
+
+  $.ajax({
+    url: '/api/so/getAdsByIdAdsLocation/' + data.id_ads_location,
+    type: 'GET',
+    catch: false,
+    dataType: 'json',
+    success: function (dat) {
+      $("#loading-bg").hide()
+      if (dat.content.length != 0) {
+        // remove option value = 0 (not zoning)
+        $("#is-zoning option[value='0']").remove();
+      }
+      if (data.is_zoning == false) {
+        form.find("#is-zoning").val("0");
+      } else if (data.is_zoning == true) {
+        form.find("#is-zoning").val("1");
+      } else {
+        form.find("#is-zoning").val("");
+      }
+    },
+    error: function (err) {
+      $("#loading-bg").hide()
+      console.log(err);
+    }
+  })
+
   if (data.photo != null && data.photo != "") {
     form.find("#image-preview").attr("src", data.photo); 
   } else {

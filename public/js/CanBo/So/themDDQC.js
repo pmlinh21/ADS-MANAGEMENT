@@ -225,7 +225,14 @@ $(document).ready(function () {
           })
 
           $("#add-ads-location button[value='add']").on("click", async function (e) {
-            if ($("#add-ads-location #address").val() == "" || $("#add-ads-location #ward").val() == "" || $("#add-ads-location #district").val() == "" || $("#add-ads-location #coordinates").val() == "" || $("#add-ads-location #ads-location-type").val() == "" || $("#add-ads-location #ads-type").val() == "") {
+            if ($('#coordinates').val() == '') {
+              alert('Vui lòng chọn vị trí trên bản đồ');
+              return;
+            } else if (imageData == null) {
+              alert('Vui lòng chọn ảnh');
+              return;
+            }
+            if ($("#add-ads-location #address").val() == "" || $("#add-ads-location #ward").val() == "" || $("#add-ads-location #district").val() == "" || $("#add-ads-location #coordinates").val() == "" || $("#add-ads-location #ads-location-type").val() == "" || $("#add-ads-location #ads-type").val() == "" || $("#add-ads-location #is-zoning").val() == "" || imageData == null) {
               return;
             }
             e.preventDefault();
