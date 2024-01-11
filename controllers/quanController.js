@@ -526,9 +526,9 @@ const getAdsCreateWard = async(req, res) =>{
         (`SELECT ac.*, bt.board_type, w.ward, al.address as address_adsloc, d.district
         FROM Ads_create ac
         INNER JOIN Board_type bt ON bt.id_board_type = ac.id_board_type
-        INNER JOIN Ads_location al ON al.id_ads_location = ac.id_ads_location
-        INNER JOIN Ward w ON w.id_ward = al.id_ward
-        INNER JOIN District d ON d.id_district = w.id_district
+        LEFT JOIN Ads_location al ON al.id_ads_location = ac.id_ads_location
+        LEFT JOIN Ward w ON w.id_ward = al.id_ward
+        LEFT JOIN District d ON d.id_district = w.id_district
         WHERE al.id_ward = ${id_ward}`);
         
         sucessCode(res,data,"Get thành công")
