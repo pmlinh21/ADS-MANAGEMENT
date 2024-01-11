@@ -1079,7 +1079,7 @@ label.required::after {
 }
 .image-container {
   width: 700px; 
-  height: 500px; 
+  height: 400px; 
   overflow: hidden; 
   border-radius: 20px; 
   position: relative;
@@ -1101,9 +1101,36 @@ label.required::after {
   padding-right: 4rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 980px) {
+  .create-ads{
+    padding-right: 2.8rem;
+  }
+}
+
+@media (max-width: 400px) {
   .image-container {
-    width: 300px; 
+    width: 180px; 
+    height: 85px;
+  }
+  .image-container img {
+    width: 90%; 
+  }
+}
+
+@media (min-width: 400px) {
+  .image-container {
+    width: 350px; 
+    height: 150px;
+  }
+  .image-container img {
+    width: 90%; 
+  }
+}
+
+@media (min-width: 768px) {
+  .image-container {
+    width: 650px; 
+    height: 330px;
   }
   .image-container img {
     width: 90%; 
@@ -1113,7 +1140,7 @@ label.required::after {
 @media (min-width: 1400px) {
   .image-container {
     width: 800px; 
-    height: 550px;
+    height: 450px;
   }
   .image-container img {
     width: 100%; 
