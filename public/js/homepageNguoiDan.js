@@ -320,6 +320,7 @@ function showSidebar(adsloc) {
 
         $('#report-popup .style3-button').on("click", function () {
             $('#report-popup form').get(0).reset()
+            $("#report-popup .style1-button").prop("disabled", false);
             $("#report-popup").modal("hide")
         })
 
@@ -340,7 +341,6 @@ function showSidebar(adsloc) {
             
             else {
                 $("#report-popup .style1-button").prop("disabled", true);
-                const reportContent = encodeURIComponent(tinymce.get("content").getContent())
                 const reportTime = new Date()
 
                 let reportObject = {
@@ -352,7 +352,7 @@ function showSidebar(adsloc) {
                     fullname: $("#name").val(),
                     email: $("#email").val(),
                     phone: $("#phone").val(),
-                    content: reportContent,
+                    content: tinymce.get("content").getContent(),
                     photo1: await uploadImage(imageData1),
                     photo2: await uploadImage(imageData2),
                     report_time: validateDate(reportTime),
@@ -366,6 +366,7 @@ function showSidebar(adsloc) {
                 grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
                     const captcha = token;
 
+                    // fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
                     fetch('https://ads-map-officer.onrender.com/api/nguoidan/verifyCaptcha', {
                         method: 'POST',
                         headers: {
@@ -379,7 +380,6 @@ function showSidebar(adsloc) {
                             const existingReportsJSON = localStorage.getItem("ads_report");
                             const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
                             existingReports.push({...reportObject, 
-                                content: decodeURIComponent(reportContent),
                                 report_time: validateDate(new Date(reportTime.setHours(reportTime.getHours() + 7)))
                             });
                             localStorage.setItem("ads_report", JSON.stringify(existingReports));
@@ -388,6 +388,8 @@ function showSidebar(adsloc) {
                             $.ajax({
                                 type: "POST",
                                 url: "https://ads-map-officer.onrender.com/api/nguoidan/createAdsReport",
+                                // url: "http://localhost:8080/api/nguoidan/createAdsReport",
+                                contentType: 'application/json',
                                 data: JSON.stringify(reportObject),
                                 success: function (response) {
                                     // Handle success
@@ -395,7 +397,6 @@ function showSidebar(adsloc) {
                                     $("#report-popup .style1-button").prop("disabled", false);
                                     $('#report-popup form').get(0).reset()
                                     $("#report-popup").modal("hide")
-                                    
                                     // Optional: Show a success message to the user
                                 },
                                 error: function (error) {
@@ -436,6 +437,7 @@ function showSidebar(adsloc) {
         });
         $('#report-popup .style3-button').on("click", function () {
             $("#report-popup").modal("hide")
+            $("#report-popup .style1-button").prop("disabled", false);
             $('#report-popup form').get(0).reset()
         })
 
@@ -455,7 +457,6 @@ function showSidebar(adsloc) {
                 alert("Trường 'Số điện thoại' không hợp lệ")
             else {
                 $("#report-popup .style1-button").prop("disabled", true);
-                const reportContent = encodeURIComponent(tinymce.get("content").getContent())
                 const reportTime = new Date()
                 if (adsloc.id_ads_location) {
                     console.log("creating adsloc report")
@@ -470,7 +471,7 @@ function showSidebar(adsloc) {
                         email: $("#email").val(),
                         phone: $("#phone").val(),
                         // content: tinymce.$("#reportContent").getContent(),
-                        content: reportContent,
+                        content: tinymce.get("content").getContent(),
                         photo1: await uploadImage(imageData3),
                         photo2: await uploadImage(imageData4),
                         report_time: validateDate(reportTime),
@@ -493,7 +494,6 @@ function showSidebar(adsloc) {
                                 const existingReportsJSON = localStorage.getItem("adsloc_report");
                                 const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
                                 existingReports.push({...reportObject, 
-                                    content: decodeURIComponent(reportContent),
                                     report_time: validateDate(new Date(reportTime.setHours(reportTime.getHours() + 7)))});
                                 // console.log(JSON.stringify(reportObject))
                                 localStorage.setItem("adsloc_report", JSON.stringify(existingReports));
@@ -503,6 +503,7 @@ function showSidebar(adsloc) {
                                 $.ajax({
                                     type: "POST",
                                     url: "https://ads-map-officer.onrender.com/api/nguoidan/createAdsLocReport",
+                                    contentType: 'application/json',
                                     data: JSON.stringify(reportObject),
                                     success: function (response) {
                                         // Handle success
@@ -544,8 +545,7 @@ function showSidebar(adsloc) {
                         fullname: $("#name").val(),
                         email: $("#email").val(),
                         phone: $("#phone").val(),
-                        // content: tinymce.$("#reportContent").getContent(),
-                        content: reportContent,
+                        content: tinymce.$("#reportContent").getContent(),
                         photo1: await uploadImage(imageData3),
                         photo2: await uploadImage(imageData4),
                         report_time: validateDate(reportTime),
@@ -568,7 +568,6 @@ function showSidebar(adsloc) {
                                 const existingReportsJSON = localStorage.getItem("loc_report");
                                 const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
                                 existingReports.push({...reportObject, 
-                                    content: decodeURIComponent(reportContent),
                                     report_time: validateDate(new Date(reportTime.setHours(reportTime.getHours() + 7)))});
                                 localStorage.setItem("loc_report", JSON.stringify(existingReports));
 
@@ -576,6 +575,7 @@ function showSidebar(adsloc) {
                                 $.ajax({
                                     type: "POST",
                                     url: "https://ads-map-officer.onrender.com/api/nguoidan/createLocReport",
+                                    contentType: 'application/json',
                                     data: JSON.stringify(reportObject),
                                     success: function (response) {
                                         // Handle success
