@@ -278,6 +278,10 @@ function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
 }
 
 function renderReport(list_report, container) {
+  list_report = list_report?.sort((a, b) => {
+    return new Date(b.report_time).getTime() - new Date(a.report_time).getTime();
+  });
+  
   const note = list_report?.map(item => {
     return {
       statusClass: item.status ? "resolved" : "unresolved",
@@ -296,7 +300,20 @@ function renderReport(list_report, container) {
     var template = `
     <% for (var i = 0; i < list_report?.length; i++) { %>
       <div class="other-report row" >
-        <div class="col-md-12">
+        <div class="col-md-12 detail">
+          <strong>Thời gian báo cáo:</strong> 
+          <% const reportDate = new Date(list_report[i].report_time); %>
+          <% reportDate.setHours(reportDate.getHours()); %>
+          <%= reportDate.getDate().toString().padStart(2, '0') %>-<%= (reportDate.getMonth() + 1).toString().padStart(2, '0') %>-<%= reportDate.getFullYear() %> <%= reportDate.getHours().toString().padStart(2, '0') %>:<%= reportDate.getMinutes().toString().padStart(2, '0') %>:<%= reportDate.getSeconds().toString().padStart(2, '0') %>
+        </div>
+        <div class="col-md-12 detail">
+          <% if (list_report[i].status) { %>
+              <strong>Cách thức xử lí:</strong> 
+              <%= list_report[i].resolve %>
+          <% } %>
+        </div>
+        <div class="col-md-12 detail">
+          <strong>Nội dung báo cáo:</strong> 
           <%- list_report[i].content %>
         </div>
         <div class="col-md-12 view-image">
@@ -518,14 +535,8 @@ function changeMapSize() {
 // hard code
 $(document).ready(function () {
   var wards, info, filter_info
-  
-  changeMapSize();
 
   $(window).on('resize', function () {
-    changeMapSize();
-  });
-
-  window.addEventListener('devtoolschange', function (e) {
     changeMapSize();
   });
 
@@ -533,11 +544,10 @@ $(document).ready(function () {
   var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: [106.6924, 10.7759],
-    zoom: 16,
-    language: 'vi',
-    interactive: true
-  });
+    center: [106.6974, 10.7743],
+    zoom: 15,
+    language: 'vi'
+});
 
   var language = new MapboxLanguage({
     defaultLanguage: 'vi'
