@@ -435,6 +435,12 @@ input:checked+.slider:before {
     box-shadow: none;
 }
 
+button:active{
+  transform: translateY(4px);
+  cursor: pointer;
+}
+
+
 .detail-button {
     color: lightgray;
     font-size: 1.3rem;
@@ -515,6 +521,10 @@ label.required::after {
     justify-content: end;
     gap: 0.8rem;
     margin-top: 0.5rem;
+}
+
+#other-report-popup .col-md-12.detail{
+    display: block;
 }
 
 #my-report .col-md-12.location {

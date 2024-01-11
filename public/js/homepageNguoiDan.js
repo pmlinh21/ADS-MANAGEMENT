@@ -182,7 +182,9 @@ function red(item) {
 
 // hiển thị danh sách report
 function renderReport(list_report, container, user_email) {
-    console.log(list_report)
+    list_report = list_report.sort((a, b) => {
+        return new Date(b.report_time).getTime() - new Date(a.report_time).getTime();
+      });
     const note = list_report?.map(item => {
         return {
             is_user: (item.email == user_email) ? "mine" : "other",
@@ -203,9 +205,23 @@ function renderReport(list_report, container, user_email) {
         var template = `
   <% for (var i = 0; i < list_report?.length; i++) { %>
     <div class="<%=note[i].is_user%>-report row" >
-      <div class="col-md-12">
-        <%- list_report[i].content%>
-      </div>
+        <div class="col-md-12 detail">
+            <strong>Thời gian báo cáo:</strong> 
+            <% const reportDate = new Date(list_report[i].report_time); %>
+            <% reportDate.setHours(reportDate.getHours() - 7); %>
+            <%= reportDate.getDate().toString().padStart(2, '0') %>-<%= (reportDate.getMonth() + 1).toString().padStart(2, '0') %>-<%= reportDate.getFullYear() %> <%= reportDate.getHours().toString().padStart(2, '0') %>:<%= reportDate.getMinutes().toString().padStart(2, '0') %>:<%= reportDate.getSeconds().toString().padStart(2, '0') %>
+        </div>
+        <div class="col-md-12 detail">
+            <% if (list_report[i].status) { %>
+                <strong>Cách thức xử lí:</strong> 
+                <%= list_report[i].resolve %>
+            <% } %>
+        </div>
+        <div class="col-md-12 detail">
+            <strong>Nội dung báo cáo:</strong> 
+            <%- list_report[i].content %>
+        </div>
+
       <div class="col-md-12 view-image">
       <% if (note[i].imagePath1) { %>
         <img class="col-md-6 image1" src="<%= note[i].imagePath1 %>">
@@ -323,7 +339,9 @@ function showSidebar(adsloc) {
                 alert("Trường 'Số điện thoại' không hợp lệ")
             
             else {
+                $("#report-popup .style1-button").prop("disabled", true);
                 const reportContent = encodeURIComponent(tinymce.get("content").getContent())
+                const reportTime = new Date()
 
                 let reportObject = {
                     id_report: null, // You may need to generate a unique ID
@@ -337,7 +355,7 @@ function showSidebar(adsloc) {
                     content: reportContent,
                     photo1: await uploadImage(imageData1),
                     photo2: await uploadImage(imageData2),
-                    report_time: validateDate(new Date()),
+                    report_time: validateDate(reportTime),
                     status: false, // You may need to handle this differently
                     resolve: null, // You may need to handle this differently
                     report_type: idReportType2String(parseInt($("#reportType").val())), // You may need to handle this differently
@@ -360,7 +378,10 @@ function showSidebar(adsloc) {
                         if (data.success) {
                             const existingReportsJSON = localStorage.getItem("ads_report");
                             const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                            existingReports.push({...reportObject, content: decodeURIComponent(reportContent)});
+                            existingReports.push({...reportObject, 
+                                content: decodeURIComponent(reportContent),
+                                report_time: validateDate(new Date(reportTime.setHours(reportTime.getHours() + 7)))
+                            });
                             localStorage.setItem("ads_report", JSON.stringify(existingReports));
 
                             // Send data to the server using AJAX
@@ -370,22 +391,32 @@ function showSidebar(adsloc) {
                                 data: JSON.stringify(reportObject),
                                 success: function (response) {
                                     // Handle success
-                                    alert("Report Successful")
+                                    alert("Báo cáo thành công")
+                                    $("#report-popup .style1-button").prop("disabled", false);
+                                    $('#report-popup form').get(0).reset()
+                                    $("#report-popup").modal("hide")
+                                    
                                     // Optional: Show a success message to the user
                                 },
                                 error: function (error) {
                                     // Handle error
                                     alert(JSON.stringify(error) + "createError");
+                                    $("#report-popup .style1-button").prop("disabled", false);
+                                    $('#report-popup form').get(0).reset()
+                                     $("#report-popup").modal("hide")
+                                    
                                     // Optional: Show an error message to the user
                                 },
                             });
                         } else {
                             alert("Captcha không hợp lệ")
+                            $("#report-popup .style1-button").prop("disabled", false);
+                            $('#report-popup form').get(0).reset()
+                            $("#report-popup").modal("hide")
                         }
                     })
                 })
-                $('#report-popup form').get(0).reset()
-                $("#report-popup").modal("hide")
+                
             }
         })
     })
@@ -423,8 +454,9 @@ function showSidebar(adsloc) {
             else if (!isValidPhoneNumber($("#phone").val()))
                 alert("Trường 'Số điện thoại' không hợp lệ")
             else {
+                $("#report-popup .style1-button").prop("disabled", true);
                 const reportContent = encodeURIComponent(tinymce.get("content").getContent())
-
+                const reportTime = new Date()
                 if (adsloc.id_ads_location) {
                     console.log("creating adsloc report")
                     
@@ -441,7 +473,7 @@ function showSidebar(adsloc) {
                         content: reportContent,
                         photo1: await uploadImage(imageData3),
                         photo2: await uploadImage(imageData4),
-                        report_time: validateDate(new Date()),
+                        report_time: validateDate(reportTime),
                         status: false, // You may need to handle this differently
                         resolve: null, // You may need to handle this differently
                         report_type: idReportType2String(parseInt($("#reportType").val())), // You may need to handle this differently
@@ -458,11 +490,13 @@ function showSidebar(adsloc) {
                             body: JSON.stringify({ captcha: captcha })
                         }).then((res) => res.json()).then((data) => {
                             if (data.success) {
-                                const existingReportsJSON = localStorage.getItem("ads_loc_report");
+                                const existingReportsJSON = localStorage.getItem("adsloc_report");
                                 const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                                existingReports.push({...reportObject, content: decodeURIComponent(reportContent)});
+                                existingReports.push({...reportObject, 
+                                    content: decodeURIComponent(reportContent),
+                                    report_time: validateDate(new Date(reportTime.setHours(reportTime.getHours() + 7)))});
                                 // console.log(JSON.stringify(reportObject))
-                                localStorage.setItem("ads_loc_report", JSON.stringify(existingReports));
+                                localStorage.setItem("adsloc_report", JSON.stringify(existingReports));
 
                                 console.log(JSON.stringify(reportObject))
                                 // Send data to the server using AJAX
@@ -472,16 +506,25 @@ function showSidebar(adsloc) {
                                     data: JSON.stringify(reportObject),
                                     success: function (response) {
                                         // Handle success
-                                        alert("Report Successful")
+                                        $("#report-popup .style1-button").prop("disabled", false);
+                                        $('#report-popup form').get(0).reset()
+                                        $("#report-popup").modal("hide")
+                                        alert("Báo cáo thành công")
                                         // Optional: Show a success message to the user
                                     },
                                     error: function (error) {
                                         // Handle error
+                                        $("#report-popup .style1-button").prop("disabled", false);
+                                        $('#report-popup form').get(0).reset()
+                                        $("#report-popup").modal("hide")
                                         alert(JSON.stringify(error) + "createError");
                                         // Optional: Show an error message to the user
                                     },
                                 });
                             } else {
+                                $("#report-popup .style1-button").prop("disabled", false);
+                                $('#report-popup form').get(0).reset()
+                                $("#report-popup").modal("hide")
                                 alert("Captcha không hợp lệ")
                             }
                         })
@@ -505,7 +548,7 @@ function showSidebar(adsloc) {
                         content: reportContent,
                         photo1: await uploadImage(imageData3),
                         photo2: await uploadImage(imageData4),
-                        report_time: validateDate(new Date()),
+                        report_time: validateDate(reportTime),
                         status: false, // You may need to handle this differently
                         resolve: null, // You may need to handle this differently
                         id_ward: address2wardid(adsloc.ward, adsloc.district),
@@ -524,7 +567,9 @@ function showSidebar(adsloc) {
                             if (data.success) {
                                 const existingReportsJSON = localStorage.getItem("loc_report");
                                 const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                                existingReports.push({...reportObject, content: decodeURIComponent(reportContent)});
+                                existingReports.push({...reportObject, 
+                                    content: decodeURIComponent(reportContent),
+                                    report_time: validateDate(new Date(reportTime.setHours(reportTime.getHours() + 7)))});
                                 localStorage.setItem("loc_report", JSON.stringify(existingReports));
 
                                 // Send data to the server using AJAX
@@ -534,24 +579,30 @@ function showSidebar(adsloc) {
                                     data: JSON.stringify(reportObject),
                                     success: function (response) {
                                         // Handle success
-                                        alert("Tạo báo cáo thành công")
+                                        $("#report-popup .style1-button").prop("disabled", false);
+                                        $('#report-popup form').get(0).reset()
+                                        $("#report-popup").modal("hide")
+                                        alert("Báo cáo thành công")
                                         // Optional: Show a success message to the user
                                     },
                                     error: function (error) {
                                         // Handle error
+                                        $("#report-popup .style1-button").prop("disabled", false);
+                                        $('#report-popup form').get(0).reset()
+                                        $("#report-popup").modal("hide")
                                         alert(JSON.stringify(error) + "Lỗi tạo báo cáo");
                                         // Optional: Show an error message to the user
                                     },
                                 });
                             } else {
+                                $("#report-popup .style1-button").prop("disabled", false);
+                                $('#report-popup form').get(0).reset()
+                                $("#report-popup").modal("hide")
                                 alert("Captcha không hợp lệ")
                             }
                         })
                     })
                 }
-
-                $('#report-popup form').get(0).reset()
-                $("#report-popup").modal("hide")
             }
         })
     })
@@ -1010,17 +1061,25 @@ $(document).ready(function () {
                     my_loc_report.push(item)
             })
 
-            const list_report = [...my_ads_report, ...my_loc_report, ...my_adsloc_report]
-            console.log(JSON.stringify(list_report) + "list_report")
+            const list_report = [...my_ads_report, ...my_loc_report, ...my_adsloc_report].sort((a, b) => {
+                return new Date(b.report_time).getTime() - new Date(a.report_time).getTime();
+              });
+            console.log("list report: ", list_report)
 
             const note = list_report?.map(item => {
-                if (item.id_ads_location)
-                    address = NguoiDanAdsLoc.content.filter(i => i.id_ads_location == item.id_ads_location)[0].address
-                // else if(item.id_ads)
-                //     address = NguoiDanAdsLoc.content.filter(i => i.list_ads.filter(j => j.id_ads == item.id_ads).length > 0)[0].address
-                else
+                if (item.id_ads_location){
+                    const info = NguoiDanAdsLoc.content.filter(i => i.id_ads_location == item.id_ads_location)[0]
+                    address = info.address   
+                    address += ", phường " + info.ward
+                    address += ", quận " + info.district
+                }
+                else{
                     address = item.address
-
+                    address += ", phường " + item.ward
+                    address += ", quận " + item.district
+                }
+                    
+                
                 return {
                     address: address,
                     statusClass: item.status ? "resolved" : "unresolved",
@@ -1040,16 +1099,27 @@ $(document).ready(function () {
                     <% for (var i = 0; i < list_report?.length; i++) { %>
                         <div class="other-report row" >
                         <div class="col-md-12 location">
-                            <strong>Địa điểm:</strong> 
-                            <% if (list_report[i].address) { %>
+                            <strong>Địa chỉ:</strong> 
+                            <% if (list_report[i].id_ads) { %>
                                 <%= list_report[i].address %>
-                            <% } else if (note[i].address){ %>
-                                <%= note[i].address %>
                             <% } else { %>
-                                Biển quảng cáo
+                                <%= note[i].address %>
                                 <% } %>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-12 location">
+                            <strong>Thời gian báo cáo:</strong> 
+                            <% const reportDate = new Date(list_report[i].report_time); %>
+                            <% reportDate.setHours(reportDate.getHours() - 7); %>
+                            <%= reportDate.getDate().toString().padStart(2, '0') %>-<%= (reportDate.getMonth() + 1).toString().padStart(2, '0') %>-<%= reportDate.getFullYear() %> <%= reportDate.getHours().toString().padStart(2, '0') %>:<%= reportDate.getMinutes().toString().padStart(2, '0') %>:<%= reportDate.getSeconds().toString().padStart(2, '0') %>
+                        </div>
+                        <div class="col-md-12 location">
+                            <% if (list_report[i].status) { %>
+                                <strong>Cách thức xử lí:</strong> 
+                                <%= list_report[i].resolve %>
+                            <% } %>
+                        </div>
+                        <div class="col-md-12 location">
+                            <strong>Nội dung báo cáo:</strong> 
                             <%- list_report[i].content %>
                         </div>
 
@@ -1065,9 +1135,9 @@ $(document).ready(function () {
                                 <div class = "report-cate">
                                 <% if (list_report[i].id_ads) { %>
                                     Biển quảng cáo
-                                <% } else if (note[i].address){ %>
+                                <% } else if (list_report[i].id_ads_location){ %>
                                     Điểm đặt
-                                <% } else if (list_report[i].address) { %>
+                                <% } else { %>
                                     Địa điểm
                                     <% } %>
                                 </div>
