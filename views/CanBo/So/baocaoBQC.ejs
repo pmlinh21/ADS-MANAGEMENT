@@ -15,7 +15,7 @@
                 </div>
                 <div class="input-field">
                     <label for="id-ads">ID Bảng quảng cáo</label>
-                    <input type="text" id="id-ads" name="id_ads" disabled>
+                    <input type="text" id="id-ads" name="id_ads" class="disabled" readonly>
                 </div>
                 <div class="input-field">
                     <label for="fullname">Họ tên người báo cáo</label>
@@ -72,6 +72,20 @@
                 </div>
             </div>
         </form>
+        <div class="popupmap" id="select-location-map">
+          <div class="popupmap-header">
+              <span class="title">Xem vị trí điểm đặt</span>
+              <!-- <span class="search-bar">
+                  <input type="text" id="search">
+                  <i class="fas fa-search"></i>
+              </span> -->
+          </div>
+          <div class="map" id="map"></div>
+          <div class="popupmap-footer">
+              <!-- <div class="chosen-address" id="chosen-address" style="z-index: 1000;"></div> -->
+              <!-- <button>Xác nhận</button> -->
+          </div>
+        </div>
     </div>
 </div>
 <script src="../../../public/js/CanBo/So/baocaoBQC.js"></script>

@@ -7,7 +7,7 @@
         </div>
        
         <form action="" method="post" class="form" id="report-location">
-            <legend><i class="fas fa-info-circle"></i> Chi tiết báo cáo địa điểm quảng cáo</legend>
+            <legend><i class="fas fa-info-circle"></i> Chi tiết báo cáo địa điểm</legend>
             <div class="input-container">
                 <div class="input-field">
                     <label for="id-report">ID Báo cáo</label>
@@ -15,7 +15,7 @@
                 </div>
                 <div class="input-field">
                     <label for="address">Địa chỉ</label>
-                    <input type="text" id="address" name="address" disabled>
+                    <input type="text" id="address" name="address" class="disabled" readonly>
                 </div>
                 <div class="input-field">
                     <label for="fullname">Họ tên người báo cáo</label>
@@ -74,21 +74,20 @@
             </div>
         </form>
 
-        <!-- <div class="popupmap" id="select-location-map">
-            <div class="popupmap-header">
-                <span class="title">Xác định vị trí điểm đặt</span>
-                <span class="search-bar">
-                    <input type="text" id="search">
-                    <i class="fas fa-search"></i>
-                </span>
-                
-            </div>
-            <div class="popupmap-footer">
-                <div class="chosen-address"></div>
-                <button>Xác nhận</button>
-            </div>
-        </div> -->
-
+        <div class="popupmap" id="select-location-map">
+          <div class="popupmap-header">
+              <span class="title">Xem địa điểm</span>
+              <!-- <span class="search-bar">
+                  <input type="text" id="search">
+                  <i class="fas fa-search"></i>
+              </span> -->
+          </div>
+          <div class="map" id="map"></div>
+          <div class="popupmap-footer">
+              <!-- <div class="chosen-address" id="chosen-address" style="z-index: 1000;"></div> -->
+              <!-- <button>Xác nhận</button> -->
+          </div>
+        </div>
     </div>
 </div>
 <script src="../../../public/js/CanBo/So/baocaoDD.js"></script>
