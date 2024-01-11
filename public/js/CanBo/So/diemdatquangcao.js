@@ -36,7 +36,7 @@ function buildAdsLocationsTable(data) {
     tr.append('<td class="location-type">' + item.loc_type + '</td>');
     tr.append('<td class="ads-type">' + item.ads_type + '</td>');
     if (item.is_zoning == false) {
-      tr.append('<td class="zoning">Chưa quy hoạch</td>');
+      tr.append('<td class="zoning" style="color: indianred">Chưa quy hoạch</td>');
     } else {
       tr.append('<td class="zoning">Đã quy hoạch</td>');
     }

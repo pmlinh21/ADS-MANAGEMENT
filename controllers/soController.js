@@ -703,13 +703,27 @@ const getAdsByIdAdsLocation = async (req, res) => {
 // BANGQUANGCAO
 const getAllBangQuangCao = async (req, res) => {
   try {
-    const [data, metadata] = await sequelize.query(`SELECT A.id_ads, A.id_ads_location, L.address, W.ward, D.district, B.board_type, A.expired_date
-                                                    FROM Ads A 
+    // const [data, metadata] = await sequelize.query(`SELECT A.id_ads, A.id_ads_location, L.address, W.ward, D.district, B.board_type, A.expired_date
+    //                                                 FROM Ads A 
+    //                                                 LEFT JOIN Ads_location L ON L.id_ads_location = A.id_ads_location
+    //                                                 LEFT JOIN Ward W ON W.id_ward = L.id_ward
+    //                                                 LEFT JOIN District D ON D.id_district = W.id_district
+    //                                                 LEFT JOIN Board_type B ON B.id_board_type = A.id_board_type
+    //                                                 ORDER BY id_ads`);
+    const [data, metadata] = await sequelize.query(`WITH StatusRank AS (
+                                                      SELECT id_ads, status, ROW_NUMBER() OVER (PARTITION BY id_ads ORDER BY id_ads, status) AS status_rank
+                                                        FROM Ads_create
+                                                        WHERE status = true OR status IS NULL
+                                                      )
+                                                    SELECT DISTINCT A.id_ads, A.id_ads_location, L.address, W.ward, D.district, B.board_type, A.expired_date, SR.status
+                                                    FROM Ads A
                                                     LEFT JOIN Ads_location L ON L.id_ads_location = A.id_ads_location
                                                     LEFT JOIN Ward W ON W.id_ward = L.id_ward
                                                     LEFT JOIN District D ON D.id_district = W.id_district
                                                     LEFT JOIN Board_type B ON B.id_board_type = A.id_board_type
-                                                    ORDER BY id_ads`);
+                                                    LEFT JOIN StatusRank SR ON SR.id_ads = A.id_ads
+                                                    WHERE SR.status_rank = 1
+                                                    ORDER BY A.id_ads`);
     sucessCode(res, data, "Get thành công");
   } catch (err) {
     errorCode(res, "Lỗi BE");
