@@ -351,11 +351,11 @@ $(document).ready(function() {
       <div class="col-md-12">
         <label for="status" class="form-label" style="display: block;">Trạng thái xử lý</label>
         <div class="form-check">
-          <input type="radio" class="form-check-input" id="statusProcessed" name="status" value="true" readonly>
+          <input type="radio" class="form-check-input" id="statusProcessed" name="status" value="1" readonly>
           <label class="form-check-label" for="statusProcessed">Đã xử lý</label>
         </div>
         <div class="form-check">
-          <input type="radio" class="form-check-input" id="statusPending" name="status" value="false" readonly>
+          <input type="radio" class="form-check-input" id="statusPending" name="status" value="0" readonly>
           <label class="form-check-label" for="statusPending">Chưa xử lý</label>
         </div>
       </div>
@@ -416,7 +416,6 @@ $(document).ready(function() {
             role: parseInt(role),
             status: parseInt(updatedStatus)
           }
-
           $.ajax({
             url: `/api/basic/updateLocReportByID/${id_report}`,
             type: 'PUT',

@@ -15,7 +15,7 @@ $(document).ready(function () {
   if (role == "1") {
     document.getElementById("createLicenseButton").style.marginLeft = "78em";
   } else if (role == "2") {
-    document.getElementById("createLicenseButton").style.marginLeft = "76.3em";
+    document.getElementById("createLicenseButton").style.marginLeft = "78.5em";
   }
 
   if (role == "2"){

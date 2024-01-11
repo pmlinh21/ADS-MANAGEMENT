@@ -483,6 +483,88 @@ const updatePassword = async(req,res) => {
     }
 }
 
+const comparePassword = async(req,res) => {
+    let { email, role } = req.params
+    let { cf_password } = req.body;
+    
+    console.log("compare")
+    try{
+        if (role == 2){
+            console.log("role")
+            let cbphuong = await model.CanboPhuong.findOne({
+                where: {
+                    email
+                }
+            });
+            if(cbphuong){
+                console.log("cbphuong")
+                let checkPass = bcrypt.compareSync(cf_password, cbphuong.password);
+                console.log("checkPass: ", checkPass);
+                if(checkPass){
+                    console.log("trung")
+                    sucessCode(res, checkPass, "Mật khẩu mới trùng với mật khẩu cũ");
+                    return;
+                }
+                else{
+                    console.log("khong trung")
+                    sucessCode(res, checkPass, "Mật khẩu mới không trùng với mật khẩu cũ");
+                    return;
+                }
+            }
+            else{
+                failCode(res, "", "Không tìm thấy cán bộ phường");
+                return;
+            }
+        }
+        if (role == 1){
+            let cbquan = await model.CanboQuan.findOne({
+                where: {
+                    email
+                }
+            });
+            if(cbquan){
+                let checkPass = bcrypt.compareSync(cf_password, cbquan.password);
+                if(checkPass){
+                    sucessCode(res, checkPass, "Mật khẩu mới trùng với mật khẩu cũ");
+                    return;
+                }
+                else{
+                    sucessCode(res, checkPass, "Mật khẩu mới không trùng với mật khẩu cũ");
+                    return;
+                }
+            }
+            else{
+                failCode(res, "", "Không tìm thấy cán bộ quận");
+                return;
+            }
+        }
+        if (role == 3){
+            let cbso = await model.CanboSo.findOne({
+                where: {
+                    email
+                }
+            });
+            if(cbso){
+                let checkPass = bcrypt.compareSync(cf_password, cbso.password);
+                if(checkPass){
+                    sucessCode(res, checkPass, "Mật khẩu mới trùng với mật khẩu cũ");
+                    return;
+                }
+                else{
+                    sucessCode(res, checkPass, "Mật khẩu mới không trùng với mật khẩu cũ");
+                    return;
+                }
+            }
+            else{
+                failCode(res, "", "Không tìm thấy cán bộ sở");
+                return;
+            }
+        } 
+    }catch(err){
+        errorCode(res,"Lỗi BE")
+    }
+}
+
 const getAdsReportByID = async(req, res) =>{
     try{
         let { id_report } = req.params;
@@ -537,6 +619,7 @@ const getLocReportByID = async(req, res) =>{
         errorCode(res,"Lỗi BE")
     }
 }
+
 
 const getReportHtmlContent = function(content, report_time, report_type, resolve, type, address ){
     const htmlContent = `<body>
@@ -989,4 +1072,4 @@ module.exports = { getAdsType, getBoardType, getReportType, getLocType,
     updateAdsReportByID, updateAdsLocReportByID, updateLocReportByID,
     getAdsCreateByID, deleteAdsCreateByID, getAdsCreateByAds,
     login, findEmail, sendEmail, checkOTP, createNewPwd, updatePassword,
-    getAccountInfo, updateInfo, updatePasswordByOTP, uploadImage}
+    getAccountInfo, updateInfo, updatePasswordByOTP, uploadImage, comparePassword}

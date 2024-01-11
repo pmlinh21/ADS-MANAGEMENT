@@ -1061,7 +1061,7 @@ label.required::after {
 
 .fixed-size-textarea {
   width: 100%;
-  height: 2rem;
+  height: 3rem;
   resize: vertical;
   overflow-y: auto;
 }
