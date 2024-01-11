@@ -335,8 +335,8 @@ $(document).ready(function () {
             });
             map_create.addControl(language);
     
-            map.on('idle',function(){
-              map.resize()
+            map_create.on('idle',function(){
+              map_create.resize()
             })
     
             select_adsloc.forEach(function (item, index) {
