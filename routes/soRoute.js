@@ -187,7 +187,7 @@ soRoute.delete("/deleteAdsUpdateByIdAds/:id", isCanboSo, deleteAdsUpdateByIdAds)
 // YEUCAUCAPPHEP
 soRoute.get("/getAllYeuCauCapPhep", isCanboSo, getAllYeuCauCapPhep);
 soRoute.get("/getYeuCauCapPhepById/:id", isCanboSo, getYeuCauCapPhepById);
-soRoute.put("/updateYeuCauCapPhep/:id/:status", isCanboSo, updateYeuCauCapPhep);
+soRoute.put("/updateYeuCauCapPhep/:id/:status/:id_ads", isCanboSo, updateYeuCauCapPhep);
 soRoute.post("/createBangQuangCao", isCanboSo, createBangQuangCao);
 soRoute.get("/getAdsCreateByIdAdsNotIdCreate/:id/:id_create", isCanboSo, getAdsCreateByIdAdsNotIdCreate);
 soRoute.put("/updateAdsExpiredDate", isCanboSo, updateAdsExpiredDate);

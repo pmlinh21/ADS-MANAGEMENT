@@ -920,7 +920,7 @@ const updateYeuCauChinhSuaBQC = async (req, res) => {
 
 const deleteAdsUpdateByIdAds = async (req, res) => {
   try {
-    const id = req.body.id;
+    const id = req.params.id;
     data = await model.Ads_update.destroy({
       where: {
         id_ads: id
@@ -1027,7 +1027,8 @@ const updateYeuCauCapPhep = async (req, res) => {
   try {
     const id = req.params.id;
     const status = req.params.status;
-    [data, meta] = await sequelize.query(`UPDATE Ads_create SET status = ${status} WHERE id_create = ${id}`);
+    const id_ads = req.params.id_ads;
+    [data, meta] = await sequelize.query(`UPDATE Ads_create SET status = ${status}, id_ads = ${id_ads} WHERE id_create = ${id}`);
     sucessCode(res, data, "Put thành công");
   } catch (err) {
     errorCode(res, "Lỗi BE");

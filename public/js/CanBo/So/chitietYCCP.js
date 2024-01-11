@@ -80,7 +80,7 @@ $(document).ready(function () {
             $("#create-ads button[value='deny']").on("click", async function (e) {
               e.preventDefault();
               $.ajax({
-                url: '/api/so/updateYeuCauCapPhep/' + id + '/false',
+                url: '/api/so/updateYeuCauCapPhep/' + id + '/false/null',
                 type: 'PUT',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -111,7 +111,7 @@ $(document).ready(function () {
                         },
                         error: function (xhr, status, err) {
                           $("#loading-bg").hide()
-                          alert("Từ chối yêu cầu thất bại. 7");
+                          alert("Từ chối yêu cầu thất bại.");
                           console.log(err);
                         }
                       })
@@ -142,23 +142,6 @@ $(document).ready(function () {
                       console.log(err);
                     }
                   })
-                  // $.ajax({
-                  //   url: '/api/so/deleteBangQuangCao', 
-                  //   type: 'DELETE',
-                  //   catch: false,
-                  //   dataType: 'json',
-                  //   data: deleteData,
-                  //   success: function (res) {
-                  //     $("#loading-bg").hide()
-                  //     location.reload();
-                  //     alert("Từ chối yêu cầu thành công! tạo mới");
-                  //   },
-                  //   error: function (xhr, status, err) {
-                  //     $("#loading-bg").hide()
-                  //     alert("Từ chối yêu cầu thất bại.");
-                  //     console.log(err);
-                  //   }
-                  // })
                 },
                 error: function (xhr, status, err) {
                   $("#loading-bg").hide()
@@ -172,7 +155,7 @@ $(document).ready(function () {
             $("#create-ads button[value='accept']").on("click", async function (e) {
               e.preventDefault();
               $.ajax({
-                url: '/api/so/updateYeuCauCapPhep/' + id + '/true',
+                url: '/api/so/updateYeuCauCapPhep/' + id + '/true/' + yccp.id_ads,
                 type: 'PUT',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -200,7 +183,7 @@ $(document).ready(function () {
             $("#create-ads button[value='deny']").on("click", async function (e) {
               e.preventDefault();
               $.ajax({
-                url: '/api/so/updateYeuCauCapPhep/' + id + '/false',
+                url: '/api/so/updateYeuCauCapPhep/' + id + '/false/' + yccp.id_ads,
                 type: 'PUT',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -225,7 +208,7 @@ $(document).ready(function () {
             $("#create-ads button[value='accept']").on("click", async function (e) {
               e.preventDefault();
               $.ajax({
-                url: '/api/so/updateYeuCauCapPhep/' + id + '/true',
+                url: '/api/so/updateYeuCauCapPhep/' + id + '/true/' + yccp.id_ads,
                 type: 'PUT',
                 dataType: 'json',
                 contentType: 'application/json',
