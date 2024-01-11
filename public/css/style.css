@@ -1159,6 +1159,7 @@ label.required::after {
 .forms-container {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .form-account {
@@ -1231,6 +1232,21 @@ label.required::after {
 }
 .form-forget.visible {
   visibility: visible;
+}
+
+@media (max-width: 768px) {
+  .form-account,
+  .form-pass {
+    margin: 1.5rem 1rem;
+  }
+}
+
+.btn-pass {
+  margin-left: calc(27rem);
+}
+
+.btn-back {
+  margin-left: calc(27rem);
 }
 
 /* PHAN HE SO: side-navbar */
