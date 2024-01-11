@@ -182,7 +182,7 @@ function red(item) {
 
 // hiển thị danh sách report
 function renderReport(list_report, container, user_email) {
-    list_report = list_report.sort((a, b) => {
+    list_report = list_report?.sort((a, b) => {
         return new Date(b.report_time).getTime() - new Date(a.report_time).getTime();
       });
     const note = list_report?.map(item => {
@@ -298,7 +298,7 @@ function showSidebar(adsloc) {
         const list_ads = JSON.parse(adsloc.list_ads)
         ads = list_ads?.filter(item => item.id_ads == id_ads)[0]
 
-        let imagePath = (!ads.photo ? `../image/image-placeholder.jpg` : `${ads.photo}`)
+        let imagePath = (!ads.photo ? `../../image/image-placeholder.jpg` : `${ads.photo}`)
         $("#detail-popup .image img").attr("src", imagePath)
         $("#detail-popup .expired-date").text("Ngày hết hạn hợp đồng: " + validateSQLDate(ads.expired_date))
     })
@@ -806,7 +806,7 @@ function createMarker(info, map) {
         if (item[7] != "")
             imagePath = item[7]
         else
-            imagePath = "../image/image-placeholder.jpg"
+            imagePath = "../../image/image-placeholder.jpg"
         return {
             type: 'Feature',
             geometry: {
