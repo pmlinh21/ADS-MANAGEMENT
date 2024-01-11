@@ -142,6 +142,7 @@ $(document).ready(function () {
       adslocations = [];
       for (let i = 0; i < data.content.length; i++) {
         let { id_ads_location, address, ward, district, latitude, longitude, is_zoning } = data.content[i];
+        // chỉ hiển thị những địa điểm đã được quy hoạch
         if (is_zoning == 1)
           adslocations.push({ id_ads_location, address, ward, district, latitude, longitude });
       }

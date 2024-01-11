@@ -100,7 +100,7 @@ body {
   width: 100vw;
   height: 100%;
   background-color: rgba(2, 18, 4, 0.4);
-  z-index: 5;
+  z-index: 500;
   position: fixed;
   top: 0;
   left: 0;
@@ -697,6 +697,10 @@ input:checked+.slider:before {
     justify-content: end;
     gap: 0.8rem;
     margin-top: 0.5rem;
+}
+
+#other-report-popup .col-md-12.detail{
+  display: block;
 }
 
 #other-report-popup .view-image{

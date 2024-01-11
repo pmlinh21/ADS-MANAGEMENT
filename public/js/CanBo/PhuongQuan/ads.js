@@ -52,8 +52,8 @@ $(document).ready(function () {
           let page = $("#example_wrapper .page-item.active a").text();
           console.log(row);
           let path  = "../../../public/image/image-placeholder.jpg"
-          if (filter_info[row + 5 * parseInt(page) - 5][9] != "")
-            path  = `../../../../public/image/${filter_info[row + 5 * parseInt(page) - 5][9]}`
+          if (filter_info[row + 5 * parseInt(page) - 5][10] != "")
+            path  = filter_info[row + 5 * parseInt(page) - 5][10]
           $('#view-image .photo').attr('src', path );
           return
         })
@@ -416,6 +416,7 @@ $(document).ready(function () {
               photo: null
             }
 
+            $("#create-license").modal("hide")
             $(".form-create").get(0).reset();
     
             const signResponse = await fetch('/api/basic/uploadImage');
@@ -871,7 +872,7 @@ $(document).ready(function () {
           } else if ($('#start_date_create').val() > $('#end_date_create').val()) {
             alert('Ngày bắt đầu không thể lớn hơn ngày kết thúc.');
           } else { 
-            $("#loading-bg").show()
+            
             
             var createData = {
               officer: email,
@@ -892,6 +893,8 @@ $(document).ready(function () {
             }
 
             $(".form-create").get(0).reset();
+            $("#create-license").modal("hide")
+            $("#loading-bg").show()
     
             const signResponse = await fetch('/api/basic/uploadImage');
             const signData = await signResponse.json();
@@ -962,6 +965,7 @@ function sendCreateRequest(url, formData) {
     contentType: "application/json",
     success: function (response) {
       // Handle the successful response here
+      alert("Tạo cấp phép thành công")
       window.location.reload();
       console.log(response);
     },

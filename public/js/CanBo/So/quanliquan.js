@@ -1,17 +1,25 @@
 $(document).ready(function () {
   $("quan").addClass("snb-li-active");
-  $("#loading-bg").show()
 
-  var allQuan;
-  $.get('/api/so/getAllQuanData', function (data) {
-    allQuan = data.content.map(item => [item.id_district, item.district, item.SLPhuong, item.SLDDQC, item.SLBQC, item.SLCB]);
-    buildDistrictTable(allQuan);
-    $("#loading-bg").hide()
-  }).fail(function (err) {
-    $("#loading-bg").hide()
-    console.log(err);
-  });
-});
+  $.ajax({
+    url: "/api/so/getAllQuanData",
+    type: "GET",
+    catch: false,
+    dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
+    success: function (data) {
+      $("#loading-bg").hide()
+      let allQuan = data.content.map(item => [item.id_district, item.district, item.SLPhuong, item.SLDDQC, item.SLBQC, item.SLCB]);
+      buildDistrictTable(allQuan);
+    },
+    error: function (err) {
+      $("#loading-bg").hide()
+      console.log(err);
+    }
+  })
+})
 
 function buildDistrictTable(districts) {
   let table = $("#district-table table tbody");

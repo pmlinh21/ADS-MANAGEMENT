@@ -4,89 +4,216 @@ $(document).ready(function () {
   $("#loading-bg").show()
 
   // STATISTICS
-  let soLuongQuan, soLuongPhuong, soLuongCanBo, soLuongDDQC, soLuongBQC;
-  $.get(`/api/so/getSoLuongQuan`, function (data) {
-    count++;
-    soLuongQuan = data.content[0].soLuongQuan;
-    $("#district-statistic .statistic-number").text(soLuongQuan);
-  }).fail(function (error) {
-    count++;
-    console.log(error);
-  });
+  var soLuongQuan, soLuongPhuong, soLuongCanBo, soLuongDDQC, soLuongBQC;
+  $.ajax({
+    url: "/api/so/getSoLuongQuan",
+    type: "GET",
+    catch: false,
+    dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
+    success: function (data) {
+      count++;
+      soLuongQuan = data.content[0].soLuongQuan;
+      $("#district-statistic .statistic-number").text(soLuongQuan);
+    },
+    error: function (err) {
+      count++;
+      console.log(err);
+    }
+  })
 
-  $.get(`/api/so/getSoLuongPhuong`, function (data) {
-    count++;
-    soLuongPhuong = data.content[0].soLuongPhuong;
-    $("#ward-statistic .statistic-number").text(soLuongPhuong);
-  }).fail(function (error) {
-    count++;
-    console.log(error);
-  });
+  $.ajax({
+    url: "/api/so/getSoLuongPhuong",
+    type: "GET",
+    catch: false,
+    dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
+    success: function (data) {
+      count++;
+      soLuongPhuong = data.content[0].soLuongPhuong;
+      $("#ward-statistic .statistic-number").text(soLuongPhuong);
+    },
+    error: function (err) {
+      count++;
+      console.log(err);
+    }
+  })
 
-  $.get(`/api/so/getSoLuongCanBo`, function (data) {
-    count++;
-    soLuongCanBo = data.content[0].soLuongCanBo;
-    $("#officer-statistic .statistic-number").text(soLuongCanBo);
-  }).fail(function (error) {
-    count++;
-    console.log(error);
-  });
+  $.ajax({
+    url: "/api/so/getSoLuongCanBo",
+    type: "GET",
+    catch: false,
+    dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
+    success: function (data) {
+      count++;
+      soLuongCanBo = data.content[0].soLuongCanBo;
+      $("#officer-statistic .statistic-number").text(soLuongCanBo);
+    },
+    error: function (err) {
+      count++;
+      console.log(err);
+    }
+  })
 
-  $.get(`/api/so/getSoLuongDDQC`, function (data) {
-    count++;
-    soLuongDDQC = data.content[0].soLuongDDQC;
-    $("#location-statistic .statistic-number").text(soLuongDDQC);
-  }).fail(function (error) {
-    count++;
-    console.log(error);
-  });
+  $.ajax({
+    url: "/api/so/getSoLuongDDQC",
+    type: "GET",
+    catch: false,
+    dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
+    success: function (data) {
+      count++;
+      soLuongDDQC = data.content[0].soLuongDDQC;
+      $("#location-statistic .statistic-number").text(soLuongDDQC);
+    },
+    error: function (err) {
+      count++;
+      console.log(err);
+    }
+  })
 
-  $.get(`/api/so/getSoLuongBQC`, function (data) {
-    count++;
-    soLuongBQC = data.content[0].soLuongBQC
-    $("#ad-statistic .statistic-number").text(soLuongBQC);
-  }).fail(function (error) {
-    count++;
-    console.log(error);
-  });
+  $.ajax({
+    url: "/api/so/getSoLuongBQC",
+    type: "GET",
+    catch: false,
+    dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
+    success: function (data) {
+      count++;
+      soLuongBQC = data.content[0].soLuongBQC
+      $("#ad-statistic .statistic-number").text(soLuongBQC);
+    },
+    error: function (err) {
+      count++;
+      console.log(err);
+    }
+  })
 
   // UPLOAD DATA FROM DB TO TABLES
   var loaiViTri, hinhThucQuangCao, loaiHinhBaoCao, loaiBangQuangCao;
-  $.get(`/api/so/getLoaiViTri`, function (data) {
-    count++;
-    loaiViTri = data.content.map(type => [type.id_loc_type, type.loc_type])
-    buildLocationTypeTable(loaiViTri);
-  }).fail(function (error) {
-    count++;
-    console.log(error);
-  });
 
-  $.get(`/api/so/getHinhThucQuangCao`, function (data) {
-    count++;
-    hinhThucQuangCao = data.content.map(type => [type.id_ads_type, type.ads_type])
-    buildAdsTypeTable(hinhThucQuangCao);
-  }).fail(function (error) {
-    count++;
-    console.log(error);
-  });
+  $.ajax({
+    url: "/api/so/getLoaiViTri",
+    type: "GET",
+    catch: false,
+    dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
+    success: function (data) {
+      count++;
+      loaiViTri = data.content.map(type => [type.id_loc_type, type.loc_type])
+      buildLocationTypeTable(loaiViTri);
+    },
+    error: function (err) {
+      count++;
+      console.log(err);
+    }
+  })
 
-  $.get(`/api/so/getLoaiHinhBaoCao`, function (data) {
-    count++;
-    loaiHinhBaoCao = data.content.map(type => [type.id_report_type, type.report_type])
-    buildReportTypeTable(loaiHinhBaoCao);
-  }).fail(function (error) {
-    count++;
-    console.log(error);
-  });
+  $.ajax({
+    url: "/api/so/getHinhThucQuangCao",
+    type: "GET",
+    catch: false,
+    dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
+    success: function (data) {
+      count++;
+      hinhThucQuangCao = data.content.map(type => [type.id_ads_type, type.ads_type])
+      buildAdsTypeTable(hinhThucQuangCao);
+    },
+    error: function (err) {
+      count++;
+      console.log(err);
+    }
+  })
 
-  $.get(`/api/so/getLoaiBangQuangCao`, function (data) {
-    count++;
-    loaiBangQuangCao = data.content.map(type => [type.id_board_type, type.board_type])
-    buildBoardTypeTable(loaiBangQuangCao);
-  }).fail(function (error) {
-    count++;
-    console.log(error);
-  });
+  $.ajax({
+    url: "/api/so/getLoaiHinhBaoCao",
+    type: "GET",
+    catch: false,
+    dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
+    success: function (data) {
+      count++;
+      loaiHinhBaoCao = data.content.map(type => [type.id_report_type, type.report_type])
+      buildReportTypeTable(loaiHinhBaoCao);
+    },
+    error: function (err) {
+      count++;
+      console.log(err);
+    }
+  })
+
+  $.ajax({
+    url: "/api/so/getLoaiBangQuangCao",
+    type: "GET",
+    catch: false,
+    dataType: "json",
+    beforeSend: function () {
+      $("#loading-bg").show()
+    },
+    success: function (data) {
+      count++;
+      loaiBangQuangCao = data.content.map(type => [type.id_board_type, type.board_type])
+      buildBoardTypeTable(loaiBangQuangCao);
+    },
+    error: function (err) {
+      count++;
+      console.log(err);
+    }
+  })
+
+  // $.get(`/api/so/getLoaiViTri`, function (data) {
+  //   count++;
+  //   loaiViTri = data.content.map(type => [type.id_loc_type, type.loc_type])
+  //   buildLocationTypeTable(loaiViTri);
+  // }).fail(function (error) {
+  //   count++;
+  //   console.log(error);
+  // });
+
+  // $.get(`/api/so/getHinhThucQuangCao`, function (data) {
+  //   count++;
+  //   hinhThucQuangCao = data.content.map(type => [type.id_ads_type, type.ads_type])
+  //   buildAdsTypeTable(hinhThucQuangCao);
+  // }).fail(function (error) {
+  //   count++;
+  //   console.log(error);
+  // });
+
+  // $.get(`/api/so/getLoaiHinhBaoCao`, function (data) {
+  //   count++;
+  //   loaiHinhBaoCao = data.content.map(type => [type.id_report_type, type.report_type])
+  //   buildReportTypeTable(loaiHinhBaoCao);
+  // }).fail(function (error) {
+  //   count++;
+  //   console.log(error);
+  // });
+
+  // $.get(`/api/so/getLoaiBangQuangCao`, function (data) {
+  //   count++;
+  //   loaiBangQuangCao = data.content.map(type => [type.id_board_type, type.board_type])
+  //   buildBoardTypeTable(loaiBangQuangCao);
+  // }).fail(function (error) {
+  //   count++;
+  //   console.log(error);
+  // });
 
   // CHECK IF ALL REQUESTS ARE DONE
   let check = setInterval(() => {
