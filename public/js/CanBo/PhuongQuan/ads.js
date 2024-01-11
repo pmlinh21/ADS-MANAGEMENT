@@ -215,8 +215,7 @@ $(document).ready(function () {
               return;
             }
             
-            let reason = $('#reason').v
-            al();
+            let reason = $('#reason').val();
             if (!reason){
               alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
             }
