@@ -401,7 +401,7 @@ function showSidebar(adsloc) {
                                 },
                                 error: function (error) {
                                     // Handle error
-                                    alert(JSON.stringify(error) + "createError");
+                                    alert("Lỗi tạo báo cáo");
                                     $("#report-popup .style1-button").prop("disabled", false);
                                     $('#report-popup form').get(0).reset()
                                      $("#report-popup").modal("hide")
@@ -518,7 +518,7 @@ function showSidebar(adsloc) {
                                         $("#report-popup .style1-button").prop("disabled", false);
                                         $('#report-popup form').get(0).reset()
                                         $("#report-popup").modal("hide")
-                                        alert(JSON.stringify(error) + "createError");
+                                        alert("Lỗi tạo báo cáo");
                                         // Optional: Show an error message to the user
                                     },
                                 });
@@ -590,7 +590,7 @@ function showSidebar(adsloc) {
                                         $("#report-popup .style1-button").prop("disabled", false);
                                         $('#report-popup form').get(0).reset()
                                         $("#report-popup").modal("hide")
-                                        alert(JSON.stringify(error) + "Lỗi tạo báo cáo");
+                                        alert("Lỗi tạo báo cáo");
                                         // Optional: Show an error message to the user
                                     },
                                 });
