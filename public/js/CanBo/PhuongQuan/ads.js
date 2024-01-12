@@ -136,47 +136,47 @@ $(document).ready(function () {
             $('button.btn-con').prop('disabled', false);
           });
 
-          var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: [filter_info[click_row][13], filter_info[click_row][14]],
-            zoom: 17,
-            language: 'vi'
-          });
+          // var map = new mapboxgl.Map({
+          //   container: 'map',
+          //   style: 'mapbox://styles/mapbox/streets-v11',
+          //   center: [filter_info[click_row][13], filter_info[click_row][14]],
+          //   zoom: 17,
+          //   language: 'vi'
+          // });
 
-          var language = new MapboxLanguage({
-            defaultLanguage: 'vi'
-          });
-          map.addControl(language);
+          // var language = new MapboxLanguage({
+          //   defaultLanguage: 'vi'
+          // });
+          // map.addControl(language);
 
-          map.on('idle',function(){
-            map.resize()
-          })
+          // map.on('idle',function(){
+          //   map.resize()
+          // })
       
-          $.get(`/api/quan/getAllAdsLoc`, function(data) {
-            adsloc = data.content
+          // $.get(`/api/quan/getAllAdsLoc`, function(data) {
+          //   adsloc = data.content
       
-            adsloc.forEach(function (item, index) {
-              var marker = new mapboxgl.Marker({color: '#0B7B31' })
-              .setLngLat([item.longitude, item.latitude]) 
-              .addTo(map)
-              .getElement();
+          //   adsloc.forEach(function (item, index) {
+          //     var marker = new mapboxgl.Marker({color: '#0B7B31' })
+          //     .setLngLat([item.longitude, item.latitude]) 
+          //     .addTo(map)
+          //     .getElement();
       
-              marker.id =`marker-${index}`;
-            });
+          //     marker.id =`marker-${index}`;
+          //   });
       
-            $(document).on('click', '.mapboxgl-marker', function() {
-              let markerId = $(this).attr('id');
-              index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
-              console.log(adsloc[index].district);
-              id_adsloc = adsloc[index].id_ads_location
-              result = adsloc[index].address + ', phường ' + adsloc[index].ward + ', quận ' + adsloc[index].district;
-              $("#address").val(`${result} [${adsloc[index].longitude}, ${adsloc[index].latitude}]` )
-            });
+          //   $(document).on('click', '.mapboxgl-marker', function() {
+          //     let markerId = $(this).attr('id');
+          //     index = parseInt(markerId.substring(markerId.indexOf("-") + 1))
+          //     console.log(adsloc[index].district);
+          //     id_adsloc = adsloc[index].id_ads_location
+          //     result = adsloc[index].address + ', phường ' + adsloc[index].ward + ', quận ' + adsloc[index].district;
+          //     $("#address").val(`${result} [${adsloc[index].longitude}, ${adsloc[index].latitude}]` )
+          //   });
 
-          }).fail(function(error) {
-            console.log(error);
-          });
+          // }).fail(function(error) {
+          //   console.log(error);
+          // });
           
             $('#photo').on('change', function(e) {
               if (e.target.files[0])
@@ -214,7 +214,7 @@ $(document).ready(function () {
               alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
               return;
             }
-            
+
             let reason = $('#reason').val();
             if (!reason){
               alert("Trường 'Lí do chỉnh sửa' bắt buộc.")

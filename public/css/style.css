@@ -1281,6 +1281,9 @@ label.required::after {
   }
 }
 
+#space2{
+  margin-top: 4rem;
+}
 /* PHAN HE SO: side-navbar */
 .side-navbar {
   position: fixed;
