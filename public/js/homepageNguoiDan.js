@@ -383,6 +383,7 @@ function showSidebar(adsloc) {
                                 report_time: validateDate(new Date(reportTime.setHours(reportTime.getHours() + 7)))
                             });
                             localStorage.setItem("ads_report", JSON.stringify(existingReports));
+                            localStorage.setItem("email", JSON.stringify($("#email").val()))
 
                             // Send data to the server using AJAX
                             $.ajax({
@@ -491,6 +492,7 @@ function showSidebar(adsloc) {
                             body: JSON.stringify({ captcha: captcha })
                         }).then((res) => res.json()).then((data) => {
                             if (data.success) {
+                                localStorage.setItem("email", JSON.stringify($("#email").val()))
                                 const existingReportsJSON = localStorage.getItem("adsloc_report");
                                 const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
                                 existingReports.push({...reportObject, 
@@ -565,6 +567,7 @@ function showSidebar(adsloc) {
                             body: JSON.stringify({ captcha: captcha })
                         }).then((res) => res.json()).then((data) => {
                             if (data.success) {
+                                localStorage.setItem("email", JSON.stringify($("#email").val()))
                                 const existingReportsJSON = localStorage.getItem("loc_report");
                                 const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
                                 existingReports.push({...reportObject, 
