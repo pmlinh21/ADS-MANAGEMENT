@@ -214,7 +214,7 @@ $(document).ready(function () {
               alert('Không có thông tin nào được thay đổi. Vui lòng chỉnh sửa ít nhất một thông tin để cập nhật.');
               return;
             }
-            
+
             let reason = $('#reason').val();
             if (!reason){
               alert("Trường 'Lí do chỉnh sửa' bắt buộc.")
