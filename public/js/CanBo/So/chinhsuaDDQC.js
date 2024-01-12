@@ -77,6 +77,7 @@ $(document).ready(function () {
               let marker = new mapboxgl.Marker({
                 color: '#0B7B31'
               }).setLngLat([ddqc.longitude, ddqc.latitude]).addTo(map);
+              $('#select-location-map .chosen-address').text(`${ddqc.address} [${ddqc.longitude}, ${ddqc.latitude}]`);
 
 
               $('#search').append(geocoder.onAdd(map));

@@ -86,7 +86,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         $.ajax({
-          url: '/api/so/getDiemDatQuangCaoById/' + id,
+          url: '/api/so/getDiemDatQuangCaoById/' + ddqcChinhSua.id_ads_location,
           type: 'GET',
           catch: false,
           dataType: 'json',
@@ -107,7 +107,10 @@ $(document).ready(function () {
             formData.append("id_ads_type", ddqcChinhSua.id_ads_type);
             formData.append("is_zoning", ddqcChinhSua.is_zoning);
             formData.append("old_photo", old_photo);
-            formData.append("photo", ddqcChinhSua.photo);
+            if (ddqcChinhSua.photo != null && ddqcChinhSua.photo != "")
+              formData.append("photo", ddqcChinhSua.photo);
+            else
+              formData.append("photo", old_photo);
 
             updateData = Object.fromEntries(formData.entries());
             $.ajax({
@@ -124,25 +127,25 @@ $(document).ready(function () {
                   success: function (data) {
                     $("#loading-bg").hide()
                     location.reload();
-                    alert("Chỉnh sửa thành công");
+                    alert("Chỉnh sửa thành công!");
                   },
                   error: function (xhr, status, err) {
                     $("#loading-bg").hide()
-                    alert("Chỉnh sửa thất bại");
+                    alert("Chỉnh sửa thất bại.");
                     console.log(err);
                   }
                 })
               },
               error: function (xhr, status, err) {
                 $("#loading-bg").hide()
-                alert("Xử lí thất bại");
+                alert("Xử lí thất bại.");
                 console.log(err);
               }
             })
           },
           error: function (xhr, status, err) {
             $("#loading-bg").hide()
-            alert("Xử lí thất bại");
+            alert("Xử lí thất bại.");
             console.log(err);
           }
         })

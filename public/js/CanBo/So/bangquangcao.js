@@ -38,6 +38,10 @@ function buildAdsTable(data) {
     tr.append('<td class="district">' + item.district + '</td>');
     tr.append('<td class="board-type">' + item.board_type + '</td>');
     tr.append('<td class="expired-date">' + new Date(item.expired_date).toLocaleDateString('en-GB').replace(/\//g, '-') + '</td>');
+    if (item.status == true) 
+      tr.append('<td class="status">Đã cấp phép</td>');
+    else
+      tr.append('<td class="status" style="color: indianred">Chưa cấp phép</td>');
 
     tr.click(function () {
       window.location = "/bangquangcao/chinhsua?id=" + item.id_ads;

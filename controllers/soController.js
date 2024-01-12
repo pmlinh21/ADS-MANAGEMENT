@@ -703,13 +703,27 @@ const getAdsByIdAdsLocation = async (req, res) => {
 // BANGQUANGCAO
 const getAllBangQuangCao = async (req, res) => {
   try {
-    const [data, metadata] = await sequelize.query(`SELECT A.id_ads, A.id_ads_location, L.address, W.ward, D.district, B.board_type, A.expired_date
-                                                    FROM Ads A 
+    // const [data, metadata] = await sequelize.query(`SELECT A.id_ads, A.id_ads_location, L.address, W.ward, D.district, B.board_type, A.expired_date
+    //                                                 FROM Ads A 
+    //                                                 LEFT JOIN Ads_location L ON L.id_ads_location = A.id_ads_location
+    //                                                 LEFT JOIN Ward W ON W.id_ward = L.id_ward
+    //                                                 LEFT JOIN District D ON D.id_district = W.id_district
+    //                                                 LEFT JOIN Board_type B ON B.id_board_type = A.id_board_type
+    //                                                 ORDER BY id_ads`);
+    const [data, metadata] = await sequelize.query(`WITH StatusRank AS (
+                                                      SELECT id_ads, status, ROW_NUMBER() OVER (PARTITION BY id_ads ORDER BY id_ads, status) AS status_rank
+                                                        FROM Ads_create
+                                                        WHERE status = true OR status IS NULL
+                                                      )
+                                                    SELECT DISTINCT A.id_ads, A.id_ads_location, L.address, W.ward, D.district, B.board_type, A.expired_date, SR.status
+                                                    FROM Ads A
                                                     LEFT JOIN Ads_location L ON L.id_ads_location = A.id_ads_location
                                                     LEFT JOIN Ward W ON W.id_ward = L.id_ward
                                                     LEFT JOIN District D ON D.id_district = W.id_district
                                                     LEFT JOIN Board_type B ON B.id_board_type = A.id_board_type
-                                                    ORDER BY id_ads`);
+                                                    LEFT JOIN StatusRank SR ON SR.id_ads = A.id_ads
+                                                    WHERE SR.status_rank = 1
+                                                    ORDER BY A.id_ads`);
     sucessCode(res, data, "Get thành công");
   } catch (err) {
     errorCode(res, "Lỗi BE");
@@ -719,10 +733,12 @@ const getAllBangQuangCao = async (req, res) => {
 const getBangQuangCaoById = async (req, res) => {
   try {
     const id = req.params.id;
-    const [data, metadata] = await sequelize.query( `SELECT A.id_ads, A.id_ads_location, A.id_board_type, B.board_type, A.width, A.height, A.photo, A.quantity, A.expired_date, L.longitude, L.latitude
+    const [data, metadata] = await sequelize.query( `SELECT A.id_ads, A.id_ads_location, A.id_board_type, B.board_type, A.width, A.height, A.photo, A.quantity, A.expired_date, L.longitude, L.latitude, L.address, W.ward, D.district
                                                     FROM Ads A 
                                                     LEFT JOIN Board_type B ON B.id_board_type = A.id_board_type
                                                     LEFT JOIN Ads_location L ON L.id_ads_location = A.id_ads_location
+                                                    LEFT JOIN Ward W ON W.id_ward = L.id_ward
+                                                    LEFT JOIN District D ON D.id_district = W.id_district
                                                     WHERE A.id_ads = ${id}`);
     sucessCode(res, data, "Get thành công");
   } catch (err) {

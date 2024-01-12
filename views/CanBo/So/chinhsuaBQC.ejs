@@ -16,8 +16,9 @@
                 </div>
                 <div class="input-field">
                     <label for="id-ads-location">ID Điểm đặt</label>
-                    <input type="text" id="id-ads-location" name="id_ads_location" readonly>
-                    <span class="tooltiptext">Chỉnh sửa bằng tọa độ</span>
+                    <input type="text" id="id-ads-location" name="id_ads_location" class="disabled" readonly>
+                    <!-- <span class="tooltiptext">Chỉnh sửa bằng tọa độ</span> -->
+                    <span class="tooltiptext">Không thể chỉnh sửa</span>
                 </div>
                 <div class="input-field">
                     <label for="board-type">Loại bảng</label>
@@ -59,7 +60,7 @@
             </div>
         </form>
 
-        <div class="popupmap" id="select-location-map">
+        <!-- <div class="popupmap" id="select-location-map">
             <div class="popupmap-header">
                 <span class="title">Chọn điểm đặt</span>
                 <span class="search-bar">
@@ -72,6 +73,21 @@
                 <div class="chosen-address" id="chosen-address" style="z-index: 1000;"></div>
                 <button>Xác nhận</button>
             </div>
+        </div> -->
+
+        <div class="popupmap" id="select-location-map">
+          <div class="popupmap-header">
+              <span class="title">Xem vị trí điểm đặt</span>
+              <!-- <span class="search-bar">
+                  <input type="text" id="search">
+                  <i class="fas fa-search"></i>
+              </span> -->
+          </div>
+          <div class="map" id="map"></div>
+          <div class="popupmap-footer">
+              <div class="chosen-address" id="chosen-address" style="z-index: 1000;"></div>
+              <!-- <button>Xác nhận</button> -->
+          </div>
         </div>
 
     </div>
