@@ -85,6 +85,9 @@ $(document).ready(function() {
                 $('#fullname').val(info.fullname);
                 $('#phone').val(info.phone);
                 $('#birthdate').val(info.birthdate);
+                const space = `<div id="space2"></div>`
+                const pos = document.querySelector('.manage_area');
+                pos.insertAdjacentHTML('afterend', space);
                 $('.manage_area').hide();
             }
         },
@@ -109,6 +112,9 @@ $(document).ready(function() {
         else{
             if (newFullname.trim() === '') {
                 $('#fullname-error').text('Vui lòng nhập họ và tên.').show();
+                document.getElementById("space2").style.marginTop = "2.5rem";
+                $('#birthdate-error').hide();
+                $('#phone-error').hide();
                 return;
             } else {
                 $('#fullname-error').hide();
@@ -117,6 +123,8 @@ $(document).ready(function() {
             const birthdateRegex = /^\d{4}-\d{2}-\d{2}$/;
             if (newBirthdate.trim() === '' || !birthdateRegex.test(newBirthdate)) {
                 $('#birthdate-error').text('Vui lòng nhập ngày tháng năm sinh đúng định dạng.').show();
+                document.getElementById("space2").style.marginTop = "2.5rem";
+                $('#phone-error').hide();
                 return;
             } else {
                 $('#birthdate-error').hide();
@@ -125,6 +133,7 @@ $(document).ready(function() {
             const phoneRegex = /^\d+$/;
             if (newPhone.trim() === '' || !phoneRegex.test(newPhone)) {
                 $('#phone-error').text('Vui lòng nhập số điện thoại chỉ chứa số.').show();
+                document.getElementById("space2").style.marginTop = "2.5rem";
                 return;
             } else {
                 $('#phone-error').hide();
