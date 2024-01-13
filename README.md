@@ -6,13 +6,20 @@
 Đảm bảo bạn đã cài đặt PostgreSQL trên máy tính của bạn.
 
 - Mở `pgAdmin`. Trong Menubar, nhấn vào **Object** -> **Register** -> **Server** để tạo Server cho localhost
+
 - Ở tab "General": Điền "Name" là tên của Server muốn tạo (tùy ý)
+
 - Ở tab **Connection**:
    + Điền **Hostname / address** là "localhost"
    + Điền **Username** và **Password** là thông tin tài khoản postgres của máy
+
 - Nhấn **Save** để tạo Server
-- Nhấn chọn database **postgres** trong server vừa mới tạo. Trong Menubar, nhấn vào **Tool** -> **Query Tool** và dán nội dung file `db.sql` trong thư mục `db` vào khung **Query**.
-- Nhấn chọn database **postgres** trong server vừa mới tạo. Trong Menubar, nhấn vào **Object** -> **Properties**.
+
+- Nhấn chọn database **postgres** trong server vừa mới tạo. 
+Trong Menubar, nhấn vào **Tool** -> **Query Tool** và dán nội dung file `db.sql` trong thư mục `db` vào khung **Query**.
+
+- Nhấn chọn database **postgres** trong server vừa mới tạo. 
+Trong Menubar, nhấn vào **Object** -> **Properties**.
    + Nếu thông tin ở phần **Owner** là "postgres", nhấn **Execute** (F5) để thực thi truy vấn.
    + Ngược lại, nhấn **Replace** (Ctrl + Shift + F) để thay thế cụm "postgres" thành thông tin ở phần **Owner**. Nhấn **Execute** (F5) để thực thi truy vấn.
 
