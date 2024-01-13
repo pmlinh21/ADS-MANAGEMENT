@@ -30,6 +30,10 @@ Lưu ý: cài đặt phân hệ cán bộ trước khi cài đặt phân hệ ng
 
 **Phân hệ cán bộ**
 
+- Mở folder `canbo` trong Visual Studio Code hoặc trình soạn thảo mã nguồn phổ biến khác.
+
+- Mở file `config.json` trong folder `config`. Ở phần **development** thay thế **username** và **password** là thông tin tài khoản postgres của máy.
+
 - Mở terminal và di chuyển đến folder `canbo`.
 
 - Chạy lệnh sau để tải các package cần thiết:
