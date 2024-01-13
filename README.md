@@ -1,20 +1,31 @@
 # PTUDW-21KTPM4-Nhom06
-Đây là hướng dẫn chi tiết để biên dịch và cài đặt đồ án từ mã nguồn. Đảm bảo bạn đã tải và giải nén file src.zip để có mã nguồn của đồ án.
+Đây là hướng dẫn chi tiết để biên dịch và cài đặt đồ án từ mã nguồn. Đảm bảo bạn đã tải và giải nén file src.zip để có mã nguồn của đồ án và file db.zip để có script tạo database.
+
+## Cài đặt database
+
+Đảm bảo bạn đã cài đặt PostgreSQL trên máy tính của bạn.
+
+- Mở pgAdmin. Trong Menubar, nhấn "Object" -> "Register" -> "Server" để tạo server cho localhost
+- Ở tab "Connection":
+  + Điền "Hostname / address" là "localhost"
+  + Điền "Username" và "Password" là thông tin tài khoản postgres của máy
+- Nhấn chọn database "postgres" trong server vừa mới tạo. Trong Menubar, nhấn "Tool" -> "Query Tool" và dán nội dung trong file db.sql trong folder db vào khung query.
+- Nhấn chọn database "postgres" trong server vừa mới tạo. Trong Menubar, nhấn "Object" -> "Properties".
+  + Nếu thông tin ở phần "Owner" là "postgres" thì nhấn "Execute" (F5) để thực thi truy vấn
+  + Ngược lại, nhấn Replace (Ctrl + Shift + F) để thay thế cụm "postgres" thành thông tin ở phần "Owner". Nhấn "Execute" (F5) để thực thi truy vấn
+
+- Mở `pgAdmin`. Trong Menubar, nhấn vào **Object** -> **Register** -> **Server** để tạo một server cho localhost.
+- Trong tab **Connection**:
+   + Điền **Hostname / address** là "localhost".
+   + Điền **Username** và **Password** là thông tin tài khoản `postgres` của máy.
+- Nhấn chọn database **postgres** trong server vừa tạo. Trong Menubar, nhấn vào **Tool** -> **Query Tool** và dán nội dung trong tệp `db.sql` trong thư mục `db` vào khung truy vấn.
+- Nhấn chọn database **postgres** trong server vừa tạo. Trong Menubar, nhấn vào **Object** -> **Properties**.
+   + Nếu thông tin ở phần **Owner** là "postgres", nhấn **Execute** (F5) để thực thi truy vấn.
+   + Ngược lại, nhấn **Replace** (Ctrl + Shift + F) để thay thế cụm "postgres" thành thông tin ở phần **Owner**. Sau đó, nhấn **Execute** (F5) để thực thi truy vấn.
 
 ## Cài đặt 
 
 Đảm bảo bạn đã cài đặt Node.js và npm trên máy tính của bạn.
-
-**Phân hệ người dân**
-
-- Mở folder `nguoidan` trong Visual Studio Code hoặc trình soạn thảo mã nguồn phổ biến khác.
-
-- Mở file `index.html`.
-
-- Nhấp chuột phải vào file và chọn "Open with Live Server".
-
-Sau bước này, trang web của người dân sẽ mở trên trình duyệt mặc định của bạn.
-
 
 **Phân hệ cán bộ**
 
@@ -32,5 +43,15 @@ Sau bước này, trang web của người dân sẽ mở trên trình duyệt m
 
 Sau bước này, bạn sẽ có thể truy cập trang web của cán bộ trên máy tính của bạn.
 
-## Cài đặt database
-Bạn không cần phải setup database vì nó đã được host trên render.com.
+
+**Phân hệ người dân**
+
+- Mở folder `nguoidan` trong Visual Studio Code hoặc trình soạn thảo mã nguồn phổ biến khác.
+
+- Mở file `index.html`.
+
+- Nhấp chuột phải vào file và chọn "Open with Live Server".
+
+Sau bước này, trang web của người dân sẽ mở trên trình duyệt mặc định của bạn.
+
+
