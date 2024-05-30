@@ -47,16 +47,20 @@
 </head>
 
 <body>
+  <div id="loading-bg" style ="display: none">
+    <img src="image/loading-gif.gif" class = "my-3">
+    <p>Vui lòng chờ một chút ...</p>
+  </div>
   <div id="headerNgDan">
     <div class="flex-container">
       <img class="logo-img" src="image/logo.png" alt="logo">
       <i class="bi bi-search"></i>
 
-      <form id="geocodeForm" action="#" method="get">
-        <input type="text" class="form-control" name="address" id="address" aria-describedby="helpId"
-          placeholder="Search" style="height: fit-content;" autocomplete="address-line1">
-      </form>
-      <div id="result"></div>
+      <div class="search-address">
+        <input type="text" class="form-control search-address-bar " placeholder="Nhập địa chỉ ...">
+        <hr style="display: none">
+        <div class="resultapi-address" style="display: none"></div>
+      </div>
 
       <button data-target="#my-report" data-toggle="modal" class="btn style2-button my-report ms-auto my-auto me-3">
         Báo cáo của bạn
@@ -148,7 +152,7 @@
                 <div class=" inputGroupContainer">
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input name="name" id="name" class="form-control" type="text" required>
+                    <input name="name" id="name" class="form-control" type="text" placeholder="Nguyễn Văn A" required>
                   </div>
                 </div>
               </div>
@@ -160,7 +164,7 @@
                 <div class=" inputGroupContainer">
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                    <input name="email" id="email" class="form-control" type="text" value="lvduc@gmail.com" required>
+                    <input name="email" id="email" class="form-control" type="text" placeholder="nguyenVanA@gmail.com" required>
                   </div>
                 </div>
               </div>
@@ -170,7 +174,7 @@
                 <div class=" inputGroupContainer">
                   <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-                    <input name="phone" id="phone" class="form-control" type="text" required>
+                    <input name="phone" id="phone" class="form-control" type="tel" placeholder="0988123123" required>
                   </div>
                 </div>
               </div>
@@ -213,14 +217,14 @@
           <div class="modal-body">
 
           </div>
-          <!-- <div class="modal-footer">
+          <div class="modal-footer">
             <div class="other-symbol">
               <i class="fa-solid fa-circle"></i> Báo cáo của người khác
             </div>
             <div class="mine-symbol">
-              <i class="fa-solid fa-circle"></i> Báo cáo của bạn
+              <i class="fa-solid fa-circle"></i> Báo cáo của tôi
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
@@ -247,6 +251,7 @@
   </div>
 
 </body>
+
 <script type="text/javascript" src="js/homepageNguoiDan.js"></script>
 
 </html>

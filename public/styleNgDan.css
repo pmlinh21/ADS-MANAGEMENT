@@ -16,6 +16,32 @@ body {
     font-weight: 500;
 }
 
+#loading-bg{
+    width: 100vw;
+    height: 100%;
+    background-color: rgba(2, 18, 4, 0.4);
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    color: white;
+  }
+  
+  #loading-bg img{
+    width: 6%;
+    /* object-fit: cover; */
+    /* display: inline-block;
+    z-index: 6;
+    background-image: url('../../public/image/loading-gif.gif');
+    background-size: cover; */
+  }
+
 /* #header {
     background-color: #0B7B31;
     display: flex;
@@ -46,7 +72,15 @@ body {
 #headerNgDan {
     background-color: #0B7B31;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0.5rem;
+    flex-wrap: wrap;
+    height: fit-content;
+    position: fixed;
     padding: 0 0.5rem;
+    width: 100%;
+    z-index: 10;
     /* display: none; */
 }
 
@@ -63,6 +97,61 @@ body {
 
 #headerNgDan .flex-container input {
     width: 20rem;
+}
+
+
+.search-address {
+    min-width: 8rem;
+    width: 20rem;
+    position: relative;
+    margin-bottom: 0.3rem;
+}
+
+.search-address-bar:focus-within,
+.search-address-bar:focus,
+.search-address-bar:hover {
+    box-shadow: none;
+    border: none;
+}
+
+.resultapi-address {
+    min-width: 8rem;
+    width: 100%;
+    height: fit-content;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 3rem 1rem 1rem;
+    z-index: -1;
+    /* display: grid;
+    grid-template-columns: repeat(3, 3fr);
+    gap: 0.5rem; */
+    background-color: white;
+    border-radius: 1.5rem;
+    /* margin: 0 1rem; */
+}
+
+
+.select-ward-bar,
+.search-address-bar {
+    width: 100%;
+    background-color: white;
+    height: fit-content;
+    padding: 0.3rem 1rem 0.3rem;
+    border-radius: 0.5rem;
+    color: #867F7F;
+    cursor: pointer;
+    z-index: 2;
+    font-size: 0.9rem;
+    border: none;
+}
+
+hr {
+    position: absolute;
+    z-index: 2;
+    top: 1.5rem;
+    width: 95%;
+    left: 2.5%;
 }
 
 .homepageNgDan {
@@ -110,7 +199,7 @@ body {
     background-color: white;
     overflow-x: hidden;
     transition: 0.2s;
-    z-index: 100;
+    z-index: 1;
 }
 
 #sidebar .adInfo {
@@ -141,7 +230,7 @@ body {
     padding: 1rem;
     border-radius: 0.5rem;
     margin: 1rem;
-    
+
 }
 
 #sidebar .locInfo .data p {
@@ -161,7 +250,7 @@ body {
     border-radius: 0 1rem 0 0;
     display: flex;
     gap: 0.5rem;
-    
+
 }
 
 span#sub {
@@ -346,6 +435,12 @@ input:checked+.slider:before {
     box-shadow: none;
 }
 
+button:active{
+  transform: translateY(4px);
+  cursor: pointer;
+}
+
+
 .detail-button {
     color: lightgray;
     font-size: 1.3rem;
@@ -421,32 +516,35 @@ label.required::after {
 }
 
 #other-report-popup .col-md-12,
-#my-report .col-md-12{
+#my-report .col-md-12 {
     display: flex;
     justify-content: end;
     gap: 0.8rem;
     margin-top: 0.5rem;
 }
 
-#my-report .col-md-12.location{
+#other-report-popup .col-md-12.detail{
+    display: block;
+}
+
+#my-report .col-md-12.location {
     display: block
 }
 
 #other-report-popup .view-image,
-#my-report .view-image{
-    background-color: #d9d9d9;
+#my-report .view-image {
     margin-top: 0.5rem;
     display: flex;
     justify-content: space-evenly;
 }
 
-.view-image img{
+.view-image img {
     width: 50%;
     border-radius: 0.3rem;
 }
 
 #other-report-popup .resolved,
-#my-report .resolved{
+#my-report .resolved {
     background-color: #0B7B31;
 }
 
@@ -493,24 +591,32 @@ label.required::after {
     box-shadow: none;
 }
 
-#myPosButton{
+#myPosButton {
     position: absolute;
     z-index: 99;
 }
 
 .markerCurentPos {
-    width: 14px; /* Marker width */
-    height: 14px; /* Marker height */
-    border-radius: 50%; /* Make it a circle */
-    background-color: #4285f4; /* Google Maps blue dot color */
-    border: 2px solid #fff; /* Marker border */
-    box-shadow: 0 0 5px rgba(66, 133, 244, 0.5); /* Add a subtle shadow */
+    width: 14px;
+    /* Marker width */
+    height: 14px;
+    /* Marker height */
+    border-radius: 50%;
+    /* Make it a circle */
+    background-color: #4285f4;
+    /* Google Maps blue dot color */
+    border: 2px solid #fff;
+    /* Marker border */
+    box-shadow: 0 0 5px rgba(66, 133, 244, 0.5);
+    /* Add a subtle shadow */
 }
 
 #myPosButton {
     position: fixed;
-    bottom: 20px; /* Adjust the distance from the bottom */
-    right: 20px; /* Adjust the distance from the right */
+    bottom: 20px;
+    /* Adjust the distance from the bottom */
+    right: 20px;
+    /* Adjust the distance from the right */
 }
 
 #myPosButton button {
@@ -521,5 +627,6 @@ label.required::after {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    box-shadow: 0 0 5px rgba(66, 133, 244, 0.5); /* Add a subtle shadow */
+    box-shadow: 0 0 5px rgba(66, 133, 244, 0.5);
+    /* Add a subtle shadow */
 }

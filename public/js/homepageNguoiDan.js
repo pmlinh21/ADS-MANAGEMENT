@@ -1,7 +1,39 @@
 var flag = false
 let ads_report
 let NguoiDanAdsLoc
-localStorage.setItem("email", JSON.stringify("lvduc@gmail.com"))
+localStorage.setItem("email", JSON.stringify("iot.nhom.5@gmail.com"))
+const DOMAIN = 'http://localhost:8080'
+
+function isValidPhoneNumber(phoneNumber) {
+    // Regular expression pattern to match a phone number
+    const phoneRegex = /^\d{10}$/;
+  
+    // Remove any non-digit characters from the input
+    const cleanedPhoneNumber = phoneNumber.replace(/\D/g, '');
+  
+    // Check if the cleaned phone number matches the regex pattern
+    return phoneRegex.test(cleanedPhoneNumber);
+}
+
+function isValidEmail(email) {
+    // Regular expression pattern to match an email address
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+    // Check if the email matches the regex pattern
+    return emailRegex.test(email);
+  }
+
+function renderAddressResult(res) {
+    var template = ` 
+        <% for (var i = 0; i < res.length; i++) { %>
+            <div class = "result-<%=i%>">
+              <hr>  
+              <p><%=res[i].title%></p>
+            </div>
+        <% } %>`
+    var rendered = ejs.render(template, { res: res });
+    $(".resultapi-address").html(rendered);
+}
 
 // DATETIME (SQL) -> dd/mm/yyyy
 function validateSQLDate(dateString) {
@@ -25,6 +57,7 @@ function validateDate(date) {
 
     return formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
+
 
 function address2wardid(wardString, districtString) {
     if (districtString == "Quận 1") {
@@ -108,7 +141,7 @@ async function imageValidate(e) {
 
 async function uploadImage(file) {
     if (!file) return null
-    const signResponse = await fetch('http://localhost:8080/api/basic/uploadImage')
+    const signResponse = await fetch(`${DOMAIN}/api/basic/uploadImage`)
     const signData = await signResponse.json()
     const cloudinaryData = new FormData();
     const url = "https://api.cloudinary.com/v1_1/" + signData.cloudname + "/auto/upload";
@@ -150,9 +183,12 @@ function red(item) {
 
 // hiển thị danh sách report
 function renderReport(list_report, container, user_email) {
+    list_report = list_report?.sort((a, b) => {
+        return new Date(b.report_time).getTime() - new Date(a.report_time).getTime();
+      });
     const note = list_report?.map(item => {
         return {
-            is_user: (item[1] == user_email) ? "mine" : "other",
+            is_user: (item.email == user_email) ? "mine" : "other",
             statusClass: item.status ? "resolved" : "unresolved",
             statusText: item.status ? "Đã xử lí" : "Chưa xử lí",
             report_type: idReportType2String(item.id_report_type),
@@ -160,15 +196,33 @@ function renderReport(list_report, container, user_email) {
             imagePath2: item.photo2,
         }
     })
-    // console.log(note)
+    console.log(note)
     // list_report.forEach((item, index) => console.log(item, note[index]))
-
-    var template = `
+    if (!list_report || list_report.length == 0) {
+        var template = `
+        <p class = "text-center"> (Chưa có báo cáo) </p>
+        `;
+    } else {
+        var template = `
   <% for (var i = 0; i < list_report?.length; i++) { %>
     <div class="<%=note[i].is_user%>-report row" >
-      <div class="col-md-12">
-        <%- list_report[i].content %>
-      </div>
+        <div class="col-md-12 detail">
+            <strong>Thời gian báo cáo:</strong> 
+            <% const reportDate = new Date(list_report[i].report_time); %>
+            <% reportDate.setHours(reportDate.getHours() - 7); %>
+            <%= reportDate.getDate().toString().padStart(2, '0') %>-<%= (reportDate.getMonth() + 1).toString().padStart(2, '0') %>-<%= reportDate.getFullYear() %> <%= reportDate.getHours().toString().padStart(2, '0') %>:<%= reportDate.getMinutes().toString().padStart(2, '0') %>:<%= reportDate.getSeconds().toString().padStart(2, '0') %>
+        </div>
+        <div class="col-md-12 detail">
+            <% if (list_report[i].status) { %>
+                <strong>Cách thức xử lí:</strong> 
+                <%= list_report[i].resolve %>
+            <% } %>
+        </div>
+        <div class="col-md-12 detail">
+            <strong>Nội dung báo cáo:</strong> 
+            <%- list_report[i].content %>
+        </div>
+
       <div class="col-md-12 view-image">
       <% if (note[i].imagePath1) { %>
         <img class="col-md-6 image1" src="<%= note[i].imagePath1 %>">
@@ -188,13 +242,15 @@ function renderReport(list_report, container, user_email) {
     </div>
   <% } %>
   `;
+    }
     var rendered = ejs.render(template, { list_report, email, note });
     $(container).html(rendered);
 }
 
 // hiển thị danh sách các bảng quảng cáo
 function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
-    list_ads = JSON.parse(list_ads)
+    list_ads = (list_ads) ? JSON.parse(list_ads) : []
+
     var template = `
   <i class="fa-solid fa-circle-info" style="color: #05ACF4; margin-bottom:1rem"></i> 
   Thông tin bảng quảng cáo
@@ -203,10 +259,10 @@ function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
       <div id="data-<%= list_ads[i].id_ads %>">
           <p style="width: 90%;font-size: 1rem; margin-bottom: 0.3rem"><strong><%= list_ads[i].board_type %></strong></p>
           <p style="font-size: 0.7rem; color: gray; margin-bottom: 0.3rem"><%= address %>, phường <%= ward %>, <%= district %></p>
-          <p>Kích thước:  <strong><%= list_ads[i].width %>m x <%= list_ads[i].height %>m</strong></p>
-          <p>Số lượng:  <strong><%= list_ads[i].quantity %> trụ / bảng</strong></p>
-          <p>Hình thức:  <strong><%= ads_type %></strong></p>
-          <p>Phân loại:  <strong><%= loc_type %></strong></p>
+          <p> Kích thước:  <strong><%= list_ads[i].width %>m x <%= list_ads[i].height %>m</strong></p>
+          <p> Số lượng:  <strong><%= list_ads[i].quantity %> trụ / bảng</strong></p>
+          <p> Hình thức:  <strong><%= ads_type %></strong></p>
+          <p> Phân loại:  <strong><%= loc_type %></strong></p>
 
           <div class="detail-button data-<%= list_ads[i].id_ads %>" data-target="#detail-popup" data-toggle="modal">
             <i class="fa-solid fa-circle-info"></i>
@@ -234,10 +290,7 @@ function showSidebar(adsloc) {
     renderAds(adsloc)
     flag = true;
 
-    if (adsloc.id_ads_location)
-        $(".locInfo .address").text(`${adsloc.address}, Phường ${adsloc.ward}, ${adsloc.district}`)
-    else
-        $(".locInfo .address").text(`${adsloc.address}, ${adsloc.ward}, ${adsloc.district}`)
+    $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, quận ${adsloc.district}`)
 
     // Chi tiết bảng quảng cáo
     $("#sidebar .detail-button").on("click", function () {
@@ -247,7 +300,7 @@ function showSidebar(adsloc) {
         const list_ads = JSON.parse(adsloc.list_ads)
         ads = list_ads?.filter(item => item.id_ads == id_ads)[0]
 
-        let imagePath = (!ads.photo ? `./image/image-placeholder.jpg` : `${ads.photo}`)
+        let imagePath = (!ads.photo ? `../../image/image-placeholder.jpg` : `${ads.photo}`)
         $("#detail-popup .image img").attr("src", imagePath)
         $("#detail-popup .expired-date").text("Ngày hết hạn hợp đồng: " + validateSQLDate(ads.expired_date))
     })
@@ -269,6 +322,7 @@ function showSidebar(adsloc) {
 
         $('#report-popup .style3-button').on("click", function () {
             $('#report-popup form').get(0).reset()
+            $("#report-popup .style1-button").prop("disabled", false);
             $("#report-popup").modal("hide")
         })
 
@@ -282,7 +336,15 @@ function showSidebar(adsloc) {
                 alert("Trường 'Số điện thoại' bắt buộc")
             else if (tinymce.get("content").getContent() == "")
                 alert("Trường 'Nội dung báo cáo' bắt buộc")
+            else if (!isValidEmail($("#email").val()))
+                alert("Trường 'Email' không hợp lệ")
+            else if (!isValidPhoneNumber($("#phone").val()))
+                alert("Trường 'Số điện thoại' không hợp lệ")
+            
             else {
+                $("#report-popup .style1-button").prop("disabled", true);
+                const reportTime = new Date()
+
                 let reportObject = {
                     id_report: null, // You may need to generate a unique ID
                     officer: null, // You may need to handle this differently
@@ -295,60 +357,76 @@ function showSidebar(adsloc) {
                     content: tinymce.get("content").getContent(),
                     photo1: await uploadImage(imageData1),
                     photo2: await uploadImage(imageData2),
-                    report_time: validateDate(new Date()),
+                    report_time: validateDate(reportTime),
                     status: false, // You may need to handle this differently
                     resolve: null, // You may need to handle this differently
                     report_type: idReportType2String(parseInt($("#reportType").val())), // You may need to handle this differently
+                    address: adsloc.address,
                 };
 
-                console.log(reportObject.content)
                 // check Captcha
-                console.log("checking captcha")
                 grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
                     const captcha = token;
-                    console.log(captcha);
-                    fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
+
+                    // fetch('http://localhost:8080/api/nguoidan/verifyCaptcha', {
+                    fetch(DOMAIN + '/api/nguoidan/verifyCaptcha', {
                         method: 'POST',
                         headers: {
+                            'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ captcha })
-                    }).then((data) => {
+                        body: JSON.stringify({ captcha: captcha })
+                    }).then((res) => res.json()).then((data) => {
+                        console.log(data)
                         if (data.success) {
                             const existingReportsJSON = localStorage.getItem("ads_report");
                             const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                            existingReports.push(reportObject);
+                            existingReports.push({...reportObject, 
+                                report_time: validateDate(new Date(reportTime.setHours(reportTime.getHours() + 7)))
+                            });
                             localStorage.setItem("ads_report", JSON.stringify(existingReports));
+                            localStorage.setItem("email", JSON.stringify($("#email").val()))
 
                             // Send data to the server using AJAX
                             $.ajax({
                                 type: "POST",
-                                url: "http://localhost:8080/api/nguoidan/createAdsReport",
+                                url: `${DOMAIN}/api/nguoidan/createAdsReport`,
+                                // url: "http://localhost:8080/api/nguoidan/createAdsReport",
+                                contentType: 'application/json',
                                 data: JSON.stringify(reportObject),
                                 success: function (response) {
                                     // Handle success
-                                    alert("Report Successful")
+                                    alert("Báo cáo thành công")
+                                    $("#report-popup .style1-button").prop("disabled", false);
+                                    $('#report-popup form').get(0).reset()
+                                    $("#report-popup").modal("hide")
                                     // Optional: Show a success message to the user
                                 },
                                 error: function (error) {
                                     // Handle error
-                                    alert(JSON.stringify(error) + "createError");
+                                    alert("Lỗi tạo báo cáo");
+                                    $("#report-popup .style1-button").prop("disabled", false);
+                                    $('#report-popup form').get(0).reset()
+                                     $("#report-popup").modal("hide")
+                                    
                                     // Optional: Show an error message to the user
                                 },
                             });
                         } else {
                             alert("Captcha không hợp lệ")
+                            $("#report-popup .style1-button").prop("disabled", false);
+                            $('#report-popup form').get(0).reset()
+                            $("#report-popup").modal("hide")
                         }
                     })
                 })
-
-                $('#report-popup form').get(0).reset()
-                $("#report-popup").modal("hide")
+                
             }
         })
     })
 
     $("#sidebar .locInfo .report-button").on("click", function () {
+        console.log(adsloc)
         let imageData3 = null, imageData4 = null
 
         $('#image1').on('change', async function (e) {
@@ -362,6 +440,7 @@ function showSidebar(adsloc) {
         });
         $('#report-popup .style3-button').on("click", function () {
             $("#report-popup").modal("hide")
+            $("#report-popup .style1-button").prop("disabled", false);
             $('#report-popup form').get(0).reset()
         })
 
@@ -375,9 +454,16 @@ function showSidebar(adsloc) {
                 alert("Trường 'Số điện thoại' bắt buộc")
             else if ($("#reportContent").val() == "")
                 alert("Trường 'Nội dung báo cáo' bắt buộc")
+            else if (!isValidEmail($("#email").val()))
+                alert("Trường 'Email' không hợp lệ")
+            else if (!isValidPhoneNumber($("#phone").val()))
+                alert("Trường 'Số điện thoại' không hợp lệ")
             else {
+                $("#report-popup .style1-button").prop("disabled", true);
+                const reportTime = new Date()
                 if (adsloc.id_ads_location) {
                     console.log("creating adsloc report")
+                    
                     reportObject = {
                         id_report: null, // You may need to generate a unique ID
                         officer: null, // You may need to handle this differently
@@ -391,34 +477,64 @@ function showSidebar(adsloc) {
                         content: tinymce.get("content").getContent(),
                         photo1: await uploadImage(imageData3),
                         photo2: await uploadImage(imageData4),
-                        report_time: validateDate(new Date()),
+                        report_time: validateDate(reportTime),
                         status: false, // You may need to handle this differently
                         resolve: null, // You may need to handle this differently
                         report_type: idReportType2String(parseInt($("#reportType").val())), // You may need to handle this differently
                     };
-                    const existingReportsJSON = localStorage.getItem("ads_loc_report");
-                    const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                    existingReports.push(reportObject);
-                    // console.log(JSON.stringify(reportObject))
-                    localStorage.setItem("ads_loc_report", JSON.stringify(existingReports));
 
-                    console.log(JSON.stringify(reportObject))
-                    // Send data to the server using AJAX
-                    $.ajax({
-                        type: "POST",
-                        url: "http://localhost:8080/api/nguoidan/createAdsLocReport",
-                        data: JSON.stringify(reportObject),
-                        success: function (response) {
-                            // Handle success
-                            alert("Report Successful")
-                            // Optional: Show a success message to the user
-                        },
-                        error: function (error) {
-                            // Handle error
-                            alert(JSON.stringify(error) + "createError");
-                            // Optional: Show an error message to the user
-                        },
-                    });
+                    grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
+                        const captcha = token;
+                        fetch(`${DOMAIN}/api/nguoidan/verifyCaptcha`, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ captcha: captcha })
+                        }).then((res) => res.json()).then((data) => {
+                            if (data.success) {
+                                localStorage.setItem("email", JSON.stringify($("#email").val()))
+                                const existingReportsJSON = localStorage.getItem("adsloc_report");
+                                const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
+                                existingReports.push({...reportObject, 
+                                    report_time: validateDate(new Date(reportTime.setHours(reportTime.getHours() + 7)))});
+                                // console.log(JSON.stringify(reportObject))
+                                localStorage.setItem("adsloc_report", JSON.stringify(existingReports));
+
+                                console.log(JSON.stringify(reportObject))
+                                // Send data to the server using AJAX
+                                $.ajax({
+                                    type: "POST",
+                                    url: "https://ads-map-officer.onrender.com/api/nguoidan/createAdsLocReport",
+                                    contentType: 'application/json',
+                                    data: JSON.stringify(reportObject),
+                                    success: function (response) {
+                                        // Handle success
+                                        $("#report-popup .style1-button").prop("disabled", false);
+                                        $('#report-popup form').get(0).reset()
+                                        $("#report-popup").modal("hide")
+                                        alert("Báo cáo thành công")
+                                        // Optional: Show a success message to the user
+                                    },
+                                    error: function (error) {
+                                        // Handle error
+                                        $("#report-popup .style1-button").prop("disabled", false);
+                                        $('#report-popup form').get(0).reset()
+                                        $("#report-popup").modal("hide")
+                                        alert("Lỗi tạo báo cáo");
+                                        // Optional: Show an error message to the user
+                                    },
+                                });
+                            } else {
+                                $("#report-popup .style1-button").prop("disabled", false);
+                                $('#report-popup form').get(0).reset()
+                                $("#report-popup").modal("hide")
+                                alert("Captcha không hợp lệ")
+                            }
+                        })
+                    })
+
                 } else {
                     reportObject = {
                         id_report: null, // You may need to generate a unique ID
@@ -433,40 +549,65 @@ function showSidebar(adsloc) {
                         fullname: $("#name").val(),
                         email: $("#email").val(),
                         phone: $("#phone").val(),
-                        // content: tinymce.$("#reportContent").getContent(),
                         content: tinymce.get("content").getContent(),
                         photo1: await uploadImage(imageData3),
                         photo2: await uploadImage(imageData4),
-                        report_time: validateDate(new Date()),
+                        report_time: validateDate(reportTime),
                         status: false, // You may need to handle this differently
                         resolve: null, // You may need to handle this differently
                         id_ward: address2wardid(adsloc.ward, adsloc.district),
                     };
-                    const existingReportsJSON = localStorage.getItem("loc_report");
-                    const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
-                    existingReports.push(reportObject);
-                    localStorage.setItem("loc_report", JSON.stringify(existingReports));
 
-                    // Send data to the server using AJAX
-                    $.ajax({
-                        type: "POST",
-                        url: "http://localhost:8080/api/nguoidan/createLocReport",
-                        data: JSON.stringify(reportObject),
-                        success: function (response) {
-                            // Handle success
-                            alert("Report Successful")
-                            // Optional: Show a success message to the user
-                        },
-                        error: function (error) {
-                            // Handle error
-                            alert(JSON.stringify(error) + "createError");
-                            // Optional: Show an error message to the user
-                        },
-                    });
+                    grecaptcha.execute('6LeUpUopAAAAANmK2yer45ZpRkLJ0fnsfASyluXw', { action: 'homepage' }).then(async function (token) {
+                        const captcha = token;
+                        fetch(`${DOMAIN}/api/nguoidan/verifyCaptcha`, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json, text/plain, */*', // Tells server that this is JSON encoded data
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ captcha: captcha })
+                        }).then((res) => res.json()).then((data) => {
+                            if (data.success) {
+                                localStorage.setItem("email", JSON.stringify($("#email").val()))
+                                const existingReportsJSON = localStorage.getItem("loc_report");
+                                const existingReports = existingReportsJSON ? JSON.parse(existingReportsJSON) : [];
+                                existingReports.push({...reportObject, 
+                                    report_time: validateDate(new Date(reportTime.setHours(reportTime.getHours() + 7)))});
+                                localStorage.setItem("loc_report", JSON.stringify(existingReports));
+
+                                // Send data to the server using AJAX
+                                $.ajax({
+                                    type: "POST",
+                                    url: `${DOMAIN}/api/nguoidan/createLocReport`,
+                                    contentType: 'application/json',
+                                    data: JSON.stringify(reportObject),
+                                    success: function (response) {
+                                        // Handle success
+                                        $("#report-popup .style1-button").prop("disabled", false);
+                                        $('#report-popup form').get(0).reset()
+                                        $("#report-popup").modal("hide")
+                                        alert("Báo cáo thành công")
+                                        // Optional: Show a success message to the user
+                                    },
+                                    error: function (error) {
+                                        // Handle error
+                                        $("#report-popup .style1-button").prop("disabled", false);
+                                        $('#report-popup form').get(0).reset()
+                                        $("#report-popup").modal("hide")
+                                        alert("Lỗi tạo báo cáo");
+                                        // Optional: Show an error message to the user
+                                    },
+                                });
+                            } else {
+                                $("#report-popup .style1-button").prop("disabled", false);
+                                $('#report-popup form').get(0).reset()
+                                $("#report-popup").modal("hide")
+                                alert("Captcha không hợp lệ")
+                            }
+                        })
+                    })
                 }
-
-                $('#report-popup form').get(0).reset()
-                $("#report-popup").modal("hide")
             }
         })
     })
@@ -501,7 +642,7 @@ function showSidebar(adsloc) {
 
             list_report = list_report.filter(item =>
                 (item.longitude.toFixed(4) == adsloc.longitude.toFixed(4) && item.latitude.toFixed(4) == adsloc.latitude.toFixed(4))
-                || (item.address) == adsloc.address)
+                || ((item.address) == adsloc.address && item.ward == adsloc.ward))
 
             // console.log("thông tin của điểm được click: ")
             // console.log(adsloc.longitude.toFixed(4))
@@ -624,7 +765,7 @@ function createLayer(map, features) {
       <p class = "loc-type">${loc_type}</p>
       <p class = "address">${address}, Phường ${ward}, Quận ${district} </p>
       <p class = "zoning-text" style = "font-weight: 900; font-style: italic">${zoning_text}</p>
-      <img src = ${imagePath} class = "img-thumbnail" />
+      <img src = ${imagePath || "image/image-placeholder.jpg"} class = "img-thumbnail" />
       </div>`
             )
         e.features[0].popup = popup;
@@ -670,7 +811,7 @@ function createMarker(info, map) {
         if (item[7] != "")
             imagePath = item[7]
         else
-            imagePath = "../image/image-placeholder.jpg"
+            imagePath = "../../image/image-placeholder.jpg"
         return {
             type: 'Feature',
             geometry: {
@@ -705,21 +846,15 @@ function createMarker(info, map) {
         map.removeLayer('cluster-count');
         map.removeLayer('clusters');
         map.removeSource('adsloc');
-
-        createLayer(map, features)
-    } else {
-        map.on('load', () => {
-            createLayer(map, features)
-        });
     }
+    createLayer(map, features)
 }
 
 let marker = new mapboxgl.Marker();
 
 // get location report from server
 $.ajax({
-    url: `http://localhost:8080/api/nguoidan/getLocReport`,
-    // url: `https://adsmap-officer.onrender.com/api/nguoidan/getLocReport`,
+    url: `${DOMAIN}/api/nguoidan/getLocReport`,
     type: "GET",
 }).done(function (data) {
     localStorage.setItem("loc_report", JSON.stringify(data.content))
@@ -728,12 +863,53 @@ $.ajax({
         console.log(errorThrown + "getLocReport")
     })
 
-
 $(document).ready(function () {
+    // tạo bản đồ
+    mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [106.6974, 10.7743],
+        zoom: 15,
+        language: 'vi'
+    });
+
+    $(window).on('resize', function () {
+        let windowHeight = $(window).height();
+        let headerHeight = $('#headerNgDan').height();
+        let mapHeight = windowHeight - headerHeight;
+        $('#map').css('top', headerHeight);
+        $('#sidebar').css('top', headerHeight);
+        // console.log(windowHeight, headerHeight, mapHeight)
+        $('#map').height(mapHeight);
+        $('#sidebar').height(mapHeight);
+    });
+    
+    var language = new MapboxLanguage({
+        defaultLanguage: 'vi'
+      });
+    
+      map.addControl(language);
+
+    map.addControl(new mapboxgl.NavigationControl());
+
+    // Add geolocate control to the map.
+    map.addControl(
+        new mapboxgl.GeolocateControl({
+            positionOptions: {
+                enableHighAccuracy: true
+            },
+            // When active the map will receive updates to the device's location as it changes.
+            trackUserLocation: true,
+            // Draw an arrow next to the location dot to indicate which direction the device is heading.
+            showUserHeading: true
+        })
+    );
+
     let NguoiDanAdsLoc
+    $("#loading-bg").show()
     $.ajax({
-        url: `http://localhost:8080/api/nguoidan/getAdsLoc`,
-        // url: `https://adsmap-officer.onrender.com/api/nguoidan/getAdsLoc`,
+        url: `${DOMAIN}/api/nguoidan/getAdsLoc`,
         type: "GET",
     }).done(function (data) {
         NguoiDanAdsLoc = data;
@@ -763,7 +939,10 @@ $(document).ready(function () {
                     // Iterate through 'list_ads' and push each report to 'allReports'
                     location.list_ads.forEach(ad => {
                         if (ad.list_report) {
-                            allReports.push(...ad.list_report);
+                            for (let i = 0; i < ad.list_report.length; i++) {
+                                ad.list_report[i].address = location.address + ", phường " + location.ward + ", quận " + location.district;
+                                allReports.push(ad.list_report[i]);
+                            }
                         }
                     });
                 }
@@ -773,42 +952,6 @@ $(document).ready(function () {
 
         const ads_report = getAllReports(NguoiDanAdsLoc);
         localStorage.setItem("ads_report", JSON.stringify(ads_report))
-
-        // thay đổi kích thước bản đồ khi resize cửa sổ trình duyệt
-        $(window).on('resize', function () {
-            let windowHeight = $(window).height();
-            let headerHeight = $('#headerNgDan').height();
-            let mapHeight = windowHeight - headerHeight;
-            $('#map').css('top', headerHeight);
-            $('#sidebar').css('top', headerHeight);
-            // console.log(windowHeight, headerHeight, mapHeight)
-            $('#map').height(mapHeight);
-            $('#sidebar').height(mapHeight);
-        });
-
-        // tạo bản đồ
-        mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
-        var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: [106.6974, 10.7743],
-            zoom: 15,
-            language: 'vi'
-        });
-        map.addControl(new mapboxgl.NavigationControl());
-
-        // Add geolocate control to the map.
-        map.addControl(
-            new mapboxgl.GeolocateControl({
-                positionOptions: {
-                    enableHighAccuracy: true
-                },
-                // When active the map will receive updates to the device's location as it changes.
-                trackUserLocation: true,
-                // Draw an arrow next to the location dot to indicate which direction the device is heading.
-                showUserHeading: true
-            })
-        );
 
         // lấy dữ liệu lưu vào info
         var info = NguoiDanAdsLoc.content.map(function (item) {
@@ -821,9 +964,10 @@ $(document).ready(function () {
 
         // tạo điểm trên map
         createMarker(info, map);
+        $("#loading-bg").hide()
 
         // bắt sự kiện toggle
-        $(".flex-container input").on('click', function (e) {
+        $(".toggle input").on('click', function (e) {
             createMarker(info, map)
         })
 
@@ -832,7 +976,8 @@ $(document).ready(function () {
             let lngLat = e.lngLat;
             longitude = lngLat.lng;
             latitude = lngLat.lat;
-            marker.remove()
+            $(".mapboxgl-marker").remove()
+
             marker = new mapboxgl.Marker({
                 color: '#0B7B31'
             }).setLngLat(lngLat).addTo(map);
@@ -861,8 +1006,8 @@ $(document).ready(function () {
                 .then(response => response.json())
                 .then(data => {
                     const feature = data.items[0].address;
-                    locObject.ward = feature.district;
-                    locObject.district = feature.city;
+                    locObject.ward = feature?.district.substring(7)
+                    locObject.district = feature.city.substring(5);
                     locObject.address = (feature?.houseNumber && feature?.street)
                         ? feature?.houseNumber + " " + feature?.street
                         : feature?.label.substring(0, feature?.label.indexOf(", Phường"));
@@ -899,55 +1044,6 @@ $(document).ready(function () {
 
         });
 
-        // map.on('scroll', function () {
-        //   $('#sidebar').hide()
-        // });
-
-        document.getElementById('geocodeForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            const address = document.getElementById('address').value;
-
-            fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${(address)}.json?proximity=ip&access_token=pk.eyJ1Ijoia3JlZW1hIiwiYSI6ImNsbzVldjkzcTAwMHEya3F2OHdnYzR1bWUifQ.SHR5A6nDXXsiz1fiss09uw`)
-                .then(response => response.json())
-                .then(data => {
-                    let locObject = {
-                        "colorMarker": null,
-                        "id_ads_location": null,
-                        "address": null,
-                        "ward": null,
-                        "district": null,
-                        "loc_type": null,
-                        "ads_type": null,
-                        "zoning_text": null,
-                        "imagePath": null,
-                        "longitude": null,
-                        "latitude": null,
-                        "is_zoning": null,
-                        "list_ads": "null",
-                        "list_report": "null"
-                    }
-
-                    let center = data.features[0].center;
-                    map.flyTo({
-                        center: center,
-                        zoom: 17
-                    })
-                    // Create a new marker.
-                    marker.remove()
-                    marker = new mapboxgl.Marker().setLngLat(center).addTo(map);
-                    locObject.ward = data.features[0].context[0].text;
-                    locObject.district = data.features[0].context[2].text;
-                    locObject.address = data.features[0].properties.address;
-                    if ($('#sidebar').is(':visible')) { } else {
-                        showSidebar(locObject)
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    const resultDiv = document.getElementById('result');
-                    resultDiv.innerHTML = '<p>Error during geocoding.</p>';
-                });
-        })
 
         $(".my-report").on("click", () => {
             let email = JSON.parse(localStorage.getItem('email'));
@@ -976,17 +1072,25 @@ $(document).ready(function () {
                     my_loc_report.push(item)
             })
 
-            const list_report = [...my_ads_report, ...my_loc_report, ...my_adsloc_report]
-            console.log(JSON.stringify(list_report) + "list_report")
+            const list_report = [...my_ads_report, ...my_loc_report, ...my_adsloc_report].sort((a, b) => {
+                return new Date(b.report_time).getTime() - new Date(a.report_time).getTime();
+              });
+            console.log("list report: ", list_report)
 
             const note = list_report?.map(item => {
-                if (item.id_ads_location)
-                    address = NguoiDanAdsLoc.content.filter(i => i.id_ads_location == item.id_ads_location)[0].address
-                // else if(item.id_ads)
-                //     address = NguoiDanAdsLoc.content.filter(i => i.list_ads.filter(j => j.id_ads == item.id_ads).length > 0)[0].address
-                else
+                if (item.id_ads_location){
+                    const info = NguoiDanAdsLoc.content.filter(i => i.id_ads_location == item.id_ads_location)[0]
+                    address = info.address   
+                    address += ", phường " + info.ward
+                    address += ", quận " + info.district
+                }
+                else{
                     address = item.address
-
+                    address += ", phường " + item.ward
+                    address += ", quận " + item.district
+                }
+                    
+                
                 return {
                     address: address,
                     statusClass: item.status ? "resolved" : "unresolved",
@@ -996,69 +1100,190 @@ $(document).ready(function () {
                     imagePath2: item.photo2,
                 }
             })
-            var template = `
-            <% for (var i = 0; i < list_report?.length; i++) { %>
-                <div class="other-report row" >
-                <div class="col-md-12 location">
-                    <strong>Địa điểm:</strong> 
-                    <% if (list_report[i].address) { %>
-                        <%= list_report[i].address %>
-                    <% } else if (note[i].address){ %>
-                        <%= note[i].address %>
-                    <% } else { %>
-                        Biển quảng cáo
-                        <% } %>
-                </div>
-                <div class="col-md-12">
-                    <%- list_report[i].content %>
-                </div>
 
-                <div class="col-md-12 view-image">
-                <% if (note[i].imagePath1) { %>
-                    <img class="col-md-6 image1" src="<%= note[i].imagePath1 %>">
-                <% } %>
-                <% if (note[i].imagePath2) { %>
-                    <img class="col-md-6 image2" src="<%= note[i].imagePath2 %>">
-                <% } %>
-                </div>
-                    <div class="col-md-12 ">
-                        <div class = "report-cate">
-                        <% if (list_report[i].address) { %>
-                            Địa điểm
-                        <% } else if (note[i].address){ %>
-                            Điểm đặt
-                        <% } else { %>
-                            Biển quảng cáo
+            if (!list_report || list_report.length == 0) {
+                var template = `
+                <p class = "text-center"> (Chưa có báo cáo) </p>
+                `;
+            } else {
+                var template = `
+                    <% for (var i = 0; i < list_report?.length; i++) { %>
+                        <div class="other-report row" >
+                        <div class="col-md-12 location">
+                            <strong>Địa chỉ:</strong> 
+                            <% if (list_report[i].id_ads) { %>
+                                <%= list_report[i].address %>
+                            <% } else { %>
+                                <%= note[i].address %>
+                                <% } %>
+                        </div>
+                        <div class="col-md-12 location">
+                            <strong>Thời gian báo cáo:</strong> 
+                            <% const reportDate = new Date(list_report[i].report_time); %>
+                            <% reportDate.setHours(reportDate.getHours() - 7); %>
+                            <%= reportDate.getDate().toString().padStart(2, '0') %>-<%= (reportDate.getMonth() + 1).toString().padStart(2, '0') %>-<%= reportDate.getFullYear() %> <%= reportDate.getHours().toString().padStart(2, '0') %>:<%= reportDate.getMinutes().toString().padStart(2, '0') %>:<%= reportDate.getSeconds().toString().padStart(2, '0') %>
+                        </div>
+                        <div class="col-md-12 location">
+                            <% if (list_report[i].status) { %>
+                                <strong>Cách thức xử lí:</strong> 
+                                <%= list_report[i].resolve %>
                             <% } %>
                         </div>
-                        <div class = <%= note[i].statusClass %> >
-                            <%= note[i].statusText %>
+                        <div class="col-md-12 location">
+                            <strong>Nội dung báo cáo:</strong> 
+                            <%- list_report[i].content %>
                         </div>
-                        <div class = "report-type">
-                            <%= note[i].report_type %>
+
+                        <div class="col-md-12 view-image">
+                        <% if (note[i].imagePath1) { %>
+                            <img class="col-md-6 image1" src="<%= note[i].imagePath1 %>">
+                        <% } %>
+                        <% if (note[i].imagePath2) { %>
+                            <img class="col-md-6 image2" src="<%= note[i].imagePath2 %>">
+                        <% } %>
                         </div>
-                    </div>
-                </div>
-            <% } %>
+                            <div class="col-md-12 ">
+                                <div class = "report-cate">
+                                <% if (list_report[i].id_ads) { %>
+                                    Biển quảng cáo
+                                <% } else if (list_report[i].id_ads_location){ %>
+                                    Điểm đặt
+                                <% } else { %>
+                                    Địa điểm
+                                    <% } %>
+                                </div>
+                                <div class = <%= note[i].statusClass %> >
+                                    <%= note[i].statusText %>
+                                </div>
+                                <div class = "report-type">
+                                    <%= note[i].report_type %>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
             `;
+            }
             var rendered = ejs.render(template, { list_report, note });
             $('#my-report .modal-body').html(rendered)
         })
     }).fail(function (jqXHR, textStatus, errorThrown) {
         console.log(errorThrown + "getAdsLoc")
     })
+
+    $('.search-address-bar').on('keydown', function (event) {
+        if (event.keyCode === 13) { // Kiểm tra phím Enter
+            let address = $('.search-address-bar').val()
+            console.log(address)
+
+            $(".search-address hr").show()
+            $(".resultapi-address").show()
+            $('#map').css('pointer-events', 'none');
+
+            $.ajax({
+                url: `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(address)}&apiKey=X0xvqkeSEUDJe7SRWSwJTAm8wx3mJiE6SrN28Y3GVwc`,
+                type: 'GET',
+                data: {
+                    access_token: mapboxgl.accessToken,
+                    language: "vi"
+                },
+                success: function (response) {
+                    console.log(response.items);
+                    renderAddressResult(response.items.slice(0, 3));
+
+                    $('.resultapi-address div').on('click', function (event) {
+                        let index = $(this).attr("class").split("-")[1];
+
+                        console.log(index);
+                        console.log(response.items[index])
+                        geocoding(marker, response.items[index]);
+                    })
+                },
+                error: function () {
+                    alert('Error occurred during geocoding');
+                }
+            });
+        }
+    });
+
+    function geocoding(marker, item) {
+        console.log(item + "item")
+        $(".mapboxgl-marker").remove();
+
+        let longitude = item.position.lng;
+        let latitude = item.position.lat;
+
+        marker = new mapboxgl.Marker({
+            color: '#0B7B31'
+        }).setLngLat([longitude, latitude]).addTo(map);
+        map.flyTo({
+            center: [longitude, latitude],
+            zoom: 17
+        })
+
+        let locObject = {
+            "colorMarker": null,
+            "id_ads_location": null,
+            "address": null,
+            "ward": null,
+            "district": null,
+            "loc_type": null,
+            "ads_type": null,
+            "zoning_text": null,
+            "imagePath": null,
+            "longitude": null,
+            "latitude": null,
+            "is_zoning": null,
+            "list_ads": "null",
+            "list_report": "null"
+        }
+
+        const feature = item.address
+        locObject.ward = feature?.district.substring(7)
+        locObject.district = feature?.city.substring(5)
+        locObject.address = (feature?.houseNumber && feature?.street)
+            ? feature?.houseNumber + " " + feature?.street
+            : feature?.label.substring(0, feature?.label.indexOf(", Phường"))
+        locObject.longitude = longitude
+        locObject.latitude = latitude
+
+        $('.search-address-bar').val(`${item.title}`)
+
+        if (!flag) {
+            console.log(flag)
+            showSidebar(locObject)
+        } else {
+            console.log(flag)
+        }
+
+        flag = false
+
+        // Lắng nghe sự kiện mousedown trên bản đồ
+        map.on('mousedown', function () {
+            // Đặt kiểu con trỏ thành 'grab' khi nhấn chuột
+            map.getCanvas().style.cursor = 'grab';
+        });
+
+        // Lắng nghe sự kiện mouseup trên bản đồ
+        map.on('mouseup', function () {
+            // Đặt kiểu con trỏ thành 'pointer' khi nhả chuột
+            map.getCanvas().style.cursor = 'pointer';
+        })
+    }
+
+    $(document).mouseup(function (e) {
+        const container = $('.search-address-bar');
+
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+            $(".search-address hr").hide()
+            $(".resultapi-address").hide()
+            $('#map').css('pointer-events', 'auto');
+        }
+    });
 })
 
 
 tinymce.init({
-    selector: 'textarea',
-    plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
-    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-    tinycomments_mode: 'embedded',
-    tinycomments_author: 'Author name',
-    mergetags_list: [
-        { value: 'First.Name', title: 'First Name' },
-        { value: 'Email', title: 'Email' },
-    ],
-    ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
-});
+    selector: 'textarea',  // change this value according to your HTML
+    menubar: 'file edit view',
+    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+  });
