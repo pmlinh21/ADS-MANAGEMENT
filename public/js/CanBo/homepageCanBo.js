@@ -74,7 +74,7 @@ function createLayer(map, features) {
               30,
               750,
               40
-          ]
+          ],
       }
   });
 
@@ -100,6 +100,8 @@ function createLayer(map, features) {
       paint: {
           'circle-color': ['get', 'colorMarker'],
           'circle-radius': 10,
+          'circle-stroke-color': 'red',
+          'circle-stroke-width': ['get', 'strokeMarker']
       }
   });
 
@@ -171,7 +173,10 @@ function createLayer(map, features) {
           feature.popup.remove();
           delete feature.popup;
       }
+      console.log(e.features[0].properties)
+      flag = true;
       showSidebar(e.features[0].properties);
+      
   })
 }
 
@@ -184,9 +189,9 @@ function createMarker(info, map) {
   const features = info.map(item => {
     let colorMarker
 
-    if (red(item) && baocao)
-      colorMarker = 'red';
-    else if (!item[10] && chuaquyhoach) // chưa quy hoạch
+    let strokeMarker =  (red(item) && baocao) ? 3 : 0;
+
+    if (!item[10] && chuaquyhoach) // chưa quy hoạch
       colorMarker = 'purple';
     else if (item[11] && quangcao)
       colorMarker = 'blue';
@@ -207,6 +212,7 @@ function createMarker(info, map) {
       },
       properties: {
         colorMarker,
+        strokeMarker,
         id_ads_location: item[0],
         address: item[1],
         ward: item[2],
@@ -247,7 +253,12 @@ function validateSQLDate(dateString) {
 
 // hiển thị danh sách các bảng quảng cáo
 function renderAds({ list_ads, ads_type, loc_type, address, ward, district }) {
-  list_ads = JSON.parse(list_ads)
+  if (list_ads){
+    list_ads = JSON.parse(list_ads)
+  } else{
+    list_ads = []
+  }
+
   var template = `
   <i class="fa-solid fa-circle-info" style="color: #05ACF4; margin-bottom:1rem"></i> 
   Thông tin bảng quảng cáo
@@ -379,8 +390,7 @@ function showSidebar(adsloc) {
   $(".flex-container.toggle").hide();
   $('#sidebar').show()
   renderAds(adsloc)
-  flag = true;
-
+  
   $(".locInfo .address").text(`${adsloc.address}, phường ${adsloc.ward}, quận ${adsloc.district}`)
 
   $("#sidebar .detail-button").on("click", function () {
@@ -469,8 +479,15 @@ function showSidebar(adsloc) {
   })
 
   $("#sidebar .locInfo .other-report-button").off("click").on("click", function () {
+    console.log(adsloc)
+
     if (adsloc.id_ads_location) {
-      let list_report = JSON.parse(adsloc.list_report);
+      let list_report
+
+      if (adsloc.list_report)
+        list_report = JSON.parse(adsloc.list_report);
+      else  
+        list_report = []
       console.log(list_report)
       renderReport(list_report, "#other-report-popup .modal-body")
       return
@@ -540,6 +557,7 @@ $(document).ready(function () {
     changeMapSize();
   });
 
+  
   mapboxgl.accessToken = 'pk.eyJ1IjoicG1saW5oMjEiLCJhIjoiY2xueXVlb2ZsMDFrZTJsczMxcWhjbmo5cSJ9.uNguqPwdXkMJwLhu9Cwt6w';
   var map = new mapboxgl.Map({
     container: 'map',
@@ -575,6 +593,7 @@ $(document).ready(function () {
 
     let locObject = {
       "colorMarker": null,
+      "strokeMarker": null,
       "id_ads_location": null,
       "address": null,
       "ward": null,
@@ -586,8 +605,8 @@ $(document).ready(function () {
       "longitude": null,
       "latitude": null,
       "is_zoning": null,
-      "list_ads": "null",
-      "list_report": "null"
+      "list_ads": "[]",
+      "list_report": "[]"
     }
     // $('#sidebar').hide()
 
@@ -647,6 +666,7 @@ $(document).ready(function () {
 
     let locObject = {
       "colorMarker": null,
+      "strokeMarker": null,
       "id_ads_location": null,
       "address": null,
       "ward": null,
@@ -695,6 +715,7 @@ $(document).ready(function () {
     })
   }
 
+  map.on('style.load', () => {
   if (role === "2") {
     $("#select-ward").hide();
 
@@ -748,7 +769,8 @@ $(document).ready(function () {
         console.log(info)
         filter_info = [...info]
 
-        createMarker(info, map);
+        
+          createMarker(info, map);
         $("#loading-bg").hide()
       },
     })
@@ -858,7 +880,7 @@ $(document).ready(function () {
       createMarker(filter_info, map)
     })
   }
-
+  })
   $('.search-address-bar').on('keydown', function (event) {
     if (event.keyCode === 13) { // Kiểm tra phím Enter
       let address = $('.search-address-bar').val()

@@ -83,9 +83,9 @@ app.get('/forget-pass', function(req, res) {
 app.get('/', verifyToken, function(req, res) {
   const token = req.cookies?.token;
   const content = decodeToken(token).data
-
+  console.log(content)
   res.render('CanBo/homepageCanBo', {id_ward: 0, id_district: 0, ...content})
-
+  // res.render('CanBo/sidebar')
 });
 
 app.get('/adsLocation', verifyToken, function(req, res) {
@@ -98,7 +98,7 @@ app.get('/adsLocation', verifyToken, function(req, res) {
 app.get('/ads', verifyToken,function(req, res) {
   const token = req.cookies?.token;
   const content = decodeToken(token).data
-
+  console.log(content)
   res.render('CanBo/PhuongQuan/ads', {id_ward: 0, id_district: 0, ...content});
 });
 

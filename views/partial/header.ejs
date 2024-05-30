@@ -17,25 +17,19 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-  <!-- mapbox -->
-  <script src='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js'></script>
-  <link href='https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css' rel='stylesheet' />
-
-  <!-- geocoding -->
-  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js'></script>
-  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css' type='text/css' />
-  
-  <!-- language -->
   <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-language/v1.0.0/mapbox-gl-language.js'></script>
-  
-  <!-- toggle -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+
+  <script src='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js'></script>
+
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@5.0.4/css/bootstrap5-toggle.min.css" rel="stylesheet">
-  
-<!-- thumnail -->
-  <!-- <link rel="image_src" href="http://www.domain.co.uk/images/image.jpg"> -->
 
   <link rel="stylesheet" href="../../public/css/style.css">
-  <script type = "text/javascript" src="../../public/js/CanBo/PhuongQuan/apiObject.js"></script>
+
 </head>
 
 <body>
@@ -44,7 +38,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap5-toggle@5.0.4/js/bootstrap5-toggle.jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/ejs@3.1.8/ejs.min.js"></script>
-  
+
   <script>
     const email = '<%= email %>';
     const role = '<%= role %>';
@@ -59,10 +53,11 @@
     console.log("email: ", email, ", role: ", role, ", id_district: ", id_district, ", id_ward: ", id_ward)
   
   </script>
+
   <div id="loading-bg" style ="display: none">
     <img src="../../public/image/loading-gif.gif" class = "my-3">
     <p>Vui lòng chờ một chút ...</p>
   </div>
   <div id="header">
 
-    <a class="logo-link" href="/"><img class="logo-img" src="../../public/image/logo.png" alt="logo"></a>
+  <a class="logo-link" href="/"><img class="logo-img" src="../../public/image/logo.png" alt="logo"></a>
